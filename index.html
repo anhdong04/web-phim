@@ -6,125 +6,218 @@
     <title>Kho Phim Dropbox</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* --- CSS Giao diện chính --- */
-        body { background-color: #141414; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h1 { color: #e50914; margin-bottom: 10px;}
-        .search-bar { padding: 12px 20px; width: 100%; max-width: 500px; border-radius: 30px; border: 1px solid #333; outline: none; background: #333; color: white; font-size: 16px; transition: 0.3s;}
-        .search-bar:focus { border-color: #e50914; background: #444; }
-        
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-        
-        .card { background: #1f1f1f; border-radius: 8px; overflow: hidden; position: relative; transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.3); }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.8); }
-        
-        /* CSS cho Huy hiệu điểm số (MỚI) */
-        .rating-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: #ffc107; /* Màu vàng sao */
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            z-index: 2;
-            backdrop-filter: blur(2px);
-            border: 1px solid #ffc107;
+        /* --- 1. CẤU HÌNH CHUNG --- */
+        :root {
+            --primary-red: #e50914;
+            --bg-color: #141414;
+            --card-bg: #1f1f1f;
+            --text-color: #ffffff;
+            --donate-color: #ffc107;
+            --play-color: #28a745;
         }
-        .rating-badge i { margin-right: 4px; }
 
-        /* Ảnh Poster - Thêm cursor pointer để biết là bấm được */
-        .poster-container { position: relative; cursor: pointer; overflow: hidden;}
-        .poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; transition: 0.3s;}
-        .card:hover .poster { transform: scale(1.03); filter: brightness(1.1); }
-        
-        .info { padding: 12px; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* --- 2. HEADER & SEARCH & DONATE --- */
+        .header {
+            display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; gap: 15px;
+        }
+        .header h1 { color: var(--primary-red); margin: 0; text-transform: uppercase; letter-spacing: 2px;}
+
+        .controls {
+            display: flex; gap: 10px; width: 100%; max-width: 600px; justify-content: center;
+        }
+
+        .search-bar {
+            padding: 12px 20px; width: 100%; border-radius: 30px; border: 1px solid #333; outline: none;
+            background: #333; color: white; font-size: 16px; transition: 0.3s;
+        }
+        .search-bar:focus { border-color: var(--primary-red); background: #444; }
+
+        .donate-btn {
+            background: var(--donate-color); color: #000; padding: 0 20px; border: none; border-radius: 30px;
+            font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; white-space: nowrap;
+        }
+        .donate-btn:hover { background: #ffdb4d; transform: scale(1.05); }
+
+        /* --- 3. LƯỚI PHIM --- */
+        .grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px;
+            max-width: 1200px; margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg); border-radius: 8px; overflow: hidden; position: relative;
+            transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.8); }
+
+        .rating-badge {
+            position: absolute; top: 10px; right: 10px; background: rgba(0, 0, 0, 0.7); color: var(--donate-color);
+            padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; z-index: 2;
+            backdrop-filter: blur(2px); border: 1px solid var(--donate-color);
+        }
+
+        .poster-container { position: relative; cursor: pointer; overflow: hidden; aspect-ratio: 2/3;}
+        .poster { width: 100%; height: 100%; object-fit: cover; transition: 0.3s;}
+        .card:hover .poster { transform: scale(1.05); filter: brightness(1.1); }
+
+        .info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
         .title { font-size: 15px; font-weight: bold; margin: 0 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .year { font-size: 13px; color: #aaa; }
-
-        /* Nút tải về ngoài trang chủ (Giữ lại hoặc bỏ tùy bạn, ở đây tôi giữ lại) */
+        .year { font-size: 13px; color: #aaa; margin-bottom: 10px;}
         .download-btn-card {
-            display: block; text-align: center; background: #333; color: white; 
-            text-decoration: none; padding: 8px; margin-top: 10px; border-radius: 4px; font-size: 13px; transition: 0.2s;
+            margin-top: auto; display: block; text-align: center; background: #333; color: white; 
+            text-decoration: none; padding: 8px; border-radius: 4px; font-size: 13px; transition: 0.2s;
         }
         .download-btn-card:hover { background: #555; }
 
-        /* --- CSS CHO MODAL (CỬA SỔ BẬT LÊN - MỚI) --- */
+        /* --- 4. MODAL & PLAYER --- */
         .modal-overlay {
-            display: none; /* Ẩn mặc định */
-            position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.85); /* Nền tối mờ */
-            backdrop-filter: blur(5px);
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.95); backdrop-filter: blur(5px);
             justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+            animation: fadeIn 0.2s ease;
         }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes slideUp { from {transform: translateY(20px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
 
-        .modal-content {
-            background-color: #1f1f1f;
-            border-radius: 12px;
-            max-width: 800px;
-            width: 100%;
-            display: flex;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
-            position: relative;
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn { from {transform: translateY(50px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
-
-        .modal-poster { width: 40%; object-fit: cover; }
-        .modal-info { padding: 30px; width: 60%; box-sizing: border-box; display: flex; flex-direction: column;}
-        
         .close-btn {
-            position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 28px; font-weight: bold; cursor: pointer; z-index: 10; transition: 0.2s;
+            position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; z-index: 100; transition: 0.2s;
         }
-        .close-btn:hover { color: #e50914; }
+        .close-btn:hover { color: var(--primary-red); }
 
-        .modal-title { margin: 0 0 10px 0; font-size: 2rem; color: #e50914; }
-        .modal-meta { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; font-style: italic;}
-        .modal-overview { line-height: 1.6; color: #ddd; flex-grow: 1; overflow-y: auto; max-height: 300px; padding-right: 10px;}
-        /* Thanh cuộn cho phần mô tả */
-        .modal-overview::-webkit-scrollbar { width: 6px; }
-        .modal-overview::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
-
-        .modal-download-btn {
-            display: inline-block; background-color: #e50914; color: white; padding: 12px 30px;
-            text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 1.1rem;
-            text-align: center; margin-top: 20px; transition: 0.2s; align-self: flex-start;
+        .modal-movie-content {
+            background-color: #1f1f1f; border-radius: 12px; max-width: 900px; width: 100%;
+            display: flex; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.9); position: relative;
+            animation: slideUp 0.3s ease;
         }
-        .modal-download-btn:hover { background-color: #ff0f1f; transform: scale(1.05);}
 
-        /* Responsive cho mobile */
+        .media-area { width: 50%; position: relative; background: #000; display: flex; align-items: center; justify-content: center;}
+        .modal-poster { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .video-player { width: 100%; height: 100%; display: none; } 
+        
+        .modal-info { padding: 30px; width: 50%; box-sizing: border-box; display: flex; flex-direction: column; color: #fff;}
+        .modal-title { margin: 0 0 10px 0; font-size: 2rem; color: var(--primary-red); }
+        .modal-meta { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; }
+        .modal-overview { line-height: 1.6; color: #ddd; flex-grow: 1; overflow-y: auto; max-height: 250px; padding-right: 10px; margin-bottom: 20px;}
+        
+        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;}
+        .btn-action {
+            padding: 12px 20px; border-radius: 5px; font-weight: bold; font-size: 1rem;
+            text-decoration: none; text-align: center; color: white; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-play { background-color: var(--play-color); }
+        .btn-play:hover { background-color: #218838; }
+        .btn-download { background-color: var(--primary-red); }
+        .btn-download:hover { background-color: #ff0f1f; }
+
+        /* MỚI: Style cho khung lưu ý */
+        .note-box {
+            background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 8px; padding: 12px; font-size: 0.85rem; color: #ddd;
+        }
+        .note-box strong { color: var(--donate-color); display: block; margin-bottom: 5px; font-size: 0.9rem;}
+        .note-box ul { margin: 0; padding-left: 20px; }
+        .note-box li { margin-bottom: 4px; }
+
+        /* --- 5. DONATE --- */
+        .donate-content {
+            background: white; color: #333; border-radius: 12px; padding: 30px; text-align: center;
+            max-width: 380px; width: 100%; position: relative; animation: slideUp 0.3s ease;
+        }
+        .donate-qr { width: 100%; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0;}
+        .bank-info { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: left; font-size: 14px;}
+        .bank-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed #ddd; padding-bottom: 5px;}
+        .copy-btn { color: var(--primary-red); cursor: pointer; font-weight: bold; margin-left: 5px;}
+
         @media (max-width: 768px) {
-            .modal-content { flex-direction: column; max-height: 90vh; overflow-y: auto;}
-            .modal-poster { width: 100%; height: 300px; }
+            .modal-movie-content { flex-direction: column; max-height: 90vh; overflow-y: auto;}
+            .media-area { width: 100%; height: 250px; }
             .modal-info { width: 100%; padding: 20px; }
-            .modal-title { font-size: 1.5rem; }
+            .controls { flex-direction: column-reverse;}
         }
     </style>
 </head>
 <body>
+
     <div class="header">
         <h1>🎬 MY CINEMA</h1>
-        <input type="text" id="search" class="search-bar" placeholder="Tìm tên phim, diễn viên...">
+        <div class="controls">
+            <input type="text" id="search" class="search-bar" placeholder="Tìm tên phim...">
+            <button class="donate-btn" onclick="openDonate()"><i class="fas fa-coffee"></i> Donate Admin</button>
+        </div>
     </div>
 
     <div class="grid" id="movie-grid"></div>
 
     <div id="movieModal" class="modal-overlay">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <img src="" alt="" class="modal-poster" id="modalPoster">
+        <div class="modal-movie-content">
+            <span class="close-btn" onclick="closeMovie()" style="color: #fff">&times;</span>
+            
+            <div class="media-area">
+                <img src="" alt="" class="modal-poster" id="modalPoster">
+                <video controls class="video-player" id="modalVideoPlayer" controlsList="nodownload">
+                    <source src="" type="video/mp4" id="videoSource">
+                    Trình duyệt không hỗ trợ thẻ video.
+                </video>
+            </div>
+
             <div class="modal-info">
                 <h2 class="modal-title" id="modalTitle"></h2>
                 <div class="modal-meta">
                     <span id="modalYear"></span> | ⭐ <span id="modalRating"></span>/10
                 </div>
                 <p class="modal-overview" id="modalOverview"></p>
-                <a href="#" class="modal-download-btn" id="modalDownload">
-                    <i class="fas fa-download"></i> TẢI PHIM VỀ MÁY
-                </a>
+                
+                <div class="action-buttons">
+                    <div class="btn-action btn-play" onclick="playMovie()">
+                        <i class="fas fa-play"></i> XEM NGAY
+                    </div>
+                    <a href="#" class="btn-action btn-download" id="modalDownload">
+                        <i class="fas fa-download"></i> TẢI VỀ
+                    </a>
+                </div>
+
+                <div class="note-box">
+                    <strong><i class="fas fa-exclamation-triangle"></i> Lưu ý khi xem Online:</strong>
+                    <ul>
+                        <li>Tốc độ load phim phụ thuộc vào Server Dropbox (có thể chậm vào giờ cao điểm).</li>
+                        <li>Nếu video bị đứng hoặc mất tiếng (do lỗi định dạng), vui lòng bấm nút <b>TẢI VỀ</b> để xem mượt mà trên máy.</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="donateModal" class="modal-overlay">
+        <div class="donate-content">
+            <span class="close-btn" onclick="closeDonate()" style="color: #333">&times;</span>
+            <h2 style="margin:0; color:#e50914; font-size: 1.5rem;">ỦNG HỘ ADMIN</h2>
+            <p style="font-size: 13px; color: #666; margin-bottom: 10px;">Mời mình 1 ly cafe nhé! ❤️</p>
+            
+            <img src="https://img.vietqr.io/image/BIDV-2170836028-compact.jpg" class="donate-qr" alt="QR Code">
+
+            <div class="bank-info">
+                <div class="bank-row">
+                    <span>Ngân hàng:</span> <strong>BIDV</strong>
+                </div>
+                <div class="bank-row">
+                    <span>Số tài khoản:</span>
+                    <span>
+                        <strong id="stk-number">2170836028</strong>
+                        <span class="copy-btn" onclick="copySTK()">[COPY]</span>
+                    </span>
+                </div>
+                <div class="bank-row">
+                    <span>Chủ TK:</span> <strong>DONG DUY ANH</strong>
+                </div>
             </div>
         </div>
     </div>
@@ -133,26 +226,26 @@
     <script>
         const grid = document.getElementById('movie-grid');
         const searchInput = document.getElementById('search');
-        const modal = document.getElementById('movieModal');
+        const movieModal = document.getElementById('movieModal');
+        const donateModal = document.getElementById('donateModal');
+        
+        const modalPoster = document.getElementById('modalPoster');
+        const modalVideo = document.getElementById('modalVideoPlayer');
+        const videoSource = document.getElementById('videoSource');
+        let currentDropboxLink = "";
 
-        // Hàm hiển thị danh sách phim ra lưới
+        // 1. RENDER
         function render(list) {
             grid.innerHTML = list.map(movie => {
-                // Lấy năm phát hành
                 const year = movie.release_date ? movie.release_date.split('-')[0] : 'N/A';
-                // Lấy điểm số, làm tròn 1 chữ số thập phân. Nếu không có thì để 'N/A'
-                const rating = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
+                const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '0.0';
 
                 return `
                 <div class="card">
-                    <div class="rating-badge">
-                        <i class="fas fa-star"></i> ${rating}
-                    </div>
-                    
-                    <div class="poster-container" onclick="openModal(${movie.id})">
+                    <div class="rating-badge"><i class="fas fa-star"></i> ${rating}</div>
+                    <div class="poster-container" onclick="openMovie(${movie.id})">
                         <img src="${movie.poster_path}" class="poster" loading="lazy" alt="${movie.title}">
                     </div>
-                    
                     <div class="info">
                         <h3 class="title">${movie.title}</h3>
                         <div class="year">${year}</div>
@@ -162,54 +255,71 @@
             `}).join('');
         }
 
-        // --- CÁC HÀM XỬ LÝ MODAL ---
-
-        // Hàm mở modal và điền thông tin
-        function openModal(movieId) {
-            // Tìm phim trong danh sách dựa vào ID
+        // 2. LOGIC MODAL & PLAYER
+        function openMovie(movieId) {
             const movie = movieList.find(m => m.id === movieId);
             if (!movie) return;
 
-            // Điền dữ liệu vào các phần tử trong modal
-            document.getElementById('modalPoster').src = movie.poster_path;
+            modalPoster.style.display = 'block';
+            modalVideo.style.display = 'none';
+            modalVideo.pause();
+
+            modalPoster.src = movie.poster_path;
             document.getElementById('modalTitle').innerText = movie.title;
             document.getElementById('modalYear').innerText = movie.release_date ? movie.release_date.split('-')[0] : 'N/A';
             document.getElementById('modalRating').innerText = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
-            document.getElementById('modalOverview').innerText = movie.overview || "Chưa có mô tả cho phim này.";
+            document.getElementById('modalOverview').innerText = movie.overview || "Chưa có mô tả.";
             document.getElementById('modalDownload').href = movie.dropbox_link;
+            
+            currentDropboxLink = movie.dropbox_link;
 
-            // Hiển thị modal (thay đổi display từ none sang flex)
-            modal.style.display = 'flex';
-            // Khóa cuộn trang chính lại
+            movieModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
 
-        // Hàm đóng modal
-        function closeModal() {
-            modal.style.display = 'none';
-             // Mở lại cuộn trang chính
+        function playMovie() {
+            // Chuyển dl=0/1 thành raw=1 để stream
+            let streamLink = currentDropboxLink.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
+            
+            modalPoster.style.display = 'none';
+            modalVideo.style.display = 'block';
+            
+            videoSource.src = streamLink;
+            modalVideo.load();
+            modalVideo.play();
+        }
+
+        function closeMovie() {
+            movieModal.style.display = 'none';
             document.body.style.overflow = 'auto';
+            modalVideo.pause();
+            videoSource.src = "";
         }
 
-        // Đóng modal khi click ra ngoài vùng nội dung modal
+        // 3. DONATE
+        function openDonate() { donateModal.style.display = 'flex'; }
+        function closeDonate() { donateModal.style.display = 'none'; }
+        function copySTK() {
+            const stk = document.getElementById('stk-number').innerText;
+            navigator.clipboard.writeText(stk);
+            alert("Đã copy STK: " + stk);
+        }
+
         window.onclick = function(event) {
-            if (event.target == modal) {
-                closeModal();
-            }
+            if (event.target == movieModal) closeMovie();
+            if (event.target == donateModal) closeDonate();
         }
 
-        // --- KHỞI CHẠY ---
-        // Sắp xếp phim mới nhất lên đầu trước khi hiển thị (Tùy chọn)
-        movieList.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
-        
-        render(movieList);
-
-        // Tìm kiếm
         searchInput.addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = movieList.filter(m => m.title.toLowerCase().includes(term));
             render(filtered);
         });
+
+        if(typeof movieList !== 'undefined') {
+            movieList.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+            render(movieList);
+        }
     </script>
 </body>
 </html>
