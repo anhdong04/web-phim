@@ -5,16 +5,116 @@ const movieList = [
 
 
 
-
-
-
-
-
-
-
-
-
-
+{
+    "id": 1129508,
+    "title": "Tẩu Thoát Khỏi Đức Quốc Xã",
+    "original_title": "Escape from Germany",
+    "overview": "Năm 1939, quân đội của Hitler đóng cửa biên giới, và tám mươi lăm nhà truyền giáo Mỹ đang ở Đức phục vụ nhà thờ của họ. Cuộc trốn thoát của những nhà truyền giáo này khỏi Đức Quốc xã là một trong những sự kiện kịch tính nhất xảy ra trong lịch sử hội thánh hiện đại.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ImLwjncbby96zBhPyI2mDRplnX.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/rc4gftC3BOULuhvE6BDrzpvVJS4.jpg",
+    "release_date": "2024-04-11",
+    "vote_average": 6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ttmwtpahfcjxwcfgo46lq/Escape.from.Germany.2024.1080p.AMZN.WEB-DL.DDP2.0.H.264.mkv?rlkey=6fy6db4hp58rhhrxoxbghwf77&st=iboaflpp&dl=0&dl=1"
+},
+{
+    "id": 1371151,
+    "title": "Ngoài Tầm Truy Vết",
+    "original_title": "Off the Grid",
+    "overview": "Sau khi một tập đoàn vô đạo đức cố gắng biến công nghệ mang tính cách mạng của một nhà khoa học thiên tài thành vũ khí, anh quyết định 'ẩn mình' để bảo vệ nhân loại. Nhưng khi tập đoàn này cử một đội truy bắt tinh nhuệ để tìm anh, họ đã phạm sai lầm lớn nhất: biến chính người họ muốn bắt thành thứ vũ khí nguy hiểm nhất.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/mMUVnkcx2VawTBJYnnnRN8fxJpb.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/jpS4Hg1MjXgmIXYZhJwNPVGJaTG.jpg",
+    "release_date": "2025-06-27",
+    "vote_average": 6.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/52ejfut8v7ql6fz5j4fyk/Off.the.Grid.2025.ViE.1080p.BluRay.DD5.1.x264-playHD.mkv?rlkey=wii7wl1li2qoy44tqdkouhx1b&st=lcsslqfg&dl=0&dl=1"
+},
+{
+    "id": 1297028,
+    "title": "Di Sản Ma Quái",
+    "original_title": "Rosario",
+    "overview": "Rosario Fuentes, một nhà môi giới chứng khoán thành đạt ở New York, buộc phải quay về căn hộ cũ của bà ngoại sau khi bà qua đời. Khi một trận bão tuyết khiến cô bị mắc kẹt qua đêm cùng thi thể bà, Rosario bắt đầu phát hiện ra những bí mật đen tối liên quan đến tín ngưỡng huyền bí Palo mà bà Griselda từng theo đuổi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/beLZhuHT97849WkWgty2X1hkWUa.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/d5aBTObiUzqGZMohXtQKY4FMGvb.jpg",
+    "release_date": "2025-05-01",
+    "vote_average": 5.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/tkbjmnyod93840e4f12gx/Rosario.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR-Sub-Viet.mkv?rlkey=yrpiowi82s5syaomf7q0wgoel&st=2e94hq6c&dl=0&dl=1"
+},
+{
+    "id": 1312833,
+    "title": "Cuộc Chiến Của Hiệp Sĩ",
+    "original_title": "A Knight's War",
+    "overview": "Nội dung phim Cuộc Chiến Của Hiệp Sĩ – A Knight’s War (2025) fshare: Nhân vật chính là Paladin Bhodie (do Jeremy Ninaber thủ vai), một hiệp sĩ dũng cảm được giao nhiệm vụ giải cứu Avalon (Kristen Kaster), một thiếu nữ tóc đỏ được tiên tri là “Người được chọn” có khả năng cứu rỗi nhân loại. Để thực hiện nhiệm vụ, Bhodie phải bước vào một vùng đất bị nguyền rủa, nơi anh phải đối mặt với những mối nguy …; Trên đây là nội dung phim Cuộc Chiến Của Hiệp Sĩ – A Knight’s War (2025)",
+    "poster_path": "https://image.tmdb.org/t/p/w500/janjdSMrTRGtPrI1p9uOX66jv7x.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/cJCW78MZsyyXBKHo4V25WctK00V.jpg",
+    "release_date": "2025-02-07",
+    "vote_average": 5.955,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/4t3bsaw1wfwc62pkoyhpn/A.Knights.War.2025.1080p.BluRay.x264-VETO.mkv?rlkey=o8jk10uhxnukwlah7c2elnir9&st=u7i11b5l&dl=0&dl=1"
+},
+{
+    "id": 987400,
+    "title": "Batman Aztec: Đế Chế Huyết Chiến",
+    "original_title": "Batman Azteca: Choque de imperios",
+    "overview": "Phim kể về Yohualli Coatl, một chàng trai Aztec trẻ tuổi, người chứng kiến cha mình — Toltecatzin — bị quân viễn chinh Tây Ban Nha giết hại. Lớn lên, Yohualli trở thành linh mục dưới triều vua Moctezuma II, đồng thời bí mật sử dụng thân phận siêu anh hùng “Batman”. Hắn được huấn luyện tại đền của thần dơi Tzinacan, chế tạo vũ khí và thiết bị để chống",
+    "poster_path": "https://image.tmdb.org/t/p/w500/2nifUnsraLRfZL4vWCTi7A92DiN.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/9KSboWOt09J72aMY4x8SS1IaOHK.jpg",
+    "release_date": "2025-09-18",
+    "vote_average": 7.76,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/i8b4swclz56z2xgyk1h9k/Aztec-Batman-Clash-of-Empires-2025-1080p-AMZN-WEB-DL-DUAL-DDP5-1-H-264-BYNDR-Vsub.mkv?rlkey=p3ihf1pd5h7pnm2jrrp3gf9j4&st=sooodlis&dl=0&dl=1"
+},
+{
+    "id": 1244531,
+    "title": "Quái Thú Chiến Tranh",
+    "original_title": "Beast of War",
+    "overview": "Một nhóm lính trẻ người Úc bị đắm tàu khi vượt qua biển Timor trong Thế chiến II. Họ phải sinh tồn trên một chiếc bè nhỏ giữa đại dương, đối mặt với xung đột nội bộ, tấn công từ kẻ thù và một con cá mập trắng khổng lồ, đói khát.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/2xgDjVEOtu5LlbPEngxfbCqWEFg.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ktsHS7DhwS4M54I3CBkxNV5GlTM.jpg",
+    "release_date": "2025-09-18",
+    "vote_average": 6.315,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ze4i57bcaxfcw4y4vtobo/Beast.Of.War.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-KyoGo.mkv?rlkey=oxywv1iesl6k5a11qc4uadgmz&st=4fcy2crr&dl=0&dl=1"
+},
+{
+    "id": 1166073,
+    "title": "Hoàn tiền",
+    "original_title": "還錢",
+    "overview": "Bị lừa gạt sau một vụ cướp ngân hàng, một nhóm trộm chuyên nghiệp tiến hành một nhiệm vụ còn khó khăn hơn: trả lại số tiền họ đã trộm.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/6ke8pycPTpO8aFqIos2r3HkbDmC.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/5P0FeTl1mO65Xa5xjTIG6Iqdls0.jpg",
+    "release_date": "2024-02-08",
+    "vote_average": 6.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/o1d2ziuzus3d6p73byv1a/Breaking.and.Re-entering.2024.1080p.NF.WEB-DL.DDP5.1.H.264-MrHulk.mkv?rlkey=cwb6qsiqqtcm6vvtzpc0az7l4&st=lp79uq2z&dl=0&dl=1"
+},
+{
+    "id": 1386827,
+    "title": "Bầy Sói Hoang",
+    "original_title": "Coyotes",
+    "overview": "Một gia đình bị mắc kẹt trong ngôi nhà ở Hollywood Hills, phải chiến đấu để sinh tồn giữa trận cháy rừng dữ dội và bầy chó sói hoang dã.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/fSzs9ZXYcrln0FRrjGIPCjuB6En.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/z7OrG1YBDEpGJ3awOnvk7BMZryE.jpg",
+    "release_date": "2025-10-02",
+    "vote_average": 5.682,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/n967sqb6xbm4i7b3qzgit/Coyotes-2025-ViE-1080p-AMZN-WEB-DL-DDP5-1-H-264-FLUX.mkv?rlkey=c3xgtdh82xgsrgp3g3bxilgz1&st=v7n0al8w&dl=0&dl=1"
+},
+{
+    "id": 1234782,
+    "title": "Mưa trên cánh bướm",
+    "original_title": "Mưa trên cánh bướm",
+    "overview": "Một người phụ nữ trung niên vô tình phát hiện chồng mình ngoại tình thông qua một trận bóng đá được phát trên sóng truyền hình. Bà quyết định tìm đến một thầy đồng mạng với niềm tin có thể thay đổi được chồng. Thế nhưng, những nghi thức bí ẩn lại vô tình đánh thức một thế lực đen tối trong nhà mà chỉ mình bà Tâm và con gái có thể nhìn thấy.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/m6eXzAXYYcdjmKdRWSL6YZDnlh2.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/zPk3XdI5KhkqUSQEiKfGR1nMb2D.jpg",
+    "release_date": "2025-01-03",
+    "vote_average": 6.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/po0bi7yy2shys4tm4i0d7/Don.t.Cry.Butterfly.2025.1080p.WEB-DL.EC3.5.1.H.264-Vownice.mkv?rlkey=e5i70f6gefx74tzm98vel8tgx&st=8ii5b4ll&dl=0&dl=1"
+},
+{
+    "id": 787752,
+    "title": "Fresh",
+    "original_title": "Fresh",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/tlu71AgaL3EQBBCNGsAwZLPbV5D.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/oVv5l6L5Wi5j3gd4P2vt0YvVMOg.jpg",
+    "release_date": "2022-03-03",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/vvu725ulsbcc0brbcyqbn/Fresh.2022.1080p.WEB-DL.DDP5.1.Atmos.x264-NOGRP-Vietsub.mkv?rlkey=elvnfr89e37vuqw5kb4f0cufd&st=i6tjaf6a&dl=0&dl=1"
+},
 {
     "id": 1242404,
     "title": "Steve",
