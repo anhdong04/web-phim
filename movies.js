@@ -10,6 +10,352 @@ const movieList = [
 
 
 
+
+
+
+
+
+{
+    "id": 1242404,
+    "title": "Steve",
+    "original_title": "Steve",
+    "overview": "Trong một ngày căng thẳng, vị hiệu trưởng tận tâm của một trường cải tạo cơ hội cuối nỗ lực đưa các học sinh của mình vào khuôn khổ trong khi đối mặt với áp lực riêng.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/wmLoMyofbseLfxiGgk1Iz5H97c3.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/sb8Aq1RohASXyjT0uEOUUZJi5oI.jpg",
+    "release_date": "2025-09-19",
+    "vote_average": 6.382,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/63gyen85xu38ig8q97tqr/Steve.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=3hqr1d9mi5jz0oohpj61bt26r&st=tu79v6el&dl=0&dl=1"
+},
+{
+    "id": 1058615,
+    "title": "Tài Xế Đêm",
+    "original_title": "The Accidental Getaway Driver",
+    "overview": "The Accidental Getaway Driver (Tài Xế Đêm) là một bộ phim tội phạm Mỹ năm 2023 dựa trên câu chuyện có thật về vụ bắt cóc có thật năm 2016. tài xế taxi Mã Hoàng Long, một tài xế taxi gốc Việt tại Quận Cam, bị bắt cóc bởi ba tù nhân vượt ngục. Phim có sự tham gia của Hiệp Trần Nghĩa, Phi Vũ, Dali Benssalah và Dustin Nguyễn. Bộ phim ra mắt tại Liên hoan phim Sundance 2023 vào ngày 23 tháng 1 và đã giúp Lee giành được Giải thưởng Đạo diễn xuất sắc tại hạng mục phim Mỹ. Sau đó, phim được phát hành vào ngày 28 tháng 2 năm 2025 bởi Utopia. Bộ phim nhận được nhiều đánh giá tích cực với 85% trên Rotten Tomatoes và 69 điểm trên Metacritic.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/1JpJK5nOQWBl6aaft1Tt1ymD3kK.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/12IP1jQLj3r2rUvO8WJ7KGEFlCR.jpg",
+    "release_date": "2025-02-28",
+    "vote_average": 6.8,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/tk0s88oru1ljk18t13l5o/The.Accidental.Getaway.Driver.2023.1080p.WEB-DL.DDP5.1.H264-WAYNE-Vietsub.mkv?rlkey=yu7upo1u2rosucovlwpmdj9f7&st=9u0th0eg&dl=0&dl=1"
+},
+{
+    "id": 1418305,
+    "title": "Quan Tài Vợ Quỷ",
+    "original_title": "สุสานคนเป็น",
+    "overview": "Sau khi người vợ giàu có qua đời, người đàn ông nọ và nhân tình phải ở cùng thi thể được bảo quản của cô suốt 100 ngày tại ngôi biệt thự hẻo lánh để nhận được tiền thừa kế.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vXLs9kuIHdJO4vb177uqufoAUSi.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/DdsdqgPJaiTJ8dJ39aJtQTUksE.jpg",
+    "release_date": "2025-04-24",
+    "vote_average": 4.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/mc42x0n6r43zmscly77s4/Tomb.Watcher.2025.1080p.NF.WEB-DL.DDP5.1.H264-Sub-Viet.mkv?rlkey=vjycdjs12nkk158clawbixkse&st=omb3jo1z&dl=0&dl=1"
+},
+{
+    "id": 863837,
+    "title": "Thủy Quái 2: Rừng Đen",
+    "original_title": "水怪2：黑木林",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vgknfj1v8mm2jnX21zewWYewX1k.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/keji1Qj5r6noSmg2DXiEvRhzMYC.jpg",
+    "release_date": "2021-08-20",
+    "vote_average": 6.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/k35h2vvi9faz3fds33s7k/Water.Monster.II.2021.1080p.WEB-DL.H264.AAC_Viet-Sub.mkv?rlkey=k2smkxtsm5an5wtflo4u7og0b&st=evrop7p5&dl=1"
+},
+{
+    "id": 614930,
+    "title": "Ninja Rùa: Hỗn Loạn Tuổi Dậy Thì",
+    "original_title": "Teenage Mutant Ninja Turtles: Mutant Mayhem",
+    "overview": "Sau nhiều năm được che chở khỏi thế giới loài người, anh em nhà Rùa lên đường chinh phục trái tim người dân New York và được chấp nhận như những thiếu niên bình thường thông qua các hành động anh hùng. Người bạn mới April O'Neil giúp họ chống lại một tổ chức tội phạm bí ẩn, nhưng họ sớm gặp rắc rối khi một đội quân dị nhân được thả ra tấn công họ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/aqICQRXQLSB6uKulBHHCUwLAvK.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2Cpg8hUn60PK9CW9d5SWf605Ah8.jpg",
+    "release_date": "2023-07-31",
+    "vote_average": 7.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/3fc82jeuyogt6xfuzn3pt/Teenage.Mutant.Ninja.Turtles.Mutant.Mayhem.2023.1080p.BluRay.Atmos.TrueHD7.1.x265.10bit-WiKi.mkv?rlkey=f5ouy8dxcfbb4ryw32jo1xflp&st=iayzafic&dl=0&dl=1"
+},
+{
+    "id": 508883,
+    "title": "Thiếu Niên Và Chim Diệc",
+    "original_title": "君たちはどう生きるか",
+    "overview": "Đến từ Studio Ghibli và đạo diễn Miyazaki Hayao, bộ phim là câu chuyện về hành trình kỳ diệu của cậu thiếu niên Mahito trong một thế giới hoàn toàn mới lạ. Trải qua nỗi đau mất mẹ cùng mối quan hệ chẳng mấy vui vẻ với gia đình cũng như bạn học, Mahito dần cô lập bản thân... cho đến khi cậu gặp một chú chim diệc biết nói kỳ lạ. Mahito cùng chim diệc bước vào một tòa tháp bí ẩn, nơi một thế giới thần kỳ mở ra, đưa cậu gặp gỡ những người mình yêu thương... trong một nhân dạng hoàn toàn khác.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/zC2AoYyY5JGHAT5Y5IidtqEkyVB.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/a0GM57AnJtNi7lMOCamniiyV10W.jpg",
+    "release_date": "2023-07-14",
+    "vote_average": 7.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/77himfc86sfwjhhpp91ge/The.Boy.and.the.Heron.2023.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=g9imcv1ehdacq4sg3z1tin5o4&st=o11lw7go&dl=0&dl=1"
+},
+{
+    "id": 774825,
+    "title": "Kỷ Băng Hà: Cuộc Phiêu Lưu Của Buck Wild",
+    "original_title": "The Ice Age Adventures of Buck Wild",
+    "overview": "Anh em nhà Possum Crash và Eddie bắt đầu tìm một nơi ở cho riêng mình, nhưng lại thấy mình bị mắc kẹt trong Thế giới đã mất. Họ được chồn Buck Wild giải cứu, và cùng nhau bắt tay vào sứ mệnh giải cứu Thế giới đã mất khỏi sự thống trị của loài khủng long.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/zzXFM4FKDG7l1ufrAkwQYv2xvnh.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/qw02SUqrrdTjAOPCFJBPyKaVf4z.jpg",
+    "release_date": "2022-01-28",
+    "vote_average": 6.587,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ixul36vo4082hcof98wnp/The.Ice.Age.Adventures.of.Buck.Wild.2022.ViE.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H.264-MZABI.mkv?rlkey=e6hgc870e8xhuokbkbcqrkfl1&st=eum5qf23&dl=0&dl=1"
+},
+{
+    "id": 1495723,
+    "title": "Người bị bỏ rơi",
+    "original_title": "Metruk Adam",
+    "overview": "Sau khi ra tù vì gánh tội thay anh trai, một người đàn ông dè dặt đoàn tụ với gia đình và tìm thấy hi vọng cùng sự chữa lành qua mối liên kết làm thay đổi cuộc đời với cô cháu gái",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lGaVDZ6kLPqxypkio1fREN3z3Li.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/j5FNYFaSXmD3T0WAYDAvguEPVOv.jpg",
+    "release_date": "2025-08-22",
+    "vote_average": 7.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/4yctfmp4zbty23ouymc7s/Abandoned.Man.2025.1080p.NF.WEB-DL.DUAL.DDP5.1.H.264-FLUX-Sub-Viet.mkv?rlkey=vf1lruxaqigihtbsqz0ehj9dm&st=w5atoycg&dl=0&dl=1"
+},
+{
+    "id": 1236204,
+    "title": "Bào Thai Ma Quái",
+    "original_title": "Birthrite",
+    "overview": "Wren và Maya trở về quê sống trong căn nhà được thừa kế, nhưng niềm vui chớm nở nhanh chóng bị dập tắt khi họ nhận ra đứa con chưa sinh đang bị đe dọa bởi lời nguyền từ quá khứ và lịch sử đen tối của thị trấn.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/4ozeV62H7CGWprsCrif2lax8dHO.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/60wbhTekWEfPz1bGgGPBp40mwcN.jpg",
+    "release_date": "2025-08-08",
+    "vote_average": 4.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/hykue4a8zunsvlq8az1nx/Birthrite.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR-Sub-Viet.mkv?rlkey=wgkx8zjgyl0v6124gg7z4kyho&st=nxfd759j&dl=0&dl=1"
+},    
+{
+    "id": 1429739,
+    "title": "Băng trộm săn vàng",
+    "original_title": "เขาชุมทอง คะนองชุมโจร",
+    "overview": "Cuối Thế chiến II, một thủ lĩnh băng cướp cùng đồng bọn đối đầu với kẻ thù không đội trời chung và quân đội Nhật để cướp chuyến tàu chở đầy vàng.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/9ii6tt7jwGiMiZS7qpWVrKKWwzk.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/kYsU56QEcwEr8jAQ6Vm3M8bXTWz.jpg",
+    "release_date": "2025-08-19",
+    "vote_average": 6.981,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/0fx7o58bmg150cpg4hrcb/Gold.Rush.Gang.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H264-HHWEB-Sub-Viet.mkv?rlkey=3g8ymgw29s1bgvo55slr0fcjv&st=lek58ket&dl=0&dl=1"
+},
+{
+    "id": 1205656,
+    "title": "Con Đường Oan Nghiệt",
+    "original_title": "Hallow Road",
+    "overview": "Trong một đêm u ám, chiếc điện thoại reo lên, xé tan sự yên tĩnh. Ở đầu dây bên kia là giọng run rẩy của cô con gái: một tai nạn đã xảy ra, và bi kịch không thể đảo ngược. Từ khoảnh khắc đó, cha mẹ cô bị cuốn vào cuộc chạy đua nghẹt thở với thời gian, nơi từng giây phút đều chất chứa nỗi sợ hãi, tuyệt vọng và cả tình thương vô điều kiện.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/dVsgV7ak6vR5xyXFggooJQinXBg.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yPU89i5KvCrfPkbgsUqYjRycPaY.jpg",
+    "release_date": "2025-04-16",
+    "vote_average": 6.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/m1rkr78td3uknf1r0bvm8/Hallow.Road.2025.1080p.iT.WEB-DL.DDP5.1.H.264-BYNDR.mkv?rlkey=kdryksq6gyp7azef2ueqxg47t&st=8spkpubf&dl=0&dl=1"
+},
+{
+    "id": 1083433,
+    "title": "Mùa Hè Kinh Hãi 4",
+    "original_title": "I Know What You Did Last Summer",
+    "overview": "Khi năm người bạn vô tình gây ra một vụ tai nạn xe hơi chết người, họ quyết định che giấu và lập một giao ước giữ bí mật thay vì phải đối mặt với hậu quả. Một năm sau, quá khứ trở lại ám ảnh họ, buộc họ phải đối diện với một sự thật khủng khiếp: có ai đó biết những gì họ đã làm vào mùa hè năm ngoái… và quyết tâm trả thù họ. Khi từng người trong nhóm bị một kẻ sát nhân truy đuổi, họ phát hiện ra rằng điều này đã xảy ra trước đây, và họ tìm đến hai người sống sót từ vụ thảm sát huyền thoại ở Southport năm 1997 để cầu cứu.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/x8NisBbgtLhlNGaM9QYn7scwYue.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/gVPjIcYo1gTaACF43OMsralrcUS.jpg",
+    "release_date": "2025-07-16",
+    "vote_average": 5.8,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/850wcdnoavcfk7ds014n3/I.Know.What.You.Did.Last.Summer.2025.1080p.MA.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Sub-Viet.mkv?rlkey=ecymczmh6d1xv1fip6id5fdmh&st=hj2c9tf0&dl=0&dl=1"
+},
+{
+    "id": 744653,
+    "title": "Câu lạc bộ án mạng ngày thứ Năm",
+    "original_title": "The Thursday Murder Club",
+    "overview": "Trong bộ phim hài tội phạm chuyển thể từ tiểu thuyết này, một nhóm thám tử cao niên đam mê phá giải những vụ án còn bỏ ngỏ bị cuốn vào vụ án mạng bí ẩn ngoài đời thật.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/dz3OWxtqyDYKxFFM62Lr4NKWKy0.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/4KN06gns94rQFoYQWDGunK7Cob4.jpg",
+    "release_date": "2025-08-22",
+    "vote_average": 6.643,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/t423jvdz54xbhosr9va4n/The.Thursday.Murder.Club.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-Sub-Viet.mkv?rlkey=cabeorrk230stflwza1cagrpz&st=aradcxdu&dl=0&dl=1"
+},
+{
+    "id": 1195518,
+    "title": "Thị Trấn Tội Lỗi",
+    "original_title": "The Unholy Trinity",
+    "overview": "Những bí mật bị chôn vùi của thị trấn Trinity-Montana vào những năm 1870 dẫn đến bạo lực khi một thanh niên trở về để đòi lại công lý cho cha mình và bị kẹt giữa một cảnh sát trưởng quyết tâm duy trì trật tự và một người lạ bí ẩn quyết tâm phá hủy nó.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/waU3o5qRPNA9bIC59DIsDppll11.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/hyc9gq0Oq5THKak7tB7oqC2Rd6z.jpg",
+    "release_date": "2025-06-13",
+    "vote_average": 6.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/efkjn27h8zfrzesjf5a21/The.Unholy.Trinity.2025.1080p.MA.WEB-DL.DDP5.1.H.264-BYNDR-Sub-Viet.mkv?rlkey=9mjyt8d5om17m95vbp05s0boy&st=vbxwj3mi&dl=0&dl=1"
+},
+{
+    "id": 1443894,
+    "title": "Forgive Us All",
+    "original_title": "Forgive Us All",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/bT7sMDsvWNeIGgZ6ZsisNdBcHdq.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/46M6cG7MmeAnniaQHxFhhpGHGuy.jpg",
+    "release_date": "2025-05-08",
+    "vote_average": 5.053,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/yklnombmx1asa4thb5qb4/Forgive.us.all.2025.1080p.BluRay.x264-JustWatch.mkv?rlkey=r1tz4eplqxl05rdi93zij97vv&st=ty6rvclq&dl=0&dl=1"
+},
+{
+    "id": 1255795,
+    "title": "Putin",
+    "original_title": "Putin",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/j3Q2MrpmaOrKfN2pInNvRNhYa4G.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/8FSB22d8lFe7OIHNXVcw8t8OSri.jpg",
+    "release_date": "2025-01-09",
+    "vote_average": 5.822,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/x3c9gxakc304ma8lfq23g/Putin.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR.mkv?rlkey=btirpqybd3664qusfi0r7h64w&st=x5r4bfaa&dl=0&dl=1"
+},
+{
+    "id": 339987,
+    "title": "Gián Điệp",
+    "original_title": "The Exception",
+    "overview": "Không có gì giống như trong bộ phim kinh dị Thế chiến 2 hấp dẫn này khi một người lính cảnh giác đi điều tra một vị vua Đức bí ẩn tại biệt thự hẻo lánh của mình, dẫn anh ta vào một mạng lưới lừa dối và một mối tình nguy hiểm với một phụ nữ Do Thái địa phương",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vwGzAuzkpw1YXcdqloxK1p71zxL.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/no9d3vuwxJix8Htw7qmA2hdJB0v.jpg",
+    "release_date": "2017-06-02",
+    "vote_average": 6.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/g8egoskl522wkkc0vm6td/The.Exception.2016-1080p.BluRay.DTS-HD-MA5.1.x264.mkv?rlkey=s8l1if6m56i2bcp8qqhl8pta3&st=f4k6j1vb&dl=0&dl=1"
+},
+{
+    "id": 203739,
+    "title": "Học Viện Ma Cà Rồng",
+    "original_title": "Vampire Academy",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cJZpKgiFfjDZ6L5aOJvbmDhsGqY.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ttb2OaMIWpuq8Y0bTIOSXlOvyEk.jpg",
+    "release_date": "2014-02-07",
+    "vote_average": 6.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/f5mpfsnpwtksgp19ye2p8/Vampire.Academy.2014.1080p.BluRay.DD5.1.x264-playHD.mkv?rlkey=y40gppz1zruphvkwmggi8icmf&st=vdep49az&dl=0&dl=1"
+},
+{
+    "id": 1209629,
+    "title": "Harimau Merah: Intrik Dalaman",
+    "original_title": "Harimau Merah: Intrik Dalaman",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/iDwdniUPPTIVOHbIXkRjcJPz59L.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/bHuB4KVjVDygpH576RhJTWvyo1r.jpg",
+    "release_date": "2025-05-08",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/wyubd3vt7ee6j7vtpd1xu/Bleeding.Tiger.Internal.Affairs.2025.1080p.NF.WEB-DL.DDP5.1.H.264-NowSnowing-Sub-Viet.mkv?rlkey=xr2lqfcz5nbs5ubgxu90syj3u&st=qadsliz6&dl=0&dl=1"
+},
+{
+    "id": 839803,
+    "title": "Hùng Sư Thiếu Niên",
+    "original_title": "雄狮少年",
+    "overview": "Hùng Sư Thiếu Niên kể về câu chuyện của cậu thiếu niên bị bỏ rơi A Quyên cùng những người bạn A Miêu A Cẩu tham gia cuộc thi múa lân dưới sự huấn luyện của Sư vương đã nghỉ hưu Hàm Ngư Cường. Sau khi rèn luyện, họ trưởng thành từ một mèo bệnh thành hùng sư.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/gGz3wZ5xj2WM03l06NaNa0utWyd.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/9O5XXzZiXuuog4KLHhBefzJ70HO.jpg",
+    "release_date": "2021-12-11",
+    "vote_average": 7.164,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/yh2k4rhlbbanze2uaehcs/I.AM.WHAT.I.AM.2021.1080p.BluRay.Remux.AVC.DTS-HD.MA.5.1.2Audio-SONYHD-Vsub.mkv?rlkey=2f9nlezvah2b2u27a7cn3xdez&st=17iiay63&dl=1"
+},
+{
+    "id": 1242501,
+    "title": "Icefall",
+    "original_title": "Icefall",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/5Byv6nznAb2Izd0gHpODOXnuSbo.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/gQimJqYMKCkwHIo8wwYKhmnCfBr.jpg",
+    "release_date": "2025-10-16",
+    "vote_average": 6.97,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/rexuwgymufysv8ywmwetd/Icefall-2025-ViE-1080p-AMZN-WEB-DL-DDP5-1-H-264-FLUX.mkv?rlkey=rd0xg0srn17e5b2v4j8728pfj&st=a5n0e5he&dl=0&dl=1"
+},
+{
+    "id": 399174,
+    "title": "Đảo Của Những Chú Chó",
+    "original_title": "Isle of Dogs",
+    "overview": "Ở thế giới xã hội giả tưởng đặt bối cảnh tại thành phố Megasaki, Nhật Bản, khi tất cả loài chó bị 'trục xuất' đến một hòn đảo hoang vì cho rằng chúng mang mầm bệnh nguy hiểm. Câu chuyện của bộ phim mở ra khi cậu bé Atari Kobayashi 12 tuổi vô tình lạc mất chú chó cưng tên Spot và cậu bắt đầu cuộc hành trình đi tìm kiếm người bạn thân này của mình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/wzMRUnlmPwzII2q26pRmEtY5CY3.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/oNPoo0xR9CMNYoHX8PIyVJNbQiq.jpg",
+    "release_date": "2018-03-23",
+    "vote_average": 7.844,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/m4cqyhd746upudnzanvhe/Isle.of.Dogs.2018.1080p.BluRay.DTS.x264-TayTO.mkv?rlkey=v0vadem4qwxnm092rlzs9cbgj&st=nj7fkohd&dl=0&dl=1"
+},
+{
+    "id": 1305653,
+    "title": "Giải Cứu Đông Cực Đảo",
+    "original_title": "东极岛",
+    "overview": "Trong Thế chiến II, tại vùng biển gần Chu Sơn, Trung Quốc, một tàu chở hàng Nhật Bản chở tù binh chiến tranh Anh đã bị đánh chìm, khiến hàng ngàn người bị quân đội Nhật Bản mắc kẹt bên trong. Trong tình thế tuyệt vọng này, một nhóm ngư dân từ đảo Đông Tế đã không ngần ngại tiến lên. Được thúc đẩy bởi lòng tốt, lòng dũng cảm và tinh thần kiên cường, họ đã dũng cảm vượt qua biển cả dữ dội để mở ra con đường sống sót cho những tù binh bị mắc kẹt.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/yt520l7fu3CkvoyH6255xpxjOl.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/k42B99QoaXB9u8H4TeyT7dU1bdD.jpg",
+    "release_date": "2025-08-08",
+    "vote_average": 6.8,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/cn2322svyd072lujjzmog/Dongji.Rescue.2025.ViE.2160p.WEB-DL.H265.HQ.DTS5.1-PandaQT.mkv?rlkey=ko9os2hjq6jolad9pbjqt8cf5&st=hcva39q2&dl=0&dl=1"
+},
+{
+    "id": 1214684,
+    "title": "Nụ Hôn Người Nhện Nữ",
+    "original_title": "Kiss of the Spider Woman",
+    "overview": "Trong một nhà tù ở Buenos Aires, hai người đàn ông cùng chung phòng giam: Molina — một người đồng tính ám ảnh với các bộ phim tình cảm và giả tưởng, và Valentín — một nhà hoạt động cách mạng chính trị. Giữa không gian ngột ngạt ấy, Molina kể cho Valentín nghe về bộ phim “Người Đàn Bà Nhện,” dần dần xóa nhòa khoảng cách giữa họ. Qua tình bạn, lòng trắc ẩn và một nụ hôn bất ngờ, cả hai phải đối diện với tình yêu, sự phản bội, và những câu hỏi sâu sắc về tự do cũng như ý nghĩa tồn tại.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/c8zDeDq0Uatjly6Fh4ycmWuoLYy.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/mW7L8SV1fMxT01xWyX5lfzcF5mH.jpg",
+    "release_date": "2025-10-09",
+    "vote_average": 6.063,
+    "dropbox_link": "Kiss.of.the.Spider.Woman.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv?dl=1"
+},    
+{
+    "id": 378064,
+    "title": "Dáng Hình Thanh Âm",
+    "original_title": "映画 聲の形",
+    "overview": "Nishimiya Shouko, một cô bé bị điếc từ nhỏ, đã chuyển trường vào lớp của cậu bé Ishida Shouya. Để thỏa mãn sự tò mò của mình, cậu bé Shouya đã khơi mào trò bắt nạt Shouko vì tật khiếm thính. Trong một lần bắt nạt quá đà, Shouko đã bị chảy máu tai, và sau đó cô bé phải tiếp tục chuyển trường. Shouya, thay cho Shouko, bị cả lớp tẩy chay và bắt nạt. Mãi cho tới khi bước vào cao trung, Shouya, bị hành hạ và ân hận bởi những gì mình đã làm trong quá khứ, quyết định rằng cậu phải gặp lại Shouko một lần nữa. Shouya muốn bù đắp lại những tổn thương mà cậu đã gây ra cho Shouko và thực lòng muốn làm bạn với cô bé.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/aqri8up06zMaCn0oyYcZporiwj3.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/5lAMQMWpXMsirvtLLvW7cJgEPkU.jpg",
+    "release_date": "2016-09-17",
+    "vote_average": 8.386,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/agm5ixxcp3shwks5hieoz/A-Silent-Voice-2016-JPN-Hybrid-1080p-Blu-Ray-AVC-DTS-HD-MA-BluDragon.mkv?rlkey=ldyg8xdvbl9vbswlqzk8jwfrj&st=yvi5plit&dl=0&dl=1"
+},
+{
+    "id": 1561969,
+    "title": "Baramulla",
+    "original_title": "बारामूला",
+    "overview": "Điều tra về vụ bắt cóc trẻ em, viên cảnh sát nọ lật mở những bí mật rùng rợn khi hàng loạt sự kiện siêu nhiên đe dọa gia đình anh và thị trấn yên bình Baramulla.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/2raITTyjXVUcsbJ7lJAQt8HzjDK.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ajIRfvb5MkpH8spMJ5OCyg2enVS.jpg",
+    "release_date": "2025-11-06",
+    "vote_average": 5.667,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/aogcyr65updnx0etu49yb/Baramulla.2025.1080p.NF.WEB-DL.DUAL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=f441u8q2ah9wfmq4a2uozzj3i&st=i0m8vpfu&dl=0&dl=1"
+},
+{
+    "id": 1287536,
+    "title": "Dora và Hành Trình Tìm Thành Phố Vàng",
+    "original_title": "Dora and the Search for Sol Dorado",
+    "overview": "Dora and the Search for Sol Dorado (2025) là cuộc phiêu lưu mới của Dora tuổi teen cùng anh họ Diego và nhóm bạn vào rừng Amazon để tìm thành phố vàng huyền thoại Sol Dorado. Họ phải vượt qua cạm bẫy, đối đầu lính đánh thuê và khám phá sức mạnh bản thân.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/r3d6u2n7iPoWNsSWwlJJWrDblOH.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/9A0wQG38VdEu3DYh8HzXKXKhA6g.jpg",
+    "release_date": "2025-07-02",
+    "vote_average": 6.606,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/3978rvwltgnanfbz76wwi/Dora.and.The.Search.for.Sol.Dorado.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-KITSUNE-Sub-Viet.mkv?rlkey=2wbj4zqwtlq6s1u74k6lfr1sb&st=d9g9l8is&dl=0&dl=1"
+},
+{
+    "id": 1042834,
+    "title": "Vườn Địa Đàng",
+    "original_title": "Eden",
+    "overview": "Vì khao khát thay đổi sâu sắc, một nhóm người đã rời bỏ xã hội để tự kiến tạo tương lai mới giữa vùng đất khắc nghiệt của quần đảo Galápagos.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/jbFEESMVbpJU8IjZBjiWGJdEsxR.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/rz8NcfTRczvn94vpnmMx42zt6EC.jpg",
+    "release_date": "2025-04-03",
+    "vote_average": 6.736,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/glqiru577hmroooxr4m5v/Eden.2024.1080p.Bluray.DTS-HDMA5.1.x264-CHD-Sub-Viet.mkv?rlkey=0n2i8b62ubqf2jy82wa5kjvdf&st=4f4iqut6&dl=0&dl=1"
+},
+{
+    "id": 1233069,
+    "title": "Ngoài lãnh thổ",
+    "original_title": "Exterritorial",
+    "overview": "Khi con trai mất tích bên trong lãnh sự quán Hoa Kỳ, cựu lính đặc nhiệm Sara đã làm mọi cách để tìm kiếm con mình... và rồi phát hiện ra một âm mưu đen tối.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/myobUMFqh0h8E72Uw4dRFnJ3t9w.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/14UFWFJsGeInCbhTiehRLTff4Yx.jpg",
+    "release_date": "2025-04-29",
+    "vote_average": 6.613,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/u41ttessp5zroybd01bv6/Exterritorial.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=4m4iy4bvll6md8wrop75x3ed6&st=y4q1f1d5&dl=0&dl=1"
+},
+{
+    "id": 1138194,
+    "title": "Kẻ Dị Giáo",
+    "original_title": "Heretic",
+    "overview": "Hai nhà truyền giáo trẻ tuổi buộc phải chứng minh đức tin của mình khi gõ nhầm cửa và được chào đón bởi ông Reed độc ác, rồi bị mắc kẹt trong trò chơi mèo vờn chuột chết chóc của ông ta.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/fr96XzlzsONrQrGfdLMiwtQjott.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ag66gJCiZ06q1GSJuQlhGLi3Udx.jpg",
+    "release_date": "2024-10-31",
+    "vote_average": 6.975,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/3efbfug2ymgiw0dswsimx/Heretic.2024.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=37spb2ydu9kjkoz75jxozbqw4&st=gqjjupec&dl=0&dl=1"
+},
+{
+    "id": 1117857,
+    "title": "Cuộc phiêu lưu trong giấc mộng",
+    "original_title": "In Your Dreams",
+    "overview": "Stevie cùng em trai Elliot phiêu lưu vào khung cảnh vô cùng phi lý trong giấc mơ của chính họ để thỉnh cầu Người cát ban cho họ một gia đình hoàn hảo.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ug0TqgmByPCEYzR9lQWQmyAa7sw.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/pU9cz8mZjzwyPAcJDPXBlK99BoR.jpg",
+    "release_date": "2025-11-07",
+    "vote_average": 7.056,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/0o11no6rbi576p61nvr0k/In.Your.Dreams.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-Kitsune.mkv?rlkey=88m2ozt3ld0mq5t2uva37rkvp&st=ggcbgq5h&dl=0&dl=1"
+},
 {
     "id": 619930,
     "title": "Narvik",
