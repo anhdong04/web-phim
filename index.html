@@ -3,322 +3,386 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kho Phim Dropbox</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- 1. CẤU HÌNH CHUNG --- */
+        /* --- 1. CẤU HÌNH GIAO DIỆN --- */
         :root {
-            --primary-red: #e50914;
-            --bg-color: #141414;
-            --card-bg: #1f1f1f;
-            --text-color: #ffffff;
-            --donate-color: #ffc107;
-            --play-color: #28a745;
+            --primary: #f5c518;
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-white: #ffffff;
+            --text-gray: #b3b3b3;
         }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-white); 
+            font-family: 'Montserrat', sans-serif;
+            margin: 0; padding: 0; 
+            overflow-x: hidden;
         }
 
-        /* --- 2. HEADER & SEARCH & DONATE --- */
-        .header {
-            display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; gap: 15px;
+        /* --- 2. NAVBAR --- */
+        .navbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px 50px; position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
+            transition: background 0.3s;
         }
-        .header h1 { color: var(--primary-red); margin: 0; text-transform: uppercase; letter-spacing: 2px;}
-
-        .controls {
-            display: flex; gap: 10px; width: 100%; max-width: 600px; justify-content: center;
-        }
-
-        .search-bar {
-            padding: 12px 20px; width: 100%; border-radius: 30px; border: 1px solid #333; outline: none;
-            background: #333; color: white; font-size: 16px; transition: 0.3s;
-        }
-        .search-bar:focus { border-color: var(--primary-red); background: #444; }
-
-        .donate-btn {
-            background: var(--donate-color); color: #000; padding: 0 20px; border: none; border-radius: 30px;
-            font-weight: bold; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 8px; white-space: nowrap;
-        }
-        .donate-btn:hover { background: #ffdb4d; transform: scale(1.05); }
-
-        /* --- 3. LƯỚI PHIM --- */
-        .grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px;
-            max-width: 1200px; margin: 0 auto;
-        }
-
-        .card {
-            background: var(--card-bg); border-radius: 8px; overflow: hidden; position: relative;
-            transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.3); display: flex; flex-direction: column;
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.8); }
-
-        .rating-badge {
-            position: absolute; top: 10px; right: 10px; background: rgba(0, 0, 0, 0.7); color: var(--donate-color);
-            padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; z-index: 2;
-            backdrop-filter: blur(2px); border: 1px solid var(--donate-color);
-        }
-
-        .poster-container { position: relative; cursor: pointer; overflow: hidden; aspect-ratio: 2/3;}
-        .poster { width: 100%; height: 100%; object-fit: cover; transition: 0.3s;}
-        .card:hover .poster { transform: scale(1.05); filter: brightness(1.1); }
-
-        .info { padding: 12px; display: flex; flex-direction: column; flex-grow: 1; }
-        .title { font-size: 15px; font-weight: bold; margin: 0 0 5px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .year { font-size: 13px; color: #aaa; margin-bottom: 10px;}
-        .download-btn-card {
-            margin-top: auto; display: block; text-align: center; background: #333; color: white; 
-            text-decoration: none; padding: 8px; border-radius: 4px; font-size: 13px; transition: 0.2s;
-        }
-        .download-btn-card:hover { background: #555; }
-
-        /* --- 4. MODAL & PLAYER --- */
-        .modal-overlay {
-            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.95); backdrop-filter: blur(5px);
-            justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
-            animation: fadeIn 0.2s ease;
-        }
-        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
-        @keyframes slideUp { from {transform: translateY(20px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
-
-        .close-btn {
-            position: absolute; top: 15px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; z-index: 100; transition: 0.2s;
-        }
-        .close-btn:hover { color: var(--primary-red); }
-
-        .modal-movie-content {
-            background-color: #1f1f1f; border-radius: 12px; max-width: 900px; width: 100%;
-            display: flex; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.9); position: relative;
-            animation: slideUp 0.3s ease;
-        }
-
-        .media-area { width: 50%; position: relative; background: #000; display: flex; align-items: center; justify-content: center;}
-        .modal-poster { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .video-player { width: 100%; height: 100%; display: none; } 
+        .navbar.scrolled { background: #0f0f0f; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         
-        .modal-info { padding: 30px; width: 50%; box-sizing: border-box; display: flex; flex-direction: column; color: #fff;}
-        .modal-title { margin: 0 0 10px 0; font-size: 2rem; color: var(--primary-red); }
-        .modal-meta { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; }
-        .modal-overview { line-height: 1.6; color: #ddd; flex-grow: 1; overflow-y: auto; max-height: 250px; padding-right: 10px; margin-bottom: 20px;}
+        .logo { color: var(--text-white); font-size: 28px; font-weight: 900; display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none;}
+        .logo i { color: var(--primary); }
+        .search-container { flex: 1; max-width: 500px; margin: 0 40px; position: relative; }
+        .search-input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px 10px 45px; border-radius: 30px; color: white; outline: none; transition: 0.3s; }
+        .search-input:focus { background: rgba(0,0,0,0.8); border-color: var(--primary); }
+        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; }
+        .nav-right { display: flex; gap: 20px; align-items: center; font-size: 14px; font-weight: bold;}
+
+        /* --- 3. HERO BANNER --- */
+        .hero-section {
+            position: relative; width: 100%; height: 95vh;
+            background-size: cover; background-position: center top; 
+            display: flex; align-items: center; transition: background-image 0.5s ease-in-out;
+        }
+        .hero-overlay {
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 70% 20%, transparent 0%, #0f0f0f 120%),
+                        linear-gradient(to right, #0f0f0f 30%, transparent 100%),
+                        linear-gradient(to top, #0f0f0f 15%, transparent 40%);
+        }
+        .hero-content { position: relative; z-index: 10; width: 50%; padding-left: 60px; margin-top: -60px; }
+        .hero-title { font-size: 4rem; font-weight: 900; line-height: 1; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,0,0,0.8); }
+        .hero-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 25px; font-size: 14px; color: #ccc; }
+        .tag { border: 1px solid rgba(255,255,255,0.4); padding: 4px 10px; border-radius: 4px; }
+        .tag-res { background: var(--primary); color: black; border: none; font-weight: bold; }
+        .hero-desc { font-size: 1.1rem; color: #ccc; line-height: 1.6; margin-bottom: 40px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; width: 90%; }
+        .hero-actions { display: flex; gap: 20px; align-items: center; }
+        .btn-circle-play { width: 70px; height: 70px; border-radius: 50%; background: var(--primary); color: #000; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(245, 197, 24, 0.4); animation: pulse-yellow 2s infinite; }
+        .btn-circle-play:hover { transform: scale(1.1); background: #fff; }
+        .btn-action-text { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 30px; color: white; font-weight: bold; display: flex; align-items: center; gap: 10px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
         
-        .action-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;}
-        .btn-action {
-            padding: 12px 20px; border-radius: 5px; font-weight: bold; font-size: 1rem;
-            text-decoration: none; text-align: center; color: white; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .btn-play { background-color: var(--play-color); }
-        .btn-play:hover { background-color: #218838; }
-        .btn-download { background-color: var(--primary-red); }
-        .btn-download:hover { background-color: #ff0f1f; }
+        .hero-thumbnails { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 15px; padding: 10px 20px; background: rgba(0,0,0,0.6); border-radius: 15px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
+        .thumb-item { width: 70px; height: 100px; border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; border: 2px solid transparent; opacity: 0.6; }
+        .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
+        .thumb-item:hover { transform: translateY(-10px); opacity: 1; }
+        .thumb-item.active { border-color: var(--primary); transform: scale(1.15) translateY(-10px); opacity: 1; z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
-        /* MỚI: Style cho khung lưu ý */
-        .note-box {
-            background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3);
-            border-radius: 8px; padding: 12px; font-size: 0.85rem; color: #ddd;
-        }
-        .note-box strong { color: var(--donate-color); display: block; margin-bottom: 5px; font-size: 0.9rem;}
-        .note-box ul { margin: 0; padding-left: 20px; }
-        .note-box li { margin-bottom: 4px; }
+        /* --- 4. RANKING --- */
+        .ranking-section { padding: 40px 60px; background: #0f0f0f; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; border-bottom: 1px solid #222; }
+        .rank-column h3 { color: #ddd; font-size: 16px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        .rank-column h3 i { color: var(--primary); }
+        .rank-item { display: flex; align-items: center; gap: 15px; padding: 10px 0; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; }
+        .rank-item:hover { background: #1a1a1a; padding-left: 10px; border-radius: 5px;}
+        .rank-number { font-size: 24px; font-weight: bold; color: #444; width: 30px; text-align: center; }
+        .rank-item:nth-child(1) .rank-number { color: var(--primary); }
+        .rank-item:nth-child(2) .rank-number { color: #aaa; }
+        .rank-item:nth-child(3) .rank-number { color: #cd7f32; }
+        .rank-trend { font-size: 12px; }
+        .trend-up { color: #28a745; } .trend-down { color: #dc3545; }
+        .rank-img { width: 45px; height: 65px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+        .rank-info { overflow: hidden; }
+        .rank-title { font-size: 14px; font-weight: bold; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 5px 0;}
+        .rank-meta { font-size: 12px; color: #777; }
 
-        /* --- 5. DONATE --- */
-        .donate-content {
-            background: white; color: #333; border-radius: 12px; padding: 30px; text-align: center;
-            max-width: 380px; width: 100%; position: relative; animation: slideUp 0.3s ease;
+        /* --- 5. GRID & TOTAL COUNT (CẬP NHẬT) --- */
+        .section-container { padding: 50px 60px; position: relative; z-index: 2; background: var(--bg-dark); }
+        .section-header { display: flex; align-items: center; margin-bottom: 25px; font-size: 24px; font-weight: 700; color: #fff; border-left: 5px solid var(--primary); padding-left: 15px; }
+        
+        /* Badge số lượng phim */
+        #total-movies-badge {
+            font-size: 14px; background: #222; color: #aaa; padding: 5px 12px; 
+            border-radius: 20px; margin-left: 15px; font-weight: normal; 
+            border: 1px solid #333; display: inline-flex; align-items: center; gap: 5px;
         }
-        .donate-qr { width: 100%; border-radius: 8px; border: 1px solid #ddd; margin: 15px 0;}
-        .bank-info { background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: left; font-size: 14px;}
-        .bank-row { display: flex; justify-content: space-between; margin-bottom: 8px; border-bottom: 1px dashed #ddd; padding-bottom: 5px;}
-        .copy-btn { color: var(--primary-red); cursor: pointer; font-weight: bold; margin-left: 5px;}
+
+        .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
+        .movie-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; transition: 0.3s; cursor: pointer; position: relative; }
+        .movie-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        .rating-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; border: 1px solid var(--primary); z-index: 2; }
+        .card-info { padding: 15px; }
+        .card-title { margin: 0; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-year { font-size: 12px; color: var(--text-gray); margin-top: 5px; }
+
+        /* --- 6. FOOTER --- */
+        footer { background-color: #050505; padding: 60px 50px 30px 50px; color: #ccc; position: relative; overflow: hidden; border-top: 1px solid #222; }
+        .footer-watermark { position: absolute; top: 50%; right: -50px; transform: translateY(-50%); font-size: 400px; color: rgba(255,255,255,0.02); z-index: 0; pointer-events: none; }
+        .footer-content { position: relative; z-index: 1; max-width: 1200px; }
+        .badge-vn { display: inline-flex; align-items: center; gap: 8px; background: #b71c1c; color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 20px; }
+        .badge-vn i { color: #FFFF00; }
+        .footer-logo { font-size: 32px; font-weight: 900; color: white; display: flex; align-items: center; gap: 10px; margin-bottom: 20px;}
+        .footer-logo i { color: var(--primary); }
+        .social-list { display: flex; gap: 10px; margin-bottom: 30px; }
+        .social-item { width: 35px; height: 35px; border-radius: 50%; background: #222; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: 0.3s; cursor: pointer; text-decoration: none; }
+        .social-item:hover { background: var(--primary); color: #000; }
+        .footer-links { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; font-size: 14px; font-weight: 600; color: #ddd;}
+        .footer-links a { color: #ddd; text-decoration: none; transition: 0.2s; }
+        .footer-links a:hover { color: var(--primary); }
+        .copyright { font-size: 13px; color: #555; border-top: 1px solid #1a1a1a; padding-top: 20px; margin-top: 20px;}
+
+        /* --- 7. BUTTONS --- */
+        .floating-group { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 999; }
+        .donate-fab { width: 50px; height: 50px; background: linear-gradient(135deg, #FFD700, #FF8C00); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4); cursor: pointer; transition: transform 0.3s; animation: float 3s ease-in-out infinite; }
+        .donate-fab i { font-size: 24px; color: #fff; }
+        .donate-fab:hover { transform: scale(1.1) rotate(10deg); }
+        .up-btn { width: 50px; height: 50px; background: #222; border: 2px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s; }
+        .up-btn:hover { background: var(--primary); }
+        .up-btn:hover i { color: #000; }
+        .up-btn i { color: var(--primary); font-size: 24px; }
+
+        /* --- 8. MODAL --- */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
+        .modal-box { background: #181818; width: 800px; max-width: 90%; height: 500px; border-radius: 15px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative;}
+        .modal-img { width: 40%; object-fit: cover; }
+        .modal-info { padding: 40px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .modal-title { font-size: 2.5rem; font-weight: 900; color: var(--primary); margin: 0 0 10px 0; line-height: 1.1; }
+        .modal-meta { color: #ccc; margin-bottom: 20px; font-size: 0.9rem; }
+        .modal-desc { color: #aaa; line-height: 1.6; margin-bottom: 30px; overflow-y: auto; max-height: 150px; }
+        .btn-download-large { background: var(--primary); color: #000; font-weight: 900; text-decoration: none; padding: 15px; border-radius: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; transition: 0.3s; }
+        .btn-download-large:hover { background: #fff; transform: scale(1.02); }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #fff; cursor: pointer; z-index: 10; }
+        .donate-box { background: white; padding: 30px; border-radius: 15px; text-align: center; position: relative; max-width: 350px; }
+        .donate-box h2 { color: #e50914; margin: 0 0 15px 0; }
+        .donate-qr { width: 100%; border-radius: 10px; border: 1px solid #ddd; }
 
         @media (max-width: 768px) {
-            .modal-movie-content { flex-direction: column; max-height: 90vh; overflow-y: auto;}
-            .media-area { width: 100%; height: 250px; }
-            .modal-info { width: 100%; padding: 20px; }
-            .controls { flex-direction: column-reverse;}
+            .navbar { padding: 15px 20px; }
+            .hero-title { font-size: 2.5rem; }
+            .hero-content { width: 90%; padding-left: 20px; margin-top: 0; }
+            .hero-thumbnails { display: none; }
+            .ranking-section { grid-template-columns: 1fr; padding: 20px; }
+            .section-container { padding: 30px 20px; }
+            .modal-box { flex-direction: column; height: auto; max-height: 90vh; overflow-y: auto; }
+            .modal-img { width: 100%; height: 200px; }
+            .modal-info { padding: 20px; }
+            .nav-right { display: none; }
         }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes pulse-yellow { 0% { box-shadow: 0 0 0 0 rgba(245, 197, 24, 0.7); } 70% { box-shadow: 0 0 0 20px rgba(245, 197, 24, 0); } 100% { box-shadow: 0 0 0 0 rgba(245, 197, 24, 0); } }
+        @keyframes fadeIn { from{opacity:0} to{opacity:1}}
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>🎬 MY CINEMA</h1>
-        <div class="controls">
-            <input type="text" id="search" class="search-bar" placeholder="Tìm tên phim...">
-            <button class="donate-btn" onclick="openDonate()"><i class="fas fa-coffee"></i> Donate Admin</button>
+    <nav class="navbar" id="navbar">
+        <a href="#" class="logo"><i class="fas fa-play-circle"></i> DOWNCINE</a>
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Tìm kiếm phim, diễn viên...">
+        </div>
+        <div class="nav-right">
+            <span class="nav-item" style="color:var(--primary)">VIP</span>
+        </div>
+    </nav>
+
+    <div class="hero-section" id="hero-bg">
+        <div class="hero-overlay"></div>
+        <div class="hero-content" id="hero-content">
+            <h1 class="hero-title" id="hero-title">LOADING...</h1>
+            <div class="hero-meta">
+                <span class="tag tag-res">4K</span>
+                <span class="tag">T18</span>
+                <span class="tag" id="hero-year">2025</span>
+                <span>⭐ <span id="hero-rating"></span></span>
+            </div>
+            <p class="hero-desc" id="hero-desc">...</p>
+            <div class="hero-actions">
+                <div class="btn-circle-play" id="hero-play-btn" title="Xem chi tiết">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="btn-action-text"><i class="fas fa-heart"></i> Thêm vào yêu thích</div>
+            </div>
+        </div>
+        <div class="hero-thumbnails" id="hero-thumbs"></div>
+    </div>
+
+    <div class="ranking-section">
+        <div class="rank-column">
+            <h3><i class="fas fa-fire-alt"></i> Sôi Nổi Nhất (Top Rated)</h3>
+            <div id="rank-trending"></div>
+        </div>
+        <div class="rank-column">
+            <h3><i class="fas fa-heart"></i> Mới Cập Nhật</h3>
+            <div id="rank-newest"></div>
+        </div>
+        <div class="rank-column">
+            <h3><i class="fas fa-thumbs-up"></i> Hôm Nay Xem Gì?</h3>
+            <div id="rank-random"></div>
         </div>
     </div>
 
-    <div class="grid" id="movie-grid"></div>
+    <div class="section-container">
+        <div class="section-header">
+            Kho Phim Đầy Đủ
+            <span id="total-movies-badge">...</span>
+        </div>
+        <div class="movie-grid" id="movie-grid"></div>
+    </div>
+
+    <footer>
+        <i class="fas fa-play-circle footer-watermark"></i>
+        <div class="footer-content">
+            <div class="badge-vn"><i class="fas fa-star"></i> Hoàng Sa & Trường Sa là của Việt Nam!</div>
+            <div class="footer-logo"><i class="fas fa-play-circle"></i> RoPhim </div>
+            <div class="social-list">
+                <a href="#" class="social-item"><i class="fab fa-telegram-plane"></i></a>
+                <a href="#" class="social-item"><i class="fab fa-discord"></i></a>
+                <a href="#" class="social-item"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-item"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-item"><i class="fab fa-tiktok"></i></a>
+                <a href="#" class="social-item"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div class="copyright">© 2024 DOWNPHIM</div>
+        </div>
+    </footer>
+
+    <div class="floating-group">
+        <div class="donate-fab" onclick="document.getElementById('donateModal').style.display='flex'" title="Donate Admin"><i class="fas fa-gift"></i></div>
+        <div class="up-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Lên đầu trang"><i class="fas fa-arrow-up"></i></div>
+    </div>
 
     <div id="movieModal" class="modal-overlay">
-        <div class="modal-movie-content">
-            <span class="close-btn" onclick="closeMovie()" style="color: #fff">&times;</span>
-            
-            <div class="media-area">
-                <img src="" alt="" class="modal-poster" id="modalPoster">
-                <video controls class="video-player" id="modalVideoPlayer" controlsList="nodownload">
-                    <source src="" type="video/mp4" id="videoSource">
-                    Trình duyệt không hỗ trợ thẻ video.
-                </video>
-            </div>
-
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <img src="" id="modalPoster" class="modal-img">
             <div class="modal-info">
-                <h2 class="modal-title" id="modalTitle"></h2>
+                <h2 class="modal-title" id="modalTitle">TITLE</h2>
                 <div class="modal-meta">
-                    <span id="modalYear"></span> | ⭐ <span id="modalRating"></span>/10
+                    Năm: <span id="modalYear" style="color:white"></span> | 
+                    Điểm: <span id="modalRating" style="color:var(--primary)"></span>
                 </div>
-                <p class="modal-overview" id="modalOverview"></p>
-                
-                <div class="action-buttons">
-                    <div class="btn-action btn-play" onclick="playMovie()">
-                        <i class="fas fa-play"></i> XEM NGAY
-                    </div>
-                    <a href="#" class="btn-action btn-download" id="modalDownload">
-                        <i class="fas fa-download"></i> TẢI VỀ
-                    </a>
-                </div>
-
-                <div class="note-box">
-                    <strong><i class="fas fa-exclamation-triangle"></i> Lưu ý khi xem Online:</strong>
-                    <ul>
-                        <li>Tốc độ load phim phụ thuộc vào Server Dropbox (có thể chậm vào giờ cao điểm).</li>
-                        <li>Nếu video bị đứng hoặc mất tiếng (do lỗi định dạng), vui lòng bấm nút <b>TẢI VỀ</b> để xem mượt mà trên máy.</li>
-                    </ul>
-                </div>
-
+                <p class="modal-desc" id="modalDesc"></p>
+                <a href="#" id="modalLink" class="btn-download-large" target="_blank">
+                    <i class="fas fa-download"></i> TẢI VỀ (LINK DROPBOX)
+                </a>
             </div>
         </div>
     </div>
 
-    <div id="donateModal" class="modal-overlay">
-        <div class="donate-content">
-            <span class="close-btn" onclick="closeDonate()" style="color: #333">&times;</span>
-            <h2 style="margin:0; color:#e50914; font-size: 1.5rem;">ỦNG HỘ ADMIN</h2>
-            <p style="font-size: 13px; color: #666; margin-bottom: 10px;">Mời mình 1 ly cafe nhé! ❤️</p>
-            
-            <img src="https://img.vietqr.io/image/BIDV-2170836028-compact.jpg" class="donate-qr" alt="QR Code">
-
-            <div class="bank-info">
-                <div class="bank-row">
-                    <span>Ngân hàng:</span> <strong>BIDV</strong>
-                </div>
-                <div class="bank-row">
-                    <span>Số tài khoản:</span>
-                    <span>
-                        <strong id="stk-number">2170836028</strong>
-                        <span class="copy-btn" onclick="copySTK()">[COPY]</span>
-                    </span>
-                </div>
-                <div class="bank-row">
-                    <span>Chủ TK:</span> <strong>DONG DUY ANH</strong>
-                </div>
-            </div>
+    <div id="donateModal" class="modal-overlay" onclick="if(event.target==this)this.style.display='none'">
+        <div class="donate-box">
+            <span class="close-modal" onclick="document.getElementById('donateModal').style.display='none'" style="color:#333; top:10px; right:15px">&times;</span>
+            <h2>DONATE ADMIN</h2>
+            <img src="https://img.vietqr.io/image/BIDV-2170836028-compact.jpg" class="donate-qr">
+            <p style="color:#333; margin-top:10px"><b>BIDV: 2170836028</b><br>DONG DUY ANH</p>
+            <p style="font-size:12px; color:#666">Cảm ơn bạn đã ủng hộ web!</p>
         </div>
     </div>
 
     <script src="movies.js"></script>
     <script>
-        const grid = document.getElementById('movie-grid');
-        const searchInput = document.getElementById('search');
-        const movieModal = document.getElementById('movieModal');
-        const donateModal = document.getElementById('donateModal');
-        
-        const modalPoster = document.getElementById('modalPoster');
-        const modalVideo = document.getElementById('modalVideoPlayer');
-        const videoSource = document.getElementById('videoSource');
-        let currentDropboxLink = "";
+        let sliderMovies = [];
+        let autoSlideInterval;
 
-        // 1. RENDER
-        function render(list) {
-            grid.innerHTML = list.map(movie => {
-                const year = movie.release_date ? movie.release_date.split('-')[0] : 'N/A';
-                const rating = movie.vote_average ? movie.vote_average.toFixed(1) : '0.0';
-
-                return `
-                <div class="card">
-                    <div class="rating-badge"><i class="fas fa-star"></i> ${rating}</div>
-                    <div class="poster-container" onclick="openMovie(${movie.id})">
-                        <img src="${movie.poster_path}" class="poster" loading="lazy" alt="${movie.title}">
+        function initHero() {
+            if(typeof movieList !== 'undefined' && movieList.length > 0) {
+                sliderMovies = movieList.slice(0, 5); 
+                setHero(0);
+                const thumbContainer = document.getElementById('hero-thumbs');
+                thumbContainer.innerHTML = sliderMovies.map((m, index) => `
+                    <div class="thumb-item ${index === 0 ? 'active' : ''}" onclick="manualSelectHero(${index})">
+                        <img src="${m.poster_path}" loading="lazy">
                     </div>
-                    <div class="info">
-                        <h3 class="title">${movie.title}</h3>
-                        <div class="year">${year}</div>
-                        <a href="${movie.dropbox_link}" class="download-btn-card"><i class="fas fa-download"></i> Tải nhanh</a>
+                `).join('');
+                startAutoSlide();
+            }
+        }
+
+        function setHero(index) {
+            const m = sliderMovies[index];
+            const bg = m.backdrop_path || m.poster_path;
+            document.getElementById('hero-bg').style.backgroundImage = `url('${bg}')`;
+            document.getElementById('hero-title').innerText = m.title;
+            document.getElementById('hero-year').innerText = m.release_date ? m.release_date.split('-')[0] : 'N/A';
+            document.getElementById('hero-rating').innerText = m.vote_average || 'N/A';
+            document.getElementById('hero-desc').innerText = m.overview;
+            document.getElementById('hero-play-btn').onclick = () => openModal(m.id);
+            const thumbs = document.querySelectorAll('.thumb-item');
+            thumbs.forEach(t => t.classList.remove('active'));
+            if(thumbs[index]) thumbs[index].classList.add('active');
+        }
+
+        function manualSelectHero(index) { setHero(index); resetAutoSlide(); }
+        function startAutoSlide() { let i = 0; autoSlideInterval = setInterval(() => { i = (i + 1) % sliderMovies.length; setHero(i); }, 5000); }
+        function resetAutoSlide() { clearInterval(autoSlideInterval); startAutoSlide(); }
+
+        function renderRankingItem(movie, index, type) {
+            const isUp = Math.random() > 0.3; 
+            const trendIcon = isUp ? '<i class="fas fa-chart-line trend-up"></i>' : '<i class="fas fa-sort-down trend-down"></i>';
+            const extraInfo = type === 'rating' ? `⭐ ${movie.vote_average}` : (movie.release_date || '2025');
+            return `
+            <div class="rank-item" onclick="openModal(${movie.id})">
+                <div class="rank-number">${index + 1}.</div>
+                <div class="rank-trend">${trendIcon}</div>
+                <img src="${movie.poster_path}" class="rank-img">
+                <div class="rank-info">
+                    <p class="rank-title">${movie.title}</p>
+                    <span class="rank-meta">${extraInfo}</span>
+                </div>
+            </div>`;
+        }
+
+        function initRankings() {
+            if(typeof movieList === 'undefined' || movieList.length === 0) return;
+            const topRated = [...movieList].sort((a, b) => b.vote_average - a.vote_average).slice(0, 5);
+            document.getElementById('rank-trending').innerHTML = topRated.map((m, i) => renderRankingItem(m, i, 'rating')).join('');
+            const newest = movieList.slice(0, 5); 
+            document.getElementById('rank-newest').innerHTML = newest.map((m, i) => renderRankingItem(m, i, 'date')).join('');
+            const shuffled = [...movieList].sort(() => 0.5 - Math.random()).slice(0, 5);
+            document.getElementById('rank-random').innerHTML = shuffled.map((m, i) => renderRankingItem(m, i, 'rating')).join('');
+        }
+
+        function renderGrid(list) {
+            const grid = document.getElementById('movie-grid');
+            grid.innerHTML = list.map(m => `
+                <div class="movie-card" onclick="openModal(${m.id})">
+                    <div class="rating-badge">${m.vote_average || 0}</div>
+                    <img src="${m.poster_path}" class="poster" loading="lazy">
+                    <div class="card-info">
+                        <h3 class="card-title">${m.title}</h3>
+                        <div class="card-year">${m.release_date ? m.release_date.split('-')[0] : ''}</div>
                     </div>
                 </div>
-            `}).join('');
+            `).join('');
         }
 
-        // 2. LOGIC MODAL & PLAYER
-        function openMovie(movieId) {
-            const movie = movieList.find(m => m.id === movieId);
-            if (!movie) return;
-
-            modalPoster.style.display = 'block';
-            modalVideo.style.display = 'none';
-            modalVideo.pause();
-
-            modalPoster.src = movie.poster_path;
-            document.getElementById('modalTitle').innerText = movie.title;
-            document.getElementById('modalYear').innerText = movie.release_date ? movie.release_date.split('-')[0] : 'N/A';
-            document.getElementById('modalRating').innerText = movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A';
-            document.getElementById('modalOverview').innerText = movie.overview || "Chưa có mô tả.";
-            document.getElementById('modalDownload').href = movie.dropbox_link;
-            
-            currentDropboxLink = movie.dropbox_link;
-
-            movieModal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-
-        function playMovie() {
-            // Chuyển dl=0/1 thành raw=1 để stream
-            let streamLink = currentDropboxLink.replace('dl=0', 'raw=1').replace('dl=1', 'raw=1');
-            
-            modalPoster.style.display = 'none';
-            modalVideo.style.display = 'block';
-            
-            videoSource.src = streamLink;
-            modalVideo.load();
-            modalVideo.play();
-        }
-
-        function closeMovie() {
-            movieModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            modalVideo.pause();
-            videoSource.src = "";
-        }
-
-        // 3. DONATE
-        function openDonate() { donateModal.style.display = 'flex'; }
-        function closeDonate() { donateModal.style.display = 'none'; }
-        function copySTK() {
-            const stk = document.getElementById('stk-number').innerText;
-            navigator.clipboard.writeText(stk);
-            alert("Đã copy STK: " + stk);
-        }
-
-        window.onclick = function(event) {
-            if (event.target == movieModal) closeMovie();
-            if (event.target == donateModal) closeDonate();
-        }
-
-        searchInput.addEventListener('input', (e) => {
+        document.getElementById('search-input').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase();
             const filtered = movieList.filter(m => m.title.toLowerCase().includes(term));
-            render(filtered);
+            renderGrid(filtered);
+        });
+
+        const modal = document.getElementById('movieModal');
+        function openModal(id) {
+            const m = movieList.find(x => x.id === id); if(!m) return;
+            document.getElementById('modalPoster').src = m.poster_path;
+            document.getElementById('modalTitle').innerText = m.title;
+            document.getElementById('modalYear').innerText = m.release_date;
+            document.getElementById('modalRating').innerText = m.vote_average;
+            document.getElementById('modalDesc').innerText = m.overview;
+            document.getElementById('modalLink').href = m.dropbox_link;
+            modal.style.display = 'flex';
+        }
+        function closeModal() { modal.style.display = 'none'; }
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if(window.scrollY > 50) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
         });
 
         if(typeof movieList !== 'undefined') {
-            movieList.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
-            render(movieList);
+            // --- Hiển thị tổng số phim ---
+            document.getElementById('total-movies-badge').innerHTML = `<i class="fas fa-video"></i> ${movieList.length} phim`;
+            
+            initHero();
+            initRankings();
+            renderGrid(movieList);
         }
     </script>
 </body>
