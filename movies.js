@@ -766,4 +766,34 @@ const movieList = [
     "vote_average": 6.3,
     "dropbox_link": "https://www.dropbox.com/scl/fi/h2q6k5tripdltnzjekid4/Hele.vejen.2025.1080p.BluRay.DD5.1.x264-SbR.mkv?rlkey=daouulv4d82gsxjkdtgdxe88x&st=1in1qyxl&dl=0&dl=1"
 },
+{
+    "id": 524047,
+    "title": "Greenland: Thảm Họa Thiên Thạch",
+    "original_title": "Greenland",
+    "overview": "Trước thảm họa thiên thạch liên tiếp rơi xuống Trái đất và phá hủy tất cả mọi thứ nơi nó đi qua, John Garrity quyết tâm đưa vợ Allison, cùng con trai Nathan tìm đường trốn đến nơi trú ẩn an toàn - Greenland - hy vọng sống sót duy nhất của tất cả trước khi quá muộn. Mặt khác, họ phải cạnh tranh với những con người cũng đang tìm cách sinh tồn bằng mọi giá.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lHT3M3iZmXU03Jmf6xTMUFINuQK.jpg",
+    "release_date": "2020-07-29",
+    "vote_average": 7.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/tl2t3dre0kjgwircol14k/Greenland-2020-ViE-1080p-BluRay-DTS-HD-MA-5.1-x264-EVO-Thuyet-Minh-Sub-Viet.mkv?rlkey=n9ggj2kqh6zx4cd2iz9jkrxov&st=603kua1i&dl=0&dl=1"
+},
+{
+    "id": 1488158,
+    "title": "Flower Girl",
+    "original_title": "Flower Girl",
+    "overview": "Dính lời nguyền vì xúc phạm một người phụ nữ chuyển giới, Ena mất đi 'vật quý' giữa hai chân và phải tìm được tình yêu đích thực để phá bỏ lời nguyền trước khi mất nó mãi mãi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/6SBjaL1fldnpuctm5K5C0Gw2qPz.jpg",
+    "release_date": "2025-06-18",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/0uwlb4fm9kbx9imhtufmi/Flower-Girl-2025-2160p-WEB-DL-AAC-x264-Sub-Viet.mkv?rlkey=484nky0gb65lme09852qtuzd7&st=2i67jjgz&dl=0&dl=1"
+},
+{
+    "id": 1426083,
+    "title": "Kho Báu Escobar",
+    "original_title": "Escobank",
+    "overview": "Một nhóm tội phạm liều lĩnh kéo đến rừng Colombia để săn kho tiền mặt mà Pablo Escobar từng chôn giấu. Khi càng tiến sâu, tham vọng biến thành nghi kỵ, những bí mật của từng người lộ ra, và hành trình truy tìm kho báu nhanh chóng trở thành cuộc đấu sinh tử giữa chính các thành viên trong nhóm.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/5G0pPDxAKWgQy24NHBGl8LYPxIH.jpg",
+    "release_date": "2025-11-14",
+    "vote_average": 5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/gvjj7fi785gsls5gfrw39/Escobank.2025.ViE.AI.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv?rlkey=qip4pt58x0bdyuatl952z6qyq&st=vdprhj1w&dl=0&dl=1"
+},
 ];
