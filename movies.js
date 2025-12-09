@@ -416,4 +416,204 @@ const movieList = [
     "vote_average": 0,
     "dropbox_link": "https://www.dropbox.com/scl/fi/p3q28tg0yqwauh7d5a5vv/Im.Still.Here.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR-Vietsub-1.mkv?rlkey=t7xkr7brjhn4ycy0dyccyvmhd&st=b81b2lbd&dl=0&dl=1"
 },
+{
+    "id": 663442,
+    "title": "Thần Thám Địch Nhân Kiệt",
+    "original_title": "狄仁杰探案",
+    "overview": "Trong triều đại của Hoàng hậu Wu, có một số cái chết kỳ lạ ở kinh đô Trường An. Tin đồn về vụ sát hại 'Bức tranh tường nữ thần bay' ở Đền Tử Đạo ngày càng trở nên trầm trọng hơn. Di Renjie được lệnh điều tra vụ án. Anh ta phá vỡ bí ẩn của bức tranh tường dựa trên đặc điểm của Bài giảng hoa, dẫn đến kẻ sát nhân, Li Luoyu. Ngay sau đó, Li Luoyu tự sát. Sau nhiều lần điều tra, cuối cùng Di cũng tìm ra kẻ sát nhân thực sự.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cmLQpnDKIqNgfnZXeKh1cY70tVS.jpg",
+    "release_date": "2020-01-12",
+    "vote_average": 5.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/1kd0jdi1in8p7vn0hopju/Detection-Of-Di-Renjie-2020-ViE-1080P-WEBDL-x264-DD2.0-ThanThamDichNHanKiet.mkv?rlkey=rnv456zzv4i0dna85t592ag0i&st=u6n1w1u7&dl=0&dl=1"
+},
+{
+    "id": 9952,
+    "title": "Giải Cứu Lúc Bình Minh",
+    "original_title": "Rescue Dawn",
+    "overview": "Rescue Dawn (2006) có tựa đề tiếng Việt là Giải Cứu Lúc Bình Minh. Đây là một bộ phim chiến tranh - phiêu lưu do Werner Herzog đạo diễn, kể về hành trình sinh tồn của Dieter Dengler, một phi công Mỹ bị bắn rơi và bắt giữ trong Chiến tranh Việt Nam. Christian Bale vào vai Dengler, thể hiện sự kiên cường và quyết tâm của nhân vật khi phải đối mặt với điều kiện khắc nghiệt trong trại tù và tìm cách trốn thoát.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ymPlV2ymUBSctfRzpehFOxFmJiS.jpg",
+    "release_date": "2007-06-23",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/3zmn7vobvg5o28roiqhek/Rescue.Dawn.2006.1080p.BluRay.DTS.x264-Skazhutin-Vietsub.mkv?rlkey=bhtd8cxa1tnx123m2m9swh0n7&st=l75noimn&dl=0&dl=1"
+},
+{
+    "id": 1248226,
+    "title": "Buổi Hẹn Chơi",
+    "original_title": "Playdate",
+    "overview": "Brian vừa bị đuổi việc. Anh trở thành một ông bố nội trợ. Anh nhận lời mời đi chơi cùng một ông bố nội trợ khác, hóa ra lại là một gã vô lại.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/dOOcOlW4nxolR4JD3VuFUFi0B0a.jpg",
+    "release_date": "2025-11-05",
+    "vote_average": 6.168,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/0i9gu7wz9qx7tbv803haa/Playdate.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-playWEB.mkv?rlkey=ze804q66nryf994fkrm4ajbs4&st=shmfdvh1&dl=0&dl=1"
+},
+{
+    "id": 488616,
+    "title": "Ngày Không Còn Mẹ",
+    "original_title": "채비",
+    "overview": "In-gyu bị thiểu năng trí tuệ. Mẹ anh, Ae-soon, chăm sóc anh và luôn cằn nhằn anh. Một ngày nọ, cô được chẩn đoán mắc bệnh ung thư giai đoạn cuối và chuẩn bị cho sự tự lập của con trai mình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/5GfXdVVfBmYEhfB06dRSq2MAb6Q.jpg",
+    "release_date": "2017-11-09",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/u6jhm5gfgue6wu0dh17t4/The.Preparation.2017.ViE.1080p.TVING.WEB-DL.AAC2.0.H.264-PandaMoon-Vietsub-TM.mkv?rlkey=3yu67ms3x3fnwttbrtf13yx6h&st=itns0z2h&dl=0&dl=1"
+},
+{
+    "id": 1425122,
+    "title": "Muôn Kiểu Giáng Sinh Cùng Anh Em Nhà Jonas",
+    "original_title": "A Very Jonas Christmas Movie",
+    "overview": "Kevin, Nick và Joe Jonas phải đối mặt với hàng loạt rắc rối dở khóc dở cười khi họ chật vật tìm cách trở về New York từ London sao cho kịp đón Giáng Sinh cùng gia đình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/kGLgaDrYWmTAdRFzGP5pBquRnhO.jpg",
+    "release_date": "2025-11-10",
+    "vote_average": 6.23,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/g26707436q84jc5j37my4/A.Very.Jonas.Christmas.Movie.2025.1080p.DSNP.WEB-DL.DD5.1.Atmos.H.264-playWEB.mkv?rlkey=9znez501e3j7lw2vo5klwqk3g&st=2s923whf&dl=0&dl=1"
+},
+{
+    "id": 1388874,
+    "title": "Boss Ma'am",
+    "original_title": "Boss Ma'am",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/i2dtlAOk8OEFW8yM82h4Bp0BCUU.jpg",
+    "release_date": "2024-11-26",
+    "vote_average": 7.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/sbqg9f19e34a85wat34kn/Boss-Maam-2024-2160p-WEB-DL-AAC-x264-RSG.mkv?rlkey=0ax52srx8wq95k4bzdho7ff2l&st=v9in440a&dl=0&dl=1"
+},
+{
+    "id": 14160,
+    "title": "Vút Bay",
+    "original_title": "Up",
+    "overview": "Ông già Carl quyết hoàn thành chuyến đi ấp ủ cả đời tới Thác thiên đường bằng ngôi nhà kết hàng nghìn quả bóng bay. Ngay khi vừa 'cất cánh', ông phát hiện ra người đồng hành bất đắc dĩ: Cậu bé hướng đạo sinh Russell lắm mồm. Kể từ đây, cuộc phiêu lưu kì thú của 2 ông cháu diễn ra với biết bao bất ngờ cùng nguy hiểm rình rập...",
+    "poster_path": "https://image.tmdb.org/t/p/w500/y8zhQBzsNt7cyLdYkOdPnzOL9Ez.jpg",
+    "release_date": "2009-05-28",
+    "vote_average": 7.96,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/r144d3eeff884kd2wwms5/Up.2009.REPACK.1080p.UHD.BluRay.DD7.1.DoVi.x265-c0kE.mkv?rlkey=2pcxhg8981mryoaoelvxdj9ke&st=3o68dlea&dl=0&dl=1"
+},
+{
+    "id": 879600,
+    "title": "The Black Book",
+    "original_title": "The Black Book",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/j3J57RrKvOeGgbqtBzIvRTFF55Y.jpg",
+    "release_date": "2021-07-07",
+    "vote_average": 6.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/rtfx9i2omb8k2efh9s73q/The.Black.Book.2021.1080p.AMZN.WEB-DL.AAC2.0.H.264-EVO.mkv?rlkey=vg00eqmvolhx0k1nw5lankfvs&st=creaz2cs&dl=0&dl=1"
+},
+{
+    "id": 840326,
+    "title": "Sisu: Già Gân Báo Thù",
+    "original_title": "Sisu",
+    "overview": "Khi một cựu quân nhân phát hiện ra vàng ở vùng hoang dã Lapland cố gắng mang chiến lợi phẩm vào thành phố, những người lính Đức Quốc xã do một sĩ quan SS tàn bạo chỉ huy đã chiến đấu với anh ta.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/bUnhv3lAxVbXnPJ0N9fLVQ3m0zl.jpg",
+    "release_date": "2022-09-09",
+    "vote_average": 7.401,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/7tsz4qad2o5hozei77tzz/Sisu.2022.1080p.BluRay.DD5.1.x264-playHD_Vsub.mkv?rlkey=vis4ksiipp2gcm3dm51mylbyw&st=grfbyjhr&dl=0&dl=1"
+},
+{
+    "id": 639988,
+    "title": "Không Còn Lựa Chọn",
+    "original_title": "어쩔수가없다",
+    "overview": "Man Soo (Lee Byung Hun), một nhân viên văn phòng bỗng chốc bị sa thải khỏi một công ty mà anh đã gắn bó 25 năm, cuộc sống êm ấm vừa mới có được lại bị đảo ngược. Để chu toàn cho gia đình là vợ Mi Ri (Son Ye Jin) và hai con, người đàn ông này nhất quyết phải sinh tồn đến cùng, bao gồm cả việc nhận những nghề cực đoan nhất.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/9w7WGjQes0Cs0s4U3Qr09Tg1Sra.jpg",
+    "release_date": "2025-09-24",
+    "vote_average": 7.753,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ehbfp32ws7gmxs9yw0wyd/No-Other-Choice-2025-.1080p.WEB-DL.H264.AAC-EMCEU.mkv?rlkey=7h1dda3hgausrqu26qs779qh5&st=elsyk9cg&dl=0&dl=1"
+},
+{
+    "id": 675353,
+    "title": "Nhím Sonic 2",
+    "original_title": "Sonic the Hedgehog 2",
+    "overview": "Chú nhím xanh được yêu thích nhất thế giới trở lại cho cuộc phiêu lưu ở cấp độ tiếp theo trong Nhím Sonic 2. Sau khi định cư ở Green Hills, Sonic háo hức chứng tỏ mình sở hữu điều cần thiết để trở thành anh hùng thực thụ. Thách thức cho cậu xuất hiện khi Tiến sĩ Robotnik trở lại, lần này cùng đối tác mới là Knuckles, với mục đích kiếm tìm viên ngọc lục bảo có sức mạnh hủy diệt các nền văn minh. Sonic hợp tác với người bạn Tails và họ cùng nhau trên hành trình khắp địa cầu nhằm tìm ra viên ngọc lục bảo trước khi nó rơi vào tay kẻ xấu.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/3eh7j7zVOc4ZRtOrduYnaWD9mYJ.jpg",
+    "release_date": "2022-03-30",
+    "vote_average": 7.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/62s2x42d8oz08dl1cidj0/Sonic.The.Hedgehog.2.2022.ViE.1080p.AMZN.WEB-DL.DDP5.1.H.264-LASTalfaHD.mkv?rlkey=lfg8nd7bctj0vcq72d9twg114&st=w7hyan8n&dl=0&dl=1"
+},
+{
+    "id": 214340,
+    "title": "Devil in the Flesh",
+    "original_title": "Devil in the Flesh",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/8P4EHTCv9q0NpKOWq5rV9ANHtTn.jpg",
+    "release_date": "1986-08-01",
+    "vote_average": 2.833,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/lo9798esrvnv7nemsrnt0/Devil.in.the.Flesh.1986.1080p.BluRay.x264.DTS-WiKi.mkv?rlkey=hcgjgecbwjq1aeora5xfamnae&st=hgn1pjkb&dl=0&dl=1"
+},
+{
+    "id": 1329643,
+    "title": "Cuộc Đời Thứ 2",
+    "original_title": "重见天日",
+    "overview": "Trong nhà tù nữ, “Chiến thần” Lão Lương (do Nguyên Thu thủ vai) – người khiến ai cũng khiếp sợ, và A Quỷ (do Ngô Vĩnh Long thủ vai) – sát thủ mù lòa của băng Thanh Long từng một thời nổi tiếng, vô tình gặp lại nhau. Từ đó, giữa hai mẹ con tại một tiệm thuốc Đông y đã xảy ra một loạt những cuộc đấu trí, đấu sức đầy kịch tính. Một người là bậc thầy võ học Đông y, đã thất lạc con trai nhiều năm, luôn mong muốn yêu thương con bằng cách tốt nhất; người kia là một đứa trẻ mồ côi bị băng đảng bỏ rơi, nay đã quay về gia đình nhưng lại luôn tìm cách ám sát mẹ mình. Cả hai gặp lại nhau trong hoàn cảnh sai lầm, thời điểm sai lầm, dẫn đến hàng loạt các màn đối đầu võ thuật đỉnh cao, gây ra những tình huống dở khóc dở cười nhưng cũng đầy nhiệt huyết, cuối cùng tạo nên một mối duyên kỳ diệu về sự cứu rỗi lẫn nhau và cùng hoàn thiện lẫn nhau.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/eNuyQ2AbY7gITtelX36yVTYrWIH.jpg",
+    "release_date": "2024-08-15",
+    "vote_average": 7.667,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/jtq45hfjfmj3gsl1ts6l8/Second.Life.2024.2160p.WEB-DL.H265.EDR.DDP5.1-BATWEB-Vietsub.mkv?rlkey=9s0u0uarx8hx6lgbf1kcb1xns&st=ajhc86cp&dl=0&dl=1"
+},
+{
+    "id": 1269732,
+    "title": "Thần Điêu Đại Hiệp: Vấn Thế Gian",
+    "original_title": "神雕侠侣：问世间",
+    "overview": "Một bộ phim với mô típ có thể là quen thuộc với khán giả một bình cũ rượu mới. Câu chuyện xoay quanh mối tình giữa Dương Quá và Tiểu Long Nữ, hai nhân vật nổi tiếng trong thế giới võ hiệp Kim Dung. Dương Quá là một chàng trai mồ côi, tính tình ngang bướng, trải qua nhiều biến cố trong cuộc đời. Tiểu Long Nữ là một cô gái xinh đẹp, võ công cao cường, sống trong Cổ Mộ phái. Tình yêu của họ gặp phải nhiều trắc trở do những quy tắc hà khắc của võ lâm và sự khác biệt về thân phận.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ev2Cd4sI4rXnbPESxt59R8LDuKK.jpg",
+    "release_date": "2025-01-22",
+    "vote_average": 6.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/6jhr8f7zq5piymwu863yo/Condor-Hero-2025.2160p.WEB-DL.DDP2.0.H.265-HHWEB.mkv?rlkey=8xg7fjnihbbrmc2vn4wjmc8hn&st=kckhffvy&dl=0&dl=1"
+},
+{
+    "id": 1089654,
+    "title": "Trường An Ba Vạn Dặm",
+    "original_title": "长安三万里",
+    "overview": "Lấy bối cảnh Trung Quốc thời nhà Đường, vài năm sau khi Loạn An Sử do An Lộc Sơn đứng đầu nổ ra. Đồng Quan bại trận, Cao Thích buộc phải rút quân trốn chạy khiến cho Trường An rơi vào thế khó, vua Đường Huyền Tông rời bỏ kinh đô. Trong bối cảnh lịch sử đầy khắc nghiệt đó, tình bạn giữa Cao Thích và Lý Bạch trở thành một giai thoại đáng để ngưỡng mộ và ca ngợi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/7wxk8Ka5AGUIjCpEPg4vBOwSSul.jpg",
+    "release_date": "2023-07-02",
+    "vote_average": 7.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/mt9xccqkkawqg0mfndkcg/Chang.An.2023-ViE-Hybird.1080p.BluRay.DDP7.1.x264-PTer.mkv?rlkey=o0tyyfcdq319rlbihuo7z25l0&st=bkv713ol&dl=0&dl=1"
+},
+{
+    "id": 695721,
+    "title": "Đấu Trường Sinh Tử: Khúc Hát Của Chim Ca & Rắn Độc",
+    "original_title": "The Hunger Games: The Ballad of Songbirds & Snakes",
+    "overview": "Phần tiền truyện này theo chân Coriolanus Snow (Tom Blyth thủ vai) trẻ tuổi, chính là vị Tổng thống Snow sau này. Hiệu trưởng Casca Highbottom (do Peter Dinklage thủ vai) triệu tập tất cả mọi người cho Lễ chiêu quân lần thứ 10, và chuẩn bị lựa chọn vật tế từ 12 quận. Lúc này, Coriolanus Snow được chỉ định trở thành cố vấn cho trò chơi với vai trò là trợ giúp vật tế trong đấu trường và là cố vấn của Lucy Gray Baird (Rachel Zegler thủ vai).  Phần phim này sẽ hé lộ quá khứ của Tổng thống Snow thời trẻ, những sự kiện nguồn cơn dẫn Snow đến con đường trở thành thủ lĩnh độc tài của Panem thay vì là chàng thiếu niên lương thiện. Đến cuối cùng, khán giả mới có thể được biết ai sẽ là chim ca, hót lên một khúc hát của kẻ chiến thắng và ai là rắn độc thật sự.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/3I8he6xhfPW4yWQRVJOuREWSJzA.jpg",
+    "release_date": "2023-11-15",
+    "vote_average": 7.003,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/hwpyhbshscqjb2o9gxyl3/The-Hunger.Games.The.Ballad.of.Songbirds.and.Snakes.2023-ViE-1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=5akmj1bpwn2up7rj1jz919ozh&st=u42dq1ng&dl=0&dl=1"
+},
+{
+    "id": 1580234,
+    "title": "Akin Ang Gabi",
+    "original_title": "Akin Ang Gabi",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/oFqXF5GwmdFfLlv6bU98kT5hEes.jpg",
+    "release_date": "2025-11-21",
+    "vote_average": 6.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/9nimw7npsiuptj38v81py/Akin.Ang.Gabi.2025.2160p.VMX.WEB-DL.AAC.x264-RSG.mkv?rlkey=3z2poilzy4secefqakklrj3nf&st=kmq8iw1v&dl=0&dl=1"
+},
+{
+    "id": 592831,
+    "title": "Giấc Mộng Tân La Mã",
+    "original_title": "Megalopolis",
+    "overview": "Megalopolis (2024) xoay quanh thành phố New Rome, nơi diễn ra cuộc đấu tranh quyền lực giữa hai nhân vật đối lập. Cesar Catilina, một nghệ sĩ tài năng với khát vọng về một tương lai lý tưởng, và thị trưởng tham lam Franklyn Cicero, người bảo vệ quyền lợi của riêng mình. Julia Cicero, con gái của thị trưởng, bị giằng xé giữa lòng trung thành với cha và tình yêu dành cho Cesar. Phim hứa hẹn mang đến những xung đột gay gắt giữa lý tưởng và hiện thực, giữa tình yêu và trách nhiệm, trong bối cảnh một thành phố đứng trước bước ngoặt thay đổi lớn.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/8Sok3HNA3r1GHnK2lCytHyBz1A.jpg",
+    "release_date": "2024-09-25",
+    "vote_average": 5.171,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/4gdu0fklm3gffyiwxl0ey/Megalopolis-2024.1080p.BluRay.DDP.5.1.x264-hallowed.mkv?rlkey=66anyxg824m62wo1sc726w56s&st=bbks7jak&dl=0&dl=1"
+},
+{
+    "id": 668461,
+    "title": "Xứ Sở Mộng Mơ",
+    "original_title": "Slumberland",
+    "overview": "Đồng hành cùng kẻ bất kham đầy thu hút, một cô bé mồ côi táo bạo du hành qua vùng đất của những giấc mơ để tìm viên ngọc trai quý sẽ ban cho cô bé điều ước lớn nhất.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/jyI4Et4uKpBybyen5aROiGycXLG.jpg",
+    "release_date": "2022-11-18",
+    "vote_average": 7.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/iq7qpl4nbxrljqakswh1c/Slumberland.2022.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-SMURF.mkv?rlkey=v1q5p4pewm15cajri4k5fkdd6&st=j4ymbk1g&dl=0&dl=1"
+},
+{
+    "id": 1407861,
+    "title": "Quái Vật Đầm Lầy",
+    "original_title": "The Bayou",
+    "overview": "Kyle, một sinh viên sinh học vừa tốt nghiệp, cùng nhóm bạn của mình thực hiện chuyến đi đến Florida để rải tro cốt của người anh trai quá cố. Tuy nhiên, chuyến đi trở thành thảm họa khi chiếc máy bay nhỏ chở họ gặp sự cố và rơi xuống vùng đầm lầy hoang vu của Louisiana. Tại đây, họ phải đối mặt với mối đe dọa từ những con cá sấu bị biến đổi do tiếp xúc với chất hóa học từ một phòng thí nghiệm ma túy bị DEA triệt phá. Những con cá sấu này trở nên hung dữ và nguy hiểm hơn bao giờ hết, khiến cuộc chiến sinh tồn của nhóm người sống sót trở nên khốc liệt.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/sf6j1SbgDf7VTjL1MRq5MAQSOyE.jpg",
+    "release_date": "2025-01-31",
+    "vote_average": 5.562,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/6758xw8ofcscaogsv32j4/The.Bayou.2025.BluRay.1080p.DDP.5.1.x264-hallowed-Vietsub.mkv?rlkey=wxkfypbf8lq7u5k4wsvpqpanu&st=4lffdsxv&dl=0&dl=1"
+},
 ];
