@@ -1,10 +1,275 @@
 // movies.js
 const movieList = [
 
-    
 
 
 
+
+
+{
+    "id": 1106904,
+    "title": "Totto-Chan: Cô Bé Bên Cửa Sổ",
+    "original_title": "窓ぎわのトットちゃん",
+    "overview": "Sau khi không phù hợp với trường tiểu học ban đầu, Totto Chan đi học tại Tomoe Gakuen. Tại đây, cô gặp những học sinh đặc biệt và học được những điều mới mẻ, ngay cả khi Nhật Bản rơi vào chiến tranh.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/tGSmBIEBb9neCVatwH9bV9qSgTV.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/7H5fKTQX029MAxgyFJEcNu371SJ.jpg",
+    "release_date": "2023-12-08",
+    "vote_average": 7.586,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/h4dvkpiv8dummw0zcf96g/Totto-chan.The-Little.Girl.at.the.Window.2023.1080p.BluRay-DTS-HD.MA.5.1-x264.mkv?rlkey=mgvgn12b510c1h966j5egdwac&st=7fu6fczm&dl=0&dl=1"
+},
+{
+    "id": 667538,
+    "title": "Transformers: Quái Thú Trỗi Dậy",
+    "original_title": "Transformers: Rise of the Beasts",
+    "overview": "Lấy bối cảnh vào năm 1994, bộ phim lấy mốc thời gian 300 năm sau khi Bumblebee xuất hiện. Lúc này, Michael Bay vẫn còn chưa cầm trịch và Optimus Prime, thủ lĩnh can trường của Autobots vẫn còn lạ lẫm với Trái đất.  Tại đây, Optimus đã gặp gỡ Optimus Primal và nhánh Maximals - nhóm robot mới xuất hiện và có khả năng biến mình thành động vật thay vì ô tô như trước đó. Họ bị cuốn vào một trận chiến giữa Terrorcons và phe cánh Predacons. Bên cạnh đó, Optimus cũng phải đương đầu với trận chiến truyền kiếp giữa Autobots và Decepticons. Ngoài ra, Optimus còn phải đối đấu với Scourge - kẻ đứng đầu Terrorcons và có sở thích săn lùng các Autobots lẫn Maximal.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/7y0eBIw5MWsrOBgJZWPWwwLXIfy.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2vFuG6bWGyQUzYS9d69E5l85nIz.jpg",
+    "release_date": "2023-06-06",
+    "vote_average": 7.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/870l6k1s6itsfi6ygx8j3/Transformers-Rise-of-the-Beasts-2023-1080p-BluRay-TrueHD-7.1-x264-MTeam.mkv?rlkey=59dj71k0uxe1k7gl890legb57&st=69mxdm7q&dl=0&dl=1"
+},
+{
+    "id": 362409,
+    "title": "Trash Fire",
+    "original_title": "Trash Fire",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/7JH49NYwWTV2U1foK06KKXYllmm.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/buDrBTpb6H4gBCILxvPkL6ziyWN.jpg",
+    "release_date": "2016-11-03",
+    "vote_average": 5.759,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/1rtmwbufmecu1rpjre9zy/Trash.Fire.2016.ViE.1080p.BluRay.x264-nikt0.mkv?rlkey=wjio2naqto192xdvhtemsw76e&st=8ysroqjl&dl=0&dl=1"
+},
+{
+    "id": 809314,
+    "title": "Điểm Kích Hoạt",
+    "original_title": "Trigger Point",
+    "overview": "Trigger Point là một bộ phim kinh dị hành động năm 2021 của Canada do Brad Turner đạo diễn và Michael Vickerman viết kịch bản.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/qlXenN6jjgbsIyEJxBjkfkEU0q8.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/jWMWZ2ttg8B8YtVzG04UfhlcL67.jpg",
+    "release_date": "2021-04-23",
+    "vote_average": 6.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/b6l0300znkkuavxwfzqdg/Trigger.Point.2021.BluRay.1080p.DTS-HDMA5.1.x265.10bit-CHD.mkv?rlkey=bpfarz011d545luk0qkq0s0rj&st=9mmg0a5q&dl=0&dl=1"
+},
+{
+    "id": 995063,
+    "title": "Đầu Gấu Đụng Đầu Đất",
+    "original_title": "웅남이",
+    "overview": "Phim Đầu Gấu Đụng Đầu Đất dựa trên câu chuyện thần thoại nổi tiếng tại Hàn Quốc về hai chú gấu sinh đôi hoá thành người sau khi ăn tỏi và ngải cứu trong 100 ngày. Chú gấu ăn tỏi trở thành Na Woong-nam, được một cặp vợ chồng nhà khoa học mang về nuôi nấng, tuy chỉ mới 25 tuổi nhưng lại sở hữu “giao diện” của một ông chú 52 với cái “đầu đất” ngây thơ, hiền lành. Trong khi đó, chú gấu ăn ngải cứu trở thành “đầu gấu” Lee Jeong-hak, được một tên trùm tổ chức tội phạm mang về nuôi và bị lợi dụng như một món “vũ khí” phòng vệ. Trong một tình huống bất đắc dĩ, Na Woong-nam đã trực tiếp đối đầu cùng anh em song sinh Lee Jeong-hak để ngăn chặn một vụ khủng bố virus có tầm lây lan mạnh. Sức mạnh của loài gấu bộc phát sẽ đẩy cuộc đụng độ của cặp gấu song sinh hoá người đi đến hồi kết nào?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/1j9euKOxSdejDiKwPbUfO1CZH0u.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/unT5IUqiZgqcGyjcOMxomdxQOMj.jpg",
+    "release_date": "2023-03-22",
+    "vote_average": 6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/hi4cmjvliz1duz8act3te/Ungnami.2023.1080p.WEB-DL.AAC2.0.H.264-tG1R0-Vietsub.mkv?rlkey=i0m9x8x8qd99ih3a033t3a1wk&st=pkbyby91&dl=0&dl=1"
+},
+{
+    "id": 710295,
+    "title": "Người Sói",
+    "original_title": "Wolf Man",
+    "overview": "Khi cuộc hôn nhân của mình đang rạn nứt, Blake thuyết phục vợ mình là Charlotte tạm rời xa thành phố và đến thăm ngôi nhà thời thơ ấu xa xôi của anh ở vùng nông thôn Oregon. Khi họ đến trang trại vào lúc nửa đêm, họ bị một con vật vô hình tấn công và cố thủ bên trong ngôi nhà khi sinh vật đó rình rập xung quanh. Nhưng khi màn đêm buông xuống, Blake bắt đầu cư xử kỳ lạ, biến thành một thứ gì đó không thể nhận ra.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/h7cxTMzWgEjzQGNVc96Iig1NtW1.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/wwARk7hRIfHfh2n2ubN6N7lvTne.jpg",
+    "release_date": "2025-01-15",
+    "vote_average": 6.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/1nppn1muee4xb1ms42g8h/Wolf.Man.2025.1080p.MA.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Sub-Viet.mkv?rlkey=coabvv46rtbn5lafx1alghbom&st=t4ghnjgs&dl=0&dl=1"
+},
+{
+    "id": 1231808,
+    "title": "Bí Ẩn Mỏ Bạc Xuyên Không",
+    "original_title": "乌蒙奇缘",
+    "overview": "Bí Ẩn Mỏ Bạc Xuyên Không",
+    "poster_path": "https://image.tmdb.org/t/p/w500/6MkJ7P8XQNA5tLKHx0ICEN64Epk.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/i6unCYlxjPkWggxCTVhM2imjPGf.jpg",
+    "release_date": "2024-01-31",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/zoggi6uhdy5pzql5u07j3/Wumeng.Strange.Fate.2024.1080p.AMZN.WEB-DL.DDP2.0.H.264-ERBiUM.mkv?rlkey=lww0yv3iwhwmw4k1l553iwnke&st=busr4z45&dl=0&dl=1"
+},
+{
+    "id": 1122824,
+    "title": "Môn Tiền Bảo Địa",
+    "original_title": "门前宝地",
+    "overview": "Môn tiền bảo địa - 100 Yards (2024) Bối cảnh phim diễn ra tại Thiên Tân, Trung Quốc vào những năm 1920. Sau khi một võ sư nổi tiếng qua đời, hai học trò của ông trở thành đối thủ không đội trời chung để tranh giành quyền thừa kế võ đường. Một bên là Tề, đại đệ tử và người thừa kế được kỳ vọng, trong khi bên kia là Thẩm, con trai của sư phụ, người lẽ ra không theo nghiệp võ nhưng lại có đam mê mãnh liệt với nó. Cuộc tranh chấp được quyết định bằng võ đấu, nhưng kết quả chỉ làm tăng thêm mâu thuẫn. Khi những thách thức giữa họ ngày càng nhiều, các quy tắc truyền thống dần bị phá vỡ, gây chấn động cộng đồng võ thuật.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/1h79uApTIpRbqMXb42IRwpg5iFS.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/t0uorYEVF8ZiybT2XhnMr2kp6km.jpg",
+    "release_date": "2024-09-20",
+    "vote_average": 6.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/q8rzc7qz6yy6miz844q3d/100-Yards.2023.1080p.BluRay.DTS-HD.MA.5.1-x264.mkv?rlkey=fvjvo7ce3d9z50rwsizzgucl0&st=92gv1xc8&dl=0&dl=1"
+},
+{
+    "id": 428449,
+    "title": "Một Câu Chuyện Ma",
+    "original_title": "A Ghost Story",
+    "overview": "C là một nhạc sĩ đang phải sống khá chật vật với vợ M trong một ngôi nhà nhỏ ở khu vực Dallas/Fort Worth. Một đêm nọ, họ nghe thấy tiếng đàn dương cầm nhưng không thể tìm ra nguyên nhân của tiếng ồn. Một thời gian sau, C chết trong một vụ tai nạn xe hơi bên ngoài nhà. Sau đó một điều lạ thường xảy ra...",
+    "poster_path": "https://image.tmdb.org/t/p/w500/rp5JPIyZi9sMob15l46zNQLe5cO.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2y2aqaScd7jsUee0ddI1iRNgwGq.jpg",
+    "release_date": "2017-04-24",
+    "vote_average": 7.084,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/m0x48exq4u365k7emjg7j/A.Ghost.Story.2017.REPACK.1080p.BluRay.DTS.x264-VietHD-ph.mkv?rlkey=aisrusmilsf1rzisiqs0ixxk3&st=ziyjej7b&dl=0&dl=1"
+},
+{
+    "id": 848538,
+    "title": "Argylle: Siêu Điệp Viên",
+    "original_title": "Argylle",
+    "overview": "Khi nội dung bộ sách điệp viên của mình bám theo quá sát hoạt động của một tổ chức ngầm nguy hiểm, tiểu thuyết gia hướng nội Elly Conway và con mèo của mình bị cuốn vào thế giới tình báo ngoài đời thực, nơi không thứ gì, và không ai, giống như vẻ bề ngoài.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/yZHygsue0tgP1TGuswJVXploGCv.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/mY3CRicUMaX3Btxv8yspud75UJu.jpg",
+    "release_date": "2024-01-31",
+    "vote_average": 6.023,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/t2ql1nqhvojg6z6kbytuk/Argylle.2024-ViE-1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=7ebxoa4ohxvynjrsked5rje10&st=jlgj172r&dl=0&dl=1"
+},
+{
+    "id": 1076364,
+    "title": "Buổi Hẹn Của Carl",
+    "original_title": "Carl's Date",
+    "overview": "Một khi bạn đã bắt đầu nhìn thấy vẻ đẹp của cuộc sống, sự xấu xí bắt đầu biến mất. Nếu bạn bắt đầu thấy cuộc sống với niềm vui, nỗi buồn sẽ biến mất. Bạn không thể có thiên đường và địa ngục, bạn chỉ có thể có một. Đó là quyết định của bạn.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/zTAPGzOUMuweiq1WRCp3xbiHARa.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/wLttOcR1wJGedXfpe69y215NvjN.jpg",
+    "release_date": "2023-06-15",
+    "vote_average": 7.465,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/v8e1cyrpqapnq2n3brofu/Carls.Date.2023.1080p.WEB.h264-EDITH.mkv?rlkey=4b6o97n651o7gt0un4to7apk8&st=zmk1thp7&dl=0&dl=1"
+},
+{
+    "id": 811948,
+    "title": "Thanh Gươm Diệt Quỷ: Hội Nghị Đại Trụ và Điệp Phủ",
+    "original_title": "鬼滅の刃 柱合会議・蝶屋敷編",
+    "overview": "Trong phần này, Tanjiro cùng các đồng đội Zenitsu và Inosuke hợp tác với Trụ Âm Tengen Uzui để điều tra sự biến mất bí ẩn của ba người vợ của Tengen tại khu phố đèn đỏ Yoshiwara. Họ phát hiện ra rằng một con quỷ nguy hiểm đang ẩn náu tại đây. Để tiếp cận và tiêu diệt con quỷ, nhóm đã cải trang và thâm nhập vào các nhà chứa trong khu vực. Cuộc chiến khốc liệt diễn ra, đặc biệt là cuộc đối đầu với cặp anh em quỷ Thượng Huyền Lục: Daki và Gyutaro.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/1ZvLUVDpvkkGY42U56Ocr6kqn7j.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/daeD5T4MxFk5MppZlaNZoaK6lE9.jpg",
+    "release_date": "2021-12-01",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/8b8a66rmwdyukky3a2vl4/Demon-Slayer_-Kimetsu-no-Yaiba-Hashira-Meeting_-Butterfly-Mansion-2020-WEBDL-1080P-H.264-DD2.0_Viet-Sub.mkv?rlkey=ot93oke9u1tbf0cro6oeva1ci&st=6z1p1oho&dl=0&dl=1"
+},
+{
+    "id": 977177,
+    "title": "Tà Chú Cấm",
+    "original_title": "บ้านเช่า..บูชายัญ",
+    "overview": "Phim kể về cặp vợ chồng Ning, Kwin và cô con gái 7 tuổi với tên gọi Ing. Vì khó khăn về tài chính, hai vợ chồng quyết định cho thuê ngôi nhà đang ở và chuyển đến một căn hộ chung cư giá rẻ để sinh sống. Sau khi những người thuê nhà chuyển đến, Ning nhận thấy chồng bắt đầu có những hành vi bất thường. Anh ta trở nên bí mật và thường biến mất khỏi căn hộ và lúc 4 giờ sáng. Kwin thậm chí còn có một hình xăm kỳ lạ ở ngực tựa như ký hiệu đặc biệt của một hội tà giáo bí ẩn. Khi hành vi của chồng ngày càng trở nên đáng lo ngại, cũng là lúc Ning nhận ra cô con gái của mình đang gặp hiểm nguy. Bí mật nào đang được che giấu trong ngôi nhà cho thuê của họ?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/nC7hyk515cs94G0jqH8W9DdxdoZ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ge2Y3XVVRaFwepcTGiYnlZskudL.jpg",
+    "release_date": "2023-04-06",
+    "vote_average": 6.785,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/87zixm5mkhgwycslgu121/Home.for.Rent.2023.1080p.NF.WEB-DL.DDP5.1.H.264-MARK-Vietsub.mkv?rlkey=eq58gxld75dshuyv3d9hb0c2m&st=j7qyo0p5&dl=0&dl=1"
+},
+{
+    "id": 1244492,
+    "title": "Look Back: Liệu Ta Có Dám Nhìn Lại?",
+    "original_title": "ルックバック",
+    "overview": "Đây là anime được chuyển thể từ one-shot nổi tiếng của tác giả Chainsaw Man - Tatsuki Fujimoto.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/rgalULTP8ksPrcZbC0SxG5N81zT.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2okfik8YwzSfdETpT5cUClSiGFO.jpg",
+    "release_date": "2024-06-28",
+    "vote_average": 8.037,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/wljukzvtukln700pcz267/Look.Back.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264.mkv?rlkey=suhbngpyk2a0g558f8kqvgveg&st=5ons6mzq&dl=0&dl=1"
+},
+{
+    "id": 1226406,
+    "title": "Yêu Là Đau",
+    "original_title": "Love Hurts",
+    "overview": "Một nhà môi giới bất động sản bị kéo trở lại cuộc sống mà anh đã bỏ lại sau khi đồng phạm cũ của anh xuất hiện với một thông điệp đáng ngại. Với người anh trai là trùm tội phạm cũng đang truy đuổi, anh phải đối mặt với quá khứ và lịch sử mà anh chôn vùi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/skPPVeHoTTVVSJlb0Ib5vrqiuA4.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/aGgr2Q07AcyiWPGODoofgZDUEHp.jpg",
+    "release_date": "2025-02-06",
+    "vote_average": 5.732,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/oj3ftlx89b3ixuzrq8ja5/Love.Hurts.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-APEX-Sub-Viet.mkv?rlkey=apg65l000st7gbn8m3zf4kp45&st=87ml6tf2&dl=0&dl=1"
+},
+{
+    "id": 698860,
+    "title": "Mẫu Tử Lầm Lỡ",
+    "original_title": "MOTHER マザー",
+    "overview": "Người mẹ thất thường của Shuhei hoảng sợ khi cậu bước vào thế giới nằm ngoài tầm kiểm soát lệch lạc của bà và đẩy cả gia đình sa vào bi kịch.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vBHQAX6ZXdHNoO1U791DsVFHy7C.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/x3JeJcqwl90v8qa6hfDHOEuOo8J.jpg",
+    "release_date": "2020-07-03",
+    "vote_average": 6.995,
+    "dropbox_link": "Mother.2020.ViE.1080p.NF.WEB-DL.DDP5.1.x264-tG1R0.mkv?dl=1"
+},
+{
+    "id": 1255028,
+    "title": "Bí ẩn của các chiến binh Terracotta",
+    "original_title": "Mysteries of the Terracotta Warriors",
+    "overview": "Hàng ngàn chiến binh đất nung canh giữ lăng mộ của vị hoàng đế đầu tiên của Trung Quốc. Đây là câu chuyện của họ được kể thông qua các bằng chứng khảo cổ và màn tái hiện.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/snl9dddlnu2yKXXix2ua7G8UWoe.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/vdCFCvPXY7SZJs7NyMLeg32msOF.jpg",
+    "release_date": "2024-06-11",
+    "vote_average": 6.76,
+    "dropbox_link": "Mysteries.of.the.Terracotta.Warriors.2024.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?dl=1"
+},
+{
+    "id": 1216191,
+    "title": "Quỷ Án",
+    "original_title": "Oddity",
+    "overview": "Một bộ phim kinh dị siêu nhiên của Ireland năm 2024 do Damian Mc Carthy đạo diễn. Bộ phim kể về Darcy, một người mù sở hữu cửa hàng đồ cổ và là người thông linh, người đang cố gắng tìm hiểu nguyên nhân cái chết bí ẩn của người chị em sinh đôi Dani. Darcy sử dụng những vật phẩm bị ám từ cửa hàng của mình để khám phá sự thật, dẫn đến những chạm trán rùng rợn với thế lực siêu nhiên.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/3Z9c1tbUhP0QruRjczPHnbx3U2D.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/6GhU4BJnqLSaAuz0yQBq3RfdzsF.jpg",
+    "release_date": "2024-07-19",
+    "vote_average": 6.668,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/fmryugnk1vk85omfwem3j/Oddity-2024.2160p.AMZN.WEB-DL.DDP5.1.H.265-BYNDR.mkv?rlkey=hjsifte1unfluyube7ja5kezi&st=scu8brxf&dl=0&dl=1"
+},
+{
+    "id": 624860,
+    "title": "Ma Trận: Hồi Sinh",
+    "original_title": "The Matrix Resurrections",
+    "overview": "Bị quấy rầy bởi những ký ức kỳ lạ, cuộc đời của Neo có một bước ngoặt bất ngờ khi anh thấy mình trở lại bên trong Ma trận.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/hTmDe7fXpPw1AlZKHLnWXcwMb0C.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/eNI7PtK6DEYgZmHWP9gQNuff8pv.jpg",
+    "release_date": "2021-12-16",
+    "vote_average": 6.358,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/1jyffq15u7excmz8in14i/The-Matrix-Resurrections-2021-1080p-BluRay-TrueHD-7.1-x264-MTeam.mkv?rlkey=52ttepqv2jvc1qc70xpjmyw81&st=2act1z6o&dl=0&dl=1"
+},    
+{
+    "id": 635389,
+    "title": "Khương Tử Nha: Nhất Chiến Phong Thần",
+    "original_title": "姜子牙",
+    "overview": "Phim được lấy cảm hứng từ nhân vật thần thoại Jiang Ziya (Khương Tử Nha), một chỉ huy của quân đội thiên giới. Anh được giao nhiệm vụ trục xuất Hồ Ly chín đuôi, kẻ đang đe dọa sự tồn tại của tất cả mọi người. Khi phát hiện ra cuộc đời của Hồ Ly chín đuôi có liên kết với linh hồn của một cô gái vô tội, anh phải đối mặt với một quyết định đầy thử thách – làm theo ý trời hay tự mình tìm ra con đường đi đến chính nghĩa.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/qJ3XYhUg70jTjPLaWHx31JAmpAN.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/6Urx7y2CQQvxIlzk5R0BpOKI2NR.jpg",
+    "release_date": "2020-10-01",
+    "vote_average": 7.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/9c5ajthwcng7ykofhn3ka/The.Legend.of.Deiflcation.2021.1080P.WEB-DL.H265_Viet-sub.mkv?rlkey=inz0pvxsmmynrp2edun8gzhwo&st=vacnkhvp&dl=0&dl=1"
+},
+{
+    "id": 209764,
+    "title": "90 Phút Kinh Hoàng",
+    "original_title": "더 테러 라이브",
+    "overview": "Yoon Young-Hwa vốn một bình luận viên truyền hình nhưng vì nhiều ly do, anh đang phải làm một công việc khác. Một buổi sáng, khi anh đang dẫn chương trình phát thanh quen thuộc thì một người nặc danh gọi vào chương trình và tuyên bố sẽ đánh sập cây cầu Mapo. Ban đầu, ai cũng nghĩ đó chỉ là trò đùa nhưng Yoon Young-Hwa nhanh chóng nhận ra đó là mối nguy thực sự.  Từ nơi anh đang làm việc, có thể nhìn thấy cây cầu và ngay sau đó, thảm họa khủng khiếp đã xảy ra. Ngay khi đó, Yoon Young-Hwa đã nhận ra cơ hội để anh nổi tiếng đã tới và anh quyết định thực hiện bài bình luận nóng lên sóng trực tiếp .",
+    "poster_path": "https://image.tmdb.org/t/p/w500/xNbw86fuv5HMtZ3MLlwfdIeUAE5.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/opEzQcK0hVCCTZq30XcMUrIdpSl.jpg",
+    "release_date": "2013-07-31",
+    "vote_average": 7.147,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/jr41mrb6v7i6wkbnbfqre/The.Terror.Live.2013.BluRay.1080p.x264.DTS-HD.MA.5.1-HDWinG-Vietsub.mkv?rlkey=1kmhk7qod6tud0l80uiii49o1&st=k6ediy26&dl=0&dl=1"
+},    
+{
+    "id": 718821,
+    "title": "Lốc Xoáy Tử Thần",
+    "original_title": "Twisters",
+    "overview": "Kate Cooper, một nhà săn bão từng trải qua cơn lốc xoáy thời đại học hiện tại đang làm nhà nghiên cứu đặc điểm, hiện tượng của những cơn bão thông qua màn hình tại thành phố New York. Cô được Javi - một người bạn cũ, mời đến một vùng đồng bằng để thử nghiệm hệ thống theo dõi mới mang tính đột phá. Tại đó, cô tình cờ gặp Tyler Owens - một ngôi sao truyền thông mạng xã hội đầy sức quyến rũ, nổi tiếng với việc đăng tải những chuyến phiêu lưu săn bão nghẹt thở cùng với đoàn nhân viên ồn ào, thích thú với những sự nguy hiểm. Khi mùa bão trở nên khắc nghiệt hơn, những hiện tượng kỳ lạ chưa từng thấy trước đây dần được hé lộ. Kate, Tyler và đội nhóm của họ thấy mình bị cuốn vào hệ thống những cơn bão khó lường hội tụ tại trung tâm Oklahoma, tại đây, họ sẽ phải đối mặt với những thử thách chưa từng có để có thể sống sót.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/mzjSARH7deJ7BWqrldNWgzpnRMA.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/58D6ZAvOKxlHjyX9S8qNKSBE9Y.jpg",
+    "release_date": "2024-07-10",
+    "vote_average": 6.797,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/m7m2jlovs5ftlww7rzdpc/Twisters.2024.1080p.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=2bcv8m4ebdoxfghzltq0jhbmx&st=yhmjide0&dl=0&dl=1"
+},
+{
+    "id": 297762,
+    "title": "Wonder Woman: Nữ Thần Chiến Binh",
+    "original_title": "Wonder Woman",
+    "overview": "Trước khi trở thành Wonder Woman, Diana là công chúa chiến binh Amazon của hòn đảo Themyscira. Khi chàng phi công Steve Trevor trôi dạt vào đảo và kể về cuộc đại chiến đang diễn ra tại thế giới bên ngoài, Diana quyết định rời khỏi quê nhà để giải cứu nhân loại. Từ đó cô khám phá ra quyền năng và sứ mệnh thật sự của mình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/bzspyi8QqQQyztBhP2XwOAzWOSG.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/AaABt75ZzfMGrscUR2seabz4PEX.jpg",
+    "release_date": "2017-05-30",
+    "vote_average": 7.214,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/uib6ichlr7azs4iysxvpn/Wonder.Woman.1984.2020.1080p.AMZN.WEB-DL.DDP5.1.H.264-NTG-Sub-Viet.mkv?rlkey=m0xtwcoriyl9ybf71xmchdyjt&st=xgmdajuf&dl=0&dl=1"
+},
+{
+    "id": 637649,
+    "title": "Gã Điên Báo Thù",
+    "original_title": "Wrath of Man",
+    "overview": "Một nhân viên bảo vệ mới lạnh lùng và bí ẩn cho một công ty xe tải chở tiền ở Los Angeles đã gây bất ngờ cho đồng nghiệp khi anh ta thể hiện những kỹ năng chính xác trong một vụ trộm. Phi hành đoàn còn lại tự hỏi anh ta là ai và anh ta đến từ đâu. Chẳng bao lâu, động cơ cuối cùng của tay thiện xạ trở nên rõ ràng khi anh ta thực hiện các bước ấn tượng và không thể thay đổi để giải quyết một điểm số.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/xNxcKSJc9wWpMMyr6spKIucUNop.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/70AV2Xx5FQYj20labp0EGdbjI6E.jpg",
+    "release_date": "2021-04-22",
+    "vote_average": 7.59,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/3zaj7x15bf19m7gtcsmy1/Wrath-of-Man-2021-ViE-BluRay-1080p-DTS-HD-MA-5.1-x264-EVO.mkv?rlkey=3vuxta1z2mphhr911ea9cbrc7&st=l1w4g8ba&dl=0&dl=1"
+},
 {
     "id": 1129508,
     "title": "Tẩu Thoát Khỏi Đức Quốc Xã",
