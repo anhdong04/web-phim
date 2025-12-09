@@ -616,4 +616,154 @@ const movieList = [
     "vote_average": 5.562,
     "dropbox_link": "https://www.dropbox.com/scl/fi/6758xw8ofcscaogsv32j4/The.Bayou.2025.BluRay.1080p.DDP.5.1.x264-hallowed-Vietsub.mkv?rlkey=wxkfypbf8lq7u5k4wsvpqpanu&st=4lffdsxv&dl=0&dl=1"
 },
+{
+    "id": 295693,
+    "title": "Nhóc Trùm",
+    "original_title": "The Boss Baby",
+    "overview": "Một câu chuyện về sự xuất hiện của một em bé mới sinh tác động như thế nào đến một gia đình, được kể từ quan điểm của một người kể chuyện thú vị không đáng tin cậy, một đứa trẻ 7 tuổi cực kỳ giàu trí tưởng tượng tên là Tim.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/pqaoRPNgKR4a3vjSr5PnhXquD8I.jpg",
+    "release_date": "2017-03-23",
+    "vote_average": 6.456,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/s4euvgdjdvbx14zwlejka/The.Boss.Baby.2017.BluRay.1080p.DTS.3Audio.x264-CHD-1.mkv?rlkey=a9p9zkj9gg2ajgekxrq4k4wwj&st=h0gzkz7p&dl=0&dl=1"
+},
+{
+    "id": 459151,
+    "title": "Nhóc Trùm: Nối Nghiệp Gia Đình",
+    "original_title": "The Boss Baby: Family Business",
+    "overview": "Nhóc trùm Ted giờ đây đã trở thành một triệu phú nổi tiếng trong khi Tim lại có một cuộc sống đơn giản bên vợ anh Carol và hai cô con gái nhỏ yêu dấu. Mỗi mùa Giáng sinh tới, cả Tina và Tabitha đều mong được gặp chú Ted nhưng dường như hai anh em nhà Templeton nay đã không còn gần gũi như xưa. Nhưng bất ngờ thay khi Ted lại có màn tái xuất không thể hoành tráng hơn khi đáp thẳng máy bay trực thăng tới nhà Tim trước sự ngỡ ngàng của cả gia đình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vZbhUmUZ386bhApZ552SCocTqXJ.jpg",
+    "release_date": "2021-07-01",
+    "vote_average": 7.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/od8f52rrplwprcojord06/The-Boss-Baby-Family-Business-2021-ViE-1080p-PCOK-WEB-DL-DDP5.1-H.264-EVO-Thuyet-Minh-Sub-Viet.mkv?rlkey=24x1di7xeqb6pvbclftf6zeht&st=px6gadwo&dl=0&dl=1"
+},
+{
+    "id": 549509,
+    "title": "Giấc Mơ Mỹ",
+    "original_title": "The Brutalist",
+    "overview": "Phim ghi lại 30 năm cuộc đời của László Tóth (Adrien Brody), một kiến trúc sư người Do Thái gốc Hungary sống sót sau thảm họa diệt chủng Holocaust. Sau khi Thế chiến thứ hai kết thúc, ông di cư sang Hoa Kỳ cùng với vợ mình, Erzsébet (Felicity Jones) để trải nghiệm “giấc mơ Mỹ”. László ban đầu phải chịu đựng nghèo đói và sự sỉ nhục, nhưng anh sớm đạt được hợp đồng với một khách hàng bí ẩn và giàu có, Harrison Lee Van Buren, điều đó sẽ thay đổi cuộc đời anh.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vP7Yd6couiAaw9jgMd5cjMRj3hQ.jpg",
+    "release_date": "2024-12-20",
+    "vote_average": 6.966,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/eqltjbcdmdn9x2itajq04/The.Brutalist.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-APEX.mkv?rlkey=hpgldkmvvhbwe9wc8r1d67ljk&st=djq93r8b&dl=0&dl=1"
+},
+{
+    "id": 1241983,
+    "title": "Giấc mơ xe lửa",
+    "original_title": "Train Dreams",
+    "overview": "Một phu đốn gỗ có cuộc đời thanh tao và bình dị khi anh trải qua tình yêu và mất mát trong thời đại có nhiều thay đổi to lớn ở nước Mỹ đầu thế kỷ 20.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/l3zS4YnpOi4usyEXGJMtxSqDDyb.jpg",
+    "release_date": "2025-11-05",
+    "vote_average": 7.352,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/j712pwdslvkij7t3p49gk/Train.Dreams.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=grs4xg92xxcmiak3khanf8if0&st=a6ds1h9l&dl=0&dl=1"
+},
+{
+    "id": 555604,
+    "title": "Pinocchio của Guillermo del Toro",
+    "original_title": "Guillermo del Toro's Pinocchio",
+    "overview": "Guillermo del Toro, nhà làm phim đoạt giải Oscar, tái dựng câu chuyện kinh điển về con rối gỗ sống dậy trong câu chuyện nhạc kịch kiểu tĩnh vật đầy ấn tượng này.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vx1u0uwxdlhV2MUzj4VlcMB0N6m.jpg",
+    "release_date": "2022-11-09",
+    "vote_average": 8.042,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/le34n03kgd8lydqxlw2g9/Guillermo.del.Toros.Pinocchio.2022.1080p.UHD.BluRay.DDP7.1.DoVi.HDR10.x265-c0kE.mkv?rlkey=idoiakwzr3av560929x9oixuk&st=aq31aqga&dl=0&dl=1"
+},
+{
+    "id": 1126336,
+    "title": "Bí Mật Sau Bữa Tiệc",
+    "original_title": "Anniversary",
+    "overview": "Trong bộ phim tâm lý đầy kịch tính này, một gia đình gắn bó khăng khít bất ngờ bị cuốn vào vòng xoáy của phong trào xã hội gây nhiều tranh cãi mang tên “Sự Thay Đổi”. Ellen và Paul (Diane Lane và Kyle Chandler) phải đối diện với biến cố khi Liz (Phoebe Dynevor) – cựu học trò của Ellen – bất ngờ trở lại và nảy sinh quan hệ tình cảm với con trai họ (Dylan O’Brien). Sự hiện diện của Liz trong gia đình Taylor nhanh chóng làm gia tăng căng thẳng và thử thách các mối quan hệ vốn mong manh. Khi vai trò của Liz trong “Sự Thay Đổi” ngày càng rõ rệt, những mâu thuẫn âm ỉ dần bùng phát, đe dọa phá vỡ sự gắn kết của gia đình, trong bối cảnh cả quốc gia đang chao đảo trước thời kỳ đầy bất ổn và lo âu.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/tCLn5DyGjRwZiSX4ABCxpZS4QvM.jpg",
+    "release_date": "2025-10-29",
+    "vote_average": 6.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/2pe52cbbtoq8ybmnanucy/Anniversary.2025.1080p.iT.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=um9txsgbs53t6gtrl5x0axxi8&st=l71jupo6&dl=0&dl=1"
+},
+{
+    "id": 1265063,
+    "title": "Sau Cuộc Săn Lùng",
+    "original_title": "After the Hunt",
+    "overview": "Một nữ giáo sư đại học rơi vào ngã rẽ cá nhân lẫn nghề nghiệp khi một sinh viên xuất sắc tố cáo một đồng nghiệp của cô, trong lúc một bí mật đen tối từ quá khứ của chính cô cũng có nguy cơ bị phơi bày.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ryF8QPGUGlo8gRB4OYKb4J0r3aJ.jpg",
+    "release_date": "2025-10-09",
+    "vote_average": 5.815,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/bkz8cuquz8ocsvzwzocbx/After.The.Hunt.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-playWEB.mkv?rlkey=kbm2at2wondhf828woz8fqi9j&st=juul584p&dl=0&dl=1"
+},
+{
+    "id": 383498,
+    "title": "Deadpool 2",
+    "original_title": "Deadpool 2",
+    "overview": "Trong phần 2 Deadpool sẽ đối đầu với sát nhân Cable, một kẻ đến từ tương lai với âm mưu giết hại một đứa bé – Người mà theo hắn sau này sẽ trở thành một dị nhân đầy quyền năng. Với nỗ lực đảm bảo sự an toàn cho đứa bé, Deadpool sẽ nhận được sự giúp đỡ từ cả những người bạn mới và cũ, và đặc biệt là các thành viên từ một đội quân mới thành lập có tên X-Force",
+    "poster_path": "https://image.tmdb.org/t/p/w500/l0OdqQ9z12GGckRP8cmCcVfoflF.jpg",
+    "release_date": "2018-05-15",
+    "vote_average": 7.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/iqg936y80la8u23uh4p25/Deadpool.2.2018.Super.Duper.Cut.1080p.BluRay.x264.DTS-WiKi.mkv?rlkey=egus55eo5dxxwqjec47zohj6s&st=w1kjr53u&dl=0&dl=1"
+},
+{
+    "id": 1029281,
+    "title": "Strange Darling",
+    "original_title": "Strange Darling",
+    "overview": "Đây là phim thể loại giật gân biến thái đến kinh dị hay nhất mình từng xem trong năm nay, phải nói là quá hay. Cô ấy hiền lành đến ngỡ ngàng, phim đi từ bất ngờ đến bất ngờ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/kWNCRgt3ocv19bYO0sk7TRuZuFY.jpg",
+    "release_date": "2024-08-14",
+    "vote_average": 6.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/vzhppensz6b2oyoxwvgnc/Strange.Darling.2023.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv?rlkey=t1kydlbd8numh3pcnpbjpq48p&st=vfpgufxb&dl=0&dl=1"
+},
+{
+    "id": 38199,
+    "title": "Vụ Khủng Bố Không Tưởng",
+    "original_title": "Unthinkable",
+    "overview": "Unthinkable lấy bối cảnh nước Mỹ bị đe dọa bởi 3 quả bom nguyên tử được giấu ở 3 thành phố lớn. 3 quả bom được hẹn giờ cho nổ vào thứ Sáu. Thủ phạm đã bị bắt vào thứ Tư. Và việc tiếp theo, là buộc thủ phạm nói ra nơi giấu 3 quả bom. Nội dung phim xoay quanh việc tra hỏi thủ phạm để tìm ra vị trí 3 quả bom. Trong phim, khi đối diện với kẻ thù, nước Mỹ đã từng bước từng bước phải từ bỏ các giá trị về nhân quyền của mình, những giá trị Mỹ, điều làm nên nền tảng của Giấc Mơ Mỹ. Những giá trị về nhân quyền, về thượng tôn pháp luật, những điều mà Mỹ tự hào dường như bị chính nước Mỹ chối bỏ khi phải đối mặt với nguy hiểm.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/6yQqguytl10FhImngDHV90Aqewa.jpg",
+    "release_date": "2010-05-26",
+    "vote_average": 6.801,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/c6yh330p4ldehvnn470u8/Unthinkable.2010.Extended.mHD.BluRay.DD5.1.x264-c0kE.mkv?rlkey=25jc3e1pvu1ifyy5ebyarz08h&st=z6aqaczl&dl=0&dl=1"
+},
+{
+    "id": 1299209,
+    "title": "Con trai của ngàn người cha",
+    "original_title": "O Filho de Mil Homens",
+    "overview": "Ở một ngôi làng nhỏ, ngư dân cô đơn nọ khao khát có một đứa con trai rồi bị thứ ánh sáng siêu nhiên thu hút, kết nối anh với những người khác và bí mật chôn giấu từ lâu của họ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/tJ4w5lgD2mA9jVNRJrion9IPdcQ.jpg",
+    "release_date": "2025-10-30",
+    "vote_average": 7.231,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/wk1jumwj45ku2xc7xpz64/The.Son.of.a.Thousand.Men.2025.1080p.NF.WEB-DL.DUAL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=9200qsjnihltwfrak6pxyrhmn&st=zdstus1j&dl=0&dl=1"
+},
+{
+    "id": 1029575,
+    "title": "Kế Hoạch Bảo Vệ Gia Đình - The Family Plan",
+    "original_title": "The Family Plan",
+    "overview": "Dan Morgan là người toàn diện: một người chồng tận tụy, một người cha yêu thương, một nhân viên bán xe tiếng tăm. Anh cũng là một cựu sát thủ. Và khi những rắc rối quá khứ trở lại ám ảnh hiện tại, anh buộc phải đưa gia đình không mảy may nghi ngờ của mình vào một cuộc hành trình chưa từng có..",
+    "poster_path": "https://image.tmdb.org/t/p/w500/2r0nLLGFxXfKd8oRb4PWoy35osn.jpg",
+    "release_date": "2023-12-14",
+    "vote_average": 7.25,
+    "dropbox_link": "The.Family.Plan.2023.1080p.ATVP.WEB-DL.DDP5.1.Atmos.H.264-FLUX (Sub Viet).mkv?dl=1"
+},
+{
+    "id": 13474,
+    "title": "P2",
+    "original_title": "P2",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/3mTtQSKoFNyvhbcqBUJl8tPRqMz.jpg",
+    "release_date": "2007-11-09",
+    "vote_average": 6.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/t0ds3hue6h13xbb4u5yvj/P2.2007.1080p.BluRay.DTS.x264-playHD-Vietsub.mkv?rlkey=96wk6dpvf644z5frngg1hqzd5&st=yeg44nvj&dl=0&dl=1"
+},
+{
+    "id": 1148652,
+    "title": "Di Sản Lính Cứu Hỏa",
+    "original_title": "Legasi: Bomba the Movie",
+    "overview": "Đang vật lộn với cái chết của thầy mình, viên lính cứu hỏa nọ phải mạnh mẽ lãnh đạo đội trong nhiệm vụ giải cứu khi một tòa nhà chọc trời bốc cháy.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cYpOgJES148YUEAJMkJFmfQoT78.jpg",
+    "release_date": "2025-08-21",
+    "vote_average": 5.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/vbf1t2fux78cqtb685ms8/Legasi.Bomba.the.Movie.2025.1080p.NF.WEB-DL.DUAL.DDP5.1.H.264-ZYOZYO-Sub-Viet.mkv?rlkey=gqzmja4l33tmbruh56dkcj2cy&st=uuh62jlw&dl=0&dl=1"
+},
+{
+    "id": 1364635,
+    "title": "Hele Vejen",
+    "original_title": "Hele Vejen",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/5NVgPBbu7yTRtNCaRUvGGISsyxw.jpg",
+    "release_date": "2025-03-18",
+    "vote_average": 6.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/h2q6k5tripdltnzjekid4/Hele.vejen.2025.1080p.BluRay.DD5.1.x264-SbR.mkv?rlkey=daouulv4d82gsxjkdtgdxe88x&st=1in1qyxl&dl=0&dl=1"
+},
 ];
