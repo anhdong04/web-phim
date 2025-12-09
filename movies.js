@@ -4,8 +4,226 @@ const movieList = [
 
 
 
-
-
+{
+    "id": 1140535,
+    "title": "Linh Hồn Bảo Hộ",
+    "original_title": "Presence",
+    "overview": "Một gia đình chuyển đến một ngôi nhà mới ở vùng ngoại ô và dần tin rằng họ không đơn độc. Bộ phim được quay từ góc nhìn của một hồn ma/linh hồn và lấy bối cảnh trong một ngôi nhà trống trải, xinh đẹp. Ngôi nhà rất đẹp và cách quay phim rất xuất sắc.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/xZIGHoHj0DF0zdibwa66cRWHdHO.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/eT1L3IVcHUL58wLn48E5dxlea3Z.jpg",
+    "release_date": "2025-01-17",
+    "vote_average": 6.105,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/bz9ds5i1h6be14c8vz38p/Presence.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-FEELME.mkv?rlkey=g5k8v1pbpdqx5qug6cdq4lb9w&st=i9bt3a96&dl=0&dl=1"
+},
+{
+    "id": 315162,
+    "title": "Mèo Đi Hia: Điều Ước Cuối Cùng",
+    "original_title": "Puss in Boots: The Last Wish",
+    "overview": "Puss phát hiện ra rằng niềm đam mê phiêu lưu mạo hiểm của anh đã gây ra hậu quả: Anh đã đốt cháy 8 trong số 9 mạng sống của mình, bây giờ chỉ còn lại đúng một mạng. Anh ta bắt đầu một cuộc hành trình để tìm Điều ước cuối cùng thần thoại trong Rừng Đen nhằm khôi phục lại chín mạng sống của mình. Chỉ còn một mạng sống, đây có lẽ sẽ là cuộc hành trình nguy hiểm nhất của Puss.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/dKjjVuPawiREBYjREb3U5SCtfrt.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/jr8tSoJGj33XLgFBy6lmZhpGQNu.jpg",
+    "release_date": "2022-12-07",
+    "vote_average": 8.209,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/hp624zwjnymu3la6fyhx9/Puss.in.Boots.The.Last.Wish.2022.Vie.Dub.1080p.MA.WEB-DL.DDP5.1.Atmos.H.264-FLUX-LT-Ghi-Am-Rap.mkv?rlkey=j4lnqnwsqent755e0qafmrio3&st=z3miox76&dl=0&dl=1"
+},
+{
+    "id": 792307,
+    "title": "Poor Things",
+    "original_title": "Poor Things",
+    "overview": "Chuyện phim kể về một phụ nữ trẻ tên Bella, sống ở thế kỷ 19. Sau khi tự sát, cô được một nhà khoa học hồi sinh bằng cách đặt vào đầu cô bộ não của trẻ sơ sinh. Bella bỏ trốn và gặp gỡ Duncan Wedderburn một luật sư có lối sống phóng túng, trụy lạc. Trong cuộc hành trình phiêu lưu này, Bella đã có những phát hiện mới về bản thân mình, trong đó có những phát hiện đến từ trải nghiệm... tình dục của cô.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/kCGlIMHnOm8JPXq3rXM6c5wMxcT.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/zh6IdheEYinU4TPtorWsjx6qPQE.jpg",
+    "release_date": "2023-12-07",
+    "vote_average": 7.657,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/p8qiz74xxia6ukc1x9yxi/Poor-Things.2023-ViE-1080p.BluRay.DTS-HDMA5.1.x264-CHD.mkv?rlkey=t49coimkzofhrrfn9d8jvh0lt&st=poebjir3&dl=0&dl=1"
+},
+{
+    "id": 1328803,
+    "title": "Tù Binh Chiến Tranh",
+    "original_title": "Prisoner of War",
+    "overview": "Chỉ huy Không quân Hoàng gia Anh James Wright bị quân Nhật bắt giữ trong Thế chiến II và buộc phải tham gia các trận chiến tay đôi tàn bạo. Nhưng đám lính Nhật không ngờ rằng, với nhiều năm rèn luyện võ thuật tại Hồng Kông, Wright lại trở thành một đối thủ đáng gờm vượt xa mọi kỳ vọng.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/1XET89sjRm9mUuHXhGIlKTNd5uD.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yGByIyqgJerCw7AAphTrTAlrdkJ.jpg",
+    "release_date": "2025-09-19",
+    "vote_average": 7.129,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/2isjre8aszqkkrmtixssm/Prisoner.of.War.2025.BluRay.1080p.DDP.5.1.x264-hallowed.mkv?rlkey=4hjc8wj3ahvt5vxi26gnxe743&st=4kpf935h&dl=0&dl=1"
+},
+{
+    "id": 1239506,
+    "title": "Ma Cây",
+    "original_title": "Malam Pencabut Nyawa",
+    "overview": "Sau cái chết bi thảm của cha mẹ, cậu thiếu niên Respati (Devano Danendra) đang cố gắng phục hồi tổn thương và tìm lại sự cân bằng trong cuộc sống. Tuy nhiên, việc phải chịu đựng những cơn ác mộng kinh hoàng mỗi đêm càng khiến tinh thần của Respati bị ảnh hưởng nghiêm trọng. Song, Respati nhận ra đó không đơn thuần là ác mộng, mà cậu đang sở hữu khả năng bước vào giấc mơ của người khác và giữ được ý thức trong mộng giới.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/k2CfASZOxdpYyPnDoEqXHTu2fK8.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/5vuVaqzscjoIPjdNSHqc4d9YIRN.jpg",
+    "release_date": "2024-05-22",
+    "vote_average": 6.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ii3vur87han1ijr6ynstn/Respati.2024.1080p.NF.WEB-DL.DDP5.1.H.264-MrHulk-ph-horror.mkv?rlkey=z2iblk2nbs556w5fqrjhvlgdy&st=e4jwriri&dl=0&dl=1"
+},
+{
+    "id": 990485,
+    "title": "Scorpio Nights 3",
+    "original_title": "Scorpio Nights 3",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/9uBbhfM8Co57T4Fn5flo0tMn5NC.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/zGkUjZNz7yhbPcCgVtrO24GvpLJ.jpg",
+    "release_date": "2022-07-28",
+    "vote_average": 5.735,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/laltxqgl51mztobazie28/Scorpio-Nights-3-2022-1080p-VMAX-WEB-DL-AAC2.0-x264-Archie.mkv?rlkey=eo17pp58k16m0ntihfkscn26p&st=sb84r4b3&dl=0&dl=1"
+},
+{
+    "id": 1095805,
+    "title": "Kẻ Đóng Thế",
+    "original_title": "武替道",
+    "overview": "Một đạo diễn đóng thế hết thời đang vật lộn để tìm lối đi trong ngành công nghiệp điện ảnh nhiều biến động. Ông đánh cược tất cả để tạo nên màn tái xuất cuối cùng, đồng thời cố gắng hàn gắn mối quan hệ với cô con gái xa cách của mình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/wuOlEY4hpCg3FgLKDdpbdDqrF7b.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/DlXdNS5JmM5WPSk5H64ritDy5.jpg",
+    "release_date": "2024-09-14",
+    "vote_average": 7.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/vzw1cxt714cnpqe6jt5db/Stuntman.2024.Bluray.1080p.x264.TrueHD.5.1-MTeam-Vietsub.mkv?rlkey=9wfpa0l1ssjhyod6h8s7dwbwz&st=2rio8y8g&dl=0&dl=1"
+},
+{
+    "id": 298618,
+    "title": "Flash",
+    "original_title": "The Flash",
+    "overview": "Câu chuyện của Flash bắt đầu khi Barry Allen (Ezra Miller thủ vai) sử dụng siêu năng lực của mình để du hành thời gian nhằm thay đổi những sự kiện trong quá khứ. Nhưng khi nỗ lực cứu lấy gia đình mình vô tình thay đổi tương lai, Barry bị kẹt lại trong một thực tại, nơi tướng Zod tái xuất và đe dọa hủy diệt tất cả, nhưng không có bất cứ siêu anh hùng nào đứng ra giải cứu… Trừ khi Barry có thể thuyết phục một Batman rất khác và giải cứu một cư dân Kryptonian đang bị cầm tù… dẫu có thể đó không phải người mà anh thực sự tìm kiếm. Để giải cứu thế giới hiện tại cũng như trở lại tương lai mình từng biết, niềm hy vọng duy nhất của Barry là phải chạy đua vì cuộc đời mình. Vậy nhưng, sự hy sinh tuyệt đối đó có là đủ để đưa thế giới về lại như ban đầu?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cmjiTVMuyRj3Bp8Dg306UksHBDc.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yF1eOkaYvwiORauRCPWznV9xVvi.jpg",
+    "release_date": "2023-06-13",
+    "vote_average": 6.621,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/gf1xont37zvgf3snrhz5x/The-Flash.2023.ViE-1080p.MA.WEB-DL.DDP5.1.Atmos.x264-CMRG.mkv?rlkey=vefq9cu7k9kkfzdprfv2mq9og&st=ucvez1sm&dl=0&dl=1"
+},
+{
+    "id": 777443,
+    "title": "Xứ sở robot",
+    "original_title": "The Electric State",
+    "overview": "Một thiếu nữ mồ côi cùng một robot bí ẩn lên đường tìm kiếm em trai thất lạc từ lâu của cô. Trong hành trình đó, cô bắt tay với một tay buôn lậu và trợ thủ hay châm chọc của hắn.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/jRdxyW5ZmhD3ycStlb7gwOewTuE.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2n7lYEeIbucsEQCswRcVB6ZYmMP.jpg",
+    "release_date": "2025-03-07",
+    "vote_average": 6.505,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/08huw2leorh6c7oavzgjz/The.Electric.State.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-Sub-Viet.mkv?rlkey=coc7dpmwyyaz15s481a2hia1q&st=srwg8xri&dl=0&dl=1"
+},
+{
+    "id": 1417800,
+    "title": "Đặc Vụ Vô Hình 2",
+    "original_title": "黑白潜行2",
+    "overview": "Khi chế độ Laika đang thay đổi, những người dưới mặt đen và trắng đang tăng lên. Một số người muốn kiếm được rất nhiều tiền, một số người muốn sử dụng việc này để minh oan, một số người muốn trốn thoát khỏi Laika, và một số người muốn thiết lập một chỗ đứng ở Laika ... cảnh sát đã đặt một sĩ quan cảnh sát bí mật, Zheng Zha, ẩn nấp trong số những người lớn nhất Black Force ở Laika, bài hát Boss, nhưng họ không biết rằng có những người khác muốn nhân cơ hội này để trả thù bài hát Boss.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/i0CXTCWEbqpOypNnVLLw0jikNsX.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/rWw4cGC96hK8pFfhYDswZT1Zz53.jpg",
+    "release_date": "2025-01-25",
+    "vote_average": 1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/r0kckwsbk5ocwcykg8zgu/The.Grey.Men.2.2025.ViE.1080p.WEB-DL.AAC.H264.2Audio.mkv?rlkey=49ondzgkrmlef0eo1pkdnx43r&st=d93daitt&dl=0&dl=1"
+},
+{
+    "id": 1168196,
+    "title": "Thiết Thiên Thư: Tướng Quân Không Đầu",
+    "original_title": "窃天书之无头将军",
+    "overview": "Người chỉ huy đội quân Lang Vệ dưới sự lãnh đạo của A Cốc Lực thèm muốn khám phá kho báu của Gia Tộc Thiên Nhạc và người đẹp nhất thiên hạ - Sử Thiên Kiều, đặt ra mục tiêu chiếm Thành Lưu Lạc để tìm kiếm họ. Tướng quân bảo vệ thành phố, Sử Vạn Phu, bất lực trước sự tấn công của đối thủ nên để cứu dân trong thành và con gái của mình, Sử Thiên Kiều, ông đã tham mưu cùng với người bạn tốt của mình, Tiêu Bất Bình, và sử dụng cuốn sách Thiết Thiên Thư.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/gn1KDeKLOhDjfOvx55Bu7bIHFwb.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/oO0S6yZDrkzoq6nYlReQRqg9OHT.jpg",
+    "release_date": "2023-08-22",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/zlyngy7shbvemxlm4rd22/The.Headless.General.Who.Stole.the.Book.of.Heaven.2023.ViE.2160p.WEB-DL.H265.AAC-DreamHD.mkv?rlkey=zcxajillcbkgs6wx3n2hf529d&st=fsgogxpg&dl=0&dl=1"
+},
+{
+    "id": 1056126,
+    "title": "Nhà Bà Nữ",
+    "original_title": "Nhà Bà Nữ",
+    "overview": "Câu chuyện xoay quanh gia đình bà Nữ gồm ba thế hệ sống cùng nhau trong một ngôi nhà. Bà Nữ một tay cáng đáng mọi sự, nổi tiếng với quán bánh canh cua và cũng khét tiếng với việc kiểm soát cuộc sống của tất cả mọi người, từ con gái đến con rể. Mọi chuyện diễn ra bình thường cho đến khi cô con gái út si mê anh chàng điển trai xuất thân từ một gia đình giàu có. Truyện phim khắc họa mối quan hệ phức tạp, đa chiều xảy ra với các thành viên trong gia đình. Câu tagline (thông điệp) chính 'Ai cũng có lỗi, nhưng ai cũng nghĩ mình là... nạn nhân' chứa nhiều ẩn ý về nội dung bộ phim muốn gửi gắm.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/mytkqraWHlXMNmPZazPqjreTyIo.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/tBLRdEQCth9gj5VHZbx2sO4coCY.jpg",
+    "release_date": "2023-01-22",
+    "vote_average": 5.8,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/qqrz68abags524z7wcygu/The.House.of.No.Man.2023.1080p.WEB-DL.DDP5.1.H.264-hOilOnG.mkv?rlkey=5hxmmq48s9wnpoon5ci2i0rtn&st=88s8un1d&dl=0&dl=1"
+},
+{
+    "id": 800158,
+    "title": "The Killer",
+    "original_title": "The Killer",
+    "overview": "Sau vụ ám sát thất bại định mệnh, sát thủ nọ chiến đấu chống lại những người thuê anh và chính anh trong cuộc săn lùng quốc tế mà anh khẳng định không nhằm trả tư thù cá nhân.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/e7Jvsry47JJQruuezjU2X1Z6J77.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/mRmRE4RknbL7qKALWQDz64hWKPa.jpg",
+    "release_date": "2023-10-25",
+    "vote_average": 6.578,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/fjan2uwwr62fm4lwcsn18/The.Killer.2023.ViE.1080p.NF.WEB-DL.DDP5.1.H.264-FLUX.mkv?rlkey=guynixr85jfh9uhp8h3lv4n16&st=neqocmiw&dl=0&dl=1"
+},
+{
+    "id": 881685,
+    "title": "Mục Dã Quỷ Sự: Quan Sơn Thái Bảo",
+    "original_title": "牧野诡事之观山太保",
+    "overview": "Trong Thời kỳ Trung Hoa Dân Quốc, Phong Tứ Cửu, thế hệ sau của Thái Bảo Quan Sơn ở ẩn, phụng mệnh điều tra vụ án, giải mã thách đố về địa cung Thiên Quý Cổ “Cửu Quán” đằng sau tại nạn mỏ đá.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lBcbzyurfo1vaoq9nSjz52xdsre.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/iF8a73PdMBhWb8nj6CypL3icou9.jpg",
+    "release_date": "2021-10-06",
+    "vote_average": 6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/x55y6dvmgjxxqqnwlzgwe/The.Legend.Of.Muye.Tomb.Seeking.Master.2021.1080p.WEB-DL.H265.DDP2.0_Viet-sub.mkv?rlkey=wb992m7j3rt1lh9dukuysqdqx&st=fbfq4kcm&dl=0&dl=1"
+},
+{
+    "id": 447277,
+    "title": "Nàng Tiên Cá",
+    "original_title": "The Little Mermaid",
+    "overview": "Là con gái út của vua thủy tề Triton và cũng là người lì lợm nhất, Ariel mơ ước được khám phá thế giới đất liền. Trong một lần lên trên mặt biển, cô đã nảy sinh tình cảm với hoàng tử điển trai Eric. Do mối quan hệ giữa người cá và con người bị nghiêm cấm, Ariel đã giao kèo với mụ phù thủy biển xấu xa Ursula để có cơ hội lên đất liền mà không biết rằng cô đã đưa mình và ngai vàng của cha mình vào nguy hiểm.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/yp0pZCvk0wXaeZvefV3BPKxficw.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/lAs4Y5a8Pi86xDwuv8cx2prOVI2.jpg",
+    "release_date": "2023-05-18",
+    "vote_average": 6.289,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/0z5oo67buzjjleo5pu74x/The.Little.Mermaid.2023.ViE.1080p.WEB-DL.DDP5.1.Atmos.H.264-FLUX-TM-P.mkv?rlkey=2xly5uj8er6yeinyvpvkhvoh7&st=ulkcd5qt&dl=0&dl=1"
+},
+{
+    "id": 609681,
+    "title": "Biệt Đội Marvel",
+    "original_title": "The Marvels",
+    "overview": "Carol Danvers bị vướng vào sức mạnh của Kamala Khan và Monica Rambeau, buộc họ phải hợp tác với nhau để cứu vũ trụ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/dffTM3qQ30xC0bJ7MUs2s3HrZ4e.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/criPrxkTggCra1jch49jsiSeXo1.jpg",
+    "release_date": "2023-11-08",
+    "vote_average": 5.959,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/2eryurbcsfsi90m3oqez0/The.Marvels.2023.1080p.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=9z5rl0x432u2mujeoywup05v6&st=tqfe9d9i&dl=0&dl=1"
+},
+{
+    "id": 1462214,
+    "title": "Con Đường Tơ Lụa: Huyền Án Tây Hán",
+    "original_title": "绣衣使·西汉迷案",
+    "overview": "Vào những năm đầu của triều đại Tây Hán, một trận hỏa hoạn kinh hoàng đã thiêu rụi số lụa hoàng gia được định làm cống phẩm cho Hung Nô—một thảm họa đã thổi bùng lên sự hỗn loạn trên khắp Tây Vực. Giang Du, một sứ giả ưu tú của triều đình, được phái đi theo sắc lệnh bí mật để điều tra vụ đốt phá và ngăn chặn một cuộc khủng hoảng ở biên giới. Trong khi đó, Cannu yêu dấu của anh, một thợ dệt lụa trở thành anh hùng dân gian, tập hợp người dân Shiquan để bổ sung số cống phẩm đã mất và cứu đế chế khỏi sự ô nhục. Khi Giang Du một mình mạo hiểm vào Tây Vực đầy hiểm nguy, anh phải đối mặt với một lựa chọn bất khả thi: trung thành với số phận của nhà Hán… hay lời thì thầm của trái tim mình",
+    "poster_path": "https://image.tmdb.org/t/p/w500/3Py1TT9hDyCcDV3N3ihh3HUGihz.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/r1kR3HEfqM0y7KYjYQUj6CXwn5S.jpg",
+    "release_date": "2025-04-10",
+    "vote_average": 5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/np4bqex3tu9sx3g1cv7k2/The.Mystery.of.the.Silk.2025.2160p.WEB-DL.H265.EDR.DDP2.0-PandaQT-Vietsub.mkv?rlkey=2xval2ti49n9gblgqle4c5m1e&st=q5kh1vee&dl=0&dl=1"
+},
+{
+    "id": 1125510,
+    "title": "Hố sâu đói khát 2",
+    "original_title": "El hoyo 2",
+    "overview": "Sau khi nhà lãnh đạo bí ẩn nọ áp đặt luật lệ của mình trong một hệ thống phòng giam xếp dọc đầy tàn bạo, một người mới đến đấu tranh với một phương thức chia đồ ăn đáng ngờ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/kP84jB5ClTA6cU3JEZ0z8xiVsz8.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/3m0j3hCS8kMAaP9El6Vy5Lqnyft.jpg",
+    "release_date": "2024-09-27",
+    "vote_average": 5.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/b283jwnqxkt6m7i6qr1ku/The.Platform.2.2024-ViE-1080p.NF.WEB-DL.DUAL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=jc43gl3relgis7j0t324bw98m&st=ulpmtyve&dl=0&dl=1"
+},
+{
+    "id": 1151949,
+    "title": "Sát thủ mật danh 13",
+    "original_title": "The Shadow Strays",
+    "overview": "Có kỹ năng giết người điêu luyện, sát thủ trẻ nọ bất tuân lời thầy để cứu một cậu bé khỏi một tổ chức tội phạm tàn nhẫn... và cô sẽ tiêu diệt bất cứ ai cản đường.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/pwD9rQJimSaRuYoYdgwgacrNCOY.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/3R96c2rQp6Jt1xQYX4LYdY6ETdS.jpg",
+    "release_date": "2024-09-10",
+    "vote_average": 7.227,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/zeigfkunpydzyjioamw7f/The.Shadow.Strays.2024.1080p.NF.WEB-DL.DUAL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=eya6liuy19w0ppiyvs5t5c7io&st=xvwbzbei&dl=0&dl=1"
+},    
+{
+    "id": 1202618,
+    "title": "Kẻ Ăn Hồn",
+    "original_title": "Kẻ Ăn Hồn",
+    "overview": "Kẻ Ăn Hồn - phim về hàng loạt cái chết bí ẩn ở Làng Địa Ngục, nơi có ma thuật cổ xưa: 5 mạng đổi bình Rượu Sọ Người. Thập Nương - cô gái áo đỏ là kẻ nắm giữ bí thuật luyện nên loại rượu mạnh nhất!  Diễn viên: Hoàng Hà, Võ Điền Gia Huy, Huỳnh Thanh Trực, NSƯT Chiều Xuân, Nghệ sĩ Viết Liên, NSND Ngọc Thư, Nguyễn Hữu Tiến, Nguyễn Phước Lộc, Nghinh Lộc, Lý Hồng Ân, Vũ Đức Ngọc…  Phim điện ảnh mới của Đạo diễn Trần Hữu Tấn và NSX Hoàng Quân dự kiến khởi chiếu từ 15.12.2023!",
+    "poster_path": "https://image.tmdb.org/t/p/w500/hu4H2mIMrqtrTNOEwn1Y6WAHTrl.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/hff43E9BAOrwQ6hfhouucohFizR.jpg",
+    "release_date": "2023-12-15",
+    "vote_average": 6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/kl805gkyoo821iv0qtn17/The.Soul.Reaper.2023.1080p.WEBRip.DDP5.1.H.264-chuPhniM.mkv?rlkey=yuj1azn408lv2d5bkttu9f6th&st=c2pbvufa&dl=0&dl=1"
+},
 {
     "id": 1106904,
     "title": "Totto-Chan: Cô Bé Bên Cửa Sổ",
