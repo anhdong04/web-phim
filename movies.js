@@ -17,7 +17,7 @@ const movieList = [
         "release_date": "2025-07-30",
         // SỬA DÒNG DƯỚI ĐÂY (xóa ?dl=1 thừa ở cuối)
         "dropbox_link": "https://www.dropbox.com/scl/fi/z4y1rojm0zztpvswfw8wd/Leaving-Mom.2025.1080p.WEB-DL.H264.AAC.mp4?rlkey=6gi8u981a64eq8eypyg5fvs2b&st=j7due4jf&dl=1"
-    }
+    },
     {
     "id": 1010756,
     "title": "Sát Nhân Giấu Mặt: Chương 2",
@@ -38,4 +38,5 @@ const movieList = [
 
     
 ];
+
 
