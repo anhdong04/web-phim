@@ -356,4 +356,64 @@ const movieList = [
     "vote_average": 7.11,
     "dropbox_link": "https://www.dropbox.com/scl/fi/5nvolu1mf26fm68jy46rz/Dracula.A.Love.Tale.2025.1080p.WEB.H264-SLOT.mkv?rlkey=lfjpu0wr3mox9f3bxcnlod9pg&st=jnps19o2&dl=0&dl=1"
 },
+{
+    "id": 1519461,
+    "title": "Para X Normal",
+    "original_title": "Paraxnormal",
+    "overview": "Bốn người bạn thời thơ ấu đoàn tụ tại quê nhà để cướp căn biệt thự bỏ hoang được đồn có vàng và tiền mặt giấu bên trong. Nhưng rốt cuộc họ lại phát hiện ra nơi này có thể bị ám.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/gN9vjWmS0bYmfP4gHpeW2q4YUa3.jpg",
+    "release_date": "2025-08-28",
+    "vote_average": 3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ehartk1ge2duyuf0kr4de/Para.X.Normal.2025.1080p.NF.WEB-DL.DDP5.1.H.264-KQRM-Sub-Viet.mkv?rlkey=awquf1nfz0qyuo7p1h32zkypd&st=qtuy3nz4&dl=0&dl=1"
+},
+{
+    "id": 850439,
+    "title": "Kẻ Bị Nguyền Rủa",
+    "original_title": "The Damned",
+    "overview": "Giữa mùa đông băng giá đầu thế kỷ 19 ở bờ biển Iceland, góa phụ Eva phải gánh vác trạm đánh cá trong cảnh thiếu ăn. Khi một con tàu đắm ngoài khơi, cô quyết định không cứu để giữ lại nguồn sống cho nhóm mình. Nhưng từ đó, tội lỗi và nỗi sợ bắt đầu gặm nhấm, biến những bóng hình ngoài kia thành ác quỷ trong trí óc – cho đến khi sự thật phơi …",
+    "poster_path": "https://image.tmdb.org/t/p/w500/fAXDQny8kEquc1BImiQHhYMGSsW.jpg",
+    "release_date": "2025-01-03",
+    "vote_average": 6.129,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/pra67xlfkloqlglvib3m1/The.Dam.2025.1080p.NF.WEB-DL.DD5.1.H.264-playWEB.mkv?rlkey=5ej3qdk0xkzuwvoz09rr93nw7&st=mziinjeh&dl=0&dl=1"
+},
+{
+    "id": 1477538,
+    "title": "Timeless Tidings of Joy",
+    "original_title": "Timeless Tidings of Joy",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/iHRLMwAtMR6rDZlheUmFwbjhCnN.jpg",
+    "release_date": "2025-11-13",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/mygcu812pieqggji4n33v/Timeless.Tidings.of.Joy.2025.1080p.AMZN.WEB-DL.DDP2.0.H.264-Kitsune.mkv?rlkey=evuq5pv7hfilt09880cth4i8r&st=y6sdnpbu&dl=0&dl=1"
+},
+{
+    "id": 1448560,
+    "title": "Wildcat",
+    "original_title": "Wildcat",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/h893ImjM6Fsv5DFhKJdlZFZIJno.jpg",
+    "release_date": "2025-11-19",
+    "vote_average": 5.838,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/vbfnzdibnjlx7gb0zfveq/Wildcat.2025.1080p.WEB.h264-EDITH.mkv?rlkey=l2j7whh0i2d8icy04ryma81ni&st=95mqe0dq&dl=0&dl=1"
+},
+{
+    "id": 533533,
+    "title": "Trò Chơi Ảo Giác: Ares",
+    "original_title": "TRON: Ares",
+    "overview": "Một chương trình trí tuệ nhân tạo siêu việt mang tên Ares được gửi từ thế giới số vào thế giới thực trong một nhiệm vụ đầy nguy hiểm — đánh dấu lần đầu tiên nhân loại tiếp xúc trực tiếp với một thực thể A.I. sống động.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lj7imLGAzI3zKvbJtPH01aYW9lU.jpg",
+    "release_date": "2025-10-08",
+    "vote_average": 6.529,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/zhobrv0ogma4t4i5rq1f8/Tron.Ares.2025.ViE.AI.1080p.RU-DCPRip.HEVC.10bit.Hybrid.Audio.TrueHD.5.1.DDP5.1.mkv?rlkey=q9np2ck09fj3luderz662wttu&st=ucvcwpwh&dl=0&dl=1"
+},
+{
+    "id": 1330018,
+    "title": "I'm Still Here",
+    "original_title": "I'm Still Here",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/6OGmSX1cwIpHCTqENkp19kT2mtB.jpg",
+    "release_date": "2024-08-19",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/p3q28tg0yqwauh7d5a5vv/Im.Still.Here.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR-Vietsub-1.mkv?rlkey=t7xkr7brjhn4ycy0dyccyvmhd&st=b81b2lbd&dl=0&dl=1"
+},
 ];
