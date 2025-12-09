@@ -4,6 +4,202 @@ const movieList = [
 
 
 
+
+
+
+
+
+
+
+
+
+{
+    "id": 1175882,
+    "title": "Địch Nhân Kiệt: Mượn Đường Âm Binh",
+    "original_title": "狄仁杰之幽兵借路",
+    "overview": "Địch Nhân Kiệt: Mượn Đường Âm Binh vào thời Ngô Chu, gia đình của Hồ Hiển Đức bị giết hại, Võ Tắc Thiên đã ra lệnh cho Địch Nhân Kiệt điều tra. Cuộc điều tra của Địch Nhân Kiệt phát hiện ra rằng Hồ Hiển Đức, người vốn là người trung thực và có trách nhiệm, lại có liên quan một cách kỳ lạ đến một vụ án lớn.  Địch Nhân Kiệt không khỏi nghi ngờ và nhận ra rằng vụ án này có thể là một vụ án trong một vụ án. Trong quá trình điều tra vụ án, Địch Nhân Kiệt liên tục gặp phải nhiều sự việc kỳ lạ khác nhau, những người liên quan đến vụ án cũng lần lượt chết một cách bí ẩn. Khi những có những người đòi lấy mạng sống của họ, vụ án rơi vào bế tắc và Địch Nhân Kiệt bị bao phủ trong một âm mưu lớn…",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cU4bA3VquU4CET6HkJWlx0U4b38.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yAppATtQWoWvL4axM9Iqd53kifs.jpg",
+    "release_date": "2023-09-09",
+    "vote_average": 5.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/uyqwo9x07omjyduqb8mfc/Ghost.Soldier.Borrowed.2023.2160p.WEB-DL.HEVC.10bit.HDR10.DDP.2Audios-NukeHD.mkv?rlkey=3nwitxysr0nxg343dtw74mbzr&st=bhstesh4&dl=0&dl=1"
+},
+{
+    "id": 826510,
+    "title": "Harold và Cây Bút Phép Thuật",
+    "original_title": "Harold and the Purple Crayon",
+    "overview": "Cốt truyện dựa trên bộ truyện cùng tên - được xuất bản vào năm 1955. Cuốn sách của Crockett Johnson kể về Harold, một cậu bé 4 tuổi, với sức mạnh của cây bút chì màu, đã tạo ra thế giới xung quanh mình. Harold sử dụng cây bút chì màu tím kì diệu của mình để vẽ một cánh cửa dẫn vào Thế giới Thực, nơi anh và những người bạn của mình dấn thân vào một cuộc phiêu lưu mới lạ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/sVb5npjh1XilnStwDBehFfVWPSv.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/biMJPdS7bGW7HQTQrHvXxMqOqdC.jpg",
+    "release_date": "2024-07-31",
+    "vote_average": 6.7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/abhn43cw1687jluswca1r/Harold-and-the-Purple-Crayon-2024-1080p-Blu-ray-Remux-AVC-DTS-HD-MA-5.1-MBH.mkv?rlkey=53j2sxbvqrdk2ce0c3dq14com&st=5pzg1f7j&dl=0&dl=1"
+},
+{
+    "id": 668489,
+    "title": "Tàn phá",
+    "original_title": "Havoc",
+    "overview": "Khi vụ cướp ma túy vượt ngoài tầm kiểm soát, một cảnh sát chán chường chiến đấu giữa thế giới tội phạm ngầm ở thành phố thối nát để cứu con trai của một chính trị gia.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/fghzFIe3vx6nbP2wkB6JE4cH50E.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/7rKyFSg6SdLoCRCVoWLjL5k658k.jpg",
+    "release_date": "2025-04-25",
+    "vote_average": 6.401,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/l4ldjap5785asl38cohbf/Havoc.2025.ViE-1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Thuyet-Minh-Sub-Viet.mkv?rlkey=oac00gzhc9nvjr42jb5ln0wy3&st=ojzwdwoy&dl=0&dl=1"
+},
+{
+    "id": 978202,
+    "title": "Nhân Duyên Tiền Đình",
+    "original_title": "달짝지근해: 7510",
+    "overview": "Chuyện phim xoay quanh nhân vật Chi-ho (Yoo Hae-jin) - nhà nghiên cứu bim bim với khả năng nếm vị xuất chúng, nhưng lại ngờ nghệch với mọi thứ xung quanh. Chi-ho là một người cực kỳ hướng nội, thích ở một mình và sống như một cái máy được lập trình sẵn mà không hề mắc lỗi dù chỉ một giây. Trong lúc phải đi trả nợ thay cho người anh trai cờ bạc (Cha In-pyo), Chi-ho đã gặp gỡ “nhân viên đòi nợ” Il-young - người phụ nữ hướng ngoại, luôn suy nghĩ tích cực về cuộc sống dù đang ở trong hoàn cảnh khó khăn của một bà mẹ đơn thân. Khác biệt về tính cách lẫn ngoại hình khiến cả hai trở thành “trái dấu hút nhau”. Sự “trái dấu” này đã đẩy đưa cuộc tình của họ đến vô vàn tình huống “cười ra nước mắt” nhưng cũng không kém phần cảm xúc.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/kSqTDw2qC6SqOxQFMA7Mxk35M0K.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/VMZkF6HEMHZSglILOmpMcpG5CP.jpg",
+    "release_date": "2023-08-15",
+    "vote_average": 5.7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/lewcl0anys0xwhkvtfe8d/Honey.Sweet.2023.ViE.1080p.WEB-DL.AAC2.0.H.264-PandaMoon.mkv?rlkey=wys8cnrwae74omukyac3r6hii&st=zp9yhpid&dl=0&dl=1"
+},
+{
+    "id": 324544,
+    "title": "Vùng Đất Bị Quên Lãng",
+    "original_title": "In the Lost Lands",
+    "overview": "Một nữ hoàng đã phái nữ phù thủy quyền năng và đáng sợ Gray Alys đến vùng đất ma quái Lost Lands để tìm kiếm sức mạnh ma thuật, nơi cô và người hướng dẫn của mình, kẻ lang thang Boyce, phải đánh bại cả con người và ác quỷ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/dDlfjR7gllmr8HTeN6rfrYhTdwX.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/jb7yM17VZvDqUJVS4JR77EOfgEM.jpg",
+    "release_date": "2025-02-27",
+    "vote_average": 6.41,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/nyf3zrur5zlqg7na48wlm/In-the-Lost.Lands.2025.1080p.BluRay.DTS-HD.MA.5.1.x264-BLOW.mkv?rlkey=4pb8il8ewfx5pvavfz07avvsc&st=3uatjirf&dl=0&dl=1"
+},
+{
+    "id": 5879,
+    "title": "Vương quốc dục cảm",
+    "original_title": "愛のコリーダ",
+    "overview": "Bộ phim dựa trên một câu chuyện có thật xảy ra trước thế chiến thứ 2 ở Nhật, về một cuộc tình ám ảnh giữa một người đàn ông ( Kichizo ) và cô hầu trong nhà ( Sada ). Sada càng lúc càng trở nên lấn tới, điều khiển từng động tác 'kĩ thuật' làm tình. Hai nhân vật chính trong phim mây mưa không ngừng nghỉ, với nhiều 'chiêu bài' mới lạ để đạt được sự thỏa mãn tột đỉnh, kể cả đánh đập, thắt cổ nhau. Không chỉ dừng ở mức quay rõ cảnh khỏa thân, giao hợp rõ mồn một mà cả những hình ảnh kích thích tình dục qua đường miệng cũng không hề chút che đậy ! Hình ảnh kết thúc phim chìm trong hoan lạc và bạo động, có thể khiến khán giả phải chóng mặt !",
+    "poster_path": "https://image.tmdb.org/t/p/w500/dbFnly6wXJBluY7CF7N8wxLVYG9.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/g3L6tOvJIRWSkxnhmoEW1SKEvW3.jpg",
+    "release_date": "1976-09-15",
+    "vote_average": 6.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ddmmrgc41e1mroj5e5xbt/In-the-Realm-of-the-Senses.-1976-1080p-Criterion-Bluray-DTS-x264-GCJM.mkv?rlkey=83uzi962fqc5vr6bwbwp2c3q0&st=dofue2jo&dl=0&dl=1"
+},
+{
+    "id": 864370,
+    "title": "Chú Nguyền",
+    "original_title": "咒",
+    "overview": "Sáu năm trước, Lý Nhược Nam bị nguyền rủa vì phạm phải điều cấm kị trong tôn giáo. Giờ đây, cô phải bảo vệ con gái trước hậu quả của những hành động mình gây ra.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/g6xM1zEtNaOQUz9UXGn961iQovo.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/vqEX1uF3Spl12rOACQ3gJ6j4MSR.jpg",
+    "release_date": "2022-03-18",
+    "vote_average": 6.828,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/i7bgmi9sgr5jatdpj52fy/Incantation.2022.ViE.1080p.NF.WEB-DL.DDP5.1.H.264-NSHE-LT-P.mkv?rlkey=1nuwksnm8s91qef6otg80jr0a&st=j8oqooui&dl=0&dl=1"
+},
+{
+    "id": 890526,
+    "title": "Bài Học Sát Nhân - Lesson in Murder",
+    "original_title": "死刑にいたる病",
+    "overview": "Masaya Kakei là một chàng sinh viên đại học sống cuộc đời nhạt nhẽo. Một ngày nọ, cậu nhận được một lá thư từ kẻ giết người hàng loạt Yamato Haimura, kẻ bị kết án hàng loạt tội giết người và nhận án tử hình. Trong thư, Yamato chia sẻ mình thực hiện các vụ giết người khi điều hành một cửa hàng bánh mì. Lúc đó, Masaya đang là học sinh cấp Hai và là khách hàng quen tại cửa hàng. Yamato thú nhận đã thực hiện các vụ giết người, nhưng khẳng định mình không ra tay vụ số 9, và cầu xin Masaya cứu giúp. Và từ đây Masaya bắt đầu điều tra vụ án giết người cuối cùng để minh oan cho tên sát nhân.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/oMAnlf97UOyfQrFOGUE4bqPbmLo.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/lCZ6Z9v4O6ybmYqUMZ5dp6wvOeH.jpg",
+    "release_date": "2022-05-06",
+    "vote_average": 7.471,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/b3i0f12rr1lgk38uqef2o/Lesson.in.Murder.2022.JAPANESE.1080p.AMZN.WEBRip.DDP2.0.x264-NOGRP-Vietsub.mkv?rlkey=i8d5yy4awyvtbujy2gxqg6qd8&st=k9y36k4e&dl=0&dl=1"
+},
+{
+    "id": 696506,
+    "title": "Người Nhân Bản",
+    "original_title": "Mickey 17",
+    "overview": "Được chuyển thể từ tiểu thuyết Mickey 7 của nhà văn Edward Ashton, Cuốn tiểu thuyết xoay quanh các phiên bản nhân bản vô tính mang tên “Mickey”, dùng để thay thế con người thực hiện cuộc chinh phạt nhằm thuộc địa hóa vương quốc băng giá Niflheim. Mỗi khi một Mickey chết đi, một Mickey mới sẽ được tạo ra, với phiên bản được đánh số 1, 2, 3 tiếp theo. Mickey số 7 được cho rằng đã chết, để rồi một ngày kia, hắn quay lại và bắt gặp phiên bản tiếp theo của mình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/XsKM62tGS8eRPm9sM9fYGEyZVn.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/hGLywNhy1Fo1rNFHsNZsXGS69B8.jpg",
+    "release_date": "2025-02-28",
+    "vote_average": 6.843,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/sxs8hez66m8ej54mqjwkv/Mickey.17.2025.1080p.iT.WEB-DL.DDP5.1.Atmos.H.264-BYNDR.mkv?rlkey=smeiptjakwbrrd3n4oh835hif&st=j6gp5q94&dl=0&dl=1"
+},
+{
+    "id": 526896,
+    "title": "Morbius",
+    "original_title": "Morbius",
+    "overview": "Sau khi bị mắc một căn bệnh hiếm gặp về máu, vị giáo sư Michael Morbius đã cố gắng tạo một thứ thuốc để tự điều trị cho bản thân mình nhưng cũng vì thứ thuốc đó đã khiến trở thành một dạng ma cà rồng.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/jTuTXGdugBZTiHuHFV3dHlyqRg9.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/jzWT0zd8U77fqWg5WgUfYaMzSFz.jpg",
+    "release_date": "2022-03-30",
+    "vote_average": 5.934,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/dmz0sysqnrajzuyaqs0a7/Morbius.2022.ViE.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=mowhm0bri0e2wzc319h467yu2&st=35ujo93l&dl=0&dl=1"
+},
+{
+    "id": 783121,
+    "title": "Chiến Dịch Moscow",
+    "original_title": "93国际列车大劫案：莫斯科行动",
+    "overview": "Các thám tử Trung Quốc thực hiện nhiệm vụ tới Moscow để truy lùng những tên cướp tàn nhẫn đang gây ra bạo lực và hỗn loạn trên tuyến đường sắt xuyên Siberia.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/eQr1KJImxUKEclMo0NubJrPrsjX.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/wun6RZEmfhBHOaaz2h1JfLFdEpq.jpg",
+    "release_date": "2023-09-29",
+    "vote_average": 6.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/cogvn3rz9tgeal7z7xz1l/Moscow.Mission.2023.1080p.WEB-DL.DDP5.1.H.264.mkv?rlkey=sl4r81vh6pogt8h3yzc481vuq&st=a0j4qywl&dl=0&dl=1"
+},
+{
+    "id": 1205229,
+    "title": "Quái Thú Đại Náo Sở Thú",
+    "original_title": "Night of the Zoopocalypse",
+    "overview": "Một thiên thạch mang virus rơi xuống sở thú, biến các con vật thành Zombie kẹo dẻo. Cô sói Gracie và chú sư tử núi Dan đã hợp sức với nhóm bạn thú tìm cách cứu lấy sở thú. Cuối cùng, họ phát hiện ra âm nhạc chính là phương thuốc diệt virus hiệu quả nhất. Nhờ vậy, họ đã đẩy lùi được virus và đưa mọi thứ trở lại bình thường.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/nufpMxgT3oPjTu2wi08H0xGL5FL.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/h2SEtzuABKmcZAnKBJ1za3kETTY.jpg",
+    "release_date": "2025-01-23",
+    "vote_average": 6.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/8y42bxyl6p8120fr4uk60/Night-of-the-Zoopocalypse-2024-Vie-1080p-AMZN-WEB-DL-DDP5-1-H-264-BYNDR_viet-sub.mkv?rlkey=jrdsf50lg8570zk7jvzmp7epe&st=8jj3674b&dl=0&dl=1"
+},
+{
+    "id": 739405,
+    "title": "Phi Vụ Toàn Sao",
+    "original_title": "Operation Fortune: Ruse de Guerre",
+    "overview": "Nội dung phim xoay quanh đặc vụ M16 Orson Fortune (do Jason Statham thủ vai) và nhóm đặc nhiệm cool ngầu cùng thực hiện nhiệm vụ ngăn chặn âm mưu trao đổi 'món hàng' khiến nhiều người 'đăng xuất hàng loạt'. Sinh mạng của nhiều quốc gia đều phụ thuộc vào phi vụ này.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/nmOTayNXcM5t5XJG9GfJ22D5OMu.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/sNnPbPopZxGO3s7Hd5qcqoMyLXl.jpg",
+    "release_date": "2023-01-04",
+    "vote_average": 6.471,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ntnxwz176j0g5alwbk6jd/Operation.Fortune.Ruse.de.Guerre.2023.ViE-1080p.WEB-DL.DDP5.1.H.264-RIGHTNOW-TM-P.mkv?rlkey=hpb2xmygetuk394le61hrxxs0&st=mgi0edf3&dl=0&dl=1"
+},
+{
+    "id": 496243,
+    "title": "Ký Sinh Trùng",
+    "original_title": "기생충",
+    "overview": "Bộ phim xoay quanh hai gia đình hoàn toàn trái ngược: một bên vô cùng giàu có, còn một bên luôn sống trong cảnh nghèo túng. Họ tình cờ gặp gỡ và quen biết nhau sau một biến cố không ngờ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/zZydO1LhMhqDAMM86JUi241wT7X.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/hiKmpZMGZsrkA3cdce8a7Dpos1j.jpg",
+    "release_date": "2019-05-30",
+    "vote_average": 8.496,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/a8kpp0ndz5p3r68m1nr95/Parasite.2019.ViE.1080p.H264.AAC-NetHD.mkv?rlkey=wuilkpqo9smzglwdxq4fbfcqm&st=5oj8qgxs&dl=0&dl=1"
+},
+{
+    "id": 715253,
+    "title": "Bóng Ma: Gián Điệp",
+    "original_title": "유령",
+    "overview": "Năm 1933, khi Hàn Quốc nằm dưới sự chiếm đóng của Nhật Bản, năm người ở Gyeongseong bị nghi ngờ là gián điệp 'Bóng ma' của lực lượng chống Nhật.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/k1cBfSMAcMCIdPf238lWyHH99ls.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/wFzI8o0jEMYfNugglP4wjFIr647.jpg",
+    "release_date": "2023-01-18",
+    "vote_average": 6.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/pvctg2787o0b1c45l6b1e/Phantom.2023-ViE-1080p.Bluray.DTS-HDMA5.1.x264-CHD.mkv?rlkey=kijbpx8vguiqcbk7gmaj6dn9t&st=5fqhj7mb&dl=0&dl=1"
+},    
+{
+    "id": 435615,
+    "title": "Người Sở Hữu",
+    "original_title": "Possessor",
+    "overview": "Tasya Vos là một đặc vụ của công ty sử dụng công nghệ cấy ghép não vào cơ thể người khác, khiến họ thực hiện các vụ ám sát vì lợi ích của công ty. Mặc dù cô có năng khiếu đặc biệt đối với công việc, nhưng những thứ cô chứng kiến trong suốt thời gian làm việc đã khiến cô thay đổi đáng kể, và trong cuộc sống của chính mình, cô phải vật lộn để kìm nén những ký ức bạo lực và thôi thúc. Khi căng thẳng tinh thần của cô tăng lên, cô bắt đầu mất kiểm soát và ngay sau đó cô thấy mình bị mắc kẹt trong tâm trí của một người đàn ông đang muốn giết chết cô.​",
+    "poster_path": "https://image.tmdb.org/t/p/w500/xC9GZeJZ3NagdkGg9nLQx0aPG6J.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/owTL741kAuvJDKYnXKJCgTRGRud.jpg",
+    "release_date": "2020-10-02",
+    "vote_average": 6.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/s0xob2q3xaoaqn0tj0k9m/Possessor-2020-1080p-WEB-DL-DD5.1-H.264-EVO_Vi-t-Sub.mkv?rlkey=3zb6lpwejkt6v3j7xu77blb7g&st=isec3nl1&dl=0&dl=1"
+},
+{
+    "id": 1376434,
+    "title": "Quái Thú Vô Hình: Sát Thủ Diệt Sát Thủ",
+    "original_title": "Predator: Killer of Killers",
+    "overview": "Ba chiến binh huyền thoại, ba thời đại khốc liệt, ba trận chiến khắc nghiệt định đoạt số phận: Một nữ Viking đầy kiên cường, dẫn dắt đứa con trai mình trong cuộc hành trình đẫm máu để trả thù; một ninja thời Nhật Bản phong kiến, đứng trước cuộc đối đầu quyết liệt với người anh Samurai trong cuộc chiến giành quyền lực; và một phi công dũng cảm trong Thế chiến II, bay vào bầu trời để đối mặt với một mối đe dọa siêu nhiên có thể thay đổi cục diện chiến tranh. Một hành trình ép buộc, đầy đau thương và quyết tâm, nơi mỗi chiến binh phải đương đầu với số phận và vũ khí trong tay.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/2XDQa6EmFHSA37j1t0w88vpWqj9.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/cBgJJS19kVxedaLWPBbAi7Mh8wM.jpg",
+    "release_date": "2025-06-05",
+    "vote_average": 7.858,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/168x5j2wvfpi0h8qqm1ky/Predator.Killer.of.Killers.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=sinsdc3xi9stlrras08yiyubr&st=0fqr1zr4&dl=0&dl=1"
+},
 {
     "id": 1140535,
     "title": "Linh Hồn Bảo Hộ",
