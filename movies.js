@@ -1,5 +1,180 @@
 // movies.js
 const movieList = [
+
+    
+
+
+
+
+
+
+
+
+{
+    "id": 619930,
+    "title": "Narvik",
+    "original_title": "Kampen om Narvik",
+    "overview": "Trong bối cảnh trận chiến Thế chiến II được coi là thất bại đầu tiên của Hitler, một người lính Na Uy trở về nhà và biết được sự thật động trời về vợ mình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/gU4mmINWUF294Wzi8mqRvi6peMe.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ogFIG0fNXEYRQKrpnoRJcXQNX9n.jpg",
+    "release_date": "2022-12-25",
+    "vote_average": 6.762,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/cum6y3g9h3j3dlhbw4a9p/Narvik-2022-ViE-1080p.NF.WEB-DL.DDP5.1.x264-KHN-TM-P.mkv?rlkey=xpmukoldeofsnztcv3t2d0btd&st=2ehizfo8&dl=0&dl=1"
+},
+{
+    "id": 931175,
+    "title": "Tân Ỷ Thiên Đồ Long Ký 01: Cửu Dương Thần Công",
+    "original_title": "倚天屠龍記之九陽神功",
+    "overview": "Tân Ỷ Thiên Đồ Long Ký (Phần 1): Cửu Dương Thần Công xoay quanh câu chuyện về chàng trai Trương Vô Kỵ, và cuộc chiến tranh giành bảo vật đầy khốc liệt giữa các môn phái. Giờ đây, khi các võ lâm đang lên kế hoạch đế núi Quang Minh để có thể tiêu diệt được minh giáo Trương Vô Kỵ, nhằm ngăn chặn những tiềm tàn nguy hiểm xảy ra trong tương lai. Không những thế Trương Vô Kỵ còn dùng tính mạng của mình để cứu sống được Triệu Mẫn.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/oAKheXz1l4G0s4CDo5jnpHsFhzl.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/opJTAZ7t7s5Hqsq9mJCbcLBoCuj.jpg",
+    "release_date": "2022-01-28",
+    "vote_average": 4.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/04agekfti8lnbwpy1lu9f/New.Kung.Fu.Cult.Master.-.2022.ViE.1080p.WEB-DL.AAC2.0.H264-HDSWEB.mkv?rlkey=mo4u24ckh02qe9667ptngkmom&st=kh20amza&dl=0&dl=1"
+},
+{
+    "id": 933861,
+    "title": "Tân Ỷ Thiên Đồ Long Ký 02: Thánh Hỏa Hùng Phong",
+    "original_title": "倚天屠龍記之聖火雄風",
+    "overview": "Các bậc thầy của Lục Tông bị mắc kẹt trong chùa Vạn An, mỗi người đều bị trúng Bột độc Thập Hương và mất hết toàn bộ võ lực.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/s94AGikcoJyXygw8IGZcyucylk1.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/6QUvo2TmzFVeAmhy1S7QFHDRCaz.jpg",
+    "release_date": "2022-02-12",
+    "vote_average": 4.8,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/pf3qt59rtmq288sflr1k9/New.Kung.Fu.Cult.Master.-.2022.ViE-Sub.WEB-DL.4K.H265.DDP5.1-Dave-Thuyetminh-Vietsub.mkv?rlkey=6sj1hdk6ckdxqcn226s5fe2ow&st=tzculfy7&dl=0&dl=1"
+},
+{
+    "id": 1054867,
+    "title": "Trận Chiến Sau Trận Chiến",
+    "original_title": "One Battle After Another",
+    "overview": "Mười sáu năm sau ngày kẻ thù tàn bạo bị xóa sổ, nhóm cựu chiến sĩ cách mạng buộc phải tái hợp để giải cứu con gái của một đồng đội thân thiết trong nhóm, đối mặt với hiểm nguy mới để bảo vệ di sản tình nghĩa và lý tưởng của họ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/wQ0IDT8rXOvCt6LflxcMEOUNBUS.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/zpEWFNqoN8Qg1SzMMHmaGyOBTdW.jpg",
+    "release_date": "2025-09-23",
+    "vote_average": 7.492,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/n6pc74sp06gacexy1vxfn/One.Battle.After.Another.2025.ViE.AI.1080p.AMZN.WEB-DL.DDP5.1.H.264.mkv?rlkey=yd2wxt9pxtwzfw65knucpp1ik&st=40o8e3cy&dl=0&dl=1"
+},
+{
+    "id": 1242419,
+    "title": "Thợ Lợp Mái",
+    "original_title": "Roofman",
+    "overview": "Một tên tội phạm lôi cuốn, trong khi chạy trốn cảnh sát, đã ẩn náu trong một không gian bí mật của một cửa hàng đồ chơi. Tại đây, hắn ta lấy một danh tính mới và vướng vào một mối tình vừa bất ngờ vừa đầy rủi ro với một cô gái.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/pUpFD3Oq1eN5mdF9MDwCwH874P8.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2YOnE2qmoyyOUqQsFit12gDSauk.jpg",
+    "release_date": "2025-10-08",
+    "vote_average": 7.257,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/1odlgablf5r18flqbk5pj/Roofman.2025.ViE.1080p.WEB.H264-SUPPLY-NEW.mkv?rlkey=v669i418ft4ajlgflsfyu4jdl&st=rq03s3mm&dl=0&dl=1"
+},
+{
+    "id": 710258,
+    "title": "Chạy Trốn Cái Chết",
+    "original_title": "Rust",
+    "overview": "'Rust' là phim cao bồi lấy bối cảnh năm 1882 tại Wyoming. Nhân vật chính là Harland Rust (Alec Baldwin), một tay súng sống ngoài vòng pháp luật, tìm cách cứu đứa cháu trai Lucas Hollister, 13 tuổi, khỏi án tử hình sau khi cậu bé vô tình bắn chết một người. Họ cùng nhau chạy trốn về phía Mexico, bị truy đuổi bởi cảnh sát trưởng và thợ săn tiền thưởng. Trên đường đi, cả hai phải đối mặt với những bóng ma trong quá khứ và mối liên kết gia đình được xây dựng lại trong nghịch cảnh.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/tbJ3RkA2s6X5qrBzrYHYTxvDBui.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/12tEzU0bNYKIjXXEwI5abuOotHF.jpg",
+    "release_date": "2025-05-01",
+    "vote_average": 6.717,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/5jvu0azdvnkpjuv32j19a/Rust.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR-Sub-Viet.mkv?rlkey=fccsqafyw3mehnkfm3awl0c4z&st=iwna3qu0&dl=0&dl=1"
+},
+{
+    "id": 1429738,
+    "title": "Tee Yai: Tính bản ác",
+    "original_title": "ตี๋ใหญ่ ฤกษ์ดาวโจร",
+    "overview": "Những năm 1980 ở Bangkok, một tên trộm xảo quyệt thực hiện hàng loạt vụ trộm táo bạo, khiến chính quyền và công chúng hoang mang – cho đến khi một cảnh sát quyết tâm hạ bệ hắn.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vqYZMLUwaN1z1iJ4TKvExyxo1TX.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/xmnqFHhGNYHf5JFy4GSfiIEG0ly.jpg",
+    "release_date": "2025-11-12",
+    "vote_average": 4.987,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/o7iuv1jql69cr0gfjq4aq/Tee.Yai.Born.to.Be.Bad.2025.1080p.WEB.h264-EDITH-Sub-Viet.mkv?rlkey=6ebbxki2r5h0f112c7yp9ynaj&st=rsk7rnh2&dl=0&dl=1"
+},
+{
+    "id": 1232827,
+    "title": "Cô Gái và Cây Kim",
+    "original_title": "Cô Gái và Cây Kim",
+    "overview": "Copenhagen 1919: A young worker finds herself unemployed and pregnant. She meets Dagmar, who runs an underground adoption agency. A strong connection grows but her world shatters when she stumbles on the shocking truth behind her work.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/w5XAp3Gcf5QdWkRwfiJ0gb90Gpu.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/uwACVNL5OpiI3oT72DVGxnU4SRV.jpg",
+    "release_date": "2024-09-06",
+    "vote_average": 7.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/dz7bxd7ky7ew91yk5f6n1/The.Girl.with.the.Needle.2024.1080p.BluRay.DDP5.1.x264-ZoroSenpai-Vietsub.mkv?rlkey=y8f2p5gq8pszdf6u42eb1wsl9&st=n08crgdi&dl=0&dl=1"
+},    
+{
+    "id": 1426518,
+    "title": "Đời của Eddie",
+    "original_title": "Being Eddie",
+    "overview": "Ở bộ phim tài liệu toàn sao này, Eddie Murphy nhìn lại hành trình phi thường của mình, từ cây hài tuổi teen đi lên huyền thoại Hollywood, với sự hài hước và chân thực trần trụi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/bAAdoOyCm3DqrOyj0h2icPpeHHw.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/9w6883OlULmjwLA0H0Zo4XYhZSR.jpg",
+    "release_date": "2025-11-11",
+    "vote_average": 6.904,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/keio8iisrq33w3kvx01p9/Being-Eddie-2025-1080p-NF-WEB-DL-DDP5-1-Atmos-H-264-FLUX.mkv?rlkey=z8ntm1ix6qu12h5nzblc5l4dw&st=n8hxrfo7&dl=0&dl=1"
+},
+{
+    "id": 1419406,
+    "title": "Bổ Phong Truy Ảnh",
+    "original_title": "捕风追影",
+    "overview": "Wong Tak-Chung, một cựu chuyên gia giám sát được biết đến với khả năng phân tích dữ liệu và truy vết bậc thầy, bị cảnh sát Ma Cao mời trở lại hợp tác điều tra sau khi xuất hiện hàng loạt vụ cướp quy mô lớn do một tổ chức tội phạm công nghệ cao thực hiện.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/5LGUvRBXoXHsMZsZrCGBOVmwOVd.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/4BtL2vvEufDXDP4u6xQjjQ1Y2aT.jpg",
+    "release_date": "2025-08-16",
+    "vote_average": 6.507,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/u5g8dflgzca4dv74rlyt5/The.Shadows.Edge.2025.2160p.WEB-DL.H265.DTS-QuickIO-Vsub.mkv?rlkey=u3afy5iolyriszlnmsbh95tpf&st=x35f6i4y&dl=0&dl=1"
+},    
+{
+    "id": 1377082,
+    "title": "Isang Himala: Phép Lạ",
+    "original_title": "Isang Himala",
+    "overview": "Sau khi nhìn thấy Đức Maria Đồng Trinh, cô gái nọ tuyên bố rằng mình có thể chữa bệnh, và rồi trở thành tâm điểm của cả sự tôn sùng lẫn chế giễu khi những tín đồ lũ lượt tìm đến.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/szekb0BnasOTchFzg72qncMUoWo.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/fXbu4n8O7zw0jVNeTazxWwFjU9O.jpg",
+    "release_date": "2024-12-25",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/6768nneilnjsrolxdnset/Isang.Himala.2024.1080p.NF.WEB-DL.DDP5.1.H.264-EQRTZ.mkv?rlkey=14qq424v9qfdfh9xa4004av3e&st=mxjma36m&dl=0&dl=1"
+},    
+{
+    "id": 1083968,
+    "title": "Trò chơi kinh dị",
+    "original_title": "Locked",
+    "overview": "Khi Eddie đột nhập vào một chiếc SUV sang trọng, anh ta bước vào một cái bẫy chết người do William, một người cảnh giác tự xưng mang đến thương hiệu công lý xoắn của riêng mình. Không có phương tiện trốn thoát, Eddie phải chiến đấu để sống sót trong một chuyến đi mà Escape là một ảo ảnh, sự sống còn là một cơn ác mộng và Justice chuyển sang thiết bị cao.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/hhkiqXpfpufwxVrdSftzeKIANl3.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/r4X2xRrWleVgx0kahP27xRmm3ia.jpg",
+    "release_date": "2025-03-20",
+    "vote_average": 6.244,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/smgv63c1jfms7ewluwzeo/Locked.2025.ViE.1080p.BluRay.x264-JustWatch.mkv?rlkey=ppovchlgh59ycrzzccw0nbhxg&st=cbouzdbw&dl=0&dl=1"
+},
+ {
+    "id": 1468704,
+    "title": "Mưa Đỏ",
+    "original_title": "Mưa Đỏ",
+    "overview": "“Mưa Đỏ” - Phim truyện điện ảnh về đề tài chiến tranh cách mạng, kịch bản của nhà văn Chu Lai, lấy cảm hứng và hư cấu từ sự kiện 81 ngày đêm chiến đấu anh dũng, kiên cường của nhân dân và cán bộ, chiến sĩ bảo vệ Thành Cổ Quảng Trị năm 1972. Tiểu đội 1 gồm toàn những thanh niên trẻ tuổi và đầy nhiệt huyết là một trong những đơn vị chiến đấu, bám trụ tại trận địa khốc liệt này. Bộ phim là khúc tráng ca bằng hình ảnh, là nén tâm nhang tri ân và tưởng nhớ những người con đã dâng hiến tuổi thanh xuân cho đất nước, mang âm hưởng của tình yêu, tình đồng đội thiêng liêng, là khát vọng hòa bình, hoà hợp dân tộc của nhân dân Việt Nam.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/bLrNhlqhAMHycAe5jZj1U8lpWrQ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/xgOS4pOeZX510GY42YBdpCbjuXi.jpg",
+    "release_date": "2025-08-22",
+    "vote_average": 8.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ypxguvmoofz1b0qkotokn/Red.Rain.2025.1440p.WEB-DL.AAC2.0.H.264-NhaMangToiYeu.mkv?rlkey=0lidzamww92vomlvjo8mfyuag&st=va78smag&dl=0&dl=1"
+},   
+{
+    "id": 1252377,
+    "title": "Villa ngọt ngào",
+    "original_title": "La Dolce Villa",
+    "overview": "Khi con gái quyết định mua căn villa đổ nát ở Tuscan, Eric vội đến Ý để ngăn cản. Nhưng cuối cùng, anh lại tìm thấy vẻ đẹp, tình yêu và mục đích mới.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/sEma5RN8aZ5Yu2Dkefyn5ULdlc1.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/s1ge9SG2zfJdMeZ69VMEbxeKuAE.jpg",
+    "release_date": "2025-02-12",
+    "vote_average": 6.276,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/qnlf3firtvklt2gtgcbdt/La.Dolce.Villa.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=rg1avw2rfyavbi1lygr3fnatb&st=b8jkjtib&dl=0&dl=1"
+},    
+{
+    "id": 523638,
+    "title": "Tù Nhân Của Vùng Đất Ma Quái",
+    "original_title": "Prisoners of the Ghostland",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/j5HRzcvN1QXZLvwfc3NLxX8XQJY.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/pXn6x9SILzNT0ECPz87iEwyybA9.jpg",
+    "release_date": "2021-08-31",
+    "vote_average": 5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/86v0b8a3bml2z3n9jelrs/Prisoners.of.the.Ghostland.2021.1080p.WEBRip.DD5.1.x264-NOGRP_Viet-sub.mkv?rlkey=2bta1o9m6bxynwnf1a55oa1ny&st=qutz19nv&dl=0&dl=1"
+},
     {
     "id": 1478821,
     "title": "Mang Mẹ Đi Bỏ",
@@ -795,5 +970,46 @@ const movieList = [
     "release_date": "2025-11-14",
     "vote_average": 5,
     "dropbox_link": "https://www.dropbox.com/scl/fi/gvjj7fi785gsls5gfrw39/Escobank.2025.ViE.AI.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv?rlkey=qip4pt58x0bdyuatl952z6qyq&st=vdprhj1w&dl=0&dl=1"
+},
+{
+    "id": 1323475,
+    "title": "Rắc rối sâm panh",
+    "original_title": "Champagne Problems",
+    "overview": "Một giám đốc điều hành người Mỹ đầy nhiệt huyết đến Paris với quyết tâm mua lại một thương hiệu sâm panh trước Giáng sinh – rồi vô tình phải lòng người thừa kế đế chế sâm panh đó.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/A2TCPPkzmWd5SwjBlxMlB6yQ4yK.jpg",
+    "release_date": "2025-11-18",
+    "vote_average": 6.256,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/hycd5pwbea8earw7ee8lz/Champagne.Problems.2025.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=a5efntppfenzl8w9v7def1a2j&st=6th1f63y&dl=0&dl=1"
+},
+{
+    "id": 554972,
+    "title": "Găng Tơ Tái Xuất",
+    "original_title": "성난황소",
+    "overview": "Găng Tơ Tái Xuất câu chuyện bắt đầu từ Dong-Chul và Ji-Soo là một cặp vợ chồng hạnh phúc. Dong-Chul đã từng là một tay xã hội đen khét tiếng, nhưng anh ta đã thay đổi cách thức của mình. Một ngày nọ, Dong-Chul đến nhà để tìm nhà của anh ấy trong tình trạng hỗn loạn và vợ anh ấy mất tích. Dong-Chul sau đó nhận được một cuộc điện thoại từ một người đề nghị trả tiền cho anh ta để từ bỏ vợ. Dong-Chul thề sẽ cứu vợ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/30W8M1UbyZZWiQ7zYJKwNahcC4I.jpg",
+    "release_date": "2018-11-22",
+    "vote_average": 7.41,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/d0aepqeo9fumnz9has1c6/Unstoppable.2018.ViE.1080p.BluRay.DD5.1.x264-BaSiAc-Thuyet-Minh-Sub-Viet.mkv?rlkey=2jjuvkdvq6hsx71ivy2gdx71p&st=82d4v01e&dl=0&dl=1"
+},
+{
+    "id": 813079,
+    "title": "Đơn Hàng Từ Sát Nhân",
+    "original_title": "타겟",
+    "overview": "Như bao cô gái chốn công sở, Soo-hyun dù luôn quay cuồng với deadline nhưng vẫn không quên đam mê shopping online của mình. Sau khi mua nhầm một đơn hàng 'chất lượng kém, xứng đáng 1 sao', Soo-hyun không ngờ rằng đánh giá chân thật của mình đã làm một tên sát nhân máu lạnh nổi điên!",
+    "poster_path": "https://image.tmdb.org/t/p/w500/xSSAK4QZGyvjkef978bv1i1UQ07.jpg",
+    "release_date": "2023-08-30",
+    "vote_average": 6.811,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/o8wwqgpzj3x0nywpi0jyw/Target-2023.1080p.BluRay.DTS-HD.MA.5.1-x264.mkv?rlkey=rhgl8wyp93l37mjx3tic94oqs&st=9n40wcbh&dl=0&dl=1"
+},
+{
+    "id": 1188019,
+    "title": "春画先生",
+    "original_title": "春画先生",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ujWrgxuwpVvDcubpvqoyN9ZGiFw.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/uNwcvGnJ599csRn6uEUJrA1da00.jpg",
+    "release_date": "2023-10-13",
+    "vote_average": 5,
+    "dropbox_link": "Shunga.Sensei.2023.1080p.AMZN.WEB-DL.DDP5.1.H.264-MagicStar.mkv?dl=1"
 },
 ];
