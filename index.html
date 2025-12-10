@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG</title>
+    <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG CAO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
     
@@ -15,6 +15,7 @@
             --bg-card: #1a1a1a;
             --text-white: #ffffff;
             --text-gray: #b3b3b3;
+            --vlc-orange: #ff5722;
         }
 
         body { 
@@ -25,75 +26,90 @@
             overflow-x: hidden;
         }
 
-        /* --- 2. NAVBAR & FILTERS (CẬP NHẬT) --- */
+        /* --- 2. NAVBAR (MENU TRONG SUỐT) --- */
         .navbar {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 15px 50px; position: fixed; top: 0; width: 100%; z-index: 1000;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
-            transition: background 0.3s;
-            flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
+            padding: 15px 50px; 
+            position: fixed; /* Đè lên banner */
+            top: 0; left: 0; width: 100%; 
+            z-index: 1000;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+            transition: background 0.3s; flex-wrap: wrap; box-sizing: border-box;
         }
         .navbar.scrolled { background: #0f0f0f; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         
         .logo { color: var(--text-white); font-size: 28px; font-weight: 900; display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; margin-right: 20px;}
         .logo i { color: var(--primary); }
         
-        /* Container chứa tìm kiếm và bộ lọc */
         .filter-container { 
             flex: 1; display: flex; align-items: center; gap: 10px; 
-            background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 30px; 
+            background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 30px; 
             border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px);
             max-width: 800px;
         }
 
-        .search-input { 
-            background: transparent; border: none; color: white; outline: none; 
-            padding: 8px; flex: 1; font-family: inherit; font-size: 14px;
-        }
+        .search-input { background: transparent; border: none; color: white; outline: none; padding: 8px; flex: 1; font-family: inherit; font-size: 14px; }
         .search-icon { color: #aaa; margin-right: 5px; }
 
-        /* Style cho các ô chọn (Dropdown) */
         .filter-select {
-            background: rgba(0,0,0,0.3); color: #ddd; border: none; 
+            background: rgba(0,0,0,0.5); color: #ddd; border: none; 
             padding: 8px 10px; border-radius: 15px; outline: none; 
-            cursor: pointer; font-size: 13px; font-family: inherit;
-            transition: 0.2s;
+            cursor: pointer; font-size: 13px; font-family: inherit; transition: 0.2s;
         }
-        .filter-select:hover { background: rgba(255,255,255,0.1); color: var(--primary); }
+        .filter-select:hover { background: rgba(255,255,255,0.2); color: var(--primary); }
         .filter-select option { background: #1a1a1a; color: white; }
 
         .nav-right { display: flex; gap: 20px; align-items: center; font-size: 14px; font-weight: bold; margin-left: 20px;}
 
-        /* --- 3. HERO BANNER --- */
+        /* --- 3. HERO BANNER (FULL MÀN HÌNH) --- */
         .hero-section {
-            position: relative; width: 100%; height: 95vh;
-            background-size: cover; background-position: center top; 
-            display: flex; align-items: center; transition: background-image 0.5s ease-in-out;
+            position: relative; 
+            width: 100%; 
+            height: 100vh; /* Chiếm trọn màn hình để không bị lẹm */
+            background-size: cover; 
+            background-position: center center; 
+            display: flex; align-items: center; 
+            transition: background-image 0.5s ease-in-out;
+            margin-top: 0;
         }
+        
         .hero-overlay {
             position: absolute; inset: 0;
-            background: radial-gradient(circle at 70% 20%, transparent 0%, #0f0f0f 120%),
-                        linear-gradient(to right, #0f0f0f 30%, transparent 100%),
-                        linear-gradient(to top, #0f0f0f 15%, transparent 40%);
+            background: radial-gradient(circle at 70% 30%, transparent 0%, #0f0f0f 140%),
+                        linear-gradient(to top, #0f0f0f 5%, transparent 40%),
+                        linear-gradient(to right, #0f0f0f 20%, rgba(15,15,15,0.4) 50%, transparent 100%);
         }
-        .hero-content { position: relative; z-index: 10; width: 50%; padding-left: 60px; margin-top: -60px; }
-        .hero-title { font-size: 4rem; font-weight: 900; line-height: 1; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 20px rgba(0,0,0,0.8); }
-        .hero-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 25px; font-size: 14px; color: #ccc; }
+
+        .hero-content { 
+            position: relative; z-index: 10; width: 50%; padding-left: 60px; 
+            padding-top: 80px; /* Đẩy nội dung xuống */
+        }
+        
+        .hero-title { font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        .hero-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; font-size: 14px; color: #ccc; }
         .tag { border: 1px solid rgba(255,255,255,0.4); padding: 4px 10px; border-radius: 4px; }
         .tag-res { background: var(--primary); color: black; border: none; font-weight: bold; }
-        .hero-desc { font-size: 1.1rem; color: #ccc; line-height: 1.6; margin-bottom: 40px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; width: 90%; }
-        .hero-actions { display: flex; gap: 20px; align-items: center; }
-        .btn-circle-play { width: 70px; height: 70px; border-radius: 50%; background: var(--primary); color: #000; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 20px rgba(245, 197, 24, 0.4); animation: pulse-yellow 2s infinite; }
-        .btn-circle-play:hover { transform: scale(1.1); background: #fff; }
-        .btn-action-text { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 30px; color: white; font-weight: bold; display: flex; align-items: center; gap: 10px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); }
+        .hero-desc { font-size: 1rem; color: #ddd; line-height: 1.6; margin-bottom: 30px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; width: 85%; text-shadow: 1px 1px 2px black;}
         
-        .hero-thumbnails { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 15px; padding: 10px 20px; background: rgba(0,0,0,0.6); border-radius: 15px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); }
-        .thumb-item { width: 70px; height: 100px; border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; border: 2px solid transparent; opacity: 0.6; }
+        .hero-actions { display: flex; gap: 20px; align-items: center; }
+        .btn-circle-play { width: 70px; height: 70px; border-radius: 50%; background: var(--primary); color: #000; display: flex; align-items: center; justify-content: center; font-size: 28px; cursor: pointer; transition: 0.3s; box-shadow: 0 0 30px rgba(245, 197, 24, 0.3); animation: pulse-yellow 2s infinite; }
+        .btn-circle-play:hover { transform: scale(1.1); background: #fff; }
+        .btn-action-text { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 30px; color: white; font-weight: bold; display: flex; align-items: center; gap: 10px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;}
+        .btn-action-text:hover { background: rgba(255,255,255,0.3); }
+        
+        /* THUMBNAILS CĂN GIỮA */
+        .hero-thumbnails { 
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); 
+            z-index: 20; display: flex; gap: 15px; padding: 10px 20px; 
+            background: rgba(0,0,0,0.6); border-radius: 15px; 
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); 
+        }
+        .thumb-item { width: 60px; height: 90px; border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; border: 2px solid transparent; opacity: 0.6; }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
         .thumb-item:hover { transform: translateY(-10px); opacity: 1; }
         .thumb-item.active { border-color: var(--primary); transform: scale(1.15) translateY(-10px); opacity: 1; z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
 
-        /* --- 4. RANKING --- */
+        /* --- 4. RANKING & GRID --- */
         .ranking-section { padding: 40px 60px; background: #0f0f0f; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; border-bottom: 1px solid #222; }
         .rank-column h3 { color: #ddd; font-size: 16px; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
         .rank-column h3 i { color: var(--primary); }
@@ -110,16 +126,9 @@
         .rank-title { font-size: 14px; font-weight: bold; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 5px 0;}
         .rank-meta { font-size: 12px; color: #777; }
 
-        /* --- 5. GRID & TOTAL COUNT --- */
         .section-container { padding: 50px 60px; position: relative; z-index: 2; background: var(--bg-dark); }
         .section-header { display: flex; align-items: center; margin-bottom: 25px; font-size: 24px; font-weight: 700; color: #fff; border-left: 5px solid var(--primary); padding-left: 15px; }
-        
-        #total-movies-badge {
-            font-size: 14px; background: #222; color: #aaa; padding: 5px 12px; 
-            border-radius: 20px; margin-left: 15px; font-weight: normal; 
-            border: 1px solid #333; display: inline-flex; align-items: center; gap: 5px;
-        }
-
+        #total-movies-badge { font-size: 14px; background: #222; color: #aaa; padding: 5px 12px; border-radius: 20px; margin-left: 15px; font-weight: normal; border: 1px solid #333; display: inline-flex; align-items: center; gap: 5px; }
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
         .movie-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; transition: 0.3s; cursor: pointer; position: relative; }
         .movie-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
@@ -129,7 +138,7 @@
         .card-title { margin: 0; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-year { font-size: 12px; color: var(--text-gray); margin-top: 5px; }
 
-        /* --- 6. FOOTER --- */
+        /* --- 5. FOOTER & FLOATING --- */
         footer { background-color: #050505; padding: 60px 50px 30px 50px; color: #ccc; position: relative; overflow: hidden; border-top: 1px solid #222; }
         .footer-watermark { position: absolute; top: 50%; right: -50px; transform: translateY(-50%); font-size: 400px; color: rgba(255,255,255,0.02); z-index: 0; pointer-events: none; }
         .footer-content { position: relative; z-index: 1; max-width: 1200px; }
@@ -145,7 +154,6 @@
         .footer-links a:hover { color: var(--primary); }
         .copyright { font-size: 13px; color: #555; border-top: 1px solid #1a1a1a; padding-top: 20px; margin-top: 20px;}
 
-        /* --- 7. BUTTONS --- */
         .floating-group { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 999; }
         .donate-fab { width: 50px; height: 50px; background: linear-gradient(135deg, #FFD700, #FF8C00); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4); cursor: pointer; transition: transform 0.3s; animation: float 3s ease-in-out infinite; }
         .donate-fab i { font-size: 24px; color: #fff; }
@@ -155,16 +163,44 @@
         .up-btn:hover i { color: #000; }
         .up-btn i { color: var(--primary); font-size: 24px; }
 
-        /* --- 8. MODAL --- */
+        /* --- 6. MODAL (GIAO DIỆN TẢI & VLC) --- */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
-        .modal-box { background: #181818; width: 800px; max-width: 90%; height: 500px; border-radius: 15px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative;}
+        .modal-box { background: #181818; width: 900px; max-width: 90%; height: 500px; border-radius: 15px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative;}
         .modal-img { width: 40%; object-fit: cover; }
         .modal-info { padding: 40px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .modal-title { font-size: 2.5rem; font-weight: 900; color: var(--primary); margin: 0 0 10px 0; line-height: 1.1; }
+        .modal-title { font-size: 2rem; font-weight: 900; color: var(--primary); margin: 0 0 10px 0; line-height: 1.1; }
         .modal-meta { color: #ccc; margin-bottom: 20px; font-size: 0.9rem; }
         .modal-desc { color: #aaa; line-height: 1.6; margin-bottom: 30px; overflow-y: auto; max-height: 150px; }
-        .btn-download-large { background: var(--primary); color: #000; font-weight: 900; text-decoration: none; padding: 15px; border-radius: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; transition: 0.3s; }
-        .btn-download-large:hover { background: #fff; transform: scale(1.02); }
+        
+        .modal-actions { display: flex; flex-direction: column; gap: 15px; }
+
+        /* Nút VLC Mobile */
+        .btn-vlc-large { 
+            background: var(--vlc-orange); color: white; font-weight: bold; text-decoration: none; 
+            padding: 15px; border-radius: 8px; text-align: center; display: flex; 
+            align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; 
+            border: 2px solid var(--vlc-orange); transition: 0.3s;
+        }
+        .btn-vlc-large:hover { background: transparent; color: var(--vlc-orange); }
+
+        /* Khung Copy cho PC */
+        .pc-stream-box { 
+            background: #222; padding: 15px; border-radius: 8px; border: 1px dashed #555; text-align: center; 
+        }
+        .btn-copy-stream { 
+            background: #444; color: white; border: 1px solid #666; padding: 8px 20px; 
+            border-radius: 20px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; 
+        }
+        .btn-copy-stream:hover { background: #fff; color: black; }
+        
+        .btn-download-large { 
+            background: #333; color: white; font-weight: bold; text-decoration: none; 
+            padding: 15px; border-radius: 8px; text-align: center; display: flex; 
+            align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; 
+            border: 1px solid #555; transition: 0.3s;
+        }
+        .btn-download-large:hover { background: #555; }
+        
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #fff; cursor: pointer; z-index: 10; }
         .donate-box { background: white; padding: 30px; border-radius: 15px; text-align: center; position: relative; max-width: 350px; }
         .donate-box h2 { color: #e50914; margin: 0 0 15px 0; }
@@ -176,7 +212,7 @@
             .filter-container { width: 100%; max-width: none; overflow-x: auto; margin: 0; padding: 10px;}
             .search-input { min-width: 150px; }
             .hero-title { font-size: 2.5rem; }
-            .hero-content { width: 90%; padding-left: 20px; margin-top: 0; }
+            .hero-content { width: 90%; padding-left: 20px; padding-top: 80px; }
             .hero-thumbnails { display: none; }
             .ranking-section { grid-template-columns: 1fr; padding: 20px; }
             .section-container { padding: 30px 20px; }
@@ -184,6 +220,7 @@
             .modal-img { width: 100%; height: 200px; }
             .modal-info { padding: 20px; }
             .nav-right { display: none; }
+            .pc-stream-box { display: none; } /* Ẩn Copy Link trên mobile cho gọn */
         }
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -199,27 +236,11 @@
         <div class="filter-container">
             <i class="fas fa-search search-icon"></i>
             <input type="text" id="search-input" class="search-input" placeholder="Tìm tên phim...">
-            
-            <select id="filter-year" class="filter-select">
-                <option value="">Năm</option>
-            </select>
-
+            <select id="filter-year" class="filter-select"><option value="">Năm</option></select>
             <select id="filter-month" class="filter-select">
-                <option value="">Tháng</option>
-                <option value="01">Thg 1</option><option value="02">Thg 2</option><option value="03">Thg 3</option>
-                <option value="04">Thg 4</option><option value="05">Thg 5</option><option value="06">Thg 6</option>
-                <option value="07">Thg 7</option><option value="08">Thg 8</option><option value="09">Thg 9</option>
-                <option value="10">Thg 10</option><option value="11">Thg 11</option><option value="12">Thg 12</option>
+                <option value="">Tháng</option><option value="01">Thg 1</option><option value="02">Thg 2</option><option value="03">Thg 3</option><option value="04">Thg 4</option><option value="05">Thg 5</option><option value="06">Thg 6</option><option value="07">Thg 7</option><option value="08">Thg 8</option><option value="09">Thg 9</option><option value="10">Thg 10</option><option value="11">Thg 11</option><option value="12">Thg 12</option>
             </select>
-
-            <select id="filter-rating" class="filter-select">
-                <option value="">IMDb</option>
-                <option value="9">> 9.0</option>
-                <option value="8">> 8.0</option>
-                <option value="7">> 7.0</option>
-                <option value="6">> 6.0</option>
-                <option value="5">> 5.0</option>
-            </select>
+            <select id="filter-rating" class="filter-select"><option value="">IMDb</option><option value="9">> 9.0</option><option value="8">> 8.0</option><option value="7">> 7.0</option><option value="6">> 6.0</option><option value="5">> 5.0</option></select>
         </div>
 
         <div class="nav-right">
@@ -249,25 +270,13 @@
     </div>
 
     <div class="ranking-section">
-        <div class="rank-column">
-            <h3><i class="fas fa-fire-alt"></i> Sôi Nổi Nhất (Top Rated)</h3>
-            <div id="rank-trending"></div>
-        </div>
-        <div class="rank-column">
-            <h3><i class="fas fa-heart"></i> Mới Cập Nhật</h3>
-            <div id="rank-newest"></div>
-        </div>
-        <div class="rank-column">
-            <h3><i class="fas fa-thumbs-up"></i> Hôm Nay Xem Gì?</h3>
-            <div id="rank-random"></div>
-        </div>
+        <div class="rank-column"><h3><i class="fas fa-fire-alt"></i> Sôi Nổi Nhất (Top Rated)</h3><div id="rank-trending"></div></div>
+        <div class="rank-column"><h3><i class="fas fa-heart"></i> Mới Cập Nhật</h3><div id="rank-newest"></div></div>
+        <div class="rank-column"><h3><i class="fas fa-thumbs-up"></i> Hôm Nay Xem Gì?</h3><div id="rank-random"></div></div>
     </div>
 
     <div class="section-container">
-        <div class="section-header">
-            Kho Phim Đầy Đủ
-            <span id="total-movies-badge">...</span>
-        </div>
+        <div class="section-header">Kho Phim Đầy Đủ<span id="total-movies-badge">...</span></div>
         <div class="movie-grid" id="movie-grid"></div>
     </div>
 
@@ -304,9 +313,23 @@
                     Điểm: <span id="modalRating" style="color:var(--primary)"></span>
                 </div>
                 <p class="modal-desc" id="modalDesc"></p>
-                <a href="#" id="modalLink" class="btn-download-large" target="_blank">
-                    <i class="fas fa-download"></i> TẢI VỀ (LINK DROPBOX)
-                </a>
+                
+                <div class="modal-actions">
+                    <a id="btnVLC" href="#" class="btn-vlc-large">
+                        <i class="fas fa-play-circle"></i> MỞ APP VLC (Mobile)
+                    </a>
+                    
+                    <div class="pc-stream-box">
+                        <span style="color:#aaa; font-size:12px; display:block; margin-bottom:5px;">Xem trên PC (Copy & Dán vào VLC):</span>
+                        <button class="btn-copy-stream" onclick="copyStreamLink()">
+                            <i class="fas fa-copy"></i> COPY LINK STREAM
+                        </button>
+                    </div>
+                    
+                    <a id="modalLink" href="#" class="btn-download-large" target="_blank">
+                        <i class="fas fa-download"></i> TẢI VỀ MÁY
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -325,6 +348,7 @@
     <script>
         let sliderMovies = [];
         let autoSlideInterval;
+        let currentVlcLink = "";
 
         function initHero() {
             if(typeof movieList !== 'undefined' && movieList.length > 0) {
@@ -398,7 +422,6 @@
             `).join('');
         }
 
-        // --- BỘ LỌC PHIM (LOGIC MỚI) ---
         const searchInput = document.getElementById('search-input');
         const filterYear = document.getElementById('filter-year');
         const filterMonth = document.getElementById('filter-month');
@@ -416,7 +439,7 @@
             const minRating = parseFloat(filterRating.value) || 0;
 
             const filtered = movieList.filter(m => {
-                const mDate = m.release_date || ""; // VD: "2024-05-20"
+                const mDate = m.release_date || ""; 
                 const mYear = mDate.split('-')[0];
                 const mMonth = mDate.split('-')[1];
                 const mRating = m.vote_average || 0;
@@ -431,14 +454,13 @@
             renderGrid(filtered);
         }
 
-        // Gắn sự kiện cho tất cả các bộ lọc
         searchInput.addEventListener('input', filterMovies);
         filterYear.addEventListener('change', filterMovies);
         filterMonth.addEventListener('change', filterMovies);
         filterRating.addEventListener('change', filterMovies);
 
-        // --- MODAL ---
         const modal = document.getElementById('movieModal');
+        
         function openModal(id) {
             const m = movieList.find(x => x.id === id); if(!m) return;
             document.getElementById('modalPoster').src = m.poster_path;
@@ -446,9 +468,40 @@
             document.getElementById('modalYear').innerText = m.release_date;
             document.getElementById('modalRating').innerText = m.vote_average;
             document.getElementById('modalDesc').innerText = m.overview;
-            document.getElementById('modalLink').href = m.dropbox_link;
+            
+            // XỬ LÝ LINK CHO MODAL
+            let dbLink = m.dropbox_link || "";
+            
+            // 1. Link Tải (bắt buộc có dl=1)
+            let downloadLink = dbLink;
+            if(!downloadLink.includes('dl=1')) {
+                downloadLink = downloadLink.replace('dl=0', 'dl=1');
+                if(!downloadLink.includes('dl=1')) downloadLink += (downloadLink.includes('?') ? '&dl=1' : '?dl=1');
+            }
+            document.getElementById('modalLink').href = downloadLink;
+
+            // 2. Link Stream VLC (dl.dropboxusercontent.com)
+            // Chuyển link thường thành link direct stream sạch
+            let streamUrl = dbLink.replace("www.dropbox.com", "dl.dropboxusercontent.com");
+            // Xóa các tham số cũ để tránh lỗi, chỉ giữ lại đường dẫn file
+            streamUrl = streamUrl.split('?')[0]; 
+            
+            currentVlcLink = streamUrl; // Lưu để copy
+            
+            // Gán vào nút VLC (giao thức vlc://)
+            document.getElementById('btnVLC').href = `vlc://${streamUrl}`;
+
             modal.style.display = 'flex';
         }
+        
+        function copyStreamLink() {
+            navigator.clipboard.writeText(currentVlcLink).then(() => {
+                const btn = document.querySelector('.btn-copy-stream');
+                btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ COPY!';
+                setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> COPY LINK STREAM'; }, 2000);
+            });
+        }
+
         function closeModal() { modal.style.display = 'none'; }
 
         window.addEventListener('scroll', () => {
@@ -461,7 +514,7 @@
             document.getElementById('total-movies-badge').innerHTML = `<i class="fas fa-video"></i> ${movieList.length} phim`;
             initHero();
             initRankings();
-            populateYears(); // Tự động điền năm vào ô chọn
+            populateYears();
             renderGrid(movieList);
         }
     </script>
