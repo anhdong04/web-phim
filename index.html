@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG CAO</title>
+    <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
     
@@ -30,8 +30,7 @@
         .navbar {
             display: flex; align-items: center; justify-content: space-between;
             padding: 15px 50px; 
-            position: fixed; /* Đè lên banner */
-            top: 0; left: 0; width: 100%; 
+            position: fixed; top: 0; left: 0; width: 100%; 
             z-index: 1000;
             background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
             transition: background 0.3s; flex-wrap: wrap; box-sizing: border-box;
@@ -65,7 +64,7 @@
         .hero-section {
             position: relative; 
             width: 100%; 
-            height: 100vh; /* Chiếm trọn màn hình để không bị lẹm */
+            height: 100vh;
             background-size: cover; 
             background-position: center center; 
             display: flex; align-items: center; 
@@ -82,7 +81,7 @@
 
         .hero-content { 
             position: relative; z-index: 10; width: 50%; padding-left: 60px; 
-            padding-top: 80px; /* Đẩy nội dung xuống */
+            padding-top: 80px;
         }
         
         .hero-title { font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 30px rgba(0,0,0,0.8); }
@@ -97,7 +96,6 @@
         .btn-action-text { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 30px; color: white; font-weight: bold; display: flex; align-items: center; gap: 10px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;}
         .btn-action-text:hover { background: rgba(255,255,255,0.3); }
         
-        /* THUMBNAILS CĂN GIỮA */
         .hero-thumbnails { 
             position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); 
             z-index: 20; display: flex; gap: 15px; padding: 10px 20px; 
@@ -163,7 +161,7 @@
         .up-btn:hover i { color: #000; }
         .up-btn i { color: var(--primary); font-size: 24px; }
 
-        /* --- 6. MODAL (GIAO DIỆN TẢI & VLC) --- */
+        /* --- 6. MODAL --- */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
         .modal-box { background: #181818; width: 900px; max-width: 90%; height: 500px; border-radius: 15px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative;}
         .modal-img { width: 40%; object-fit: cover; }
@@ -220,7 +218,7 @@
             .modal-img { width: 100%; height: 200px; }
             .modal-info { padding: 20px; }
             .nav-right { display: none; }
-            .pc-stream-box { display: none; } /* Ẩn Copy Link trên mobile cho gọn */
+            .pc-stream-box { display: none; } /* Ẩn Copy Link trên mobile */
         }
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -316,7 +314,7 @@
                 
                 <div class="modal-actions">
                     <a id="btnVLC" href="#" class="btn-vlc-large">
-                        <i class="fas fa-play-circle"></i> MỞ APP VLC (Mobile)
+                        <i class="fas fa-play-circle"></i> MỞ TRÊN APP VLC (Mobile)
                     </a>
                     
                     <div class="pc-stream-box">
@@ -327,7 +325,7 @@
                     </div>
                     
                     <a id="modalLink" href="#" class="btn-download-large" target="_blank">
-                        <i class="fas fa-download"></i> TẢI VỀ MÁY
+                        <i class="fas fa-download"></i> TẢI VỀ MÁY (Link Gốc)
                     </a>
                 </div>
             </div>
@@ -469,10 +467,9 @@
             document.getElementById('modalRating').innerText = m.vote_average;
             document.getElementById('modalDesc').innerText = m.overview;
             
-            // XỬ LÝ LINK CHO MODAL
             let dbLink = m.dropbox_link || "";
             
-            // 1. Link Tải (bắt buộc có dl=1)
+            // 1. LINK TẢI VỀ (Phải có dl=1)
             let downloadLink = dbLink;
             if(!downloadLink.includes('dl=1')) {
                 downloadLink = downloadLink.replace('dl=0', 'dl=1');
@@ -480,15 +477,19 @@
             }
             document.getElementById('modalLink').href = downloadLink;
 
-            // 2. Link Stream VLC (dl.dropboxusercontent.com)
-            // Chuyển link thường thành link direct stream sạch
+            // 2. LINK VLC (Direct Stream)
+            // Thay www.dropbox.com -> dl.dropboxusercontent.com
             let streamUrl = dbLink.replace("www.dropbox.com", "dl.dropboxusercontent.com");
-            // Xóa các tham số cũ để tránh lỗi, chỉ giữ lại đường dẫn file
-            streamUrl = streamUrl.split('?')[0]; 
             
-            currentVlcLink = streamUrl; // Lưu để copy
+            // Xóa sạch các tham số cũ dl=... để tránh xung đột, nhưng GIỮ LẠI rlkey
+            streamUrl = streamUrl.replace(/[?&]dl=[01]/g, "");
             
-            // Gán vào nút VLC (giao thức vlc://)
+            // Xử lý dấu ? hoặc & thừa ở cuối nếu có
+            if(streamUrl.endsWith('&') || streamUrl.endsWith('?')) streamUrl = streamUrl.slice(0, -1);
+
+            currentVlcLink = streamUrl; // Link cho nút Copy PC
+            
+            // Link cho nút mở App Mobile
             document.getElementById('btnVLC').href = `vlc://${streamUrl}`;
 
             modal.style.display = 'flex';
@@ -497,8 +498,13 @@
         function copyStreamLink() {
             navigator.clipboard.writeText(currentVlcLink).then(() => {
                 const btn = document.querySelector('.btn-copy-stream');
+                const originalText = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ COPY!';
-                setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> COPY LINK STREAM'; }, 2000);
+                btn.style.background = '#28a745';
+                setTimeout(() => { 
+                    btn.innerHTML = originalText; 
+                    btn.style.background = '#444';
+                }, 2000);
             });
         }
 
