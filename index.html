@@ -25,22 +25,44 @@
             overflow-x: hidden;
         }
 
-        /* --- 2. NAVBAR --- */
+        /* --- 2. NAVBAR & FILTERS (CẬP NHẬT) --- */
         .navbar {
             display: flex; align-items: center; justify-content: space-between;
             padding: 15px 50px; position: fixed; top: 0; width: 100%; z-index: 1000;
             background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
             transition: background 0.3s;
+            flex-wrap: wrap; /* Cho phép xuống dòng trên mobile */
         }
         .navbar.scrolled { background: #0f0f0f; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         
-        .logo { color: var(--text-white); font-size: 28px; font-weight: 900; display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none;}
+        .logo { color: var(--text-white); font-size: 28px; font-weight: 900; display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; margin-right: 20px;}
         .logo i { color: var(--primary); }
-        .search-container { flex: 1; max-width: 500px; margin: 0 40px; position: relative; }
-        .search-input { width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px 10px 45px; border-radius: 30px; color: white; outline: none; transition: 0.3s; }
-        .search-input:focus { background: rgba(0,0,0,0.8); border-color: var(--primary); }
-        .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; }
-        .nav-right { display: flex; gap: 20px; align-items: center; font-size: 14px; font-weight: bold;}
+        
+        /* Container chứa tìm kiếm và bộ lọc */
+        .filter-container { 
+            flex: 1; display: flex; align-items: center; gap: 10px; 
+            background: rgba(255,255,255,0.05); padding: 5px 15px; border-radius: 30px; 
+            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(5px);
+            max-width: 800px;
+        }
+
+        .search-input { 
+            background: transparent; border: none; color: white; outline: none; 
+            padding: 8px; flex: 1; font-family: inherit; font-size: 14px;
+        }
+        .search-icon { color: #aaa; margin-right: 5px; }
+
+        /* Style cho các ô chọn (Dropdown) */
+        .filter-select {
+            background: rgba(0,0,0,0.3); color: #ddd; border: none; 
+            padding: 8px 10px; border-radius: 15px; outline: none; 
+            cursor: pointer; font-size: 13px; font-family: inherit;
+            transition: 0.2s;
+        }
+        .filter-select:hover { background: rgba(255,255,255,0.1); color: var(--primary); }
+        .filter-select option { background: #1a1a1a; color: white; }
+
+        .nav-right { display: flex; gap: 20px; align-items: center; font-size: 14px; font-weight: bold; margin-left: 20px;}
 
         /* --- 3. HERO BANNER --- */
         .hero-section {
@@ -88,11 +110,10 @@
         .rank-title { font-size: 14px; font-weight: bold; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 5px 0;}
         .rank-meta { font-size: 12px; color: #777; }
 
-        /* --- 5. GRID & TOTAL COUNT (CẬP NHẬT) --- */
+        /* --- 5. GRID & TOTAL COUNT --- */
         .section-container { padding: 50px 60px; position: relative; z-index: 2; background: var(--bg-dark); }
         .section-header { display: flex; align-items: center; margin-bottom: 25px; font-size: 24px; font-weight: 700; color: #fff; border-left: 5px solid var(--primary); padding-left: 15px; }
         
-        /* Badge số lượng phim */
         #total-movies-badge {
             font-size: 14px; background: #222; color: #aaa; padding: 5px 12px; 
             border-radius: 20px; margin-left: 15px; font-weight: normal; 
@@ -150,7 +171,10 @@
         .donate-qr { width: 100%; border-radius: 10px; border: 1px solid #ddd; }
 
         @media (max-width: 768px) {
-            .navbar { padding: 15px 20px; }
+            .navbar { padding: 15px 20px; flex-direction: column; gap: 10px; align-items: stretch; }
+            .logo { justify-content: center; margin-right: 0;}
+            .filter-container { width: 100%; max-width: none; overflow-x: auto; margin: 0; padding: 10px;}
+            .search-input { min-width: 150px; }
             .hero-title { font-size: 2.5rem; }
             .hero-content { width: 90%; padding-left: 20px; margin-top: 0; }
             .hero-thumbnails { display: none; }
@@ -171,10 +195,33 @@
 
     <nav class="navbar" id="navbar">
         <a href="#" class="logo"><i class="fas fa-play-circle"></i> DOWNCINE</a>
-        <div class="search-container">
+        
+        <div class="filter-container">
             <i class="fas fa-search search-icon"></i>
-            <input type="text" id="search-input" class="search-input" placeholder="Tìm kiếm phim, diễn viên...">
+            <input type="text" id="search-input" class="search-input" placeholder="Tìm tên phim...">
+            
+            <select id="filter-year" class="filter-select">
+                <option value="">Năm</option>
+            </select>
+
+            <select id="filter-month" class="filter-select">
+                <option value="">Tháng</option>
+                <option value="01">Thg 1</option><option value="02">Thg 2</option><option value="03">Thg 3</option>
+                <option value="04">Thg 4</option><option value="05">Thg 5</option><option value="06">Thg 6</option>
+                <option value="07">Thg 7</option><option value="08">Thg 8</option><option value="09">Thg 9</option>
+                <option value="10">Thg 10</option><option value="11">Thg 11</option><option value="12">Thg 12</option>
+            </select>
+
+            <select id="filter-rating" class="filter-select">
+                <option value="">IMDb</option>
+                <option value="9">> 9.0</option>
+                <option value="8">> 8.0</option>
+                <option value="7">> 7.0</option>
+                <option value="6">> 6.0</option>
+                <option value="5">> 5.0</option>
+            </select>
         </div>
+
         <div class="nav-right">
             <span class="nav-item" style="color:var(--primary)">VIP</span>
         </div>
@@ -228,7 +275,7 @@
         <i class="fas fa-play-circle footer-watermark"></i>
         <div class="footer-content">
             <div class="badge-vn"><i class="fas fa-star"></i> Hoàng Sa & Trường Sa là của Việt Nam!</div>
-            <div class="footer-logo"><i class="fas fa-play-circle"></i> RoPhim </div>
+            <div class="footer-logo"><i class="fas fa-play-circle"></i> DOWNCINE </div>
             <div class="social-list">
                 <a href="#" class="social-item"><i class="fab fa-telegram-plane"></i></a>
                 <a href="#" class="social-item"><i class="fab fa-discord"></i></a>
@@ -351,12 +398,46 @@
             `).join('');
         }
 
-        document.getElementById('search-input').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = movieList.filter(m => m.title.toLowerCase().includes(term));
-            renderGrid(filtered);
-        });
+        // --- BỘ LỌC PHIM (LOGIC MỚI) ---
+        const searchInput = document.getElementById('search-input');
+        const filterYear = document.getElementById('filter-year');
+        const filterMonth = document.getElementById('filter-month');
+        const filterRating = document.getElementById('filter-rating');
 
+        function populateYears() {
+            const years = [...new Set(movieList.map(m => m.release_date ? m.release_date.split('-')[0] : null))].filter(y => y).sort().reverse();
+            years.forEach(y => { const opt = document.createElement('option'); opt.value = y; opt.innerText = y; filterYear.appendChild(opt); });
+        }
+
+        function filterMovies() {
+            const term = searchInput.value.toLowerCase();
+            const year = filterYear.value;
+            const month = filterMonth.value;
+            const minRating = parseFloat(filterRating.value) || 0;
+
+            const filtered = movieList.filter(m => {
+                const mDate = m.release_date || ""; // VD: "2024-05-20"
+                const mYear = mDate.split('-')[0];
+                const mMonth = mDate.split('-')[1];
+                const mRating = m.vote_average || 0;
+
+                const matchName = m.title.toLowerCase().includes(term);
+                const matchYear = year === "" || mYear === year;
+                const matchMonth = month === "" || mMonth === month;
+                const matchRating = mRating >= minRating;
+
+                return matchName && matchYear && matchMonth && matchRating;
+            });
+            renderGrid(filtered);
+        }
+
+        // Gắn sự kiện cho tất cả các bộ lọc
+        searchInput.addEventListener('input', filterMovies);
+        filterYear.addEventListener('change', filterMovies);
+        filterMonth.addEventListener('change', filterMovies);
+        filterRating.addEventListener('change', filterMovies);
+
+        // --- MODAL ---
         const modal = document.getElementById('movieModal');
         function openModal(id) {
             const m = movieList.find(x => x.id === id); if(!m) return;
@@ -377,11 +458,10 @@
         });
 
         if(typeof movieList !== 'undefined') {
-            // --- Hiển thị tổng số phim ---
             document.getElementById('total-movies-badge').innerHTML = `<i class="fas fa-video"></i> ${movieList.length} phim`;
-            
             initHero();
             initRankings();
+            populateYears(); // Tự động điền năm vào ô chọn
             renderGrid(movieList);
         }
     </script>
