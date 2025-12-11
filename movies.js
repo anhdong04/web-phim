@@ -1,9 +1,60 @@
 // movies.js
 const movieList = [
-
-
-
-
+{
+    "id": 741596,
+    "title": "Atonement",
+    "original_title": "阿龍",
+    "overview": "A devoted father's life turns upside down when his daughter is kidnapped during their Thailand vacation. After two years of searching, his quest for justice transforms into a dark path of vengeance.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/i8oxXUaEVPHCTSFpOgA8M4HWBO.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/gl1gonqSiSpQp7pGAd2rRp9iXri.jpg",
+    "release_date": "2025-08-30",
+    "vote_average": 4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/exkz9hhcz7ivljmojl4ib/Atonement.2025.BluRay.1080p.TrueHD5.1.x264-DreamHD.mkv?rlkey=5c7i5ud2an1rljms2h60jnwb5&st=w8agw10c&dl=0&dl=1"
+},
+{
+    "id": 1205892,
+    "title": "Thám Tử Tư: Phía Sau Vết Máu",
+    "original_title": "私家偵探",
+    "overview": "5 vụ án mạng rúng động, một 'trò chơi' sinh tử đầy uẩn khúc - và Cổ Thiên Lạc, trong vai thám tử tư, vô tình bị cuốn vào vòng xoáy kinh hoàng đó. Bí ẩn nối tiếp bí ẩn, ai sẽ là con mồi, ai mới là kẻ săn? Câu trả lời đang chờ được hé lộ…",
+    "poster_path": "https://image.tmdb.org/t/p/w500/pSjtK1UiQe4C1f81RhV0c6JxFl6.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/dIRMuVLyBJYrrnxnV7D8V4rFjY9.jpg",
+    "release_date": "2025-05-31",
+    "vote_average": 6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/1lugbuwua12c9csrbk0vu/Behind.The.Shadows.2025.BluRay.1080p.TrueHD5.1.x264-DreamHD.mkv?rlkey=sciszm5burh3pkthitxbf3c9l&st=bb93q0nw&dl=0&dl=1"
+},
+{
+    "id": 1290183,
+    "title": "ANH TRAI SAY XE",
+    "original_title": "퍼스트 라이드",
+    "overview": "Đã bao lâu bạn chưa du lịch cùng bạn thân?” Nhóm bạn nối khố của Tae Jeong, Do Jin, Yeon Min và Geum Bok đã ấp ủ một chuyến du lịch cùng nhau ngay sau khi tốt nghiệp cấp III, thế nhưng rốt cuộc vì thế này thế kia mà cả bọn đã lỡ hẹn. Hơn mười năm sau, người phải “bán mình cho tư bản”, người thì xuất gia, người đi định cư, có người lại mắc cả bệnh tâm lý. Nhưng nhóm “bốn thằng cốt” vẫn quyết định cùng nhau thực hiện lời hứa chuyến xuất ngoại đầu tiên. Bốn “anh trai say xe” này đã quậy tưng Bangkok, biến “chuyến đi đầu tiên” thành một kỉ niệm nhớ đời với vô vàn kịch tính lẫn tiếng cười, nước mắt. Nhất là khi, cô nàng vô duyên Ok Sim còn bám riết như kỳ đà!? Lần đầu tiên trên màn ảnh rộng, hai tài tử Kang Ha Neul và Cha Eun Woo bắt tay nhau tạo nên những thước phim thanh xuân mãn nhãn và đẩy cảm xúc.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ulJqKW1VEDBiUaa781VHX7GkM1C.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/1IMGRRPJYpdO7hNxsBgrexYxxGx.jpg",
+    "release_date": "2025-10-29",
+    "vote_average": 6.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/r8aw4z3w5hqfhw2jrimok/The.First.Ride.2025.ViE-1080p.FHD-DD2.0.H.264-IMBC-Thuyet-Minh-Sub-Viet.mkv?rlkey=8ad0t6va0qwozov6saqmnlou9&st=b78evc6b&dl=0&dl=1"
+},
+{
+    "id": 1566269,
+    "title": "Tuyết Đầu Mùa Ở Hang Fraggle Rock - The First Snow of Fraggle Rock",
+    "original_title": "The First Snow of Fraggle Rock",
+    "overview": "Khi ngày lễ tràn ngập những cuộc phiêu lưu và thử thách bất ngờ, các Fraggle học được cách trân trọng từng ngày vì mỗi ngày đều độc nhất và đặc biệt, như những bông tuyết.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vSd52dYptVApmiBRsCbj0WKhKmL.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/h5hCdU9KvcCbBihSNfn3vtML7tV.jpg",
+    "release_date": "2025-12-04",
+    "vote_average": 6.7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/nd9km0lhtxa5soamyfy54/The.First.Snow.of.Fraggle.Rock.2025.1080p.ATVP.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=0e6d0qt70o2gxdff9w3xjowvl&st=awf2r76m&dl=0&dl=1"
+},
+{
+    "id": 798645,
+    "title": "Trốn Chạy Tử Thần",
+    "original_title": "The Running Man",
+    "overview": "Trong bối cảnh xã hội tương lai gần, Trốn Chạy Tử Thần là chương trình truyền hình ăn khách nhất, một cuộc thi sinh tồn khốc liệt nơi các thí sinh, được gọi là “Runners”, phải trốn chạy suốt 30 ngày khỏi sự truy đuổi của các sát thủ chuyên nghiệp. Mọi bước đi của họ đều được phát sóng công khai cho khán giả theo dõi và phần thưởng tiền mặt sẽ tăng lên sau mỗi ngày sống sót. Vì cần tiền cứu chữa cho cô con gái bệnh nặng, Ben Richards, một người lao động nghèo, chấp nhận lời mời từ Dan Killian, nhà sản xuất chương trình bảnh bao nhưng tàn nhẫn, để tham gia cuộc chơi như một lựa chọn cuối cùng. Tuy nhiên, sự gan lì, nhạy bén và ý chí sinh tồn mãnh liệt của Ben lại khiến anh bất ngờ trở thành nhân vật được khán giả yêu thích nhất và là mối đe dọa với cả hệ thống. Khi lượng người xem tăng vọt, hiểm nguy cũng ngày càng bủa vây. Giờ đây, Ben không chỉ phải đối mặt với toán sát thủ mà còn cả một đất nước đang nghiện cảm giác chứng kiến anh gục ngã.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lSUUBWX1vp4WkjTUkd2mbRUuwt8.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/aHj7d7wSLqrg5cjAcgHhiGr97Ih.jpg",
+    "release_date": "2025-11-11",
+    "vote_average": 6.745,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ld4n8sq0qxe86ez2tk7jp/The.Running.Man.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-KyoGo.mkv?rlkey=th5edd7qblin5b32gmumz0z9b&st=atbebssn&dl=0&dl=1"
+},
 {
     "id": 1128556,
     "title": "Stephen",
@@ -486,14 +537,611 @@ const movieList = [
 
 
 
-
-
-
-
-
-
-
-
+{
+    "id": 436969,
+    "title": "Suicide Squad: Điệp Vụ Cảm Tử",
+    "original_title": "The Suicide Squad",
+    "overview": "Chính phủ gửi những siêu tội phạm nguy hiểm nhất trên thế giới - Bloodsport, Peacemaker, King Shark, Harley Quinn và những người khác - đến hòn đảo Corto Maltese xa xôi, đầy kẻ thù. Được trang bị vũ khí công nghệ cao, họ băng qua khu rừng rậm nguy hiểm trong một nhiệm vụ tìm kiếm và tiêu diệt, chỉ có Đại tá Rick Flag trên mặt đất để bắt họ hành xử.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/9TdlxU34Chof21d5fgfQhPARdjk.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/jlGmlFOcfo8n5tURmhC7YVd4Iyy.jpg",
+    "release_date": "2021-07-28",
+    "vote_average": 7.478,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/5l09hltclizj3hcyat33x/The.Suicide.Squad.2021.1080p.HMAX.WEB-DL.DDP5.1.Atmos.H.264-FLUX_Vietsub.mkv?rlkey=0mpd49zexn9nwnfnuw7osukas&st=ejxi776c&dl=0&dl=1"
+},
+{
+    "id": 1072890,
+    "title": "Dị Nhân Chi Hạ",
+    "original_title": "异人之下",
+    "overview": "Zhang Chu Lan là một sinh viên bình thường, cuộc sống của anh bị đảo lộn khi ông nội qua đời và thi thể bị đánh cắp. Trong quá trình tìm kiếm sự thật, anh gặp Feng Baobao – một cô gái bí ẩn sở hữu năng lực siêu nhiên. Từ",
+    "poster_path": "https://image.tmdb.org/t/p/w500/iBBXdLCqxRrqTAXe0iIzhSAHc1Q.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/17OB3LPZUbe80l893OCT9EXibCO.jpg",
+    "release_date": "2024-07-26",
+    "vote_average": 6.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/s7cyglivsplzhozc9au9f/The.Traveller.2024.ViE.2160p.HQ.WEB-DL.HEVC.DDP5.1.mkv?rlkey=7taf5370cj8mvb6pjptpxjpz0&st=yimyw5c7&dl=0&dl=1"
+},
+{
+    "id": 974663,
+    "title": "Sói 200%",
+    "original_title": "200% Wolf",
+    "overview": "kể câu chuyện về Freddy Lupin, người thừa kế của dòng họ người sói quý tộc. Khát khao cháy bỏng được trở thành một người sói, tuy nhiên Freddy bị sốc khi vào sinh nhật lần thứ 13, anh ta bị biến thành một chú chó xù màu hồng hung dữ. Ngay khi Freddy nghĩ rằng cuộc sống không thể tồi tệ hơn, anh ta lại bị ném vào nhà tù chó.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/iVUCv9GZIBrKa4fkGv0N4UeNXth.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/8VGiUMkjdevsVYHZ8tIpHl6EbbF.jpg",
+    "release_date": "2024-07-04",
+    "vote_average": 5.667,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/26nxvf9u60fbcpcmxdnmm/200.Wolf.2024.1080p.WEB-DL.DD5.1.H.264-FLUX.mkv?rlkey=e914evgbdhy0z9fwvwlx68ei9&st=vifytquw&dl=0&dl=1"
+},
+{
+    "id": 822119,
+    "title": "Captain America: Thế Giới Mới",
+    "original_title": "Captain America: Brave New World",
+    "overview": "Sau khi gặp Tổng thống Hoa Kỳ mới đắc cử Thaddeus Ross, Sam Wilson thấy mình bị cuốn vào một sự cố . Anh phải khám phá lý do đằng sau một âm mưu cực kì xấu xa trước khi kẻ chủ mưu thật sự khiến cả thế giới phải hoảng sợ",
+    "poster_path": "https://image.tmdb.org/t/p/w500/fWTZk4Y7HTyTTGNJnXNaX3XTE0v.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/8eifdha9GQeZAkexgtD45546XKx.jpg",
+    "release_date": "2025-02-12",
+    "vote_average": 6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/k3x74a45zn67bmmow2zu3/Captain.America.Brave.New.World.2025.ViE-1080p.WEB-DL.DD5.1.x264-Thuyet-Minh-Sub-Viet.mkv?rlkey=z8qlyawfzb3k25s7m6eg3hywv&st=cmzgnhq2&dl=0&dl=1"
+},
+{
+    "id": 1027268,
+    "title": "Tro tàn rực rỡ",
+    "original_title": "Tro tàn rực rỡ",
+    "overview": "Lấy bối cảnh ở Thơm Rơm, một ngôi làng nghèo ven biển ở Cà Mau với nhiều chất liệu điện ảnh và văn hóa của một vùng quê sông nước miền Tây, bộ phim xoay quanh ba người phụ nữ, có cuộc sống tình yêu khác thường, kể câu chuyện về cách họ yêu và tìm cách giữ người đàn ông của mình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/1LC52BDXN3dQvXeA4ZkN9iOPSqd.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/iUs4pGRvAq8ojju6FSB1AKR5B5e.jpg",
+    "release_date": "2022-12-02",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/n6re117c1puug25n5gv30/Glorious.Ashes.2022.1080p.ENSUBBED.WEB-DL.DDP5.1.H.264-MP12365-1.mkv?rlkey=oqbha9bs0nx58tltevsci7fiy&st=vailj5ox&dl=0&dl=1"
+},
+{
+    "id": 1111873,
+    "title": "Cô Bé Ma Cà Rồng",
+    "original_title": "Abigail",
+    "overview": "Một nhóm tội phạm bắt cóc một diễn viên ba lê nhí - con gái của một ông trùm quyền lực trong thế giới ngầm. Chúng trốn đến một biệt thự biệt lập, nhưng không hề hay biết mình đang bị giam cầm cùng một 'cô bé' hoàn toàn không bình thường.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/grjd68fOxMqy1WJOsmYpKXx81ky.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2TPoqmatGDfBOiRxqNoL11ncCJe.jpg",
+    "release_date": "2024-04-16",
+    "vote_average": 6.708,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/yyz408h5tehuas9f4qole/Abigail-2024.1080p.BluRay.x264-PiGNUS.mkv?rlkey=23h4o54uh3da8tb1pdwgvqnut&st=btftozix&dl=0&dl=1"
+},
+{
+    "id": 1357305,
+    "title": "Thám Tử Phố Tàu 1900",
+    "original_title": "唐探1900",
+    "overview": "Năm 1900, một phụ nữ da trắng đã bị sát hại tại khu phố Tàu ở San Francisco, và nghi phạm là một người đàn ông Trung Quốc. Vụ giết người đã gây chấn động xã hội và mọi người yêu cầu đóng cửa khu phố Tàu.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/jamw9dElj0LpKBK9XIHUHWNyKRg.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/6ykQysq6kfZ6Yw5C4dkhcZRd5QI.jpg",
+    "release_date": "2025-01-29",
+    "vote_average": 6.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/546be4dhayhupaio13zc3/Detective-Chinatown.1900.2025.1080p.Bluray.TrueHD7.1.x264-CHD.mkv?rlkey=twf94xueir8k4x2kd1r6dlm3t&st=btz6dy9a&dl=0&dl=1"
+},
+{
+    "id": 581726,
+    "title": "Ký Ức Vô Tận",
+    "original_title": "Infinite",
+    "overview": "Cuộc sống hàng ngày của Evan McCauley (Mark Wahlberg) luôn bị ám ảnh bởi các kỹ năng dù anh chưa từng học và ký ức về những nơi anh chưa từng đến. Một hội bí mật tự gọi là “Ký Ức Vô Tận” đến giúp đỡ khi anh tự dùng thuốc và đang trên bờ vực suy sụp tinh thần, và tiết lộ rằng ký ức của anh là có thật - nhưng đó là những ký ức từ nhiều kiếp trước. Hội Ký Ức Vô Tận đưa Evan vào thế giới phi thường, nơi có những người thiên phú với khả năng tích luỹ ký ức và kiến ​​thức qua nhiều thế kỷ sau những lần đầu thai. Với những bí mật quan trọng bị chôn vùi trong quá khứ, Evan phải cùng hội Ký Ức Vô Tận tìm kiếm đáp án trong ký ức của mình để giải cứu nhân loại khỏi một người trong số họ (Chiwetel Ejiofor), người đang tìm cách tiêu diệt loài người trong một cuộc chạy đua với thời gian.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/6PEk3ukJ9aTBf1zls3qQ6GzeOq0.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/wjQXZTlFM3PVEUmKf1sUajjygqT.jpg",
+    "release_date": "2021-09-09",
+    "vote_average": 6.588,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/tx7sqznhqt22tvbzlevat/Infinite-2021-2160p-AMZN-WEB-DL-DDP5.1-x265-HDR-EVO-Sub-Viet.mkv?rlkey=u2nce7ddgjpzkqcjn0uq0i1ep&st=03l0pe7v&dl=0&dl=1"
+},
+{
+    "id": 1151766,
+    "title": "Phỏng Vấn Sát Nhân",
+    "original_title": "살인자 리포트",
+    "overview": "Baek Sun-ju (CHO Yeo-jeong) – một nữ phóng viên đang tuyệt vọng tìm kiếm một tin độc quyền, nhận được lời đề nghị phỏng vấn rùng rợn từ bác sĩ tâm thần Lee Young-hoon (JUNG Sung-il), người tự nhận mình là một kẻ giết người hàng loạt và cảnh báo rằng một vụ án mạng khác sắp xảy ra. Sau nhiều do dự, Sun-ju bắt đầu buổi phỏng vấn với tên sát nhân trong một phòng khách sạn. Trong cuộc trò chuyện căng thẳng đó, Young-hoon tiết lộ một sự thật gây sốc: những vụ giết người của hắn bắt đầu như một cách để “chữa trị” cho bệnh nhân của mình. Khi cuộc phỏng vấn tiếp diễn, Sun-ju cảm nhận có điều gì đó vô cùng sai trái và cố gắng bỏ chạy. Nhưng hắn lại tung ra một “quả bom” khác: nếu cô dừng buổi phỏng vấn lại, sẽ có thêm một người chết. “Nếu cuộc phỏng vấn này dừng lại, sẽ có người mất mạng.” Liệu cuộc chạm trán định mệnh này sẽ kết thúc như thế nào?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/rcmJRflS4aFJg8Ockk7YePQWlzc.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/xIoUKseV9rnhDmWP9udh5IhtjiH.jpg",
+    "release_date": "2025-09-05",
+    "vote_average": 6.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/d8sz1vh33yrzaa7zlubn8/Murderer-Report-2025-1080p-WEB-DL-AAC2.0-H.264-NoPat-Vsub.mkv?rlkey=fcx4tt6jy7mij6ahtghog715c&st=2169fjvx&dl=0&dl=1"
+},
+{
+    "id": 1151766,
+    "title": "Phỏng Vấn Sát Nhân",
+    "original_title": "살인자 리포트",
+    "overview": "Baek Sun-ju (CHO Yeo-jeong) – một nữ phóng viên đang tuyệt vọng tìm kiếm một tin độc quyền, nhận được lời đề nghị phỏng vấn rùng rợn từ bác sĩ tâm thần Lee Young-hoon (JUNG Sung-il), người tự nhận mình là một kẻ giết người hàng loạt và cảnh báo rằng một vụ án mạng khác sắp xảy ra. Sau nhiều do dự, Sun-ju bắt đầu buổi phỏng vấn với tên sát nhân trong một phòng khách sạn. Trong cuộc trò chuyện căng thẳng đó, Young-hoon tiết lộ một sự thật gây sốc: những vụ giết người của hắn bắt đầu như một cách để “chữa trị” cho bệnh nhân của mình. Khi cuộc phỏng vấn tiếp diễn, Sun-ju cảm nhận có điều gì đó vô cùng sai trái và cố gắng bỏ chạy. Nhưng hắn lại tung ra một “quả bom” khác: nếu cô dừng buổi phỏng vấn lại, sẽ có thêm một người chết. “Nếu cuộc phỏng vấn này dừng lại, sẽ có người mất mạng.” Liệu cuộc chạm trán định mệnh này sẽ kết thúc như thế nào?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/rcmJRflS4aFJg8Ockk7YePQWlzc.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/xIoUKseV9rnhDmWP9udh5IhtjiH.jpg",
+    "release_date": "2025-09-05",
+    "vote_average": 6.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/d8sz1vh33yrzaa7zlubn8/Murderer-Report-2025-1080p-WEB-DL-AAC2.0-H.264-NoPat-Vsub.mkv?rlkey=fcx4tt6jy7mij6ahtghog715c&st=2169fjvx&dl=0&dl=1"
+},
+{
+    "id": 1121612,
+    "title": "Được Ăn Cả Ngã Về Không",
+    "original_title": "孤注一掷",
+    "overview": "Một lập trình viên chán nản (do Zhang Yixing thủ vai) và một người mẫu (do Jin Chen thủ vai) quyết định ra ngoài tìm vàng vì cơ hội việc làm có vẻ tốt, nhưng họ lại vô tình dính vào một vụ lừa đảo được lên kế hoạch kỹ lưỡng trên Internet.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/gjyqQD5LsNOiVIXuczw9joqjiKQ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/eqNuKqNjKAcOT6hlufhkkpxQ35F.jpg",
+    "release_date": "2023-08-05",
+    "vote_average": 7.079,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/3kesyjfl6pis5lby3smr8/No.More.Bets.2023.1080p.NF.WEB-DL.DDP5.1.H.264-ERBiUM.mkv?rlkey=apubwldle2gzhnjd6j0wec5py&st=mkxl1q6a&dl=0&dl=1"
+},
+{
+    "id": 575265,
+    "title": "Nhiệm Vụ: Bất Khả Thi - Nghiệp Báo Cuối Cùng",
+    "original_title": "Mission: Impossible - The Final Reckoning",
+    "overview": "Sau khi thoát khỏi vụ tai nạn tàu hỏa thảm khốc, Ethan nhận ra The Entity đang được giấu trên một chiếc tàu ngầm cũ của Nga, nhưng một kẻ thù trong quá khứ của anh tên là Gabriel cũng đang truy đuổi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/wxnbCpRKs8FV1SLZYA0mj1x26f9.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/xPNDRM50a58uvv1il2GVZrtWjkZ.jpg",
+    "release_date": "2025-05-17",
+    "vote_average": 7.26,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ng85j16pr3or6q0ndr9v4/Mission.Impossible.The.Final.Reckoning.2025.IMAX.1080p.AMZN.WEB-DL.DDP5.1.H.264-WADU-Sub-Viet.mkv?rlkey=pzdd1zmoj0ybfitdesw8zc3a1&st=l8ey88bu&dl=0&dl=1"
+},
+{
+    "id": 1244361,
+    "title": "Chiến Địa Tử Thi",
+    "original_title": "ช.พ.๑ สมรภูมิคืนชีพ",
+    "overview": "Phim lấy bối cảnh năm 1941 tại Thái Lan, khi một cuộc đụng độ bất ngờ xảy ra. Họ phát hiện 'thứ gì đó', giống người nhưng lại ăn thịt người...",
+    "poster_path": "https://image.tmdb.org/t/p/w500/68YnrL5zCQt85gTlRsyBytv6Tgo.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/Kj14WdD0Xqk7wZ5jXqHiyBMKtv.jpg",
+    "release_date": "2024-07-20",
+    "vote_average": 4.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/x56ib5gjm8fb4b6ul3dgw/Operation-Undead.2024.ViE-1080p.BluRay.DDP5.1.x264-SPHD-Thuyet-Minh-Sub-Viet.mkv?rlkey=kz6736g08d0dbdn1iyci2wzsv&st=fyvauqv8&dl=0&dl=1"
+},
+{
+    "id": 806731,
+    "title": "Trò Chơi Sát Nhân",
+    "original_title": "Stream",
+    "overview": "Stream 2024 xoay quanh gia đình Keenan, những người chỉ muốn có một kỳ nghỉ cuối tuần đơn giản. Tuy nhiên, chuyến đi tưởng chừng bình yên này nhanh chóng biến thành một cơn ác mộng khi bốn kẻ sát nhân bệnh hoạn, tham gia vào một trò chơi tàn ác, chiếm giữ khách sạn và thi đua nhau giết hại tất cả các khách lưu trú. Các tên sát nhân không chỉ đơn thuần giết người, mà còn thi nhau thực hiện những vụ giết hại sáng tạo và khủng khiếp nhất, biến kỳ nghỉ của gia đình Keenan thành một cuộc chạy trốn để giữ mạng sống trong bối cảnh hỗn loạn và kinh hoàng.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/az0k8pzdeqrrEO9iu8vL081bjA0.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/4Va2wodBY6pi8lzJFwkGDePlp80.jpg",
+    "release_date": "2024-08-21",
+    "vote_average": 5.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/m3a6zzgq14hv9sweh5fwn/Stream.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv?rlkey=kyt84qsjpe1zp2ctc6g0ksv9m&st=pjrci5fc&dl=0&dl=1"
+},
+{
+    "id": 870028,
+    "title": "Mật Danh: Kế Toán 2",
+    "original_title": "The Accountant²",
+    "overview": "Khi một người quen cũ bị sát hại, Wolff buộc phải giải quyết vụ án. Nhận ra các biện pháp cực đoan hơn là cần thiết, Wolff tuyển dụng người anh trai ghẻ lạnh và rất nguy hiểm của mình, Brax, để giúp đỡ. Hợp tác với Đặc vụ Kho bạc Marybeth Medina, họ phát hiện ra một âm mưu chết người, trở thành mục tiêu của một mạng lưới những kẻ giết người tàn nhẫn, những người sẽ không dừng lại ở bất cứ điều gì để giữ bí mật của họ bị chôn vùi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/1FllwDW3qFEaAiWuolthi8iZgi1.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yBDvgpyynDsbMyK21FoQu1c2wYR.jpg",
+    "release_date": "2025-04-23",
+    "vote_average": 7.124,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/az6y3r0doi9t3qgpwv5gb/The.Accountant.2.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=9vipa8uu9ipw0gjknqtzk6alg&st=n2bjqh3e&dl=0&dl=1"
+},
+{
+    "id": 502356,
+    "title": "Anh Em Super Mario",
+    "original_title": "The Super Mario Bros. Movie",
+    "overview": "The Super Mario Bros. Movie xoay quanh cuộc phiêu lưu ở thế giới Vương quốc Nấm của anh em thợ sửa ống nước Mario và Luigi. Sau khi tình cờ bước tới vùng đất lạ từ một ống nước, Luigi đã bị chia tách với Mario và rơi vào tay quái vật rùa xấu xa Bowser, hắn đang âm mưu độc chiếm thế giới. Trong lúc cố gắng tìm kiếm người anh em của mình, Mario đã chạm mặt anh bạn nấm Toad và công chúa Peach. Từ đây họ sát cánh bên nhau trên hành trình ngăn chặn thế lực hắc ám.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/gRlfFcpPdjREQ3lgeuAuB10gfbR.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/9n2tJBplPbgR2ca05hS5CKXwP2c.jpg",
+    "release_date": "2023-04-05",
+    "vote_average": 7.602,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/shxfkyp841syqd7ecxas9/The.Super.Mario.Bros.Movie.2023.ViE.DUB.1080p.BluRay.DD5.1.x264-playHD.mkv?rlkey=c6lcjjmcr8gmplo2bqrjjwevt&st=nrzts02g&dl=0&dl=1"
+},
+{
+    "id": 995926,
+    "title": "Đố Anh Còng Được Tôi",
+    "original_title": "베테랑 2",
+    "overview": "Các thanh tra kỳ cựu nổi tiếng đã hoạt động trở lại! Thám tử Seo Do-cheol (HWANG Jung-min) và đội điều tra tội phạm nguy hiểm của anh không ngừng truy lùng tội phạm cả ngày lẫn đêm, đặt cược cả cuộc sống cá nhân của họ. Nhận một vụ án sát hại một giáo sư, đội thanh tra nhận ra những mối liên hệ với các vụ án trong quá khứ và nảy sinh những nghi ngờ về một kẻ giết người hàng loạt. Điều này đã khiến cả nước rơi vào tình trạng hỗn loạn. Khi đội thanh tra đi sâu vào cuộc điều tra, kẻ sát nhân đã chế nhạo họ bằng cách công khai tung ra một đoạn giới thiệu trực tuyến, chỉ ra nạn nhân tiếp theo và làm gia tăng sự hỗn loạn. Để giải quyết mối đe dọa ngày càng leo thang, nhóm đã kết nạp một sĩ quan tân binh trẻ Park Sun-woo (JUNG Hae-in), dẫn đến những khúc mắc và đầy rẫy bất ngờ trong vụ án.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/zqPpoVWrHMoIYzsnA94shKqdcM0.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/bA4Io3xv46oEyP4O51uU0EKbluF.jpg",
+    "release_date": "2024-09-13",
+    "vote_average": 6.947,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/fn73e1vmpimougcvfnpyz/Veteran.2.2024.1080p.WEB-DL.AAC.2.0.H.264-AYA.mkv?rlkey=8d4n3tudotlcjakc3h9k0qt3i&st=f748kfjo&dl=0&dl=1"
+},
+{
+    "id": 970450,
+    "title": "Người Sói",
+    "original_title": "Werewolves",
+    "overview": "Một năm sau sự kiện siêu trăng, nguy cơ biến thành người sói đe dọa nhân loại. Hai nhà khoa học chạy đua với thời gian để ngăn chặn thảm họa.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/otXBlMPbFBRs6o2Xt6KX59Qw6dL.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/cA88pwGnHa64BBcU3R1oCcJH9Qc.jpg",
+    "release_date": "2024-12-04",
+    "vote_average": 5.915,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/6frc7b69bx7u3u2w0i0te/Werewolves.2024.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv?rlkey=np15hi3dh0bpx0eafffkc83vf&st=hi18fhsd&dl=0&dl=1"
+},
+{
+    "id": 835113,
+    "title": "Hẹn Hò Với Sát Nhân",
+    "original_title": "Woman of the Hour",
+    "overview": "Cheryl Bradshaw (Anna Kendrick thủ vai) tham gia chương trình truyền hình về hẹn hò - The Dating Game với khát khao được nổi tiếng. Tại đây, cô nàng đã gặp gỡ Rodney Alcala - tên sát nhân đội lốt một nhiếp ảnh gia lãng tử và đối đáp cực kỳ hài hước, thông minh trong chương trình hẹn hò. Quyết định kết đôi cùng Rodney Alcala, trong quá trình hẹn hò, Cheryl Bradshaw dần khám phá ra hàng loạt bí mật gây sốc được che giấu khéo léo bởi cái lốt người đàn ông hoàn hảo: đội lốt một gã sát nhân, kẻ biến thái đã chủ mưu rất nhiều vụ hiếp dâm và giết người man rợ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/hmrbJCoQvDu1geKYgQ4TPFfUBIZ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/n6KXCV9jqUDDL5HCIoKHQ8kD9Fq.jpg",
+    "release_date": "2024-10-03",
+    "vote_average": 6.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/mnxydbq1j3ix5wk898hsm/Woman.of.the.Hour.2023.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=9grngjp6e69jszmsyhpzselg3&st=m6dm7z92&dl=0&dl=1"
+},
+{
+    "id": 1100988,
+    "title": "28 Năm Sau: Hậu Tận Thế",
+    "original_title": "28 Years Later",
+    "overview": "Cơn ác mộng chưa kết thúc. Virus trở lại, kéo theo bóng tối bao trùm nước Anh. Một hành trình sinh tử: cậu bé tìm kiếm bác sĩ để cứu mẹ mình, băng qua vùng đất chết chóc đầy xác sống tiến hóa và những kẻ nguy hiểm ẩn sau gương mặt tử tế. Liệu niềm hy vọng cuối cùng có đủ để cứu họ khỏi vực thẳm tuyệt vọng?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/qX7y0GJH2JFxh95wu0kaoFCCM6h.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/wxxSyWPPgssnkO6FbCAVyntLLSr.jpg",
+    "release_date": "2025-06-18",
+    "vote_average": 6.664,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/h1ltlabvqhaqekpphc6p5/28-Years-Later.2025-ViE.1080p.BluRay.x264-KNiVES-Thuyet-Minh-Sub-Viet.mkv?rlkey=dxxxhpzn3w4r3jpzcbf3thyxi&st=naw2stnk&dl=0&dl=1"
+},
+{
+    "id": 1084390,
+    "title": "Mượn Rượu Đẩy Kèo",
+    "original_title": "소주전쟁",
+    "overview": "Mượn Rượu Đẩy Kèo lấy bối cảnh Hàn Quốc vào năm 1997, khi cuộc khủng hoảng kinh tế tài chính đang hoành hành khắp châu Á khiến Gukbo - công ty sản xuất Soju số 1 đất nước rơi vào tình trạng cận kề phá sản. In-beom (Lee Je-hoon) - chàng trai trẻ đầy tham vọng đại diện cho tập đoàn đầu tư toàn cầu Solquin đã trở về quê hương với quyết tâm thâu tóm Gukbo. Để thực hiện âm mưu này, In-beom đội lốt một chuyên gia tư vấn ngây thơ, tiếp cận Jong-rok (Yoo Hai-jin) - giám đốc vô cùng trung thành với Gukbo, đang khao khát đưa công ty quay lại thời hoàng kim. Nhưng càng đào sâu vào đế chế Gukbo, In-beom càng nhận ra đây thực sự là một cuộc chiến xảo quyệt với rất nhiều “cú twist”, dẫn đến kết cục không ngờ dành cho tất cả.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/9sW1TfzEjZETwYftTc6S5TCx3TA.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/4wy0J3W2jh47abtSJSqBqiX4Aot.jpg",
+    "release_date": "2025-05-30",
+    "vote_average": 6.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/4tywdj04bqie5ppo4l3gb/Big.Deal.2025.1080p.iTunes.WEB-DL.DD5.1.H264-PandaQT-Sub-Viet.mkv?rlkey=1im1foxvwl7giqn0fz5qskllw&st=6cdz3uro&dl=0&dl=1"
+},
+{
+    "id": 820232,
+    "title": "Thanh Gươm Diệt Quỷ: Sợi Dây Gắn Kết Giữa Hai Anh Em",
+    "original_title": "鬼滅の刃 兄妹の絆",
+    "overview": "Sau một ngày bán than về muộn, Tanjiro Kamado – cậu bé hiền lành sống cùng mẹ và các em trên núi – trở về nhà và phát hiện cả gia đình đã bị thảm sát dã man bởi quỷ. Chỉ còn lại em gái Nezuko còn sống, nhưng cô đã bị biến thành một con quỷ.  Trong lúc cố gắng đưa Nezuko xuống núi để cứu chữa, Tanjiro bị chặn lại bởi Giyuu Tomioka, một Trụ cột diệt quỷ (Hashira). Nhận thấy Nezuko vẫn giữ lại chút nhân tính và phản kháng bản năng ăn thịt người, Giyuu quyết định tha mạng cho cả hai, đồng thời chỉ đường để Tanjiro bắt đầu hành trình trở thành kiếm sĩ diệt quỷ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cYntORNmkCZEs1DM1yGm97cWStJ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/8NEvnVKeGMLEXG45MMNqxJLcM4y.jpg",
+    "release_date": "2019-03-29",
+    "vote_average": 7.93,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/6dl1995lslykr54yl9a3a/Demon-Slayer_-Kimetsu-no-Yaiba_-Brother-and-Sisters-Bond-2019-WEBDL-1080P-H.264-DD2.0_Viet-Sub.mkv?rlkey=foh7yhkpcb1l8kczg9g0wnvec&st=eogfxsme&dl=0&dl=1"
+},
+{
+    "id": 1311031,
+    "title": "Thanh Gươm Diệt Quỷ: Vô Hạn Thành",
+    "original_title": "劇場版「鬼滅の刃」無限城編 第一章 猗窩座再来",
+    "overview": "Khi các thành viên của Sát Quỷ Đoàn và Trụ Cột tham gia vào chương trình đặc huấn để chuẩn bị cho trận chiến sắp với lũ quỷ, Kibutsuji Muzan xuất hiện tại Dinh thự Ubuyashiki. Khi thủ lĩnh của Sát Quỷ Đoàn gặp nguy hiểm, Tanjiro và các Trụ Cột trở về trụ sở Thế nhưng, Muzan bất ngờ kéo toàn bộ Sát Quỷ Đoàn đến hang ổ cuối cùng của lũ quỷ là Vô Hạn Thành, mở màn cho trận đánh cuối cùng của cả hai phe.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/nV99ACeAa8fFFso0tQZ3HktEf5X.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/1RgPyOhN4DRs225BGTlHJqCudII.jpg",
+    "release_date": "2025-07-18",
+    "vote_average": 7.616,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/726kjuv8n7d3f0nstvvme/Demon.Slayer.Kimetsu.No.Yaiba.Infinity.Castle.2025.1080p.HDTS.x265.10Bit.HEVC.Jap-DD-2.0.VITOENCODES-Vietsub-1.mkv?rlkey=zsjbgv3nkg5m3wwi9hk2jvhip&st=ywmezbti&dl=0&dl=1"
+},
+{
+    "id": 1241624,
+    "title": "Ga Tử Thần",
+    "original_title": "괴기열차",
+    "overview": "Bước vào thế giới của Ghost Train, khán giả theo chân Da Gyeong (Joo Hyun Young) – một YouTuber trẻ tuổi đang tuyệt vọng cứu vãn tài khoản đang 'flop' của mình bằng những câu chuyện kỳ bí. Với khát khao phá kỷ lục lượt xem, cô quyết định khám phá ga tàu điện ngầm Gwanglim – nơi phủ đầy truyền thuyết đô thị và nổi tiếng với hàng loạt vụ mất tích bí ẩn. Được dẫn lối bởi người gác ga kỳ lạ (Jeon Bae Soo), Da Gyeong không ngờ rằng chuyến đi liều lĩnh này lại đẩy cô vào vòng xoáy tâm linh rùng rợn, nơi mà chỉ khi chạm đến “đích cuối” của chuyến tàu định mệnh, cô mới mong tìm được lối thoát.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/z4HfUc1IzYMs7mdjLXm4PeB9ix0.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/3oHIkNt8dM6gH4IDKG5W121OT2T.jpg",
+    "release_date": "2025-07-09",
+    "vote_average": 6.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/7cmyzrhagohhxpko4tdce/Ghost-Train-2025-1080p-WEBRip-VHS.mkv?rlkey=30pnku44jjlizgngaqmtgqeex&st=hclfjbn8&dl=0&dl=1"
+},
+{
+    "id": 1234821,
+    "title": "Thế Giới Khủng Long: Tái Sinh",
+    "original_title": "Jurassic World Rebirth",
+    "overview": "Thế Giới Khủng Long: Tái Sinh lấy bối cảnh 5 năm sau phần phim Thế Giới Khủng Long: Lãnh Địa, môi trường Trái đất đã chứng tỏ phần lớn là không phù hợp với khủng long. Nhiều loài thằn lằn tiền sử được tái sinh đã chết. Những con chưa chết đã rút lui đến một vùng nhiệt đới hẻo lánh gần phòng thí nghiệm. Địa điểm đó chính là nơi bộ ba Scarlett Johansson, Mahershala Ali và Jonathan Bailey dấn thân vào một nhiệm vụ cực kỳ hiểm nguy.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/2IVVciw7dPhUlNmYIaz0s1d56SZ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/fQOV47FHTJdaSuSUNlzP3zXUZWE.jpg",
+    "release_date": "2025-07-01",
+    "vote_average": 6.381,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ipwfsso3rsv7gf493b1by/Jurassic.World.Rebirth.2025.ViE-1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-Thuyet-Minh-Sub-Viet.mkv?rlkey=0y6yxr01vc0r4952jqs393us2&st=so3zn0rn&dl=0&dl=1"
+},
+{
+    "id": 1321139,
+    "title": "Tôi Có Bệnh Mới Thích Cậu",
+    "original_title": "有病才會喜歡你",
+    "overview": "Để tránh bị đuổi học, nam sinh trường cấp ba nọ giả vờ mắc bệnh nan y. Nhưng trò lừa dối dần sụp đổ khi cậu kết thân với một người bạn cùng lớp thật sự mắc bệnh.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/8AU6QnNPjy6ovDHkgOH0j9KEZwJ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/6aOUNk5tiBv30OY8bhLDx7CyI0.jpg",
+    "release_date": "2025-04-02",
+    "vote_average": 7.143,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/bv7e1u4a524xykb5q6ncl/Lovesick.2025.1080p.NF.WEB-DL.AAC2.0.H.264-BiOMA-Sub-Viet.mkv?rlkey=dyq7h2pln306giggpcmppamxe&st=g3m2oo6g&dl=0&dl=1"
+},
+{
+    "id": 1498658,
+    "title": "Mantis",
+    "original_title": "Mantis",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/jYxdUltC1BADOIuDrltcenkTWei.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/w500/jYxdUltC1BADOIuDrltcenkTWei.jpg",
+    "release_date": "2025-09-19",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/32s8ptiiucrnr7e4qymy2/Mantis.2025.ViE-1080p.NF.WEB-DL.DUAL.DDP5.1.Atmos.H.264-FLUX-Long-Tieng-Sub-Viet.mkv?rlkey=f09catd825y6dzm1dyk84mnml&st=59aamyfi&dl=0&dl=1"
+},
+{
+    "id": 1288175,
+    "title": "Rider: Giao Hàng Cho Ma",
+    "original_title": "ไรเดอร์",
+    "overview": "Một cuộc phiêu lưu ma quái của 3 tay đua giao hàng – NAT (Mario Maurer), KAI (Marut Chuensomboon) và YOD (Puwanet Seechompu). Việc giao hàng của 3 người bạn rất ổn vào ban ngày, nhưng ban đêm thì lại khác. Họ thường nhận được “những đơn hàng rùng rợn” với những chỉ dẫn bất thường và địa chỉ giao nhận là những ngôi nhà ma ám nổi tiếng. Những nhiệm vụ giao hàng đơn giản của họ thường biến thành những cuộc phiêu lưu đáng sợ tới những địa điểm kỳ lạ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lVVQGK8Nf6Le7YhYbjO4MAqZQhp.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/gOpFniz5Wn7AxWSmV8nH5AQnGmz.jpg",
+    "release_date": "2024-12-10",
+    "vote_average": 3.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/5zoez7k4npuu936pkkohu/Riders.2024.1080p.HamiVideo.WEB-DL.AAC2.0.H.264-DreamHD-Vsub.mkv?rlkey=rodudjefu3zmhr9i1nvb5ukoj&st=q3285awo&dl=0&dl=1"
+},
+{
+    "id": 1061474,
+    "title": "Superman",
+    "original_title": "Superman",
+    "overview": "Superman cố gắng can thiệp vào một cuộc khủng hoảng toàn cầu do Lex Luthor gây ra, nhưng lại bị công chúng hiểu lầm. Mọi chuyện trở nên nghiêm trọng hơn khi Luthor tạo ra một bản sao đen tối của Superman – Ultraman. Với sự giúp đỡ của Lois Lane và chú chó siêu năng lực Krypto, Superman phải đối mặt với chính bản ngã của mình để giành lại niềm tin từ nhân loại.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/f4hJ5yVSiOSnW9S6vtoGlNYvW5J.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yRBc6WY3r1Fz5Cjd6DhSvzqunED.jpg",
+    "release_date": "2025-07-09",
+    "vote_average": 7.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/j5xzx2i0bwya22u1wudyo/Superman.2025.1080p.iT.WEB-DL.Atmos.DDP5.1.H264-HHWEB-Sub-Viet.mkv?rlkey=7t2z75g7gmd1plqbpm2p879l9&st=3oh24ang&dl=0&dl=1"
+},
+{
+    "id": 1035259,
+    "title": "Họng Súng Vô Hình",
+    "original_title": "The Naked Gun",
+    "overview": "Họng Súng Vô Hình là phần tiếp theo của thương hiệu hài giả tội phạm đình đám The Naked Gun, lần này nhân vật trung úy Frank Drebin Jr. – do Liam Neeson thủ vai – tiếp bước cha mình để điều tra một vụ ám sát liên quan đến anh trai của quý cô Beth. Bộ phim mang phong cách hài hành động châm biếm, kết hợp giữa các tình huống đối kháng kịch tính và cú lừa đảo đầy hài hước đậm chất “ngơ ngơ nhưng cực quyết liệt.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/zXM4DvkQKPaLjsbnKezjzS43Ind.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/1wi1hcbl6KYqARjdQ4qrBWZdiau.jpg",
+    "release_date": "2025-07-30",
+    "vote_average": 6.495,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/4bbe0aefevfn48cr6el4a/The.Naked.Gun.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Sub-Viet.mkv?rlkey=cc7d8pmzor4y7k51eswe5rgg1&st=stjt9rpl&dl=0&dl=1"
+},
+{
+    "id": 1078605,
+    "title": "Giờ Mất Tích",
+    "original_title": "Weapons",
+    "overview": "Khi tất cả học sinh trong cùng một lớp bất ngờ biến mất trong cùng một đêm, vào đúng một thời điểm — chỉ trừ lại một em nhỏ duy nhất — cả cộng đồng rơi vào hoang mang tột độ, tự hỏi: ai… hoặc điều gì đứng sau sự biến mất bí ẩn ấy?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lVY3xYt7ai6ahduq3D7F2z5wwin.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yKWZIDo4ixcDUeelk2QGVA1EVmC.jpg",
+    "release_date": "2025-08-04",
+    "vote_average": 7.313,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/tlbicngxaineudb6byouz/Weapons.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR-Sub-Viet.mkv?rlkey=2yjjzv76km5ysh583c0prmgsl&st=k6lggeck&dl=0&dl=1"
+},
+{
+    "id": 1151031,
+    "title": "Mượn Hồn Đoạt Xác",
+    "original_title": "Bring Her Back",
+    "overview": "Sự trở lại của bộ óc sáng tạo đằng sau Talk to Me, Danny và Michael Philippou cùng A24 với một bộ phim kinh dị mới nhất Mượn Hồn Đoạt Xác. Nhiều người tin rằng linh hồn vẫn sẽ ở lại trong thân xác một thời gian trước khi rời đi, đây cũng là niềm tin đáng sợ cho nghi lễ ám ảnh nhất tháng 5.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/zNNDCFTnSNz7Y5GZDxs8SYO2MIi.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2IIKts2A9vnUdM9tTC76B8tDmuZ.jpg",
+    "release_date": "2025-05-28",
+    "vote_average": 7.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/vgvvvdkf81tzq0bqc38v9/Bring.Her.Back.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Sub-Viet.mkv?rlkey=dbzsqa45nn26gst1b44hcmsow&st=cfcatxvv&dl=0&dl=1"
+},
+{
+    "id": 793387,
+    "title": "Đêm Thánh: Đội Săn Quỷ",
+    "original_title": "거룩한 밤: 데몬 헌터스",
+    "overview": "Đêm Thánh Đội Săn Quỷ là bộ phim Hàn mới nhất với sự góp mặt của ông chú Ma Dong Seok. Seoul chìm trong hỗn loạn khi một mạng lưới tội phạm tôn thờ ma quỷ xuất hiện. Trong sự cầu xin tuyệt vọng để được cứu rỗi, cảnh sát buộc phải nhờ đến ‘Đêm Thánh’, một bộ ba thợ săn quỷ được trang bị sức mạnh siêu nhiên. Liệu ‘Đêm Thánh’ có thể chinh phục ách thống trị của quỷ dữ và khôi phục trật tự cho thành phố?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/fWJGqsrBTaB0pjl7JEqbcYg4BBH.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/5A01YSCPYoCOZOhh9tU7F3Htxkf.jpg",
+    "release_date": "2025-04-30",
+    "vote_average": 6.768,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/6mz7srm1n2kgph0sqzpjw/Holy.Night.Demon.Hunters.2025.1080p.WEB-DL.AAC2.0.H.264-AYA-Sub-Viet.mkv?rlkey=f06axvyid8ewvzm090iln3hos&st=z16azrf2&dl=0&dl=1"
+},
+{
+    "id": 1087192,
+    "title": "Bí Kíp Luyện Rồng",
+    "original_title": "How to Train Your Dragon",
+    "overview": "Phiên bản Live Action (người đóng) của studio DreamWorks rất được mong chờ đã ra mắt. Câu chuyện về một chàng trai trẻ với ước mơ trở thành thợ săn rồng, nhưng định mệnh lại đưa đẩy anh đến tình bạn bất ngờ với một chú rồng.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cLq0IEiC7vvb013UbsCLhS5puX.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/vHTFrcqJoCi1is3XN0PZe2LSnI2.jpg",
+    "release_date": "2025-06-06",
+    "vote_average": 7.985,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/0sexjfe8blhf07leo5xtw/How.to.Train.Your.Dragon.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Sub-Viet.mkv?rlkey=v6pclj2on2ysxeicmdm9soora&st=jlmg6kmp&dl=0&dl=1"
+},
+{
+    "id": 552524,
+    "title": "Lilo và Stitch",
+    "original_title": "Lilo & Stitch",
+    "overview": "Cuộc sống của hai chị em bị xáo trộn khi Lilo nhận nuôi một 'con chó' kỳ lạ từ trại cứu hộ động vật. Con vật đó thực chất là Thí nghiệm 626, hay còn gọi là Stitch (lồng tiếng bởi Chris Sanders, người lồng tiếng cho Stitch trong bản hoạt hình gốc), một sinh vật ngoài hành tinh được tạo ra bởi nhà khoa học điên rồ Dr. Jumba Jookiba (Zach Galifianakis) với mục đích gây hỗn loạn. Stitch là một 'quả bóng hủy diệt' không thể kiểm soát, nhưng Lilo lại coi cậu bé là người bạn thân nhất mà cô hằng mong ước.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/aOfmWQHIdunw4Xnc4ZL7DUDDgNl.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/7Zx3wDG5bBtcfk8lcnCWDOLM4Y4.jpg",
+    "release_date": "2025-05-17",
+    "vote_average": 7.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/wyu5yd1vgueg0qomv9uvs/Lilo.and.Stitch.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Vietsub.mkv?rlkey=k2bcx3z9fshm5bye5y31hnxo1&st=rxt2g2ei&dl=0&dl=1"
+},
+{
+    "id": 1071585,
+    "title": "M3GAN 2.0",
+    "original_title": "M3GAN 2.0",
+    "overview": "Phim lấy bối cảnh 2 năm sau các sự kiện ở phần 1. Lúc này, Gemma phát hiện công nghệ sản xuất MEGAN đã bị đánh cắp. Kẻ gian đã tạo ra một robot AI khác với chức năng tương tự MEGAN, nhưng được trang bị sức mạnh chiến đấu 'khủng' hơn mang tên Amelia. Để 'đối đầu' với Amelia, Gemma buộc phải 'hồi sinh' và cải tiến MEGAN, hứa hẹn một trận chiến 'nảy lửa' trên màn ảnh vào năm 2025.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/psASSoFLAGFoXwyfRg4hDZHgshN.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/cT9ZfwoPDk8JbgkessmQgxAWiaM.jpg",
+    "release_date": "2025-06-25",
+    "vote_average": 7.366,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/doifboa59p12vhuxo8twi/M3GAN.2.0.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Sub-Viet.mkv?rlkey=nuhzsk1uexbdnevek9wou6jqa&st=ceen8paq&dl=0&dl=1"
+},
+{
+    "id": 1136867,
+    "title": "Một Nửa Hoàn Hảo",
+    "original_title": "Materialists",
+    "overview": "Lucy (Dakota Johnson), một cô gái xinh đẹp làm công việc mai mối ở New York. “Mát tay” trong chuyện mai mối giúp người khác, nhưng trớ trêu Lucy lại “lạc lối” trong câu chuyện tình cảm của chính mình. Bất ngờ đối mặt với ngã rẽ tình cảm khi gặp lại người yêu cũ 'không hoàn hảo' (Chris Evans) và một người đàn ông 'hoàn hảo' (Pedro Pascal). Cô nàng bị đẩy vào tình thế khó xử. Đứng giữa những lựa chọn cảm xúc đầy mâu thuẫn, lúc này đây, Lucy mới nhận ra việc tìm kiếm tình yêu đích thực chưa bao giờ là điều dễ dàng",
+    "poster_path": "https://image.tmdb.org/t/p/w500/edSuYya7wFzFPu1PDtwMlU0Em2W.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/lqwwGkwJHtz9QgKtz4zeY19YgDg.jpg",
+    "release_date": "2025-06-12",
+    "vote_average": 6.486,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/7cqno4ix3mdd4b4n140i0/Materialists.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Vietsub.mkv?rlkey=6660zo067kjyqyy1lo1hzaqlh&st=i6ztruzv&dl=0&dl=1"
+},
+{
+    "id": 1233413,
+    "title": "Tội Đồ",
+    "original_title": "Sinners",
+    "overview": "Cố gắng bỏ lại cuộc sống đầy rắc rối của mình, hai anh em sinh đôi trở về quê hương để bắt đầu lại, chỉ để phát hiện ra rằng một cái ác thậm chí còn lớn hơn đang chờ đợi để chào đón họ trở lại.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/aXFWi3ir9vHqAz0m3XIuD92vPsQ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/nAxGnGHOsfzufThz20zgmRwKur3.jpg",
+    "release_date": "2025-04-16",
+    "vote_average": 7.507,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/5j1gtno3aqldywc58moyh/Sinners.2025.1080p.iT.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Sub-Viet.mkv?rlkey=u3pxmsbfvhueddvsz2f11bjve&st=vut2g9tl&dl=0&dl=1"
+},
+{
+    "id": 1278950,
+    "title": "Quỷ Tha Ma Bắt",
+    "original_title": "The Ritual",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/p6f9KKh5oZJFILWT6yEPhEz3ZeE.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yAqL0makiGke5yYiVWpmBDSKIVP.jpg",
+    "release_date": "2025-04-18",
+    "vote_average": 5.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/9uapymonw3mkcok9udw54/The-Ritual.2025.2160p.AMZN.WEB-DL.DDP5.1.H.265-BYNDR.mkv?rlkey=ljsabk4nc7o461the7zaqxnsl&st=xuyz0ssb&dl=0&dl=1"
+},
+{
+    "id": 846422,
+    "title": "The Old Guard 2",
+    "original_title": "The Old Guard 2",
+    "overview": "Andy và đội chiến binh bất tử chiến đấu với mục đích mới khi họ đương đầu với một kẻ thù mới hùng mạnh đang đe dọa sứ mệnh bảo vệ nhân loại của họ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/wqfu3bPLJaEWJVk3QOm0rKhxf1A.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/fd9K7ZDfzRAcbLh8JlG4HIKbtuR.jpg",
+    "release_date": "2025-07-01",
+    "vote_average": 5.968,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/8srtzbfoxbfr38k432lc9/The.Old.Guard.2.2025.1080p.NF.WEB-DL.DDP5.1Atmos.H.264-Sub-Viet.mkv?rlkey=icjkvdx12ya86pz49s3j2wq0g&st=7ix11h6j&dl=0&dl=1"
+},
+{
+    "id": 547016,
+    "title": "The Old Guard: Những chiến binh bất tử",
+    "original_title": "The Old Guard",
+    "overview": "Bốn chiến binh bất tử đã âm thầm bảo vệ loài người nhiều thế kỉ bỗng trở thành mục tiêu bị truy lùng bởi sức mạnh bí ẩn của mình khi họ vừa tìm thấy một người bất tử mới.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/rWFUKXIjqoG7aPL7PF4IpLN8PL6.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/m0ObOaJBerZ3Unc74l471ar8Iiy.jpg",
+    "release_date": "2020-07-09",
+    "vote_average": 7.116,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/q9rwtzon3ivgqc6rmt48h/The.Old.Guard.2020.ViE-1080p-NF.WEB-DL.DDP5.1.H.264-Long-Tieng-Sub-Viet.mkv?rlkey=eun9azut4x6a51lp5rkckelf6&st=6sxo0q6i&dl=0&dl=1"
+},
+{
+    "id": 1393868,
+    "title": "Chị Dâu",
+    "original_title": "Chị Dâu",
+    "overview": "Chuyện bắt đầu khi bà Nhị - con dâu cả của gia đình quyết định nhân dịp đám giỗ của mẹ chồng, tụ họp cả bốn chị em gái - con ruột trong nhà lại để thông báo chuyện sẽ tự bỏ tiền túi ra sửa sang căn nhà từ đường cũ kỹ trước khi bão về. Vấn đề này khiến cho nội bộ gia đình bắt đầu có những lục đục, chị dâu và các em chồng cũng xảy ra mâu thuẫn, bất hoà. Dần dà những sự thật đằng sau việc 'bằng mặt mà không bằng lòng' giữa các chị em cũng dần được hé lộ, những bí mật, nỗi đau sâu thẳm nhất trong mỗi cá nhân cũng dần được bóc tách. Liệu sợi dây liên kết vốn đã mong manh giữa các chị em có bị cắt đứt và liệu “căn nhà” vốn đã dột nát ấy có còn nguyên vẹn sau cơn bão lớn?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cOAU3a7kvhHDyYhUGzvGwlaxUfZ.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/t53vzEhFe8EOeGW8fe8hFmJp4HG.jpg",
+    "release_date": "2024-12-20",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/buyxafpi9u54fnpusixd2/The.Real.Sister.2024.GLXP.1080p.WEB-DL.DDP5.1.H.264-SIVI.mkv?rlkey=a6ah0pjf0moq5mtr1rd6ytpdi&st=iy7wiv7c&dl=0&dl=1"
+},
+{
+    "id": 986056,
+    "title": "Thunderbolts*",
+    "original_title": "Thunderbolts*",
+    "overview": "Sau khi thấy mình bị mắc kẹt trong một cái bẫy chết người, bảy người bị bỏ rơi vỡ mộng phải bắt tay vào một nhiệm vụ nguy hiểm sẽ buộc họ phải đối mặt với những góc đen tối nhất trong quá khứ của họ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/8SHwKExQ9dkR8xEmtT3y2vrHZEY.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/wSdWEc1G3OUWg8HAzNLqOZ9Gd43.jpg",
+    "release_date": "2025-04-30",
+    "vote_average": 7.315,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/33t4czju22ayzjm9r7sgj/Thunderbolts.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-KyoGo-Sub-Viet.mkv?rlkey=mviit8ezfpyuvq9shj583mffr&st=hqeh0oxi&dl=0&dl=1"
+},
+{
+    "id": 1232546,
+    "title": "Bí Mật Kinh Hoàng",
+    "original_title": "Until Dawn",
+    "overview": "Một năm sau khi chị gái Melanie mất tích một cách bí ẩn, Clover và những người bạn của cô tiến vào thung lũng xa xôi nơi cô biến mất để tìm kiếm câu trả lời. Khám phá một trung tâm du khách bị bỏ hoang, họ thấy mình bị một kẻ giết người đeo mặt nạ theo dõi và bị giết hại một cách khủng khiếp từng người một... chỉ để thức dậy và thấy mình trở lại vào đầu buổi tối hôm đó.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/544g85T0znqQxFOWzwOdUEPpZkl.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/vFJgEhYEjWWJ9JqmlMdDiKxE8JD.jpg",
+    "release_date": "2025-04-23",
+    "vote_average": 6.382,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/3a92g4lnoatp0dz7rdcjt/Until-Dawn.2025.ViE-1080p.BluRay.DTS-HD.MA.5.1.x264-D3US.mkv?rlkey=oipree35vrttzpaeyqc9fweqd&st=7w4bsqhe&dl=0&dl=1"
+},
+{
+    "id": 607845,
+    "title": "Dính Thính Là Yêu",
+    "original_title": "바이러스",
+    "overview": "Dính “Thính” Là Yêu là bộ phim hài lãng mạn xoay quanh cô nàng Taek-seon (Bae Doo-na) - bộ trưởng bộ thờ ơ, chủ tịch hội vô cảm, trưởng nhóm anti tình yêu. Đang sống cuộc đời như một “tảng băng di động”, Taek-seon bất ngờ bị nhiễm “virus tình yêu” - cơn dịch bệnh kỳ lạ khiến con người không thể kiềm chế ham muốn yêu và được yêu. Nếu không tìm được tình yêu đích thực của đời mình trong vòng 5 ngày, người nhiễm virus sẽ chết… vì cô đơn, theo đúng nghĩa đen. Đứng trước những ngã rẽ là can đảm đi tìm tình yêu hay chấp nhận từ bỏ cuộc sống, Taek-seon đã gặp gỡ 3 người đàn ông với hi vọng họ có thể thay đổi số phận của cô. Đó là nhà nghiên cứu Nam Soo-pil (Son Suk-ku), bạn học cùng tiểu học Kim Yeon-woo (Chang Ki-ha) và chuyên gia y tế Lee Kyun (Kim Yoon-seok). Những phản ứng tình yêu “dở khóc dở cười” bắt đầu bùng nổ trên hành trình chữa bệnh của Taek-seon khiến cô phải tự hỏi: Liệu đây chỉ là triệu chứng mà virus mang lại hay đó chính là tình yêu thật sự?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/rbWdnNmnSr46Z5Wk2zYG0AWICO7.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/zwFD32lmTDFLfwjCH4RvotH6LaP.jpg",
+    "release_date": "2025-05-07",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/kwuirv0dc262b7f9yjovv/Virus-2025.ViE.1080p.FHDRip.H264.AAC-Vietsub-TM.mkv?rlkey=cwqgkhogpekwqhjaahhwse278&st=atlfi4xf&dl=0&dl=1"
+},
+{
+    "id": 567811,
+    "title": "Mèo Mập Mang 10 Mạng",
+    "original_title": "10 Lives",
+    "overview": "Nhân vật chính của 10 LIVES là Beckett – một chú mèo được nuông chiều tới mức sinh ra ích kỷ, không trân trọng những may mắn mà mình đang được tận hưởng. Nhưng tất cả sắp sửa thay đổi khi cậu ta bất cẩn làm mất đi 9 cái mạng của mình. Không còn mạng nào để phòng thân và phải đối mặt với những điều không thể tránh khỏi, Beckett đã cầu xin để mọi thứ trở lại như xưa. Thoạt đầu, thỉnh cầu này bị bác bỏ, nhưng trong một khoảnh khắc đặc biệt đồng cảm, trái tim của “Người gác cổng” đã lay động và cho phép Beckett có thể quay trở lại Trái đất với một loạt mạng mới. Nhưng điều mà Beckett không nhận ra ngay lập tức chính là cứ với mỗi một mạng mới, cậu ta sẽ chuyển sinh thành một hình dạng khác… Mỗi hình dạng sẽ lại dạy cho Beckett một bài học kịp thời và giá trị.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vVCE6yyfkVsD8ZLEtYOfS0KpDPN.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/xEPQxkqAVIXrZKQIQCKqyRHzc1t.jpg",
+    "release_date": "2024-04-18",
+    "vote_average": 7.669,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/k0bw5t18zk3ta5m9vy3ro/10.Lives.2024.1080p.AMZN.WEB-DL.DD5.1.H.264-playWEB.mkv?rlkey=72mociva173rlwsvoru6zhm12&st=kfygqigg&dl=0&dl=1"
+},
+{
+    "id": 1290213,
+    "title": "404 Chạy Ngay Đi",
+    "original_title": "404 สุขีนิรันดร์..Run Run",
+    "overview": "Nakrob, một kẻ lừa đảo bất động sản trẻ tuổi, phát hiện ra một khách sạn trên sườn đồi bị bỏ hoang gần bãi biển. Nhìn thấy cơ hội, anh ta quyết định biến nó thành một vụ lừa đảo khách sạn sang trọng.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/uTx63f614g5k2Rc3A5YcF5pfKsq.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/1jJBdjGMwoosm7MqgHVT4e5KNR5.jpg",
+    "release_date": "2024-11-28",
+    "vote_average": 8.292,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/pi6epz5x8xxh92uaeuk3d/404.Run.Run.2024.ViE-DUB-1080p.WEB-DL.DDP5.1.H.264.mkv?rlkey=pdqjphgajd0ub59g1xotrqdsc&st=nznmpe8k&dl=0&dl=1"
+},
+{
+    "id": 950387,
+    "title": "Một bộ phim Minecraft",
+    "original_title": "A Minecraft Movie",
+    "overview": "Chào mừng bạn đến với thế giới của Minecraft, nơi sự sáng tạo không chỉ giúp bạn chế tạo mà còn là yếu tố quan trọng để sống sót! Bốn kẻ lạc lõng - Garrett “The Garbage Man” Garrison (Momoa), Henry (Hansen), Natalie (Myers) và Dawn (Brooks) - bất ngờ gặp rắc rối khi họ bị kéo qua cánh cửa bí ẩn dẫn đến Overworld: một thế giới kỳ lạ được tạo bởi những khối lập phương và phát triển nhờ vào trí tưởng tượng. Để trở về nhà, họ cần phải làm chủ được thế giới này (và bảo vệ nó khỏi những thực thể tà ác như Piglins và Thây Ma) trong khi dấn thân vào chuyến phiêu lưu màu nhiệm với một thợ chế tạo chuyên nghiệp và khó lường - Steve (Black). Chuyến hành trình này sẽ thách thức sự can đảm của cả năm người, thúc đẩy họ tìm lại với những phẩm chất làm nên sự đặc biệt của riêng mình,… đồng thời là những kỹ năng cần thiết để trở lại với thế giới thật.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/wRrGBv4uNofBVyShxfS0iugbcm8.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2Nti3gYAX513wvhp8IiLL6ZDyOm.jpg",
+    "release_date": "2025-03-31",
+    "vote_average": 6.335,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/llf329vnf82305no7dff8/A.Minecraft.Movie.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-BuildBreakRepeat-Sub-Viet.mkv?rlkey=uzweyisxr3tlo28hsmidawwbp&st=yw3mlqb6&dl=0&dl=1"
+},
+{
+    "id": 1064205,
+    "title": "Chuyện Nhà Bánh Xếp",
+    "original_title": "대가족",
+    "overview": "Ông trùm màn ảnh Kim Yun-seok hóa tổng tài gia trưởng khó tính trong Chuyện Nhà Bánh Xếp. Cùng với sự xuất hiện của Lee Seung-gi, bộ phim hứa hẹn mang đến những tràng cười sảng khoái dịp cuối năm.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/n8441aFz9fETVxbMQ596F1ldaOd.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/qdl3SlctJM72sUbv8zo2UjHoIpv.jpg",
+    "release_date": "2024-12-11",
+    "vote_average": 7.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/aj7tv9p66xuviegwl1lry/About.Family.2024.ViE.1080p.iTunes.WEB-DL.DD5.1.H264-HHWEB.mkv?rlkey=62npqynwr71lr7xie7vsnxmkg&st=ecsb82rp&dl=0&dl=1"
+},
+{
+    "id": 869990,
+    "title": "Ma Đồng Tây Du Hồng Hài Nhi",
+    "original_title": "西游魔童红孩儿",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/9zsaZhxLHsFiqcK1GK7RDDW0I38.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/1oGc6BDbqKaMrrcgHnnhRH1Mix.jpg",
+    "release_date": "2021-09-01",
+    "vote_average": 6.8,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/u1mxuiqd8y24onsqls10f/Awakened.Demon.2021.2160P.WEB-DL.H265.AAC-al0_Viet-sub.mkv?rlkey=o73kstl2qchlawaop448r6ax6&st=d5i56y4a&dl=0&dl=1"
+},
+{
+    "id": 1125899,
+    "title": "Đặc Vụ Lau Kính",
+    "original_title": "Cleaner",
+    "overview": "Khi một nhóm các nhà hoạt động cấp tiến chiếm lấy buổi tiệc thường niên của một công ty năng lượng, bắt giữ 300 con tin, một cựu chiến binh chuyển sang làm người lau cửa sổ bị treo lơ lửng ở bên ngoài tòa nhà trên tầng 50 phải cứu những người bị mắc kẹt bên trong, bao gồm cả em trai của cô.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/mwzDApMZAGeYCEVjhegKvCzDX0W.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/2TtpJq1PbeQ36E5FnHVX4O6hVvu.jpg",
+    "release_date": "2025-02-19",
+    "vote_average": 6.4,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/4l8xu28lgrtfe80xq93rq/Cleaner.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR-Sub-Viet.mkv?rlkey=nh228unho3gxrqebh6dcysms0&st=gy5jp7bf&dl=0&dl=1"
+},
+{
+    "id": 713364,
+    "title": "Chú Hề Trong Cánh Đồng Ngô",
+    "original_title": "Clown in a Cornfield",
+    "overview": "Quinn và cha cô chuyển từ Philadelphia đến thị trấn Kettle Springs. Sau vụ cháy nhà máy Baypen Corn Syrup, thị trấn bị chia rẽ sâu sắc. Mọi thứ trở nên hỗn độn khi Frendo, chú hề thị trấn, bắt đầu giết người trẻ tuổi để “thanh lọc” cộng đồng",
+    "poster_path": "https://image.tmdb.org/t/p/w500/rBDroMiMkt42qFTch488h63kPXR.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/gIwG9UWJLsiSBfaG5GJWGj9ghXD.jpg",
+    "release_date": "2025-05-08",
+    "vote_average": 6.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/dg0071e420gblokgz0b61/Clown-in.a.Cornfield.2025.2160p.AMZN.WEB-DL.DDP5.1.H.265-BYNDR.mkv?rlkey=f4uumva4ggu70thirvgxnuvvv&st=77916a7c&dl=0&dl=1"
+},
+{
+    "id": 1084199,
+    "title": "Kẻ Đồng Hành",
+    "original_title": "Companion",
+    "overview": "Cái chết của một tỷ phú đã khơi mào chuỗi sự kiện kinh hoàng cho Iris và bạn bè của cô trong kỳ nghỉ cuối tuần tại khu biệt thự ven hồ. Kéo theo đó, những bí mật đen tối nhất trong chuyện tình của 'cặp đôi hoàn hảo' Iris - Josh cũng dần bại lộ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/aykBXxWW3xKPGrjBaSRSs5B2HEB.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/cZnJ3ABPvsWGqwPcu06Eda493F9.jpg",
+    "release_date": "2025-01-22",
+    "vote_average": 7.042,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/a3nsee8a5xeits22qew08/Companion.2025.1080p.MA.WEB-DL.DDP5.1.Atmos.H.264-iLOVEYOU-Sub-Viet.mkv?rlkey=1yuwfy148ayqrq2lg8lmxidq0&st=4uo1p2fy&dl=0&dl=1"
+},
+{
+    "id": 1224993,
+    "title": "Nữ Tu Bóng Tối",
+    "original_title": "검은 수녀들",
+    "overview": "Hai nữ tu Junia (Song Hye-kyo) và Michaela (Jeon Yeo-been) dùng mọi nỗ lực thực hiện nghi lễ trừ tà để cứu rỗi cậu bé Hee Joon đang bị linh hồn tà ác chiếm giữ. Một cuộc chiến không hồi kết giữa đức tin và quỷ dữ, giữa bí ẩn tâm linh và niềm tin y học.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ieB6OjY1PtUb3yrvOYPbbCIWp12.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/xIB0jjWBuURB0K2Pr91VsjUNYsY.jpg",
+    "release_date": "2025-01-24",
+    "vote_average": 6.297,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/72hqm40x6kqgkpi1z2tr7/Dark.Nuns.2025-ViE-.1080p.BluRay.DDP5.1.x264-CMCT.mkv?rlkey=vfyw3whnmgmk60dlw6qprz0h5&st=gp6hghpd&dl=0&dl=1"
+},
+{
+    "id": 1006724,
+    "title": "Tìm Kiếm Tài Năng Âm Phủ",
+    "original_title": "鬼才之道",
+    "overview": "Một nàng ma mới nhút nhát phải hù dọa người sống nếu không muốn tan biến mãi mãi. Với sự giúp đỡ của một cố vấn từng được ca ngợi, cô nỗ lực để thành thạo nghệ thuật ma ám.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lkyTm8Becu9lujuKIlXMMSMOH5A.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/rGnf32URcZAqdTxtkoC6aUD1GBS.jpg",
+    "release_date": "2024-08-07",
+    "vote_average": 7.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/yv8nf17hn6j0cibdzss21/Dead.Talents.Society.2024.1080p.NF.WEB-DL.DDP5.1.H264-HHWEB-Sub-Viet.mkv?rlkey=r2w39ov2ybwxjz9s50d3d1t41&st=cnq2qz0n&dl=0&dl=1"
+},
 {
     "id": 1247019,
     "title": "Tee Yod: Quỷ Ăn Tạng 2",
