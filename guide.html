@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hướng Dẫn Xem Phim - DOWNCINE</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- COPY GIAO DIỆN TỪ TRANG CHỦ --- */
+        :root {
+            --primary: #f5c518;
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-white: #ffffff;
+            --text-gray: #b3b3b3;
+            --vlc-orange: #ff5722;
+        }
+
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-white); 
+            font-family: 'Montserrat', sans-serif;
+            margin: 0; padding: 0; 
+            line-height: 1.6;
+        }
+
+        /* NAVBAR ĐƠN GIẢN */
+        .navbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 15px 50px; background: #000; border-bottom: 1px solid #333;
+        }
+        .logo { color: var(--text-white); font-size: 24px; font-weight: 900; display: flex; align-items: center; gap: 10px; text-decoration: none;}
+        .logo i { color: var(--primary); }
+        .btn-home { 
+            padding: 8px 20px; border: 1px solid var(--primary); border-radius: 20px; 
+            color: var(--primary); text-decoration: none; font-weight: bold; transition: 0.3s;
+        }
+        .btn-home:hover { background: var(--primary); color: #000; }
+
+        /* NỘI DUNG HƯỚNG DẪN */
+        .guide-container {
+            max-width: 900px; margin: 50px auto; padding: 0 20px;
+        }
+
+        .guide-header { text-align: center; margin-bottom: 50px; }
+        .guide-title { font-size: 2.5rem; color: var(--primary); margin-bottom: 10px; text-transform: uppercase; }
+        .guide-subtitle { color: #aaa; font-size: 1.1rem; }
+
+        /* CÁC BƯỚC */
+        .step-section { margin-bottom: 60px; background: #1a1a1a; padding: 30px; border-radius: 15px; border: 1px solid #333; }
+        .step-title { font-size: 1.5rem; margin-bottom: 20px; display: flex; align-items: center; gap: 15px; color: white;}
+        .step-number { 
+            background: var(--primary); color: #000; width: 40px; height: 40px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-weight: 900; font-size: 1.2rem;
+        }
+
+        /* Link tải VLC */
+        .download-vlc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .dl-btn { 
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 15px; background: #333; color: white; text-decoration: none; 
+            border-radius: 8px; font-weight: bold; transition: 0.2s; border: 1px solid #444;
+        }
+        .dl-btn:hover { background: var(--vlc-orange); border-color: var(--vlc-orange); }
+        .dl-btn i { font-size: 20px; }
+
+        /* Hướng dẫn PC/Mobile */
+        .device-guide { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .device-col h3 { color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+        
+        .instruction-list { list-style: none; padding: 0; }
+        .instruction-list li { margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; color: #ddd; }
+        .instruction-list li i { color: var(--primary); margin-top: 5px; }
+        
+        .key-combo { 
+            background: #444; padding: 2px 8px; border-radius: 4px; 
+            font-family: monospace; font-weight: bold; border: 1px solid #666; color: #fff;
+        }
+
+        /* Footer nhỏ */
+        .footer-mini { text-align: center; margin-top: 50px; padding: 20px; border-top: 1px solid #222; color: #666; font-size: 13px; }
+
+        @media (max-width: 768px) {
+            .device-guide { grid-template-columns: 1fr; }
+            .guide-title { font-size: 1.8rem; }
+            .navbar { padding: 15px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo"><i class="fas fa-play-circle"></i> DOWNCINE</a>
+        <a href="index.html" class="btn-home"><i class="fas fa-arrow-left"></i> VỀ TRANG CHỦ</a>
+    </nav>
+
+    <div class="guide-container">
+        
+        <div class="guide-header">
+            <h1 class="guide-title">Hướng Dẫn Xem Phim</h1>
+            <p class="guide-subtitle">Cách xem phim chất lượng gốc (MKV/4K) mượt mà, không cần tải về</p>
+        </div>
+
+        <div class="step-section">
+            <h2 class="step-title"><span class="step-number">1</span> Cài đặt ứng dụng VLC Player</h2>
+            <p style="color:#aaa">Để xem được mọi định dạng phim (đặc biệt là .MKV) mà không bị lỗi, bạn cần cài đặt <b>VLC Media Player</b> (Miễn phí 100%).</p>
+            
+            <div class="download-vlc-grid">
+                <a href="https://play.google.com/store/apps/details?id=org.videolan.vlc" target="_blank" class="dl-btn">
+                    <i class="fab fa-android"></i> Tải cho Android
+                </a>
+                <a href="https://apps.apple.com/us/app/vlc-media-player/id650377962" target="_blank" class="dl-btn">
+                    <i class="fab fa-apple"></i> Tải cho iPhone/iPad
+                </a>
+                <a href="https://www.videolan.org/vlc/" target="_blank" class="dl-btn">
+                    <i class="fab fa-windows"></i> Tải cho Máy Tính (PC)
+                </a>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h2 class="step-title"><span class="step-number">2</span> Chọn thiết bị của bạn</h2>
+            
+            <div class="device-guide">
+                <div class="device-col">
+                    <h3><i class="fas fa-mobile-alt"></i> Trên Điện Thoại</h3>
+                    <ul class="instruction-list">
+                        <li><i class="fas fa-check-circle"></i> Chọn phim bạn muốn xem trên web.</li>
+                        <li><i class="fas fa-check-circle"></i> Bấm nút màu cam: <br><b>"MỞ TRÊN APP VLC"</b>.</li>
+                        <li><i class="fas fa-check-circle"></i> Điện thoại sẽ hỏi "Mở trong VLC?", bạn chọn <b>Mở (Open)</b>.</li>
+                        <li><i class="fas fa-check-circle"></i> Phim sẽ tự động phát ngay lập tức!</li>
+                    </ul>
+                </div>
+
+                <div class="device-col">
+                    <h3><i class="fas fa-desktop"></i> Trên Máy Tính (PC)</h3>
+                    <ul class="instruction-list">
+                        <li><i class="fas fa-check-circle"></i> Bấm nút <b>"COPY LINK STREAM"</b> trên web.</li>
+                        <li><i class="fas fa-check-circle"></i> Mở phần mềm <b>VLC Player</b> trên máy lên.</li>
+                        <li><i class="fas fa-check-circle"></i> Nhấn tổ hợp phím: <span class="key-combo">Ctrl</span> + <span class="key-combo">N</span></li>
+                        <li><i class="fas fa-check-circle"></i> Dán link vừa copy vào (Nhấn <span class="key-combo">Ctrl</span> + <span class="key-combo">V</span>).</li>
+                        <li><i class="fas fa-check-circle"></i> Bấm <b>Enter</b> hoặc nút <b>Play</b> để thưởng thức.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-section">
+            <h2 class="step-title"><i class="fas fa-question-circle" style="color:var(--primary)"></i> Câu hỏi thường gặp</h2>
+            
+            <div style="margin-bottom: 20px;">
+                <h4 style="color:white; margin-bottom:5px;">Tại sao không xem trực tiếp trên web được?</h4>
+                <p style="color:#aaa; font-size:14px;">Vì web chúng mình lưu trữ phim gốc chất lượng rất cao (.MKV, BluRay), trình duyệt web thông thường (Chrome, Safari) không đủ khả năng giải mã. Dùng VLC giúp bạn xem mượt và nét hơn.</p>
+            </div>
+
+            <div>
+                <h4 style="color:white; margin-bottom:5px;">Tôi có thể tải phim về không?</h4>
+                <p style="color:#aaa; font-size:14px;">Được chứ! Bạn chỉ cần bấm nút <b>"TẢI VỀ MÁY"</b> là sẽ tải được file gốc từ Dropbox về lưu trữ vĩnh viễn.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer-mini">
+        © 2024 DOWNCINE - Được thiết kế tối ưu cho trải nghiệm người dùng
+    </div>
+
+</body>
+</html>
