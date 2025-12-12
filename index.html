@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG</title>
+    <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG CAO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
     
@@ -26,16 +26,16 @@
             overflow-x: hidden;
         }
 
-        /* --- 2. NAVBAR (MENU TRONG SUỐT) --- */
+        /* --- 2. NAVBAR --- */
         .navbar {
             display: flex; align-items: center; justify-content: space-between;
             padding: 15px 50px; 
             position: fixed; top: 0; left: 0; width: 100%; 
             z-index: 1000;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, transparent 100%);
+            background: linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, transparent 100%);
             transition: background 0.3s; flex-wrap: wrap; box-sizing: border-box;
         }
-        .navbar.scrolled { background: #0f0f0f; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .navbar.scrolled { background: #0f0f0f; box-shadow: 0 4px 10px rgba(0,0,0,0.8); }
         
         .logo { color: var(--text-white); font-size: 28px; font-weight: 900; display: flex; align-items: center; gap: 10px; cursor: pointer; text-decoration: none; margin-right: 20px;}
         .logo i { color: var(--primary); }
@@ -58,18 +58,26 @@
         .filter-select:hover { background: rgba(255,255,255,0.2); color: var(--primary); }
         .filter-select option { background: #1a1a1a; color: white; }
 
-        .nav-right { display: flex; gap: 20px; align-items: center; font-size: 14px; font-weight: bold; margin-left: 20px;}
+        .nav-right { display: flex; align-items: center; margin-left: 20px;}
+        
+        /* Nút Hướng Dẫn */
+        .btn-guide-nav {
+            color: #fff; text-decoration: none; font-size: 13px; font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.5); padding: 8px 16px; 
+            border-radius: 20px; transition: 0.3s; margin-right: 15px;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .btn-guide-nav:hover { background: #fff; color: #000; border-color: #fff; }
+        .btn-guide-nav i { font-size: 14px; }
 
-        /* --- 3. HERO BANNER (FULL MÀN HÌNH) --- */
+        .vip-badge { color: var(--primary); font-weight: 900; font-size: 14px; letter-spacing: 1px; cursor: default; }
+
+        /* --- 3. HERO BANNER --- */
         .hero-section {
-            position: relative; 
-            width: 100%; 
-            height: 100vh;
-            background-size: cover; 
-            background-position: center center; 
+            position: relative; width: 100%; height: 100vh;
+            background-size: cover; background-position: center center; 
             display: flex; align-items: center; 
-            transition: background-image 0.5s ease-in-out;
-            margin-top: 0;
+            transition: background-image 0.5s ease-in-out; margin-top: 0;
         }
         
         .hero-overlay {
@@ -79,11 +87,7 @@
                         linear-gradient(to right, #0f0f0f 20%, rgba(15,15,15,0.4) 50%, transparent 100%);
         }
 
-        .hero-content { 
-            position: relative; z-index: 10; width: 50%; padding-left: 60px; 
-            padding-top: 80px;
-        }
-        
+        .hero-content { position: relative; z-index: 10; width: 50%; padding-left: 60px; padding-top: 80px; }
         .hero-title { font-size: 3.5rem; font-weight: 900; line-height: 1.1; margin-bottom: 20px; text-transform: uppercase; text-shadow: 0 0 30px rgba(0,0,0,0.8); }
         .hero-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 20px; font-size: 14px; color: #ccc; }
         .tag { border: 1px solid rgba(255,255,255,0.4); padding: 4px 10px; border-radius: 4px; }
@@ -96,13 +100,9 @@
         .btn-action-text { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); padding: 12px 25px; border-radius: 30px; color: white; font-weight: bold; display: flex; align-items: center; gap: 10px; transition: 0.3s; border: 1px solid rgba(255,255,255,0.2); cursor: pointer;}
         .btn-action-text:hover { background: rgba(255,255,255,0.3); }
         
-        .hero-thumbnails { 
-            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); 
-            z-index: 20; display: flex; gap: 15px; padding: 10px 20px; 
-            background: rgba(0,0,0,0.6); border-radius: 15px; 
-            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); 
-        }
-        .thumb-item { width: 60px; height: 90px; border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; border: 2px solid transparent; opacity: 0.6; }
+        .hero-thumbnails { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 15px; padding: 10px 20px; background: rgba(0,0,0,0.6); border-radius: 15px; backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.1); max-width: 90vw; overflow-x: auto; scrollbar-width: none; }
+        .hero-thumbnails::-webkit-scrollbar { display: none; }
+        .thumb-item { width: 60px; height: 90px; border-radius: 6px; overflow: hidden; cursor: pointer; position: relative; transition: 0.3s; border: 2px solid transparent; opacity: 0.6; flex-shrink: 0; }
         .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
         .thumb-item:hover { transform: translateY(-10px); opacity: 1; }
         .thumb-item.active { border-color: var(--primary); transform: scale(1.15) translateY(-10px); opacity: 1; z-index: 10; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
@@ -124,24 +124,68 @@
         .rank-title { font-size: 14px; font-weight: bold; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0 0 5px 0;}
         .rank-meta { font-size: 12px; color: #777; }
 
+        /* --- 5. GRID & CARD --- */
         .section-container { padding: 50px 60px; position: relative; z-index: 2; background: var(--bg-dark); }
         .section-header { display: flex; align-items: center; margin-bottom: 25px; font-size: 24px; font-weight: 700; color: #fff; border-left: 5px solid var(--primary); padding-left: 15px; }
         #total-movies-badge { font-size: 14px; background: #222; color: #aaa; padding: 5px 12px; border-radius: 20px; margin-left: 15px; font-weight: normal; border: 1px solid #333; display: inline-flex; align-items: center; gap: 5px; }
+        
         .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 25px; }
-        .movie-card { background: var(--bg-card); border-radius: 10px; overflow: hidden; transition: 0.3s; cursor: pointer; position: relative; }
-        .movie-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+        
+        .movie-card { 
+            background: var(--bg-card); border-radius: 10px; overflow: hidden; 
+            transition: all 0.3s ease; cursor: pointer; position: relative; 
+            border: 2px solid transparent; 
+        }
+        
+        .movie-card:hover { 
+            transform: translateY(-10px) scale(1.05); 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8); 
+            border-color: var(--primary); 
+            z-index: 10;
+        }
+        
+        .poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; transition: 0.3s; }
+        .movie-card:hover .poster { filter: brightness(0.4); }
+
         .rating-badge { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; border: 1px solid var(--primary); z-index: 2; }
         .card-info { padding: 15px; }
         .card-title { margin: 0; font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .card-year { font-size: 12px; color: var(--text-gray); margin-top: 5px; }
+        
+        .card-overlay { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 80%; 
+            padding: 20px; box-sizing: border-box; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            opacity: 0; transition: 0.3s ease; text-align: center;
+            background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(2px);
+        }
+        .movie-card:hover .card-overlay { opacity: 1; }
+        
+        .overlay-play-btn { font-size: 45px; color: var(--primary); margin-bottom: 15px; text-shadow: 0 0 15px rgba(245, 197, 24, 0.5); transform: scale(0); transition: 0.3s; }
+        .movie-card:hover .overlay-play-btn { transform: scale(1); }
+        .overlay-desc { 
+            color: #fff; font-size: 13px; line-height: 1.5; 
+            display: -webkit-box; -webkit-line-clamp: 6; 
+            -webkit-box-orient: vertical; overflow: hidden; 
+        }
 
-        /* --- 5. FOOTER & FLOATING --- */
+        /* --- PHÂN TRANG (PAGINATION) --- */
+        .pagination-container { display: flex; justify-content: center; gap: 10px; margin-top: 50px; padding-bottom: 20px; }
+        .page-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: #222; border: 1px solid #444; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+        .page-btn:hover { background: #444; border-color: #666; }
+        .page-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+        .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* --- 6. FOOTER & FLOATING --- */
         footer { background-color: #050505; padding: 60px 50px 30px 50px; color: #ccc; position: relative; overflow: hidden; border-top: 1px solid #222; }
         .footer-watermark { position: absolute; top: 50%; right: -50px; transform: translateY(-50%); font-size: 400px; color: rgba(255,255,255,0.02); z-index: 0; pointer-events: none; }
         .footer-content { position: relative; z-index: 1; max-width: 1200px; }
         .badge-vn { display: inline-flex; align-items: center; gap: 8px; background: #b71c1c; color: #fff; padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 20px; }
-        .badge-vn i { color: #FFFF00; }
         .footer-logo { font-size: 32px; font-weight: 900; color: white; display: flex; align-items: center; gap: 10px; margin-bottom: 20px;}
         .footer-logo i { color: var(--primary); }
         .social-list { display: flex; gap: 10px; margin-bottom: 30px; }
@@ -153,56 +197,36 @@
         .copyright { font-size: 13px; color: #555; border-top: 1px solid #1a1a1a; padding-top: 20px; margin-top: 20px;}
 
         .floating-group { position: fixed; bottom: 30px; right: 30px; display: flex; flex-direction: column; gap: 15px; z-index: 999; }
-        .donate-fab { width: 50px; height: 50px; background: linear-gradient(135deg, #FFD700, #FF8C00); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(255, 140, 0, 0.4); cursor: pointer; transition: transform 0.3s; animation: float 3s ease-in-out infinite; }
-        .donate-fab i { font-size: 24px; color: #fff; }
-        .donate-fab:hover { transform: scale(1.1) rotate(10deg); }
         .up-btn { width: 50px; height: 50px; background: #222; border: 2px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: 0.3s; }
         .up-btn:hover { background: var(--primary); }
-        .up-btn:hover i { color: #000; }
         .up-btn i { color: var(--primary); font-size: 24px; }
+        .up-btn:hover i { color: #000; }
 
-        /* --- 6. MODAL --- */
+        /* --- 7. MODAL --- */
         .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); animation: fadeIn 0.3s; }
-        .modal-box { background: #181818; width: 900px; max-width: 90%; height: 500px; border-radius: 15px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative;}
-        .modal-img { width: 40%; object-fit: cover; }
+        .modal-box { 
+            background: #181818; width: 1100px; max-width: 95%; 
+            height: auto; max-height: 90vh; 
+            border-radius: 15px; display: flex; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.8); position: relative;
+        }
+        .modal-img { width: 45%; object-fit: cover; min-height: 500px; }
         .modal-info { padding: 40px; flex: 1; display: flex; flex-direction: column; justify-content: center; }
-        .modal-title { font-size: 2rem; font-weight: 900; color: var(--primary); margin: 0 0 10px 0; line-height: 1.1; }
-        .modal-meta { color: #ccc; margin-bottom: 20px; font-size: 0.9rem; }
-        .modal-desc { color: #aaa; line-height: 1.6; margin-bottom: 30px; overflow-y: auto; max-height: 150px; }
+        .modal-title { font-size: 2.2rem; font-weight: 900; color: var(--primary); margin: 0 0 10px 0; line-height: 1.1; }
+        .modal-meta { color: #ccc; margin-bottom: 20px; font-size: 1rem; }
+        .modal-desc { color: #aaa; line-height: 1.6; margin-bottom: 30px; overflow-y: auto; max-height: 150px; font-size: 1rem; }
         
         .modal-actions { display: flex; flex-direction: column; gap: 15px; }
-
-        /* Nút VLC Mobile */
-        .btn-vlc-large { 
-            background: var(--vlc-orange); color: white; font-weight: bold; text-decoration: none; 
-            padding: 15px; border-radius: 8px; text-align: center; display: flex; 
-            align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; 
-            border: 2px solid var(--vlc-orange); transition: 0.3s;
-        }
+        .btn-vlc-large { background: var(--vlc-orange); color: white; font-weight: bold; text-decoration: none; padding: 15px; border-radius: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; border: 2px solid var(--vlc-orange); transition: 0.3s; }
         .btn-vlc-large:hover { background: transparent; color: var(--vlc-orange); }
-
-        /* Khung Copy cho PC */
-        .pc-stream-box { 
-            background: #222; padding: 15px; border-radius: 8px; border: 1px dashed #555; text-align: center; 
-        }
-        .btn-copy-stream { 
-            background: #444; color: white; border: 1px solid #666; padding: 8px 20px; 
-            border-radius: 20px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; 
-        }
-        .btn-copy-stream:hover { background: #fff; color: black; }
-        
-        .btn-download-large { 
-            background: #333; color: white; font-weight: bold; text-decoration: none; 
-            padding: 15px; border-radius: 8px; text-align: center; display: flex; 
-            align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; 
-            border: 1px solid #555; transition: 0.3s;
-        }
-        .btn-download-large:hover { background: #555; }
-        
+        .pc-stream-box { background: #252525; padding: 20px; border-radius: 10px; border: 1px solid #444; text-align: center; margin-top: 10px; }
+        .pc-title { color: #ddd; font-weight: bold; margin-bottom: 10px; display: block; font-size: 14px;}
+        .btn-copy-stream { background: #444; color: white; border: 1px solid #666; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; font-size: 1rem; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-copy-stream:hover { background: #fff; color: black; border-color: #fff; }
+        .vlc-steps { margin-top: 15px; text-align: left; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 5px; font-size: 13px; color: #bbb; line-height: 1.6; }
+        .vlc-steps b { color: var(--primary); }
+        .btn-download-large { background: #333; color: white; font-weight: bold; text-decoration: none; padding: 15px; border-radius: 8px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; border: 1px solid #555; transition: 0.3s; }
+        .btn-download-large:hover { background: #555; transform: scale(1.02); }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 30px; color: #fff; cursor: pointer; z-index: 10; }
-        .donate-box { background: white; padding: 30px; border-radius: 15px; text-align: center; position: relative; max-width: 350px; }
-        .donate-box h2 { color: #e50914; margin: 0 0 15px 0; }
-        .donate-qr { width: 100%; border-radius: 10px; border: 1px solid #ddd; }
 
         @media (max-width: 768px) {
             .navbar { padding: 15px 20px; flex-direction: column; gap: 10px; align-items: stretch; }
@@ -215,10 +239,10 @@
             .ranking-section { grid-template-columns: 1fr; padding: 20px; }
             .section-container { padding: 30px 20px; }
             .modal-box { flex-direction: column; height: auto; max-height: 90vh; overflow-y: auto; }
-            .modal-img { width: 100%; height: 200px; }
+            .modal-img { width: 100%; height: 250px; }
             .modal-info { padding: 20px; }
-            .nav-right { display: none; }
-            .pc-stream-box { display: none; } /* Ẩn Copy Link trên mobile */
+            .nav-right { justify-content: center; width: 100%; margin-left: 0; margin-top: 10px; }
+            .pc-stream-box { display: none; } 
         }
 
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -242,7 +266,8 @@
         </div>
 
         <div class="nav-right">
-            <span class="nav-item" style="color:var(--primary)">VIP</span>
+            <a href="guide.html" class="btn-guide-nav"><i class="fas fa-book-open"></i> Hướng Dẫn</a>
+            <span class="vip-badge">VIP</span>
         </div>
     </nav>
 
@@ -274,8 +299,13 @@
     </div>
 
     <div class="section-container">
-        <div class="section-header">Kho Phim Đầy Đủ<span id="total-movies-badge">...</span></div>
+        <div class="section-header">
+            Kho Phim Đầy Đủ
+            <span id="total-movies-badge">...</span>
+        </div>
         <div class="movie-grid" id="movie-grid"></div>
+        
+        <div class="pagination-container" id="pagination"></div>
     </div>
 
     <footer>
@@ -291,12 +321,18 @@
                 <a href="#" class="social-item"><i class="fab fa-tiktok"></i></a>
                 <a href="#" class="social-item"><i class="fab fa-youtube"></i></a>
             </div>
+            
+            <div class="footer-links">
+                <a href="guide.html">Hướng Dẫn Xem</a>
+                <a href="#">Chính sách</a>
+                <a href="#">Liên hệ</a>
+            </div>
+
             <div class="copyright">© 2024 DOWNPHIM</div>
         </div>
     </footer>
 
     <div class="floating-group">
-        <div class="donate-fab" onclick="document.getElementById('donateModal').style.display='flex'" title="Donate Admin"><i class="fas fa-gift"></i></div>
         <div class="up-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Lên đầu trang"><i class="fas fa-arrow-up"></i></div>
     </div>
 
@@ -318,12 +354,19 @@
                     </a>
                     
                     <div class="pc-stream-box">
-                        <span style="color:#aaa; font-size:12px; display:block; margin-bottom:5px;">Xem trên PC (Copy & Dán vào VLC):</span>
+                        <span class="pc-title"><i class="fas fa-desktop"></i> Xem trên Máy Tính (PC):</span>
                         <button class="btn-copy-stream" onclick="copyStreamLink()">
                             <i class="fas fa-copy"></i> COPY LINK STREAM
                         </button>
+                        <div class="vlc-steps">
+                            1. Mở phần mềm <b>VLC Player</b>.<br>
+                            2. Nhấn tổ hợp phím <b>Ctrl + N</b>.<br>
+                            3. Dán link vừa copy vào và bấm <b>Play</b>.
+                        </div>
                     </div>
                     
+                    <hr style="border: 0; border-top: 1px solid #333; margin: 10px 0;">
+
                     <a id="modalLink" href="#" class="btn-download-large" target="_blank">
                         <i class="fas fa-download"></i> TẢI VỀ MÁY (Link Gốc)
                     </a>
@@ -332,34 +375,43 @@
         </div>
     </div>
 
-    <div id="donateModal" class="modal-overlay" onclick="if(event.target==this)this.style.display='none'">
-        <div class="donate-box">
-            <span class="close-modal" onclick="document.getElementById('donateModal').style.display='none'" style="color:#333; top:10px; right:15px">&times;</span>
-            <h2>DONATE ADMIN</h2>
-            <img src="https://img.vietqr.io/image/BIDV-2170836028-compact.jpg" class="donate-qr">
-            <p style="color:#333; margin-top:10px"><b>BIDV: 2170836028</b><br>DONG DUY ANH</p>
-            <p style="font-size:12px; color:#666">Cảm ơn bạn đã ủng hộ web!</p>
-        </div>
-    </div>
-
     <script src="movies.js"></script>
     <script>
         let sliderMovies = [];
         let autoSlideInterval;
         let currentVlcLink = "";
+        
+        // CẤU HÌNH PHÂN TRANG
+        let currentPage = 1;
+        const itemsPerPage = 24; // 24 phim mỗi trang
+        let currentFilteredList = [];
 
-        function initHero() {
+        function init() {
             if(typeof movieList !== 'undefined' && movieList.length > 0) {
-                sliderMovies = movieList.slice(0, 5); 
-                setHero(0);
-                const thumbContainer = document.getElementById('hero-thumbs');
-                thumbContainer.innerHTML = sliderMovies.map((m, index) => `
-                    <div class="thumb-item ${index === 0 ? 'active' : ''}" onclick="manualSelectHero(${index})">
-                        <img src="${m.poster_path}" loading="lazy">
-                    </div>
-                `).join('');
-                startAutoSlide();
+                // Mặc định hiển thị theo thứ tự trong file JS (Mới nhất lên đầu nếu bạn dán lên đầu)
+                document.getElementById('total-movies-badge').innerHTML = `<i class="fas fa-video"></i> ${movieList.length} phim`;
+                
+                initHero();
+                initRankings();
+                populateYears();
+                
+                // Gán danh sách ban đầu
+                currentFilteredList = movieList;
+                renderPage(1);
             }
+        }
+
+        // --- HERO SLIDER (10 PHIM) ---
+        function initHero() {
+            sliderMovies = movieList.slice(0, 10); 
+            setHero(0);
+            const thumbContainer = document.getElementById('hero-thumbs');
+            thumbContainer.innerHTML = sliderMovies.map((m, index) => `
+                <div class="thumb-item ${index === 0 ? 'active' : ''}" onclick="manualSelectHero(${index})">
+                    <img src="${m.poster_path}" loading="lazy">
+                </div>
+            `).join('');
+            startAutoSlide();
         }
 
         function setHero(index) {
@@ -380,6 +432,7 @@
         function startAutoSlide() { let i = 0; autoSlideInterval = setInterval(() => { i = (i + 1) % sliderMovies.length; setHero(i); }, 5000); }
         function resetAutoSlide() { clearInterval(autoSlideInterval); startAutoSlide(); }
 
+        // --- RANKING ---
         function renderRankingItem(movie, index, type) {
             const isUp = Math.random() > 0.3; 
             const trendIcon = isUp ? '<i class="fas fa-chart-line trend-up"></i>' : '<i class="fas fa-sort-down trend-down"></i>';
@@ -397,29 +450,76 @@
         }
 
         function initRankings() {
-            if(typeof movieList === 'undefined' || movieList.length === 0) return;
+            // Clone mảng để không ảnh hưởng thứ tự chính
             const topRated = [...movieList].sort((a, b) => b.vote_average - a.vote_average).slice(0, 5);
             document.getElementById('rank-trending').innerHTML = topRated.map((m, i) => renderRankingItem(m, i, 'rating')).join('');
-            const newest = movieList.slice(0, 5); 
+            
+            const newest = movieList.slice(0, 5); // Lấy 5 phim đầu tiên (mới nhất)
             document.getElementById('rank-newest').innerHTML = newest.map((m, i) => renderRankingItem(m, i, 'date')).join('');
+            
             const shuffled = [...movieList].sort(() => 0.5 - Math.random()).slice(0, 5);
             document.getElementById('rank-random').innerHTML = shuffled.map((m, i) => renderRankingItem(m, i, 'rating')).join('');
         }
 
-        function renderGrid(list) {
+        // --- LOGIC PHÂN TRANG & RENDER GRID ---
+        function renderPage(page) {
+            currentPage = page;
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageItems = currentFilteredList.slice(start, end);
+            
             const grid = document.getElementById('movie-grid');
-            grid.innerHTML = list.map(m => `
-                <div class="movie-card" onclick="openModal(${m.id})">
-                    <div class="rating-badge">${m.vote_average || 0}</div>
-                    <img src="${m.poster_path}" class="poster" loading="lazy">
-                    <div class="card-info">
-                        <h3 class="card-title">${m.title}</h3>
-                        <div class="card-year">${m.release_date ? m.release_date.split('-')[0] : ''}</div>
+            if(pageItems.length === 0) {
+                grid.innerHTML = '<p style="color:#aaa; text-align:center; width:100%; margin-top:20px;">Không tìm thấy phim phù hợp!</p>';
+            } else {
+                grid.innerHTML = pageItems.map(m => `
+                    <div class="movie-card" onclick="openModal(${m.id})">
+                        <div class="rating-badge">${m.vote_average || 0}</div>
+                        <img src="${m.poster_path}" class="poster" loading="lazy">
+                        <div class="card-overlay">
+                            <i class="fas fa-play-circle overlay-play-btn"></i>
+                            <div class="overlay-desc">${m.overview ? m.overview : 'Chưa có mô tả.'}</div>
+                        </div>
+                        <div class="card-info">
+                            <h3 class="card-title">${m.title}</h3>
+                            <div class="card-year">${m.release_date ? m.release_date.split('-')[0] : ''}</div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
+            renderPaginationControl();
         }
 
+        function renderPaginationControl() {
+            const totalPages = Math.ceil(currentFilteredList.length / itemsPerPage);
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+
+            if (totalPages <= 1) return;
+
+            const createBtn = (label, page, disabled, active) => {
+                const btn = document.createElement('button');
+                btn.className = `page-btn ${active ? 'active' : ''}`;
+                btn.innerHTML = label;
+                btn.disabled = disabled;
+                btn.onclick = () => renderPage(page);
+                container.appendChild(btn);
+            };
+
+            createBtn('<i class="fas fa-chevron-left"></i>', currentPage - 1, currentPage === 1, false);
+
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + 4);
+            if (endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
+
+            for (let i = startPage; i <= endPage; i++) {
+                createBtn(i, i, false, i === currentPage);
+            }
+
+            createBtn('<i class="fas fa-chevron-right"></i>', currentPage + 1, currentPage === totalPages, false);
+        }
+
+        // --- BỘ LỌC PHIM ---
         const searchInput = document.getElementById('search-input');
         const filterYear = document.getElementById('filter-year');
         const filterMonth = document.getElementById('filter-month');
@@ -436,7 +536,7 @@
             const month = filterMonth.value;
             const minRating = parseFloat(filterRating.value) || 0;
 
-            const filtered = movieList.filter(m => {
+            currentFilteredList = movieList.filter(m => {
                 const mDate = m.release_date || ""; 
                 const mYear = mDate.split('-')[0];
                 const mMonth = mDate.split('-')[1];
@@ -449,7 +549,8 @@
 
                 return matchName && matchYear && matchMonth && matchRating;
             });
-            renderGrid(filtered);
+            
+            renderPage(1); // Reset về trang 1 khi lọc
         }
 
         searchInput.addEventListener('input', filterMovies);
@@ -457,6 +558,7 @@
         filterMonth.addEventListener('change', filterMovies);
         filterRating.addEventListener('change', filterMovies);
 
+        // --- MODAL ---
         const modal = document.getElementById('movieModal');
         
         function openModal(id) {
@@ -469,27 +571,20 @@
             
             let dbLink = m.dropbox_link || "";
             
-            // 1. LINK TẢI VỀ (Phải có dl=1)
+            // 1. LINK TẢI
             let downloadLink = dbLink;
             if(!downloadLink.includes('dl=1')) {
-                downloadLink = downloadLink.replace('dl=0', 'dl=1');
-                if(!downloadLink.includes('dl=1')) downloadLink += (downloadLink.includes('?') ? '&dl=1' : '?dl=1');
+                if(downloadLink.includes('dl=0')) downloadLink = downloadLink.replace('dl=0', 'dl=1');
+                else downloadLink += (downloadLink.includes('?') ? '&dl=1' : '?dl=1');
             }
             document.getElementById('modalLink').href = downloadLink;
 
-            // 2. LINK VLC (Direct Stream)
-            // Thay www.dropbox.com -> dl.dropboxusercontent.com
+            // 2. LINK VLC
             let streamUrl = dbLink.replace("www.dropbox.com", "dl.dropboxusercontent.com");
-            
-            // Xóa sạch các tham số cũ dl=... để tránh xung đột, nhưng GIỮ LẠI rlkey
-            streamUrl = streamUrl.replace(/[?&]dl=[01]/g, "");
-            
-            // Xử lý dấu ? hoặc & thừa ở cuối nếu có
-            if(streamUrl.endsWith('&') || streamUrl.endsWith('?')) streamUrl = streamUrl.slice(0, -1);
+            streamUrl = streamUrl.replace(/[?&]dl=[01]/g, ""); 
+            if (streamUrl.slice(-1) === '&' || streamUrl.slice(-1) === '?') streamUrl = streamUrl.slice(0, -1);
 
-            currentVlcLink = streamUrl; // Link cho nút Copy PC
-            
-            // Link cho nút mở App Mobile
+            currentVlcLink = streamUrl; 
             document.getElementById('btnVLC').href = `vlc://${streamUrl}`;
 
             modal.style.display = 'flex';
@@ -499,11 +594,13 @@
             navigator.clipboard.writeText(currentVlcLink).then(() => {
                 const btn = document.querySelector('.btn-copy-stream');
                 const originalText = btn.innerHTML;
-                btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ COPY!';
+                btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ COPY LINK!';
                 btn.style.background = '#28a745';
+                btn.style.border = '1px solid #28a745';
                 setTimeout(() => { 
                     btn.innerHTML = originalText; 
                     btn.style.background = '#444';
+                    btn.style.border = '1px solid #666';
                 }, 2000);
             });
         }
@@ -516,13 +613,8 @@
             else nav.classList.remove('scrolled');
         });
 
-        if(typeof movieList !== 'undefined') {
-            document.getElementById('total-movies-badge').innerHTML = `<i class="fas fa-video"></i> ${movieList.length} phim`;
-            initHero();
-            initRankings();
-            populateYears();
-            renderGrid(movieList);
-        }
+        // CHẠY APP
+        init();
     </script>
 </body>
 </html>
