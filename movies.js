@@ -1,6 +1,143 @@
 // movies.js
 const movieList = [
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {
+    "id": 793058,
+    "title": "Bộ 5 Siêu Đẳng Cấp",
+    "original_title": "하이파이브",
+    "overview": "Thể loại: Siêu Hài, Siêu Lòng, Siêu Hài Lòng HI.FIVE – bộ phim bom tấn siêu anh hùng châu Á, pha trộn hành động mãn nhãn và tiếng cười bùng nổ. Năm người bình thường bỗng dưng 'trúng số' — bất ngờ sở hữu siêu năng lực bá đạo sau một ca ghép tạng... kỳ quặc! Bị đời đẩy đưa trở thành siêu anh hùng bất đắc dĩ, họ vừa 'gánh team' cứu thế giới, phải học cách dùng năng lực đúng lúc để không phá banh mọi thứ xung quanh. Khi định mệnh ép bạn lên level – bạn có dám bung skill tới bến?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/xaAZKFFIT8sLG0b9027jJ7RAsai.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/oBV1aajDou6hvPD55vQHrBSlDgb.jpg",
+    "release_date": "2025-05-30",
+    "vote_average": 6.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/1dxlxv7mvdjdu3l7e13c1/High.Five.2025.ViE-1080p.BluRay-Atmos.TrueHD7.1.x264-UNVEiL.mkv?rlkey=arcg4c5copk6fqjs88d74yf1c&dl=1"
+},
+{
+    "id": 1387382,
+    "title": "Hunting Season",
+    "original_title": "Hunting Season",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/cbryTyaWdqrKpQCw6K7zm2jrB5v.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/eJ0HooOOD1uzI39CfOQNWIiWKlJ.jpg",
+    "release_date": "2025-12-05",
+    "vote_average": 7.097,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/b6ny4710uncpd0u2pmt4t/Hunting.Season.2025.ViE.AI.1080p.AMZN.WEB-DL.DDP5.1.H.264.mkv?rlkey=rtnp8rqoc60r3jjc847b1pncb&dl=1"
+},
+{
+    "id": 425274,
+    "title": "Phi Vụ Thế Kỷ 3: Thoắt Ẩn Thoắt Hiện",
+    "original_title": "Now You See Me: Now You Don't",
+    "overview": "Tứ Kỵ Sĩ chính thức tái xuất, bắt tay cùng các tân binh ảo thuật gia Gen Z trong một phi vụ đánh cắp kim cương liều lĩnh nhất trong sự nghiệp. Họ phải đối đầu với bà trùm Veronika của đế chế rửa tiền nhà Vandenberg (do Rosamund Pike thủ vai) - một người phụ nữ quyền lực và đầy thủ đoạn. Khi kinh nghiệm lão làng của bộ tứ ảo thuật va chạm với công nghệ 4.0 của một mạng lưới tội phạm xuyên lục địa, liệu ai sẽ làm chủ cuộc chơi? Hãy chuẩn bị tinh thần cho những cú xoắn não mà bạn không thể đoán trước!",
+    "poster_path": "https://image.tmdb.org/t/p/w500/usoYdcapXSsqAM1bDOtD7H42Wxe.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ufqytAlziHq5pljKByGJ8IKhtEZ.jpg",
+    "release_date": "2025-11-12",
+    "vote_average": 6.373,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/a8ls0q8b1ivtyg3drlrvm/Now.You.See.Me.Now.You.Dont.2025.ViE.AI.1080p.AMZN.WEB-DL.DDP5.1.H.264.mkv?rlkey=2m6yph0pxmhz9fka6mpv9911c&dl=1"
+},
+{
+    "id": 1325678,
+    "title": "Sarah's Oil",
+    "original_title": "Sarah's Oil",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/Av1CK61z33v2OBFLD1yF5rdRxQ1.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/rUrOOrPZFY43F6TLpq1FoGs3pqN.jpg",
+    "release_date": "2025-11-06",
+    "vote_average": 7.447,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/2ytojui3toarg4usxwt6x/Sarahs.Oil.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX-Sub-Viet.mkv?rlkey=gr9s0hqddynghv4iu36k513f4&dl=1"
+},
+{
+    "id": 1401778,
+    "title": "Bão Tố Không Trung",
+    "original_title": "Turbulence",
+    "overview": "Một cặp vợ chồng lên đường trải nghiệm chuyến phiêu lưu bằng khinh khí cầu lãng mạn, nhưng những sự cố bất ngờ trên không trung nhanh chóng biến chuyến đi thành cuộc chiến sinh tồn nghẹt thở, nơi họ phải đối mặt với hiểm nguy cận kề cái chết, thử thách giới hạn thể chất lẫn tinh thần, đồng thời kiểm chứng sức mạnh của tình yêu, niềm tin.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/6PdAODwR9amGEq5ER42FsuzV7op.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/vOV4Qy3g791OTzEndiSGoJwuI2M.jpg",
+    "release_date": "2025-11-26",
+    "vote_average": 5.567,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/4en7jll1krax9w910tvmd/TURBULENCE.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-BYNDR.mkv?rlkey=c4g8g3063wypqpmk4vrv4db2j&dl=1"
+},    
+{
+    "id": 1562010,
+    "title": "Taylor Swift : The Eras Tour - Show Kết Màn",
+    "original_title": "Taylor Swift | The Eras Tour | The Final Show",
+    "overview": "Show được quay vào chuyến lưu diễn ở Vancouver, B.C., với toàn bộ bối cảnh của Tortured Poets Department.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/c11km7kLK2F30fTNHP5Si9m8foG.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/w4aTYTHpm97iTN1UGIC9kFZIuc7.jpg",
+    "release_date": "2025-12-11",
+    "vote_average": 7.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/e2oi02x6etsl7uduoe5bb/Taylor.Swift.The.Eras.Tour.The.Final.Show.2025.1080p.DSNP.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=wbcrvwum0ksyuk4g0loo4v2xu&dl=1"
+},
+{
+    "id": 1181107,
+    "title": "Vua Của Các Vua",
+    "original_title": "The King of Kings",
+    "overview": "Trong một đêm yên bình, Charles Dickens kể cho con trai mình – cậu bé Walter – nghe câu chuyện vĩ đại nhất mọi thời đại. Nhưng câu chuyện ấy không chỉ dừng lại ở lời kể. Với trí tưởng tượng bay bổng, Walter bước vào thế giới của Chúa Giê-su – tận mắt chứng kiến những phép màu, cảm nhận nỗi đau của Ngài, và học được bài học sâu sắc nhất về tình yêu và sự hy sinh. Một câu chuyện về đức tin, sự cảm thông, và hành trình trưởng thành bắt đầu… từ chính trái tim của một người cha.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/jZB7mY36lcgaAdfnD3pSEsRWrp4.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/mr2LvZydvor6CDZhrpJLRYMCcBc.jpg",
+    "release_date": "2025-04-07",
+    "vote_average": 8.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/xvk0qwo34weellk5qp1ff/The.King.of.Kings.2025.REPACK.1080p.BluRay.DD5.1.x264-SPHD-Vietsub.mkv?rlkey=u0ui15bfr33u6ff61tti6068u&dl=1"
+},
+{
+    "id": 1402481,
+    "title": "Hoả Xa Đạo Chích",
+    "original_title": "毕正明的证明",
+    "overview": "Ẩn mình giữa giới giang hồ chẳng khác nào bước trên lớp băng mỏng, liệu những người trẻ đầy nhiệt huyết có thể giữ vững lý tưởng ban đầu và chứng minh giá trị của mình? Khi bánh xe thời gian lăn đi, sự lộng hành và những “màn trình diễn” của giới giang hồ dần phai nhạt. Sự bình yên và an toàn của ngày hôm nay chính là minh chứng rõ ràng nhất.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vVZEjRl6cXKZqjj9bNrbbiO4cdd.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/j4u6f31uHpePtmbejx3d4JbI4v7.jpg",
+    "release_date": "2025-10-01",
+    "vote_average": 6.909,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ke3g5sif16390gxs5um8j/The.Return.of.the.Lame.Hero.2025.ViE.AI.2160p.WEB-DL.H265.DDP5.1.mkv?rlkey=8t1so4rmkah5dnkydbo7ubtr4&dl=1"
+},
+{
+    "id": 1555926,
+    "title": "Maria Azama: Ngôi Sao Phim Người Lớn",
+    "original_title": "Maria Azama: Da Best Porn Star",
+    "overview": "Một người đàn ông có cuộc sống đơn điệu bất ngờ chứng kiến điều không tưởng khi thần tượng của mình – một ngôi sao phim người lớn – bước ra từ màn hình video và hiện diện ngoài đời thực, ban đầu là giấc mơ đầy phấn khích nhưng dần bộc lộ những hệ lụy phức tạp, buộc anh đối mặt với ranh giới giữa ảo tưởng và hiện thực.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/3KSTG1XQnIXQn7faGtWaXfwxBSk.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/wj7vy4fwBnFND9O2qN3ta6dlOhF.jpg",
+    "release_date": "2025-10-22",
+    "vote_average": 6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/sy3dadr784l2npju6ejxi/Maria.Azama.Da.Best.Porn.Star.2025.2160p.WEB-DL.x264.mkv?rlkey=a4t4jjq45nz2qqsvxcoqfxqt8&dl=1"
+},
+{
+    "id": 1558981,
+    "title": "Tài Xế Giao Hàng",
+    "original_title": "The Delivery Rider",
+    "overview": "Khi đang đi làm cùng cậu con trai nuôi tám tuổi, tài xế giao hàng nọ vô tình chứng kiến một tội ác. Giờ đây, anh phải bảo vệ con mình khỏi những thế lực hung bạo.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/vUoqhCHbxVjYS07t5YjcX4cIsqs.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/loh2zQrxrpGDs1IG74oGQR4dVal.jpg",
+    "release_date": "2025-10-23",
+    "vote_average": 8.357,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/krh8sa70ybcp7ki7i68cn/The.Delivery.Rider.2025.1080p.NF.WEB-DL.DDP5.1.H.264-EQRTZ-Sub-Viet.mkv?rlkey=0ar19aeojr1h6qdqrj69ywltw&dl=1"
+},
+{
+    "id": 1448353,
+    "title": "Thám Tử Kiên: Kỳ Án Không Đầu",
+    "original_title": "Thám Tử Kiên: Kỳ Án Không Đầu",
+    "overview": "Một chuỗi án mạng kinh hoàng tại một ngôi làng hẻo lánh – nơi liên tiếp xảy ra tám vụ giết người với cùng một đặc điểm rợn người: tất cả nạn nhân đều không còn đầu.  Thám Tử Kiên phải đối mặt với vụ án khủng khiếp gây hoang mang tột độ cho dân làng. Ai sẽ là nạn nhân tiếp theo trong chuỗi án mạng rùng rợn? Kiên có tìm ra mấu chốt để lần theo dấu vết hung thủ?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/zHMrhNFgmvLE3rYBQYwFXuUBQMX.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/rmhmfqVVUWV4xjoC0uBnelARFmT.jpg",
+    "release_date": "2025-04-25",
+    "vote_average": 7.875,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ew6c9lvyc9ohbe1m6843x/Detective.Kien.The.Headless.Horror.2025.1080p.WEB-DL.DDP5.1.H.264-SHINIKIN.mkv?rlkey=gi6kljva4otyydeblcs5on711&dl=1"
+},
+{
+    
     "id": 546554,
     "title": "Kẻ đâm lén",
     "original_title": "Knives Out",
@@ -10,6 +147,18 @@ const movieList = [
     "release_date": "2019-11-27",
     "vote_average": 7.845,
     "dropbox_link": "https://www.dropbox.com/scl/fi/ysbiqcqajls16loomnyth/Knives-Out-2019-ViE-1080p-BluRay-DD5.1-x264-PbK.mkv?rlkey=0fk87e6ate50q9s72eo35gw5n&st=vzb2apm9&dl=0&dl=1"
+},
+
+{
+    "id": 463319,
+    "title": "Vô Ảnh",
+    "original_title": "影",
+    "overview": "Shadow (Vô Ảnh) lấy bối cảnh dưới thời kỳ Tam Quốc. Đại Đô Đốc Phái quốc Tử Ngu (Đặng Siêu) trong một lần chiến đấu đã bị thương nặng và phải ẩn thân trong bóng tối. Để tiếp tục nhiệm vụ của mình, hắn ta giao phó cho sát thủ có tên Cảnh Châu, biệt hiệu “Ảnh tử” – cũng chính là cái bóng của mình. Cuộc chiến trong Vô Ảnh càng trở nên nguy hiểm và rắc rối khi Phái quốc bị sự đe dọa của các thế lực ngoại bang.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lXGD959Ioq9W6ux4zIAq3A2buDi.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/1A0h3Bek2eyxHNRikyZdXDGXxdS.jpg",
+    "release_date": "2018-09-30",
+    "vote_average": 6.7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/8g2p05veqw0ytrmun6cxf/Shadow-2018-ViE-BluRay-1080p-DTS-x264-MTeam.mkv?rlkey=p8g81y2bqyl02qwc8ytesv7a4&dl=1"
 },
 {
     "id": 1407862,
@@ -54,6 +203,17 @@ const movieList = [
     "release_date": "2022-11-23",
     "vote_average": 7.039,
     "dropbox_link": "https://www.dropbox.com/scl/fi/d7zov8g84lojfku39crwu/Glass.Onion.A.Knives.Out.Mystery.2022.ViE.DUB.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-ShiNobi-Vietsub-Vietsub-LT-1.mkv?rlkey=07nldsu4xgbd552em8l2528tc&st=gco1ez77&dl=0&dl=1"
+},
+{
+    "id": 1296404,
+    "title": "Tin tốt lành",
+    "original_title": "굿뉴스",
+    "overview": "Khi bọn không tặc khống chế một chuyến bay của Nhật Bản và yêu cầu bay tới Bình Nhưỡng, một thiên tài bí ẩn vạch ra mưu đồ kỳ quặc để chuyển hướng máy bay tới Seoul.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/kc09qEaxC1dyyJtkBIx4hgFqng3.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/iceD8kM2Dk6hIK2zWodkT0m6zDx.jpg",
+    "release_date": "2025-09-05",
+    "vote_average": 6.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/kp8abln7x16dr74a20l7s/Good.News.2025.1080p.NF.WEB-DL.DUAL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet-1.mkv?rlkey=e8lh3usbmotqn3kcdkv3t9zf8&dl=1"
 },
 {
     "id": 812583,
@@ -430,6 +590,28 @@ const movieList = [
     "dropbox_link": "https://www.dropbox.com/scl/fi/pkzwp5jc7zxqs6t626f2h/Everything-Everywhere-All-at-Once-2022-ViE-HYBRiD-1080p-BluRay-DDP5.1-x264-playHD.mkv?rlkey=jnyyl9gw5a8zrro45c9a5jzzp&st=mz2paxfu&dl=0&dl=1"
 },
 {
+    "id": 1419027,
+    "title": "Chị Đại Cuồng Sát",
+    "original_title": "วิญญาณเลขที่ 13",
+    "overview": "'Chị Đại Cuồng Sát' bắt đầu khi đội trưởng bóng chuyền kiêm kẻ bắt nạt bị phát hiện treo cổ trong nhà thi đấu. Các đồng đội phải ngăn cha cô ả lập tế đàn để hồi sinh linh hồn báo thù của kẻ bắt nạt... Nhưng liệu đó có phải là sự thật? Ai là người đứng sau âm mưu mượn tay oán hồn để tàn sát cả trường?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/pPd0QIdJEEvxp70d0AJtRPOm9O1.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/rC6ldrOrQGcCqgMOvAUV2Mi1Iw1.jpg",
+    "release_date": "2025-06-13",
+    "vote_average": 5.2,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/4bkqcbp4dq5yg58ud2fzz/Attack.13.2025.1080p.NF.WEB-DL.DDP5.1.H.264-BiOMA-Sub-Viet.mkv?rlkey=bnx1oybpxzswv10vn2q8buok5&dl=1"
+},
+{
+    "id": 959326,
+    "title": "Em và Trịnh",
+    "original_title": "Em và Trịnh",
+    "overview": "Tác phẩm xoay quanh cuộc đời Trịnh Công Sơn từ thời trẻ đến lúc trung niên trong khoảng những năm 1960-1990, điểm nhấn là câu chuyện giữa cố nhạc sĩ và cô gái Dao Ánh.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/x72eRMK9GzYVVER04hEsLxhWeUb.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/iy1iFcudNGCT1oZI2xjJpJtwDUY.jpg",
+    "release_date": "2024-12-15",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/hebzzrv97vwoimb4c736a/Em.V-.Tr-nh.2022.1080p.WEB-DL.DDP5.1.H.264-HDVN.mkv?rlkey=mla9h6ix9r368gswdv6kb6aad&dl=1"
+},
+{
     "id": 84194,
     "title": "Excision",
     "original_title": "Excision",
@@ -768,14 +950,270 @@ const movieList = [
 
 
 
-
-
-
-
-
-
-
-
+{
+    "id": 1306816,
+    "title": "Zombie Cưng Của Ba",
+    "original_title": "좀비딸",
+    "overview": "Zombie Cưng Của Ba đánh dấu sự trở lại của nam diễn viên Cho Jung Seok trên màn ảnh rộng năm nay. Cho Jung Seok hóa thân thành Lee Jung Hwan, một huấn luyện viên động vật đầy nhiệt huyết quyết tâm bảo vệ cô con gái tuổi teen bị nhiễm virus zombie bằng cách “thuần hóa” cô bé. Trải qua hành trình Jung Hwan đưa cô con gái nhiễm virus zombie Soo Ah đến ngôi làng ven biển, với nỗ lực bảo vệ cô bé khỏi sự truy quét của chính quyền. Tại đây, anh phát hiện Soo Ah vẫn còn giữ được ý thức con người, đặc biệt là niềm đam mê nhảy múa. Ngoài ra, cô bé vẫn nhận ra và vô cùng yêu thương bà của mình. Từ đó, Jung Hwan đưa ra quyết định quan trọng, đó là áp dụng kinh nghiệm huấn luyện động vật của chính mình để “thuần hóa” con gái, mở ra cuộc hành trình vừa hài hước vừa cảm động. Zombie Cưng Của Ba có đầy đủ yếu tố trở thành “bữa tiệc hè” đặc sắc từ xứ kim chi dịp hè 2025 khi đầy đủ các yếu tố cảm xúc HÀI - TÌNH - LỆ",
+    "poster_path": "https://image.tmdb.org/t/p/w500/aASLRiO8p9xLIvG9EHXSyZ71sPl.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/gT7MXlPs7ohpdefR5cdgdPx1zsf.jpg",
+    "release_date": "2025-07-30",
+    "vote_average": 6.696,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/7mkz5865ujqppmmhbf845/My.Daughter.is.a.Zombie.2025.ViE.1080p.CoupangPlay.WEB-DL.AAC2.0.H264-PandaQT.mkv?rlkey=zcyzg654aegf2tbrmytny8gvu&dl=1"
+},
+{
+    "id": 926899,
+    "title": "Một Ngôi Nhà, Ba Câu Chuyện",
+    "original_title": "The House",
+    "overview": "Qua nhiều thời đại, một gia đình nghèo, một nhà xây dựng lo âu và một bà chủ nhà chán nản cùng liên quan tới một ngôi nhà bí ẩn trong phim hài u tối dạng hoạt hình này.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/xhE1EYcD6U7m5R8AT7yf29CCxia.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/hk4PwhKhT7q7jp1lvA8aiYqDluy.jpg",
+    "release_date": "2022-01-14",
+    "vote_average": 7.019,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/2lg5g0qwjrle90d5n1lic/The.House.2022.1080p.NF.WEB-DL.DDP5.1.Atmos.H.264-KHN.mkv?rlkey=mozcjxrjagdi82esdw0yb5cgj&dl=1"
+},
+{
+    "id": 620249,
+    "title": "Huyền Thoại La Tiểu Hoắc",
+    "original_title": "罗小黑战记",
+    "overview": "Clarice Starling là nhân viên tập sự của cục điều tra liên bang. Clarice được giao nhiệm vụ đầu tiên là thẩm vấn Hannibal Lecter - tên ăn thịt người hàng loạt có khả năng tâm lý hết sức đặc biệt, nhằm tìm ra tung tích tên sát thủ máu lạnh chuyên thiết kế những bộ trang phục từ da người Bill Buffalo vì hắn đã bắt cóc con gái 1 thượng nghị sĩ. Liệu 1 sĩ quan mới vào nghề như Claire có hoàn thành được nhiệm vụ được giao? Kết cục của tên sát thủ Bill ra sao?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/ogMVWcW6TSBl65heyUHnuYpTlBm.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/aVFx1VtlOxR3v0ADEatalXOvwbu.jpg",
+    "release_date": "2019-08-27",
+    "vote_average": 8.325,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/wbu0dkp341kkv3ibmnqbp/The.Legend.of.Hei.2019.1080p.BluRay.DDP5.1.x265-NAN0.mkv?rlkey=7ha22mtahy6gvei3upsyxzbg4&dl=1"
+},
+{
+    "id": 1586820,
+    "title": "Elmo và Mark Rober: Giáng Sinh Vui Quà Tặng",
+    "original_title": "Elmo and Mark Rober's Merry Giftmas",
+    "overview": "Elmo, Abby, Quái Vật Bánh Quy và Grover tạo ra những món quà độc đáo dịp lễ cùng với kỹ sư kiêm nhà phát minh Mark Rober tại xưởng CrunchLabs tuyệt mật của anh.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/gcFxbtsgyMMripGtUIxPmmFxQXT.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/l9Zw7G2xOIi8BVqAdqQPrl8Ms1X.jpg",
+    "release_date": "2025-12-08",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/lxhe33r9ibl09bg5fq6rq/Merry-Christmas-1984-1080p-WEB-DL-AAC-H.264.mkv?rlkey=x1yn85wt0kdk7opktqb12fbbu&dl=1"
+},
+{
+    "id": 604079,
+    "title": "Trăm Dặm Tử Thần",
+    "original_title": "The Long Walk",
+    "overview": "Mỗi năm, năm mươi thiếu niên nam được chọn tham gia một sự kiện được cả đất nước biết đến với cái tên “Trăm Dặm Tử Thần.” Trong nhóm năm nay có Ray Garraty, 16 tuổi. Cậu biết rõ luật chơi: nếu đi dưới tốc độ quy định, vấp ngã hay ngồi xuống sẽ bị cảnh cáo. Sau ba lần cảnh cáo… bạn sẽ nhận “vé” của mình. Và điều xảy ra sau đó là lời nhắc nhở rùng rợn rằng trong cuộc thi này — chỉ có một người chiến thắng: người duy nhất còn sống.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lW4uZnHTqUDTmHiaElnMON47JOd.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/pcJft6lFWsJxutwpLHVYfmZRPQp.jpg",
+    "release_date": "2025-09-10",
+    "vote_average": 6.922,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/nkagw0tu486cqjf9joa3k/The.Long.Walk.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-FLUX.mkv?rlkey=49lgo1osviqilpgjaghtxx6o4&dl=1"
+},
+{
+    "id": 554793,
+    "title": "Người Bất Tử",
+    "original_title": "Người Bất Tử",
+    "overview": "",
+    "poster_path": "https://image.tmdb.org/t/p/w500/n1W7OhrhsUMD5XlCDgdQkXLqArp.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/a7DoGDHCLAobMBjDrXev8wSVC7C.jpg",
+    "release_date": "2018-10-26",
+    "vote_average": 6.3,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/fks25z286zo8b1bfdbr8j/Ng-i-B-t-T-.2018.1080p.WEB-DL.AAC2.0.x264-tG1R0.mkv?rlkey=4karnfw04ppc40igs643wariq&dl=1"
+},
+{
+    "id": 210626,
+    "title": "Mỹ Nhân Kế",
+    "original_title": "Mỹ Nhân Kế",
+    "overview": "Mỹ nhân kế là một bộ phim võ hiệp - cổ trang của Việt Nam do Nguyễn Quang Dũng làm đạo diễn và viết kịch bản. Chuyện phim xoay quanh băng nhóm của Kiều Thị (do Thanh Hằng thủ vai) và các nữ sát thủ trá hình kiều nữ ở Đường Sơn quán: Đào Thị (Ngọc Quyên), Mai Thị (Diễm My 9x) và Liễu Thị (Kim Dung). Họ cướp của người giàu, quan lại tham ô với mong muốn tích góp đủ số tiền để có được cuộc sống như ý.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/aEbTnTFc0qxQ7FyKbvXWaSUsLBx.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ow9Z7mr9KL2TVMYfIIYKODCIDgP.jpg",
+    "release_date": "2013-03-13",
+    "vote_average": 5.5,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/m3w5y5mqe00imhyj6e09q/My-Nhan-Ke-2013-1080i-HDTV.MP4?rlkey=kv6ftd72gammxle41ah9u9azr&dl=1"
+},
+{
+    "id": 505176,
+    "title": "Giấc Mơ Mỹ",
+    "original_title": "Giấc Mơ Mỹ",
+    "overview": "“Giấc mơ Mỹ” (The American Dream) là bộ phim điện ảnh Việt Nam đầu tiên khai thác về đề tài y khoa với bối cảnh chính được quay tại bệnh viện Vinmec vừa mới được xây dựng ở thành phố Hồ Chí Minh và các bối cảnh khác ở các địa danh nổi tiếng ở tại 15 thành phố lớn ở California cũng như một số cảnh đẹp tại Việt Nam. Nhà sản xuất đã không ngại đầu tư du thuyền 5 sao, máy bay trực thăng cũng như một đoàn xe moto phân khối lớn để thực hiện những cảnh quay sang trọng và hoàng tráng cho phim. Bộ phim quy tụ dàn diễn viên trẻ, tài năng cùng với những diễn viên gạo cội, dày dạn kinh nghiệm của điện ảnh trong và ngoài nước như: Mai Thu Huyền, Bình Minh, Kyo York, Đinh Y Nhung, Ramani Raja, Trương Thế Vinh, Mai Thu Trang, á khôi thể thao Băng Châu…",
+    "poster_path": "https://image.tmdb.org/t/p/w500/lKkqQb6dRcmJxgEMU4Ngm5vub1f.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/hJI6Vw0uoY2DOUzGT62hlYRqU83.jpg",
+    "release_date": "2017-12-08",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/sw4vy4t1ild4u1xzn7wxu/Giac-Mo-My-2017.mp4?rlkey=l6h1ftlbvrz55k9egzwcpxdns&dl=1"
+},
+{
+    "id": 522417,
+    "title": "Vua Bọ Cạp: Quyển Sách Linh Hồn",
+    "original_title": "Scorpion King: Book of Souls",
+    "overview": "Ở Ai Cập cổ đại, lãnh chúa độc ác, Nebserek (Peter Mensah), phát hiện ra một thanh kiếm bị nguyền rủa khiến người sử dụng nó mạnh hơn với mọi linh hồn mà nó tấn công. Quyết tâm ngăn chặn sức mạnh của mình tăng lên, Vua Bọ Cạp (Zach McGowan) gia nhập lực lượng với Tala (Pearl Doesi), Công chúa Nubian; Amina, một người phụ nữ bí ẩn với một bí mật kỳ diệu và bi thảm; và người bảo vệ golem của cô để tìm ra một thứ có thể đánh bại Nebserek: Quyển sách linh hồn…",
+    "poster_path": "https://image.tmdb.org/t/p/w500/mSviUMejPmerwoQxdj7wR4Ky1Fd.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/syGl3udgPqjCYrs6pzbcV0Tb2jk.jpg",
+    "release_date": "2018-10-23",
+    "vote_average": 5.9,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/b1p4y5ipx5yrjoebxu0jl/The.Scorpion.King.Book.of.Souls.2018.BluRay.1080p.DTS-HD.MA5.1.x265.10bit_viet-sub.mkv?rlkey=bgylrgngntyv0jy3fuhcmy2q2&dl=1"
+},
+{
+    "id": 786978,
+    "title": "Người Cần Quên Phải Nhớ",
+    "original_title": "Người cần quên phải nhớ",
+    "overview": "Người Cần Quên Phải Nhớ xoay quanh nữ phóng viên Loan thuộc tòa soạn CP. Express, tác phẩm sẽ đưa khán giả theo chân nàng ta điều tra, vén màn bí mật đằng sau những cái chết bí ẩn. Trong lúc thu thập chứng cứ, cô tình cờ gặp gỡ và dần phải lòng Bình, chàng thanh niên lang bạt bị mất trí nhớ đồng thời là 'đối tượng tình nghi' trong vụ án.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/2yc8u7PBQ6nG8lKCj7yQMG0DBOD.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/tIKlDtwil0pBlZjfia8IJhYv1d4.jpg",
+    "release_date": "2020-12-24",
+    "vote_average": 0,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/8slrqzal13ir4cgdjxfif/Ng-i.Qu-n.C-n.Ph-i.Nh-.2020.1080p.NF.WEB-DL.AAC2.0.x264-HBO.mkv?rlkey=ba9fx85822413ybmh3u4y5yxd&dl=1"
+},
+{
+    "id": 1099580,
+    "title": "Người Vợ Cuối Cùng",
+    "original_title": "Người Vợ Cuối Cùng",
+    "overview": "Lấy cảm hứng từ tiểu thuyết Hồ Oán Hận, của nhà văn Hồng Thái, Người Vợ Cuối Cùng là một bộ phim tâm lý cổ trang, lấy bối cảnh Việt Nam vào triều Nguyễn.  LINH - Người vợ bất đắc dĩ của một viên quan tri huyện, xuất thân là con của một gia đình nông dân nghèo khó, vì không thể hoàn thành nghĩa vụ sinh con nối dõi nên đã chịu sự chèn ép của những người vợ lớn trong gia đình. Sự gặp gỡ tình cờ của cô và người yêu thời thanh mai trúc mã của mình - NHÂN đã dẫn đến nhiều câu chuyện bất ngờ xảy ra khiến cuộc sống cô hoàn toàn thay đổi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/dRgYeBp48TwCU84d6BR7A3VwfUi.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/mkv2cz71iLvpYjUWCfBPh6nZaaD.jpg",
+    "release_date": "2023-11-03",
+    "vote_average": 7,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/ic2k42zo3ai71q2zcvy5v/Ng-i.V-.Cu-i.C-ng.2023.1080p.NF.WEB-DL.DDP5.1.x264-HBO.mkv?rlkey=95p60xgvzcdzcbg7s6szi1nyk&dl=1"
+},
+{
+    "id": 1517758,
+    "title": "Stiller & Meara: Giữ Trọn Ký Ức - Stiller & Meara: Nothing Is Lost",
+    "original_title": "Stiller & Meara: Nothing Is Lost",
+    "overview": "Ben Stiller kể lại câu chuyện về bố mẹ mình, hai biểu tượng hài kịch Jerry Stiller và Anne Meara, khám phá ảnh hưởng của họ đối với văn hóa đại chúng và gia đình, nơi ranh giới giữa sự sáng tạo, gia đình, cuộc sống và nghệ thuật thường mờ nhạt.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/56IuEiSnFpQZHFc9n7KzbH0uQL0.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/dvdZItPwnRukloJYOK9HQBPNYq9.jpg",
+    "release_date": "2025-10-17",
+    "vote_average": 6.107,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/0ojkyqe6d1avx27pktfc7/Stiller.and.Meara.Nothing.Is.Lost.2025.1080p.ATVP.WEB-DL.DDP5.1.Atmos.H.264-FLUX-Sub-Viet.mkv?rlkey=bxs750zdj0hl4f8djlnq4p1ye&dl=1"
+},
+{
+    "id": 1290182,
+    "title": "Cô Gái Năm Ấy Chúng Ta Cùng Theo Đuổi",
+    "original_title": "그 시절, 우리가 좋아했던 소녀",
+    "overview": "Một nhóm bạn thân học tại một trường tư thục đều phải lòng cô học sinh ngôi sao đầy nắng, Sun-ah. Thành viên duy nhất trong nhóm không nói rằng mình như vậy là Jin-woo, nhưng cuối cùng anh cũng yêu cô.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/1aSRSDDHQX2egc1az05qQ5tz6zS.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/rVhoq70ZDDVfeoEPS312PcR5yLE.jpg",
+    "release_date": "2025-02-21",
+    "vote_average": 8.542,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/pztegj5bpxbio4lg67w1g/You.Are.the.Apple.of.My.Eye.2025.1080p.FHDRip.AAC2.0.x264-NoGroup-Vietsub.mkv?rlkey=2bu7hrtq1p48cto2k7pk34gyh&dl=1"
+},
+{
+    "id": 527280,
+    "title": "Năm Tháng Ấy Tôi Từng Theo Đuổi Em",
+    "original_title": "あの頃、君を追いかけた",
+    "overview": "Câu chuyện tình tuổi học trò của Kosuke Mizushima và Mana Hayase. Mặc dù chẳng ai nói một lời nào, nhưng tuổi học trò của họ sẽ thật trống vắng và hụt hẫng nếu như thiếu mất nhau. Và đến cuối cùng, dù đã dành ngần ấy thời gian để đuổi theo Mana Hayase nhưng có lẽ Kosuke Mizushima vẫn chỉ là một người mà cô gái trẻ từng thương và từng yêu mà thôi.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/feaXwpthc6NAzfYI9WBt3Kq8bZT.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/bJj7CsGqGfGXCGkgCHXT1OD7McZ.jpg",
+    "release_date": "2018-10-05",
+    "vote_average": 5.583,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/3y2w8bde4mjmk5u26atps/You.Are.the.Apple.of.My.Eye.2011.1080p.BluRay.x264-ESiR-1.mkv?rlkey=yoj37d4swm00y8wb2j2jm9k9r&dl=1"
+},
+{
+    "id": 617126,
+    "title": "Bộ Tứ Siêu Đẳng: Bước Đi Đầu Tiên",
+    "original_title": "The Fantastic 4: First Steps",
+    "overview": "Sau một chuyến bay thám hiểm vũ trụ, bốn phi hành gia bất ngờ sở hữu năng lực siêu nhiên và trở thành gia đình siêu anh hùng đầu tiên của Marvel. The Fantastic Four: First Steps là bộ phim mở đầu Kỷ nguyên anh hùng thứ sáu (Phase Six), đặt nền móng cho siêu bom tấn Avengers: Doomsday trong năm sau.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/n0bqzWiKGJsmnvOlkTiYykhhM4E.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/hBvaanw3RfMEs1m1blY7xwRXzul.jpg",
+    "release_date": "2025-07-23",
+    "vote_average": 7.021,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/yb1ghjpmc3e6pzacsgdsj/The.Fantastic.Four.First.Steps.2025.1080p.AMZN.WEB-DL.DDP5.1.Atmos.H.264-BYNDR-Vietsub.mkv?rlkey=m2qw1cfzhekrocj3nl2md5uy1&dl=1"
+},
+{
+    "id": 1354700,
+    "title": "Bẫy Hồi Sinh",
+    "original_title": "강령: 귀신놀이",
+    "overview": "Một nhóm học sinh quyết định quay video dự thi với chủ đề “gọi hồn” tại một bể chứa nước ngầm bỏ hoang. Ban đầu chỉ là một trò đùa mang tính câu view, nhưng mọi thứ nhanh chóng vượt khỏi tầm kiểm soát khi một thành viên bất ngờ nôn ra nước đen và gục ngã giữa nghi lễ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/szBqzH2qcUthCm1uDVsBAYZbExW.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/35WjumOZF4QB9Ia8RvPdU4wIIQl.jpg",
+    "release_date": "2025-08-06",
+    "vote_average": 7.1,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/jjhbq7064zjieogu3674q/The-Ghost-Game-2025.1080p.WEBRip.H264.AAC-Vietsub.mkv?rlkey=kxb8vl1g2evlhfl9yhqqeye5k&dl=1"
+},
+{
+    "id": 634649,
+    "title": "Người Nhện: Không Còn Nhà",
+    "original_title": "Spider-Man: No Way Home",
+    "overview": "Peter Parker đã bị lộ mặt và không còn có thể tách biệt cuộc sống bình thường của mình với những yêu cầu cao của việc trở thành một Siêu anh hùng. Khi anh ta yêu cầu sự giúp đỡ từ Doctor Strange, mọi thứ càng trở nên nguy hiểm hơn, buộc anh ta phải khám phá ra ý nghĩa thực sự của việc trở thành Người Nhện.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/y4SQ2dJ1y2LBUnxTH7hCe8sr29c.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/tyQo080tijexyUHBvWPwQt26bZa.jpg",
+    "release_date": "2021-12-15",
+    "vote_average": 7.937,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/asdw973w5465qc27of8l3/Spider-Man-No-Way-Home.2022.ViE.1080p.Bluray.DTS-HD.MA.5.1.X264-EVO.mkv?rlkey=3vb8aoervjjrbn5jr0axs7it2&dl=1"
+},
+{
+    "id": 1304434,
+    "title": "Tiểu Yêu Quái Núi Lãng Lãng",
+    "original_title": "浪浪山小妖怪",
+    "overview": "Tiểu Heo Yêu quyết định rời núi Lang Lang để tham gia cuộc hành hương. Trên hành trình về phương Tây, những chú tiểu quái vật sẽ phải đối mặt với những thử thách nào? Cuối cùng, liệu chúng có đạt được ước mơ và sống như mong muốn?",
+    "poster_path": "https://image.tmdb.org/t/p/w500/t3Rs1BeIDXhwjOt10iyjiFe7BpL.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/zivCs8QHipco13PVKI3ZVfBcRPx.jpg",
+    "release_date": "2025-08-02",
+    "vote_average": 7.452,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/5dptp9gpb3g4qveprfsvl/Nobody.2025.HDTC1080P.mp4?rlkey=ageuyk3mwy2jb7grjc38vpcbl&dl=1"
+},
+{
+    "id": 1007734,
+    "title": "Kẻ Vô Danh 2",
+    "original_title": "Nobody 2",
+    "overview": "Kẻ Vô Danh 2 (Nobody 2) đánh dấu sự trở lại của Bob Odenkirk trong vai Hutch Mansell – người cha tưởng chừng bình thường nhưng ẩn chứa quá khứ sát thủ đầy nguy hiểm. Sau những sự kiện trong phần đầu tiên, Hutch cùng gia đình quyết định tận hưởng một kỳ nghỉ yên bình. Tuy nhiên, quá khứ đen tối của anh nhanh chóng quay trở lại, kéo theo những mối đe dọa mới.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/9XaZi0nz8iHPuWW0xjFSCSc5PAs.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/82C04rTiXYZ7c8XZv91Nu53w82Y.jpg",
+    "release_date": "2025-08-13",
+    "vote_average": 7.046,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/vvmrs8wkdh2lvavkhgkfc/Nobody.2.2025.1080p.MA.WEB-DL.DDPA5.1.HEVC-HONE-Sub-Viet.mkv?rlkey=4du1kbvhdb0qm4y8q4w0yqlr4&dl=1"
+},
+{
+    "id": 1355666,
+    "title": "Chuyện tình tóc rối",
+    "original_title": "고백의 역사",
+    "overview": "Một thiếu nữ si tình lên kế hoạch chinh phục nam thần của trường bằng cách chuyển từ tóc xoăn sang tóc thẳng – cho đến khi một học sinh mới chuyển đến thay đổi mọi chuyện.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/l3rtV7wohUMmyTMiDDySQm2oO4x.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/oBcvmHD7lbaX8RZ7NXvO05fIJef.jpg",
+    "release_date": "2025-08-28",
+    "vote_average": 8.426,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/8hbe5u41q44wwtzstzwge/Love-Untangled-2025-ViE-1080p.NF.WEB-DL.DUAL.DDP5.1.Atmos.H.264-Chuy-n-t-nh-t-c-r-i-Thuy-t-minh-Sub-vi-t.mkv?rlkey=9e9ps1z823sl1wk7gdclb5p5k&dl=1"
+},
+{
+    "id": 911430,
+    "title": "F1 Phim Điện Ảnh",
+    "original_title": "F1",
+    "overview": "Phim kể về Sonny Hayes (do Brad Pitt thủ vai), một cựu tay đua F1 lão làng, người đã rời xa đường đua sau một tai nạn kinh hoàng. Anh được thuyết phục quay trở lại thế giới tốc độ để cố vấn cho một tay đua trẻ tuổi, đầy triển vọng nhưng cũng rất liều lĩnh. Cùng nhau, họ phải đối mặt với những thách thức khốc liệt của giải đấu F1, cạnh tranh với những tay đua hàng đầu thế giới và khám phá lại niềm đam mê, đồng thời tìm cách vượt qua những giới hạn của bản thân. Phim hứa hẹn sẽ mang đến những cảnh quay chân thực và những pha đua xe mãn nhãn, được quay ngay trên các đường đua F1 thật sự.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/14qIfiKSoN9AYvpT9pSU5rieSE7.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/lkDYN0whyE82mcM20rwtwjbniKF.jpg",
+    "release_date": "2025-06-25",
+    "vote_average": 7.805,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/y1xiauktlyfq46dsewuxv/F1.The.Movie.2025.1080p.MA.WEB-DL.DDP5.1.Atmos.H.264-BYNDR.mkv?rlkey=c2x0e13yoh7cvny2dwcixhfla&dl=1"
+},
+{
+    "id": 572164,
+    "title": "Lối Thoát Trên Không",
+    "original_title": "엑시트",
+    "overview": "Thời đại học, Lee Yong-nam khá nổi tiếng trong câu lạc bộ leo núi. Nhưng cuộc đời sau này của anh thật sự nghiệt ngã hơn nhiều. Dù đã ra trường nhiều năm, Lee Yong-nam vẫn thất nghiệp và đành phải “muối mặt” nhờ cha mẹ xin một công việc tạm bợ qua ngày. Nhân dịp sinh nhật lần thứ 70 của mẹ, Yong-nam nằng nặc đòi tổ chức tiệc tại nơi mà Eui-ji – cô gái anh theo đuổi một thời đang làm việc. Một thảm họa chưa từng có bất ngờ ập tới, toàn bộ Seoul chìm trong một loại khí ga màu trắng gây chết người nếu tiếp xúc trong vài phút. Yong-nam buộc phải vận dụng mọi kỹ năng leo núi của mình, cùng sự giúp đỡ của Eiu-ji để cứu sống gia đình, tất cả khách mời cũng như chính bản thân mình.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/tk3rPNtBf7BHf10lgF5hqMR1jAH.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/yp0sTg5nXyDpiE3sGj5GltbYeHQ.jpg",
+    "release_date": "2019-07-31",
+    "vote_average": 7.6,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/09089swfudw4hnvtsygt9/EXIT.2019.ViE.1080p.FHDRip.H264.AAC_NonDRM-1.mkv?rlkey=9ssf2rkdzevozxx4502whub5m&dl=1"
+},
+{
+    "id": 856289,
+    "title": "Phong Thần Đệ Nhất Bộ: Triều Ca Phong Vân",
+    "original_title": "封神第一部：朝歌风云",
+    "overview": "Nội dung phim bắt đầu khi đất nước phải đối mặt với hàng loạt hiện tượng kỳ lạ mà trời đất bất ngờ trừng phạt. Trước tình thế đó, Khương Tử Nha quyết định rời khỏi núi Côn Luân và mang theo Bảng Phong Thần đến chỗ Thương Vương Ân Thọ để giải cứu chúng sinh khỏi cảnh lầm than. Khương Tử Nha không biết rằng ngọn nguồn của mọi tai họa đều đến từ sự thông đồng giữa Thương vương Ân Thọ, yêu hồ Đát Kỷ và Thân Công Báo. Điều này tạo nên một cuộc đối đầu gay go và quyết liệt giữa cái thiện và cái ác. Thương vương Ân Thọ đã trở thành một đại ác nhân. Trong khi đó, Thân Công Báo sở hữu võ công cao cường, có khả năng tách đầu ra khỏi cơ thể, tạo ra mối nguy hiểm lớn cho Khương Tử Nha và đồng đội.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/raWFW71w03WgSmV3alxMgybuzaR.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/cwsBDxvFn0pkxPOrQg8Koz2kMRM.jpg",
+    "release_date": "2023-07-15",
+    "vote_average": 7.103,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/btv492b7xh26twt55ingp/Creation.of.the.Gods.I.Kingdom.of.Storms.2023.1080p.NF.WEB-DL.DDP5.1.H.264-JasDon-Vsub.mkv?rlkey=nmo4vaetm1kte22q52p1xsklh&dl=1"
+},
+{
+    "id": 1038392,
+    "title": "Ám Ảnh Kinh Hoàng: Nghi Lễ Cuối Cùng",
+    "original_title": "The Conjuring: Last Rites",
+    "overview": "Hai nhà điều tra hiện tượng siêu nhiên Ed và Lorraine Warren đối mặt với một vụ án kinh hoàng cuối cùng — nơi họ buộc phải đối đầu với những thực thể bí ẩn đầy đe dọa, thách thức tất cả những gì họ từng tin tưởng.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/sjvW985erG7NSKJScFNhLbjhyma.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/tcBX2dtkNozZ0uDLVaxXrE6rqyN.jpg",
+    "release_date": "2025-09-03",
+    "vote_average": 6.957,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/9j7ngeldtsvdxi395fshp/The.Conjuring.Last.Rites.2025.1080p.Telesync.x264.mp4?rlkey=gjbwi8yvbd6tw76bhw1hpy1x7&dl=1"
+},
 {
     "id": 1272166,
     "title": "Bản ballad của tay bạc nhỏ",
@@ -1127,6 +1565,17 @@ const movieList = [
     "release_date": "2021-02-10",
     "vote_average": 6.7,
     "dropbox_link": "https://www.dropbox.com/scl/fi/r3xeuvetthbk1tb5u2o0b/Tom-and-Jerry-2021-ViE-2160p-HMAX-WEB-DL-DDP5.1-H.265-HDR-NAISU-Long-Tieng-Sub-ViE.mkv?rlkey=h37rbpfkczkr93vssk692jyel&st=iqngirg6&dl=0&dl=1"
+},
+{
+    "id": 1235746,
+    "title": "Mùa Đông Chết",
+    "original_title": "Dead of Winter",
+    "overview": "Một người phụ nữ, đang đi một mình qua miền bắc Minnesota phủ đầy tuyết trắng, đã ngăn chặn vụ bắt cóc một cô gái tuổi teen. Cách thị trấn gần nhất hàng giờ đồng hồ và không có sóng điện thoại, cô nhận ra rằng mình là hy vọng duy nhất của cô gái trẻ.",
+    "poster_path": "https://image.tmdb.org/t/p/w500/5DcrN62sGAiRJxt8rXSRlSRLwIE.jpg",
+    "backdrop_path": "https://image.tmdb.org/t/p/original/ajdB8AoHKrYlOR4yMDMZYLFyfdj.jpg",
+    "release_date": "2025-09-23",
+    "vote_average": 6.395,
+    "dropbox_link": "https://www.dropbox.com/scl/fi/p8upfpwv8qmbqergoqwc0/Dead.Of.Winter.2025.1080p.AMZN.WEB-DL.DDP5.1.H.264-FLUX.mkv?rlkey=q5lrkn30g481nyp93c4y4kpm0&dl=1"
 },
 {
     "id": 1519168,
