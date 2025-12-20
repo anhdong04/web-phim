@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG CAO</title>
+  <title>DOWNCINE - Kho phim chất lượng cao</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
 
   <style>
-    /* --- 1. CẤU HÌNH CHUNG --- */
     :root{
       --primary:#f5c518;
       --bg-dark:#0f0f0f;
@@ -18,1472 +17,680 @@
       --text-gray:#b3b3b3;
       --vlc-orange:#ff5722;
     }
+
     *{box-sizing:border-box}
-    body{
-      background-color:var(--bg-dark);
-      color:var(--text-white);
-      font-family:'Montserrat',sans-serif;
-      margin:0;padding:0;
-      overflow-x:hidden;
+    html,body{margin:0;padding:0;background:var(--bg-dark,#0f0f0f);color:var(--text-white,#fff);font-family:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,Arial;}
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px}
+
+    /* top nav */
+    .nav{position:sticky;top:0;z-index:50;background:rgba(15,15,15,.75);backdrop-filter: blur(10px);border-bottom:1px solid rgba(255,255,255,.06)}
+    .nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 24px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.6px}
+    .brand i{color:var(--primary)}
+    .navlinks{display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:flex-end}
+    .navlinks a{color:var(--text-gray);font-weight:700;font-size:13px;padding:8px 10px;border-radius:999px}
+    .navlinks a:hover{background:rgba(255,255,255,.06);color:#fff}
+    .btn{display:inline-flex;align-items:center;gap:10px;border:none;border-radius:12px;padding:12px 16px;font-weight:900;cursor:pointer}
+    .btn-primary{background:var(--primary);color:#000}
+    .btn-ghost{background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.10)}
+    .btn-ghost:hover{background:rgba(255,255,255,.10)}
+
+    /* hero */
+    .hero{position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.06)}
+    .hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;align-items:center;padding:42px 24px 28px}
+    @media(max-width:980px){.hero .wrap{grid-template-columns:1fr;}}
+    .kicker{display:flex;gap:10px;align-items:center;color:var(--text-gray);font-weight:800}
+    .kicker .pill{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10)}
+    h1{margin:12px 0 10px;font-size:46px;line-height:1.05;font-weight:900}
+    @media(max-width:520px){h1{font-size:34px}}
+    .lead{color:var(--text-gray);line-height:1.6;font-size:15px;max-width:62ch}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.10);border-radius:18px;padding:16px}
+    .mini-player{border-radius:14px;border:1px solid rgba(255,255,255,.10);overflow:hidden;background:#0b0b0b}
+    .mini-top{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(255,255,255,.04)}
+    .mini-top .dots{display:flex;gap:6px}
+    .dot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.18)}
+    .mini-body{padding:12px}
+    .mini-row{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .mini-row:last-child{border-bottom:none}
+    .tag{font-size:12px;color:var(--text-gray)}
+    .bar{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;flex:1;margin-left:10px}
+    .bar > i{display:block;height:100%;width:65%;background:linear-gradient(90deg, var(--primary), #ff8a00)}
+
+    /* sections */
+    .section{padding:26px 0}
+    .section h2{margin:0 0 10px;font-size:24px;font-weight:900}
+    .section p{margin:0;color:var(--text-gray);line-height:1.6}
+
+    .features{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+    @media(max-width:1000px){.features{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:520px){.features{grid-template-columns:1fr}}
+    .feat{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px;min-height:120px}
+    .feat i{color:var(--primary);font-size:20px}
+    .feat h3{margin:10px 0 6px;font-size:15px}
+    .feat .small{color:var(--text-gray);font-size:13px;line-height:1.55}
+
+    /* previews */
+    .previews{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+    @media(max-width:980px){.previews{grid-template-columns:1fr}}
+    .shot{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:14px}
+    .shot .head{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+    .shot .head span{font-weight:900}
+    .shot .mock{aspect-ratio:16/9;border-radius:14px;border:1px solid rgba(255,255,255,.10);background:
+      radial-gradient(1200px 600px at 20% 0%, rgba(245,197,24,.20), transparent 50%),
+      radial-gradient(900px 600px at 80% 20%, rgba(255,87,34,.12), transparent 52%),
+      linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      overflow:hidden;position:relative;
+    }
+    .mock .badge{position:absolute;left:14px;top:14px;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.12);padding:7px 10px;border-radius:999px;font-weight:900}
+    .mock .line{position:absolute;left:14px;right:14px;bottom:14px;height:44px;border-radius:14px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.10)}
+    .mock .line:before{content:"";position:absolute;left:14px;top:14px;width:42%;height:14px;border-radius:999px;background:rgba(255,255,255,.10)}
+    .mock .line:after{content:"";position:absolute;left:14px;top:30px;width:68%;height:10px;border-radius:999px;background:rgba(255,255,255,.08)}
+
+    /* faq */
+    .faq{margin-top:14px;display:grid;gap:10px}
+    .qa{border:1px solid rgba(255,255,255,.10);border-radius:16px;background:rgba(255,255,255,.03);overflow:hidden}
+    .q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;background:transparent;color:#fff;border:none;font-weight:900;cursor:pointer;text-align:left}
+    .q i{color:var(--primary)}
+    .a{display:none;padding:0 16px 14px;color:var(--text-gray);line-height:1.6;font-size:14px}
+    .qa.open .a{display:block}
+    .qa.open .chev{transform:rotate(180deg)}
+    .chev{transition:.15s}
+
+    /* footer */
+    .footer{padding:18px 0 34px;border-top:1px solid rgba(255,255,255,.06);color:var(--text-gray);font-size:13px}
+    .footer .row{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+    .footer .links{display:flex;gap:10px;flex-wrap:wrap}
+    .footer .links a{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+    .footer .links a:hover{background:rgba(255,255,255,.08)}
+  
+    .mock.has-bg{
+      background-size: cover !important;
+      background-position: center !important;
+    }
+    .mock.has-bg::after{
+      content:"";
+      position:absolute; inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.70));
+    }
+    .mock.has-bg > *{ position: relative; z-index: 1; }
+
+  
+    /* --- Banner hero like app.html --- */
+
+    /* PATCH v4: robust banner background layer */
+    .hero-banner::before{ content:none !important; }
+    .banner-bg{
+      z-index: 0;
+      position:absolute; inset:0;
+      background-image: none;
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.03);
+      opacity: 1;
+      filter: saturate(1.05);
     }
 
-    /* --- 2. NAVBAR --- */
-    .navbar{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:15px 50px;
-      position:fixed;top:0;left:0;width:100%;
-      z-index:1000;
-      background:linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, transparent 100%);
-      transition:background .3s;
-      flex-wrap:wrap;
+    .hero-banner{
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+      background: #0b0b0b;
     }
-    .navbar.scrolled{background:#0f0f0f; box-shadow:0 4px 10px rgba(0,0,0,0.8);}
-    .logo{
-      color:var(--text-white);
-      font-size:28px;
-      font-weight:900;
-      display:flex;align-items:center;gap:10px;
-      cursor:pointer;text-decoration:none;
-      margin-right:20px;
-      white-space:nowrap;
+    .hero-banner::before{
+      content:"";
+      position:absolute; inset:0;
+      background-image: var(--banner-bg, none);
+      background-size: cover;
+      background-position: center;
+      filter: saturate(1.05);
+      transform: scale(1.03);
+      opacity: .92;
     }
-    .logo i{color:var(--primary)}
-    .filter-container{
-      flex:1;
-      display:flex;align-items:center;gap:10px;
-      background:rgba(255,255,255,0.1);
-      padding:5px 15px;border-radius:30px;
-      border:1px solid rgba(255,255,255,0.1);
-      backdrop-filter:blur(5px);
-      max-width:800px;
-      min-width:260px;
-    }
-    .search-input{
-      background:transparent;border:none;color:#fff;outline:none;
-      padding:8px;flex:1;font-family:inherit;font-size:14px;min-width:100px;
-    }
-    .search-icon{color:#aaa;margin-right:5px}
-    .filter-select{
-      background:rgba(0,0,0,0.5);color:#ddd;border:none;
-      padding:8px 10px;border-radius:15px;outline:none;
-      cursor:pointer;font-size:13px;font-family:inherit;transition:.2s;
-    }
-    .filter-select:hover{background:rgba(255,255,255,0.2);color:var(--primary)}
-    .filter-select option{background:#1a1a1a;color:#fff}
-    .nav-right{display:flex;align-items:center;margin-left:20px}
-    .btn-guide-nav{
-      color:#fff;text-decoration:none;font-size:13px;font-weight:600;
-      border:1px solid rgba(255,255,255,0.5);
-      padding:8px 16px;border-radius:20px;
-      transition:.3s;margin-right:15px;
-      display:flex;align-items:center;gap:8px;
-      white-space:nowrap;
-    }
-    .btn-guide-nav:hover{background:#fff;color:#000;border-color:#fff}
-    .vip-badge{color:var(--primary);font-weight:900;font-size:14px;letter-spacing:1px;cursor:default}
-
-    /* --- 3. HERO BANNER --- */
-    .hero-section{
-      position:relative;width:100%;height:100vh;
-      background-size:cover;background-position:center center;
-      display:flex;align-items:center;
-      transition:background-image .5s ease-in-out;
-      margin-top:0;
-    }
-    .hero-overlay{
-      position:absolute;inset:0;
+    .hero-banner::after{
+      content:"";
+      position:absolute; inset:0;
       background:
-        radial-gradient(circle at 70% 30%, transparent 0%, #0f0f0f 140%),
-        linear-gradient(to top, #0f0f0f 5%, transparent 40%),
-        linear-gradient(to right, #0f0f0f 20%, rgba(15,15,15,0.4) 50%, transparent 100%);
+        radial-gradient(1000px 520px at 20% 30%, rgba(0,0,0,.05), rgba(0,0,0,.55) 60%),
+        linear-gradient(90deg, rgba(0,0,0,.70) 0%, rgba(0,0,0,.40) 45%, rgba(0,0,0,.10) 75%, rgba(0,0,0,.00) 100%),
+        linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.45) 70%, rgba(0,0,0,.75) 100%);
     }
-    .hero-content{position:relative;z-index:10;width:50%;padding-left:60px;padding-top:80px}
-    .hero-title{
-      font-size:3.5rem;font-weight:900;line-height:1.1;margin-bottom:20px;
-      text-transform:uppercase;text-shadow:0 0 30px rgba(0,0,0,0.8);
-    }
-    .hero-meta{display:flex;gap:15px;align-items:center;margin-bottom:20px;font-size:14px;color:#ccc;flex-wrap:wrap}
-    .tag{border:1px solid rgba(255,255,255,0.4);padding:4px 10px;border-radius:4px}
-    .tag-res{background:var(--primary);color:#000;border:none;font-weight:800}
-    .hero-desc{
-      font-size:1rem;color:#ddd;line-height:1.6;margin-bottom:30px;
-      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
-      overflow:hidden;width:85%;
-      text-shadow:1px 1px 2px #000;
-    }
-    .hero-actions{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
-    .btn-circle-play{
-      width:70px;height:70px;border-radius:50%;
-      background:var(--primary);color:#000;
-      display:flex;align-items:center;justify-content:center;
-      font-size:28px;cursor:pointer;transition:.3s;
-      box-shadow:0 0 30px rgba(245,197,24,0.3);
-      animation:pulse-yellow 2s infinite;
-      user-select:none;
-    }
-    .btn-circle-play:hover{transform:scale(1.1);background:#fff}
-    .btn-action-text{
-      background:rgba(255,255,255,0.1);
-      backdrop-filter:blur(10px);
-      padding:12px 25px;border-radius:30px;color:#fff;font-weight:800;
-      display:flex;align-items:center;gap:10px;
-      transition:.3s;border:1px solid rgba(255,255,255,0.2);
-      cursor:pointer;user-select:none;
-    }
-    .btn-action-text:hover{background:rgba(255,255,255,0.3)}
-    .hero-thumbnails{
-      position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
-      z-index:20;display:flex;gap:15px;padding:10px 20px;
-      background:rgba(0,0,0,0.6);
-      border-radius:15px;
-      backdrop-filter:blur(5px);
-      border:1px solid rgba(255,255,255,0.1);
-      max-width:90vw;
-      overflow-x:auto;
-      scrollbar-width:none;
-    }
-    .hero-thumbnails::-webkit-scrollbar{display:none}
-    .thumb-item{
-      width:60px;height:90px;border-radius:6px;overflow:hidden;
-      cursor:pointer;position:relative;transition:.3s;
-      border:2px solid transparent;opacity:.6;flex-shrink:0;
-    }
-    .thumb-item img{width:100%;height:100%;object-fit:cover}
-    .thumb-item:hover{transform:translateY(-10px);opacity:1}
-    .thumb-item.active{
-      border-color:var(--primary);
-      transform:scale(1.15) translateY(-10px);
-      opacity:1;z-index:10;
-      box-shadow:0 10px 20px rgba(0,0,0,0.5);
-    }
-
-    /* --- 4. RANKING & ACTIVITY --- */
-    .ranking-section{
-      padding:40px 60px;background:#0f0f0f;
+    .hero-banner .wrap{
+      z-index: 2;
+      position: relative;
+      z-index: 1;
+      padding: 44px 24px 34px;
       display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-      gap:30px;border-bottom:1px solid #222;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 22px;
+      align-items: end;
     }
-    .rank-column h3{
-      color:#ddd;font-size:15px;margin-bottom:20px;
-      text-transform:uppercase;letter-spacing:1px;
-      display:flex;align-items:center;gap:10px;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    @media(max-width:980px){
+      .hero-banner .wrap{grid-template-columns:1fr; padding: 34px 18px 26px;}
     }
-    .rank-column h3 i{color:var(--primary)}
-    .rank-item,.act-item{
-      display:flex;align-items:center;gap:15px;
-      padding:10px 0;border-bottom:1px solid #222;
-      cursor:pointer;transition:.2s;height:65px;
+    .banner-title{
+      margin: 0;
+      font-size: 52px;
+      line-height: 1.03;
+      font-weight: 900;
+      letter-spacing: .2px;
+      text-transform: uppercase;
     }
-    .rank-item:hover,.act-item:hover{background:#1a1a1a;padding-left:10px;border-radius:5px}
-    .rank-number{font-size:24px;font-weight:900;color:#444;width:30px;text-align:center}
-    .rank-item:nth-child(1) .rank-number{color:var(--primary)}
-    .rank-item:nth-child(2) .rank-number{color:#aaa}
-    .rank-item:nth-child(3) .rank-number{color:#cd7f32}
-    .rank-img,.act-img{
-      width:45px;height:65px;object-fit:cover;border-radius:4px;
-      flex-shrink:0;border:1px solid #333;
+    @media(max-width:520px){
+      .banner-title{font-size: 36px;}
     }
-    .rank-info,.act-desc{
-      overflow:hidden;
-      display:flex;flex-direction:column;justify-content:center;height:100%;
+    .banner-pills{
+      display:flex; gap:10px; flex-wrap:wrap;
+      margin: 14px 0 10px;
+      align-items:center;
     }
-    .rank-title{
-      font-size:13px;font-weight:800;color:#fff;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-      margin:0 0 5px 0;
+    .b-pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.14);
+      font-weight: 900;
+      font-size: 13px;
+      color: #fff;
+      backdrop-filter: blur(6px);
     }
-    .rank-meta{font-size:11px;color:#777}
-    .act-item{animation:slideIn .5s ease}
-    .act-time{font-size:10px;color:#666;width:35px;text-align:right;flex-shrink:0}
-    .act-desc{font-size:12px;color:#ccc;line-height:1.4;flex:1}
-    .act-desc span{color:var(--primary);font-weight:900}
-    @keyframes slideIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
-
-    /* --- 5. TOP 10 ROW (GIỐNG ẢNH BẠN GỬI) --- */
-    .top10-section{
-      padding:40px 60px;background:#0f0f0f;position:relative;overflow:hidden;
+    .b-pill.primary{ border-color: rgba(245,197,24,.35); color: var(--primary); }
+    .banner-overview{
+      color: rgba(255,255,255,.80);
+      line-height: 1.55;
+      max-width: 70ch;
+      margin: 0 0 16px;
+      font-size: 14px;
+      text-shadow: 0 8px 28px rgba(0,0,0,.45);
     }
-    .top10-header{
-      display:flex;align-items:center;gap:10px;
-      font-size:20px;font-weight:900;color:#fff;
-      margin-bottom:16px;
-      letter-spacing:.2px;
-    }
-    .top10-header .crown{
-      color:#f5c518;
-      filter:drop-shadow(0 2px 6px rgba(245,197,24,.35));
-    }
-    .top10-viewport{
-      position:relative;
-      border-radius:16px;
-    }
-    .top10-track{
-      display:flex;
-      gap:18px;
-      overflow-x:auto;
-      scroll-behavior:smooth;
-      padding:10px 6px 28px 6px;
-      scrollbar-width:none;
-    }
-    .top10-track::-webkit-scrollbar{display:none}
-
-    .top10-nav{
-      position:absolute;top:0;bottom:0;width:56px;
-      display:flex;align-items:center;justify-content:center;
-      border:none;cursor:pointer;z-index:10;
-      background:linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0));
-      color:#fff;
-      opacity:0;
-      transition:.25s;
-    }
-    .top10-nav.next{
-      right:0;
-      background:linear-gradient(to left, rgba(0,0,0,0.85), rgba(0,0,0,0));
-    }
-    .top10-nav.prev{left:0}
-    .top10-viewport:hover .top10-nav{opacity:1}
-    .top10-nav:hover{color:var(--primary)}
-    .top10-nav i{font-size:26px}
-
-    .top10-item{
-      position:relative;
-      flex:0 0 auto;
-      width:176px;
-      height:264px;
-      border-radius:22px;
-      overflow:visible;
+    .banner-actions{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .circle-play{
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      border: 2px solid rgba(245,197,24,.55);
+      background: rgba(0,0,0,.30);
+      display:inline-flex; align-items:center; justify-content:center;
       cursor:pointer;
-      transform-origin:center;
-      transition:transform .25s ease, filter .25s ease;
+      transition: .15s;
     }
-    .top10-item:hover{
-      transform:scale(1.08);
-      z-index:5;
-      filter:drop-shadow(0 14px 30px rgba(0,0,0,.55));
+    .circle-play:hover{ transform: scale(1.03); background: rgba(0,0,0,.42); }
+    .circle-play i{ color: var(--primary); font-size: 20px; margin-left: 2px; }
+    .banner-cta{
+      display:inline-flex; align-items:center; gap:10px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      background: var(--primary);
+      color:#000;
+      font-weight: 900;
+      border:none;
+      cursor:pointer;
     }
-
-    /* poster card */
-    .top10-poster{
-      width:100%;
-      height:100%;
-      border-radius:22px;
+    .banner-cta.secondary{
+      background: rgba(255,255,255,.10);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,.14);
+    }
+    .banner-right{
+      display:flex;
+      justify-content:flex-end;
+      align-items:flex-end;
+    }
+    .thumbstrip{
+      width:min(520px, 100%);
+      background: rgba(0,0,0,.35);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 16px;
+      padding: 10px;
+      display:flex;
+      gap:8px;
+      overflow:auto;
+      backdrop-filter: blur(6px);
+    }
+    .thumbstrip::-webkit-scrollbar{height:8px}
+    .thumbstrip::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:999px}
+    .thumb{
+      flex: 0 0 auto;
+      width: 62px; height: 92px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,.14);
       overflow:hidden;
-      background:#1a1a1a;
-      box-shadow:0 12px 30px rgba(0,0,0,.35);
+      background:#111;
+      cursor:pointer;
       position:relative;
     }
-    .top10-poster img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      /* tạo cảm giác poster "nổi" + fade nhẹ đáy giống nhiều UI OTT */
-      mask-image:linear-gradient(to bottom, black 78%, transparent 100%);
-    }
-
-    /* số thứ tự kiểu “to, nằm phía dưới/trái” */
-    .top10-rank{
-      position:absolute;
-      left:-14px;
-      bottom:-22px;
-      font-size:118px;
-      font-weight:900;
-      line-height:1;
-      color:rgba(0,0,0,0.25);
-      -webkit-text-stroke:3px rgba(255,255,255,0.16);
-      text-shadow:0 10px 24px rgba(0,0,0,0.55);
-      pointer-events:none;
-      user-select:none;
-      z-index:6;
-    }
-    /* top 1-3 viền vàng nổi bật hơn */
-    .top10-item[data-top="true"] .top10-rank{
-      -webkit-text-stroke:3px rgba(245,197,24,0.65);
-      color:rgba(0,0,0,0.18);
-    }
-
-    /* --- 6. GRID --- */
-    .section-container{padding:50px 60px;position:relative;z-index:2;background:var(--bg-dark)}
-    .section-header{
-      display:flex;align-items:center;margin-bottom:25px;
-      font-size:24px;font-weight:900;color:#fff;
-      border-left:5px solid var(--primary);padding-left:15px;
-      gap:12px;flex-wrap:wrap;
-    }
-    #total-movies-badge{
-      font-size:14px;background:#222;color:#aaa;
-      padding:5px 12px;border-radius:20px;
-      font-weight:600;border:1px solid #333;
-      display:inline-flex;align-items:center;gap:8px;
-    }
-    .movie-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:25px}
-    .movie-card{
-      background:var(--bg-card);
-      border-radius:10px;overflow:hidden;
-      transition:.3s;cursor:pointer;position:relative;
-    }
-    .movie-card:hover{transform:translateY(-10px);box-shadow:0 10px 30px rgba(0,0,0,0.5)}
-    .poster{width:100%;aspect-ratio:2/3;object-fit:cover}
-    .rating-badge{
-      position:absolute;top:10px;right:10px;
-      background:rgba(0,0,0,0.8);color:var(--primary);
-      padding:4px 8px;border-radius:4px;
-      font-size:12px;font-weight:900;border:1px solid var(--primary);
-      z-index:2;
-    }
-    .card-info{padding:15px}
-    .card-title{
-      margin:0;font-size:15px;font-weight:800;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .card-year{font-size:12px;color:var(--text-gray);margin-top:5px}
-
-    /* --- PHÂN TRANG --- */
-    .pagination-container{display:flex;justify-content:center;gap:10px;margin-top:50px;padding-bottom:20px;flex-wrap:wrap}
-    .page-btn{
-      width:40px;height:40px;border-radius:50%;
-      background:#222;border:1px solid #444;color:#fff;
-      display:flex;align-items:center;justify-content:center;
-      cursor:pointer;font-weight:900;transition:.2s;
-    }
-    .page-btn:hover{background:#444;border-color:#666}
-    .page-btn.active{background:var(--primary);color:#000;border-color:var(--primary)}
-    .page-btn:disabled{opacity:.3;cursor:not-allowed}
-
-    /* --- 7. FOOTER --- */
-    footer{
-      background-color:#050505;
-      padding:60px 50px 30px 50px;
-      color:#ccc;position:relative;overflow:hidden;border-top:1px solid #222;
-    }
-    .footer-watermark{
-      position:absolute;top:50%;right:-50px;transform:translateY(-50%);
-      font-size:400px;color:rgba(255,255,255,0.02);
-      z-index:0;pointer-events:none;
-    }
-    .footer-content{position:relative;z-index:1;max-width:1200px}
-    .badge-vn{
-      display:inline-flex;align-items:center;gap:8px;
-      background:#b71c1c;color:#fff;padding:8px 15px;border-radius:20px;
-      font-size:13px;font-weight:900;margin-bottom:20px;
-    }
-    .footer-logo{font-size:32px;font-weight:900;color:#fff;display:flex;align-items:center;gap:10px;margin-bottom:20px}
-    .footer-logo i{color:var(--primary)}
-    .social-list{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap}
-    .social-item{
-      width:35px;height:35px;border-radius:50%;
-      background:#222;color:#fff;display:flex;align-items:center;justify-content:center;
-      font-size:14px;transition:.3s;cursor:pointer;text-decoration:none;
-    }
-    .social-item:hover{background:var(--primary);color:#000}
-    .footer-links{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px;font-size:14px;font-weight:800;color:#ddd}
-    .footer-links a{color:#ddd;text-decoration:none;transition:.2s}
-    .footer-links a:hover{color:var(--primary)}
-    .copyright{font-size:13px;color:#555;border-top:1px solid #1a1a1a;padding-top:20px;margin-top:20px}
-
-    .floating-group{position:fixed;bottom:30px;right:30px;display:flex;flex-direction:column;gap:15px;z-index:999}
-    .up-btn{
-      width:50px;height:50px;background:#222;border:2px solid var(--primary);
-      border-radius:50%;display:flex;align-items:center;justify-content:center;
-      cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.5);transition:.3s;
-    }
-    .up-btn:hover{background:var(--primary)}
-    .up-btn i{color:var(--primary);font-size:24px}
-    .up-btn:hover i{color:#000}
-
-    /* --- 8. MODAL --- */
-    .modal-overlay{
-      display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);
-      z-index:2000;align-items:center;justify-content:center;
-      backdrop-filter:blur(5px);animation:fadeIn .3s;
-    }
-    .modal-box{
-      background:#181818;width:1100px;max-width:95%;
-      height:auto;max-height:90vh;border-radius:15px;
-      display:flex;overflow:hidden;box-shadow:0 0 50px rgba(0,0,0,0.8);
-      position:relative;
-    }
-    .modal-img{width:45%;object-fit:cover;min-height:500px}
-    .modal-info{padding:40px;flex:1;display:flex;flex-direction:column;justify-content:center}
-    .modal-title{font-size:2.2rem;font-weight:900;color:var(--primary);margin:0 0 10px 0;line-height:1.1}
-    .modal-meta{color:#ccc;margin-bottom:20px;font-size:1rem}
-    .modal-desc{color:#aaa;line-height:1.6;margin-bottom:30px;overflow-y:auto;max-height:150px;font-size:1rem}
-    .modal-actions{display:flex;flex-direction:column;gap:15px}
-    .btn-vlc-large{
-      background:var(--vlc-orange);color:#fff;font-weight:900;text-decoration:none;
-      padding:15px;border-radius:8px;text-align:center;
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      font-size:1.1rem;border:2px solid var(--vlc-orange);transition:.3s;
-    }
-    .btn-vlc-large:hover{background:transparent;color:var(--vlc-orange)}
-    .pc-stream-box{background:#252525;padding:20px;border-radius:10px;border:1px solid #444;text-align:center;margin-top:10px}
-    .pc-title{color:#ddd;font-weight:900;margin-bottom:10px;display:block;font-size:14px}
-    .btn-copy-stream{
-      background:#444;color:#fff;border:1px solid #666;padding:12px 20px;border-radius:8px;
-      cursor:pointer;font-weight:900;width:100%;font-size:1rem;transition:.2s;
-      display:flex;align-items:center;justify-content:center;gap:10px;
-    }
-    .btn-copy-stream:hover{background:#fff;color:#000;border-color:#fff}
-    .vlc-steps{margin-top:15px;text-align:left;background:rgba(0,0,0,0.3);padding:10px;border-radius:5px;font-size:13px;color:#bbb;line-height:1.6}
-    .vlc-steps b{color:var(--primary)}
-    .btn-download-large{
-      background:#333;color:#fff;font-weight:900;text-decoration:none;
-      padding:15px;border-radius:8px;text-align:center;
-      display:flex;align-items:center;justify-content:center;gap:10px;
-      font-size:1.1rem;border:1px solid #555;transition:.3s;
-    }
-    .btn-download-large:hover{background:#555;transform:scale(1.02)}
-    .close-modal{position:absolute;top:15px;right:20px;font-size:30px;color:#fff;cursor:pointer;z-index:10}
-
-    .donate-box{background:#fff;padding:30px;border-radius:15px;text-align:center;position:relative;max-width:350px}
-    .donate-box h2{color:#e50914;margin:0 0 15px 0;font-weight:900}
-    .donate-qr{width:100%;border-radius:10px;border:1px solid #ddd}
-
-    @media (max-width: 768px){
-      .navbar{padding:15px 20px;flex-direction:column;gap:10px;align-items:stretch}
-      .logo{justify-content:center;margin-right:0}
-      .filter-container{width:100%;max-width:none;overflow-x:auto;margin:0;padding:10px}
-      .search-input{min-width:150px}
-      .hero-title{font-size:2.4rem}
-      .hero-content{width:90%;padding-left:20px;padding-top:80px}
-      .hero-thumbnails{display:none}
-      .ranking-section{grid-template-columns:1fr;padding:20px}
-      .section-container{padding:30px 20px}
-      .top10-section{padding:30px 20px}
-      .top10-header{font-size:18px}
-      .top10-nav{display:none} /* mobile vuốt */
-      .modal-box{flex-direction:column;height:auto;max-height:90vh;overflow-y:auto}
-      .modal-img{width:100%;height:250px;min-height:auto}
-      .modal-info{padding:20px}
-      .nav-right{justify-content:center;width:100%;margin-left:0;margin-top:10px}
-      .pc-stream-box{display:none}
-    }
-
-    @keyframes pulse-yellow{
-      0%{box-shadow:0 0 0 0 rgba(245,197,24,0.7)}
-      70%{box-shadow:0 0 0 20px rgba(245,197,24,0)}
-      100%{box-shadow:0 0 0 0 rgba(245,197,24,0)}
-    }
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    /* ===== HOVER PREVIEW (BỔ SUNG – KHÔNG ẢNH HƯỞNG CODE CŨ) ===== */
-.movie-card{
-  overflow:visible !important;
-  position:relative;
-}
-
-.movie-card:hover{
-  z-index:30;
-}
-
-.hover-preview{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%, -55%) scale(.96);
-  width:360px;
-  background:#14161c;
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 25px 60px rgba(0,0,0,.75);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .18s ease, transform .18s ease;
-  z-index:50;
-}
-
-.movie-card:hover .hover-preview{
-  opacity:1;
-  transform:translate(-50%, -60%) scale(1);
-  pointer-events:auto;
-}
-
-
-/* Backdrop */
-.preview-backdrop{
-  height:170px;
-  background-size:cover;
-  background-position:center;
-  position:relative;
-}
-.preview-backdrop::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to top,#14161c 25%,transparent 85%);
-}
-
-/* Content */
-.preview-content{
-  padding:14px 16px 16px;
-}
-
-.preview-title{
-  font-weight:900;
-  font-size:16px;
-  margin-bottom:6px;
-}
-
-.preview-meta{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  font-size:12px;
-  color:#ccc;
-  margin-bottom:8px;
-}
-
-.preview-badge{
-  background:#222;
-  padding:3px 8px;
-  border-radius:6px;
-  font-weight:800;
-}
-
-.preview-badge.imdb{
-  color:#f5c518;
-  border:1px solid #f5c518;
-}
-
-.preview-genres{
-  font-size:12px;
-  color:#aaa;
-  margin-bottom:12px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-/* Actions */
-.preview-actions{
-  display:flex;
-  gap:10px;
-}
-
-.preview-btn{
-  flex:1;
-  padding:8px 0;
-  border-radius:8px;
-  font-weight:900;
-  font-size:13px;
-  text-align:center;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.preview-btn.play{
-  background:#f5c518;
-  color:#000;
-}
-.preview-btn.play:hover{background:#fff}
-
-.preview-btn.detail{
-  background:#2a2d36;
-  color:#fff;
-}
-.preview-btn.detail:hover{background:#3a3d46}
-/* ===== 1) AUTO ALIGN LEFT/RIGHT + UP/DOWN ===== */
-.movie-card{ overflow: visible !important; position:relative; }
-.movie-card:hover{ z-index: 40; }
-
-/* trạng thái mặc định: center */
-.hover-preview{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-60%) scale(.98);
-  width:360px;
-  background:#14161c;
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 25px 60px rgba(0,0,0,.75);
-  opacity:0;
-  pointer-events:none;
-  transition:opacity .18s ease, transform .18s ease;
-  z-index:60;
-}
-
-/* khi hover thật sự (sau delay – mục 3) */
-.movie-card.is-hover .hover-preview{
-  opacity:1;
-  transform:translate(-50%,-62%) scale(1);
-  pointer-events:auto;
-}
-
-/* canh trái/phải khi gần mép */
-.movie-card.align-left  .hover-preview{ left: 0;  transform:translate(0,-62%) scale(1); }
-.movie-card.align-right .hover-preview{ left: 100%; transform:translate(-100%,-62%) scale(1); }
-
-/* canh xuống nếu ở gần top (hiếm, nhưng cho chuẩn) */
-.movie-card.align-down .hover-preview{
-  top: 100%;
-  transform:translate(-50%, -8%) scale(1);
-}
-.movie-card.align-left.align-down .hover-preview{ left:0; top:100%; transform:translate(0,-8%) scale(1); }
-.movie-card.align-right.align-down .hover-preview{ left:100%; top:100%; transform:translate(-100%,-8%) scale(1); }
-/* ===== 2) TRAILER ON HOVER ===== */
-.preview-media{
-  height:170px;
-  position:relative;
-  background:#101217;
-}
-.preview-backdrop{
-  position:absolute; inset:0;
-  background-size:cover;
-  background-position:center;
-}
-.preview-backdrop::after{
-  content:'';
-  position:absolute; inset:0;
-  background:linear-gradient(to top,#14161c 25%,transparent 85%);
-}
-.preview-trailer{
-  position:absolute; inset:0;
-  display:none;
-}
-.preview-trailer iframe{
-  width:100%; height:100%;
-  border:0;
-}
-.movie-card.trailer-ready.is-hover .preview-trailer{
-  display:block;
-}
-.movie-card.trailer-ready.is-hover .preview-backdrop{
-  display:none;
-}
-/* ===== TOP10 SPOTLIGHT (BỔ SUNG) ===== */
-.top10-section{
-  position:relative;
-  margin: 10px 60px 0 60px;
-  padding: 34px 28px 26px 28px;
-  border-radius: 22px;
-
-  /* nền nổi bật hơn so với background */
-  background:
-    radial-gradient(circle at 20% 10%, rgba(245,197,24,0.20), transparent 45%),
-    radial-gradient(circle at 85% 20%, rgba(255,87,34,0.12), transparent 55%),
-    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow:
-    0 18px 60px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.06);
-  overflow:hidden;
-}
-
-.top10-section::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    linear-gradient(90deg, rgba(245,197,24,0.35), rgba(245,197,24,0) 55%),
-    linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.45));
-  opacity:.55;
-}
-
-.top10-section::after{
-  content:"";
-  position:absolute;
-  left:24px; right:24px; top:18px;
-  height:3px;
-  border-radius:999px;
-  background: linear-gradient(90deg, rgba(245,197,24,0.95), rgba(245,197,24,0.0));
-  opacity:.95;
-  pointer-events:none;
-}
-
-/* Header nổi bật hơn */
-.top10-header{
-  position:relative;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: .6px;
-  text-transform: uppercase;
-  margin-bottom: 18px;
-  padding-left: 6px;
-  text-shadow: 0 12px 30px rgba(0,0,0,0.65);
-}
-
-.top10-header::after{
-  content:"HOT";
-  margin-left: 10px;
-  font-size: 12px;
-  font-weight: 900;
-  padding: 5px 10px;
-  border-radius: 999px;
-  color:#000;
-  background: var(--primary);
-  box-shadow: 0 10px 26px rgba(245,197,24,0.25);
-  vertical-align: middle;
-}
-
-/* Track nhìn “premium” hơn */
-.top10-track{
-  padding: 12px 10px 30px 10px;
-}
-
-/* Card top10 nổi bật hơn + có viền glow */
-.top10-item{
-  border-radius: 26px;
-  transition: transform .22s ease, filter .22s ease;
-}
-
-.top10-poster{
-  border-radius: 26px;
-  position:relative;
-  box-shadow: 0 16px 34px rgba(0,0,0,0.45);
-  border: 1px solid rgba(255,255,255,0.10);
-}
-
-.top10-poster::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 50% 0%, rgba(245,197,24,0.20), transparent 60%),
-    linear-gradient(to top, rgba(0,0,0,0.55), transparent 55%);
-  opacity:.85;
-}
-
-.top10-item:hover{
-  transform: translateY(-6px) scale(1.10);
-  filter: drop-shadow(0 18px 34px rgba(0,0,0,.55));
-}
-
-.top10-item:hover .top10-poster{
-  border-color: rgba(245,197,24,0.55);
-  box-shadow:
-    0 22px 50px rgba(0,0,0,0.55),
-    0 0 0 6px rgba(245,197,24,0.10);
-}
-
-/* số thứ tự rõ hơn */
-.top10-rank{
-  opacity: 0.98;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.55));
-}
-
-/* Nút điều hướng rõ hơn */
-.top10-nav{
-  opacity:1 !important;               /* luôn thấy */
-  width:62px;
-}
-.top10-nav i{
-  font-size:28px;
-}
-.top10-nav.prev{
-  background: linear-gradient(to right, rgba(0,0,0,0.90), rgba(0,0,0,0));
-}
-.top10-nav.next{
-  background: linear-gradient(to left, rgba(0,0,0,0.90), rgba(0,0,0,0));
-}
-.top10-nav:hover{
-  color: var(--primary);
-}
-@keyframes top10Pop {
-  from { transform: translateY(6px); opacity: .0; }
-  to   { transform: translateY(0); opacity: 1; }
-}
-.top10-section{
-  animation: top10Pop .45s ease both;
-}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .thumb.active{ outline: 2px solid rgba(245,197,24,.85); outline-offset: 2px; }
 
   </style>
 </head>
 
 <body>
-  <!-- NAV -->
-  <nav class="navbar" id="navbar">
-    <a href="index.html" class="logo"><i class="fas fa-play-circle"></i> DOWNCINE</a>
-
-    <div class="filter-container">
-      <i class="fas fa-search search-icon"></i>
-      <input type="text" id="search-input" class="search-input" placeholder="Tìm tên phim...">
-      <select id="filter-year" class="filter-select"><option value="">Năm</option></select>
-      <select id="filter-month" class="filter-select">
-        <option value="">Tháng</option>
-        <option value="01">Thg 1</option><option value="02">Thg 2</option><option value="03">Thg 3</option>
-        <option value="04">Thg 4</option><option value="05">Thg 5</option><option value="06">Thg 6</option>
-        <option value="07">Thg 7</option><option value="08">Thg 8</option><option value="09">Thg 9</option>
-        <option value="10">Thg 10</option><option value="11">Thg 11</option><option value="12">Thg 12</option>
-      </select>
-      <select id="filter-rating" class="filter-select">
-        <option value="">IMDb</option>
-        <option value="9">> 9.0</option><option value="8">> 8.0</option><option value="7">> 7.0</option>
-        <option value="6">> 6.0</option><option value="5">> 5.0</option>
-      </select>
-    </div>
-
-    <div class="nav-right">
-      <a href="guide.html" class="btn-guide-nav"><i class="fas fa-book-open"></i> Hướng Dẫn</a>
-      <span class="vip-badge">VIP</span>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero-section" id="hero-bg">
-    <div class="hero-overlay"></div>
-    <div class="hero-content" id="hero-content">
-      <h1 class="hero-title" id="hero-title">LOADING...</h1>
-      <div class="hero-meta">
-        <span class="tag tag-res">4K</span>
-        <span class="tag">T18</span>
-        <span class="tag" id="hero-year">2025</span>
-        <span>⭐ <span id="hero-rating"></span></span>
+  <div class="nav">
+    <div class="wrap">
+      <div class="brand">
+        <i class="fa-solid fa-circle-play"></i>
+        <span>DOWNCINE</span>
       </div>
-      <p class="hero-desc" id="hero-desc">...</p>
-      <div class="hero-actions">
-        <div class="btn-circle-play" id="hero-play-btn" title="Xem chi tiết">
-          <i class="fas fa-play"></i>
+      <div class="navlinks">
+        <a href="#tinh-nang">Tính năng</a>
+        <a href="#giao-dien">Giao diện</a>
+        <a href="#faq">FAQ</a>
+        <a class="btn btn-ghost" href="https://t.me/" target="_blank" rel="noopener">
+          <i class="fa-brands fa-telegram"></i> Cộng đồng
+        </a>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Banner (random hot from movies.js / series.js) -->
+  <section class="hero-banner" id="banner">
+    <div class="banner-bg" id="bannerBg" aria-hidden="true"></div>
+    <div class="wrap">
+      <div>
+        <div class="kicker" style="margin-bottom:10px">
+          <span class="pill"><i class="fa-solid fa-fire"></i> Phim hot ngẫu nhiên</span>
+          <span class="pill"><i class="fa-solid fa-wand-magic-sparkles"></i> DOWNCINE</span>
         </div>
-        <div class="btn-action-text"><i class="fas fa-heart"></i> Thêm vào yêu thích</div>
+
+        <h1 class="banner-title" id="bannerTitle">LOADING...</h1>
+
+        <div class="banner-pills" id="bannerPills">
+          <span class="b-pill primary"><i class="fa-solid fa-star"></i> IMDb</span>
+          <span class="b-pill"><i class="fa-solid fa-calendar"></i> ...</span>
+          <span class="b-pill"><i class="fa-solid fa-tv"></i> ...</span>
+        </div>
+
+        <p class="banner-overview" id="bannerOverview">
+          Đang lấy banner từ thư viện của bạn...
+        </p>
+
+        <div class="banner-actions">
+          <button class="circle-play" type="button" onclick="goToAppFromBanner()" title="Vào web xem phim">
+            <i class="fa-solid fa-play"></i>
+          </button>
+          <a class="banner-cta" href="app.html"><i class="fa-solid fa-circle-play"></i> Vào web xem phim</a>
+          <a class="banner-cta secondary" href="#tinh-nang"><i class="fa-solid fa-circle-info"></i> Tính năng</a>
+        </div>
       </div>
-    </div>
-    <div class="hero-thumbnails" id="hero-thumbs"></div>
-  </div>
 
-  <!-- RANKING -->
-  <div class="ranking-section">
-    <div class="rank-column">
-      <h3><i class="fas fa-fire-alt"></i> Sôi Nổi Nhất</h3>
-      <div id="rank-trending"></div>
-    </div>
-    <div class="rank-column">
-      <h3><i class="fas fa-heart"></i> Mới Cập Nhật</h3>
-      <div id="rank-newest"></div>
-    </div>
-    <div class="rank-column">
-      <h3><i class="fas fa-thumbs-up"></i> Hôm Nay Xem Gì?</h3>
-      <div id="rank-random"></div>
-    </div>
-    <div class="rank-column">
-      <h3><i class="fas fa-bell"></i> Hoạt Động Mới</h3>
-      <div id="live-activity-list"></div>
-    </div>
-  </div>
-
-  <!-- TOP 10 (giống ảnh bạn gửi) -->
-  <section class="top10-section">
-    <div class="top10-header">
-      <i class="fas fa-crown crown"></i>
-      TOP 10 PHIM LẺ TRONG NGÀY
-    </div>
-
-    <div class="top10-viewport">
-      <button class="top10-nav prev" type="button" onclick="scrollTop10(-420)"><i class="fas fa-chevron-left"></i></button>
-      <div class="top10-track" id="top10-track"></div>
-      <button class="top10-nav next" type="button" onclick="scrollTop10(420)"><i class="fas fa-chevron-right"></i></button>
+      <div class="banner-right">
+        <div class="thumbstrip" id="thumbStrip" aria-label="Hot picks">
+          <!-- thumbs injected by JS -->
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- GRID -->
-  <div class="section-container">
-    <div class="section-header">
-      Kho Phim Đầy Đủ
-      <span id="total-movies-badge">...</span>
+
+<section class="hero">
+    <div class="wrap">
+      <div>
+        <div class="kicker">
+          <span class="pill"><i class="fa-solid fa-bolt"></i> Server siêu tốc</span>
+          <span class="pill"><i class="fa-solid fa-tv"></i> 4K UHD</span>
+          <span class="pill"><i class="fa-solid fa-ban"></i> Không quảng cáo</span>
+        </div>
+
+        <h1>Xem phim mượt – chất như rạp</h1>
+        <p class="lead">
+          DOWNCINE tập trung vào trải nghiệm: kho phim chất lượng cao, không quảng cáo, tìm phim nhanh, xem liền tay.
+          Hỗ trợ cả <b>phim lẻ</b> và <b>phim bộ</b> (chọn tập theo Season/Episode).
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="app.html">
+            <i class="fa-solid fa-play"></i> Vào web xem phim
+          </a>
+          <a class="btn btn-ghost" href="#tinh-nang">
+            <i class="fa-solid fa-circle-info"></i> Tìm hiểu thêm
+          </a>
+        </div>
+
+        
+      </div>
+
+      <div class="hero-card">
+        <div class="mini-player">
+          <div class="mini-top">
+            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <span class="tag"><i class="fa-solid fa-signal"></i> Đang xem</span>
+          </div>
+          <div class="mini-body">
+            <div class="mini-row">
+              <span class="tag">HEVC</span>
+              <div class="bar"><i></i></div>
+              <span class="tag">60fps</span>
+            </div>
+            <div class="mini-row">
+              <span class="tag">Subtitle VI</span>
+              <div class="bar"><i style="width:78%"></i></div>
+              <span class="tag">4K</span>
+            </div>
+            <div class="mini-row">
+              <span class="tag">Ổn định</span>
+              <div class="bar"><i style="width:72%"></i></div>
+              <span class="tag">Nhanh</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+          <span class="pill"><i class="fa-solid fa-shield"></i> Không quảng cáo</span>
+          <span class="pill"><i class="fa-solid fa-wand-magic-sparkles"></i> UI đẹp</span>
+          <span class="pill"><i class="fa-solid fa-magnifying-glass"></i> Tìm nhanh</span>
+        </div>
+      </div>
     </div>
+  </section>
 
-    <div class="movie-grid" id="movie-grid"></div>
-    <div class="pagination-container" id="pagination"></div>
-  </div>
+  <section class="section" id="tinh-nang">
+    <div class="wrap">
+      <h2>Vì sao chọn DOWNCINE?</h2>
+      <p>Những điểm cộng giúp trải nghiệm xem phim của bạn “đã” hơn mỗi ngày.</p>
 
-  <!-- FOOTER -->
-  <footer>
-    <i class="fas fa-play-circle footer-watermark"></i>
-    <div class="footer-content">
-      <div class="badge-vn"><i class="fas fa-star"></i> Hoàng Sa & Trường Sa là của Việt Nam!</div>
+      <div class="features">
+        <div class="feat">
+          <i class="fa-solid fa-globe"></i>
+          <h3>Server siêu tốc</h3>
+          <div class="small">Tối ưu link direct, mở VLC hoặc tải nhanh — bấm là chạy.</div>
+        </div>
+        <div class="feat">
+          <i class="fa-solid fa-video"></i>
+          <h3>Chất lượng cao</h3>
+          <div class="small">Ưu tiên bản đẹp (HEVC/WEB-DL), hiển thị rõ thông tin phim.</div>
+        </div>
+        <div class="feat">
+          <i class="fa-solid fa-rectangle-list"></i>
+          <h3>Phim bộ có chọn tập</h3>
+          <div class="small">Season/Episode rõ ràng, đổi link theo tập ngay trong pop-up.</div>
+        </div>
+        <div class="feat">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <h3>Giao diện thân thiện</h3>
+          <div class="small">Tìm kiếm, lọc năm/tháng, “Xem ngay/Chi tiết” mượt mà.</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <div class="footer-logo"><i class="fas fa-play-circle"></i> DOWNCINE</div>
+  <section class="section" id="giao-dien">
+    <div class="wrap">
+      <h2>Ngầu từ màn hình đầu</h2>
+      <p>Preview cảm giác giao diện trước khi vào web xem phim.</p>
 
-      <div class="social-list">
-        <a href="#" class="social-item"><i class="fab fa-telegram-plane"></i></a>
-        <a href="#" class="social-item"><i class="fab fa-discord"></i></a>
-        <a href="#" class="social-item"><i class="fab fa-twitter"></i></a>
-        <a href="#" class="social-item"><i class="fab fa-facebook-f"></i></a>
-        <a href="#" class="social-item"><i class="fab fa-tiktok"></i></a>
-        <a href="#" class="social-item"><i class="fab fa-youtube"></i></a>
+      <div class="previews">
+        <div class="shot">
+          <div class="head"><i class="fa-solid fa-house"></i><span>Trang chủ • Mới cập nhật</span></div>
+          <div class="mock" id="mockHome">
+            <div class="badge" id="badgeHome">DOWNCINE • Home</div>
+            <div class="line"></div>
+          </div>
+        </div>
+        <div class="shot">
+          <div class="head"><i class="fa-solid fa-circle-play"></i><span>Chi tiết • VLC • Trailer</span></div>
+          <div class="mock" id="mockModal">
+            <div class="badge" id="badgeModal">Modal • Xem ngay</div>
+            <div class="line"></div>
+          </div>
+        </div>
       </div>
 
-      <div class="footer-links">
-        <a href="guide.html">Hướng Dẫn Xem</a>
-        <a href="#">Chính sách</a>
-        <a href="#">Liên hệ</a>
+      <div class="hero-actions" style="margin-top:18px">
+        <a class="btn btn-primary" href="app.html">
+          <i class="fa-solid fa-play"></i> Vào web xem phim
+        </a>
+        <a class="btn btn-ghost" href="#faq">
+          <i class="fa-solid fa-circle-question"></i> Xem FAQ
+        </a>
       </div>
+    </div>
+  </section>
 
-      <div class="copyright">© 2024 DOWNPHIM</div>
+  <section class="section" id="faq">
+    <div class="wrap">
+      <h2>FAQ</h2>
+      <p>Một vài câu hỏi thường gặp khi dùng DOWNCINE.</p>
+
+      <div class="faq">
+        <div class="qa">
+          <button class="q" type="button" onclick="toggleQA(this)">
+            DOWNCINE có miễn phí không ?
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </button>
+          <div class="a">Bạn có thể dùng miễn phí với đầy đủ tính năng xem phim, không quảng cáo.</div>
+        </div>
+
+        <div class="qa">
+          <button class="q" type="button" onclick="toggleQA(this)">
+            Mở phim trên điện thoại như thế nào ?
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </button>
+          <div class="a">Trong pop-up phim, bấm nút mở VLC (mobile) hoặc copy link stream để dán vào app player bạn dùng.</div>
+        </div>
+
+        <div class="qa">
+          <button class="q" type="button" onclick="toggleQA(this)">
+            Phim bộ chọn tập ở đâu ?
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </button>
+          <div class="a">Vào web xem phim → mở phim bộ → chọn Season/Episode trong modal. Link sẽ tự đổi theo tập.</div>
+        </div>
+
+        <div class="qa">
+          <button class="q" type="button" onclick="toggleQA(this)">
+            Thiết bị nào hỗ trợ ?
+            <i class="fa-solid fa-chevron-down chev"></i>
+          </button>
+          <div class="a">Android, iOS, Windows, macOS – tối ưu UI/UX cho từng nền tảng.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="row">
+        <div style="display:flex;align-items:center;gap:10px">
+          <i class="fa-solid fa-circle-play" style="color:var(--primary)"></i>
+          <b>DOWNCINE</b>
+          <span>© 2025</span>
+        </div>
+        <div class="links">
+          <a href="app.html"><i class="fa-solid fa-play"></i> Vào xem phim</a>
+          <a href="#tinh-nang"><i class="fa-solid fa-sparkles"></i> Tính năng</a>
+          <a href="#faq"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+        </div>
+      </div>
     </div>
   </footer>
 
-  <!-- FLOATING -->
-  <div class="floating-group">
-    <div class="up-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Lên đầu trang">
-      <i class="fas fa-arrow-up"></i>
-    </div>
-  </div>
-
-  <!-- MOVIE MODAL -->
-  <div id="movieModal" class="modal-overlay">
-    <div class="modal-box">
-      <span class="close-modal" onclick="closeModal()">&times;</span>
-      <img src="" id="modalPoster" class="modal-img" alt="">
-      <div class="modal-info">
-        <h2 class="modal-title" id="modalTitle">TITLE</h2>
-        <div class="modal-meta">
-          Năm: <span id="modalYear" style="color:white"></span> |
-          Điểm: <span id="modalRating" style="color:var(--primary)"></span>
-        </div>
-        <p class="modal-desc" id="modalDesc"></p>
-
-        <!-- ✅ BỔ SUNG: Thông tin chi tiết (genres/country/runtime/cert/director/cast) -->
-        <div class="modal-meta" id="modalExtraInfo" style="margin-top:-10px;margin-bottom:18px;line-height:1.6">
-          <div><b>Thể loại:</b> <span id="modalGenres"></span></div>
-          <div><b>Quốc gia:</b> <span id="modalCountries"></span></div>
-          <div><b>Thời lượng:</b> <span id="modalRuntime"></span></div>
-          <div><b>Giới hạn tuổi:</b> <span id="modalCert"></span></div>
-          <div><b>Đạo diễn:</b> <span id="modalDirector"></span></div>
-          <div><b>Cast:</b> <span id="modalCast"></span></div>
-        </div>
-
-        <div class="modal-actions">
-          <a id="btnVLC" href="#" class="btn-vlc-large">
-            <i class="fas fa-play-circle"></i> MỞ TRÊN APP VLC (Mobile)
-          </a>
-
-          <div class="pc-stream-box">
-            <span class="pc-title"><i class="fas fa-desktop"></i> Xem trên Máy Tính (PC):</span>
-            <button class="btn-copy-stream" onclick="copyStreamLink()">
-              <i class="fas fa-copy"></i> COPY LINK STREAM
-            </button>
-            <div class="vlc-steps">
-              1. Mở phần mềm <b>VLC Player</b>.<br>
-              2. Nhấn tổ hợp phím <b>Ctrl + N</b>.<br>
-              3. Dán link vừa copy vào và bấm <b>Play</b>.
-            </div>
-          </div>
-
-          <!-- ✅ BỔ SUNG: Nút trailer (ẩn nếu không có trailer_youtube_url) -->
-          <a id="btnTrailer" href="#" class="btn-download-large" target="_blank"
-             style="display:none;background:#1976d2;border-color:#1976d2">
-            <i class="fab fa-youtube"></i> XEM TRAILER
-          </a>
-
-          <hr style="border:0;border-top:1px solid #333;margin:10px 0;">
-
-          <a id="modalLink" href="#" class="btn-download-large" target="_blank">
-            <i class="fas fa-download"></i> TẢI VỀ MÁY (Link Gốc)
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DONATE MODAL -->
-  <div id="donateModal" class="modal-overlay" onclick="if(event.target==this)this.style.display='none'">
-    <div class="donate-box">
-      <span class="close-modal"
-            onclick="document.getElementById('donateModal').style.display='none'"
-            style="color:#333; top:10px; right:15px">&times;</span>
-      <h2>DONATE ADMIN</h2>
-      <img src="https://img.vietqr.io/image/BIDV-2170836028-compact.jpg" class="donate-qr" alt="">
-      <p style="color:#333;margin-top:10px"><b>BIDV: 2170836028</b><br>DONG DUY ANH</p>
-      <p style="font-size:12px;color:#666">Cảm ơn bạn đã ủng hộ web!</p>
-    </div>
-  </div>
-
-  <!-- movieList nằm trong file này -->
+  
+  <!-- Optional: load your library to show random hot banners -->
   <script src="movies.js"></script>
+  <script src="series.js"></script>
 
-  <script>
-    let sliderMovies = [];
-    let autoSlideInterval;
-    let currentVlcLink = "";
-
-    // PHÂN TRANG
-    let currentPage = 1;
-    const itemsPerPage = 24;
-    let currentFilteredList = [];
-
-    function init(){
-      if(typeof movieList !== 'undefined' && Array.isArray(movieList) && movieList.length > 0){
-        document.getElementById('total-movies-badge').innerHTML = `<i class="fas fa-video"></i> ${movieList.length} phim`;
-
-        initHero();
-        initRankings();
-        initTop10Row();
-        populateYears();
-        startLiveFeed();
-
-        currentFilteredList = movieList;
-        renderPage(1);
-      } else {
-        document.getElementById('hero-title').innerText = 'KHÔNG TÌM THẤY movieList';
-        document.getElementById('hero-desc').innerText = 'Hãy kiểm tra movies.js có export biến movieList hay không.';
-      }
+<script>
+    function toggleQA(btn){
+      const qa = btn.closest('.qa');
+      if(!qa) return;
+      const open = qa.classList.contains('open');
+      document.querySelectorAll('.qa').forEach(x=>x.classList.remove('open'));
+      if(!open) qa.classList.add('open');
     }
 
-    /* --- HERO --- */
-    function initHero(){
-      sliderMovies = movieList.slice(0, 10);
-      setHero(0);
-
-      const thumbContainer = document.getElementById('hero-thumbs');
-      thumbContainer.innerHTML = sliderMovies.map((m, index) => `
-        <div class="thumb-item ${index === 0 ? 'active' : ''}" onclick="manualSelectHero(${index})">
-          <img src="${m.poster_path}" loading="lazy" alt="">
-        </div>
-      `).join('');
-
-      startAutoSlide();
-    }
-
-    function setHero(index){
-      const m = sliderMovies[index];
-      const bg = m.backdrop_path || m.poster_path;
-
-      document.getElementById('hero-bg').style.backgroundImage = `url('${bg}')`;
-      document.getElementById('hero-title').innerText = m.title;
-      document.getElementById('hero-year').innerText = m.release_date ? m.release_date.split('-')[0] : 'N/A';
-      document.getElementById('hero-rating').innerText = m.vote_average || 'N/A';
-      document.getElementById('hero-desc').innerText = m.overview || '';
-
-      document.getElementById('hero-play-btn').onclick = () => openModal(m.id);
-
-      const thumbs = document.querySelectorAll('.thumb-item');
-      thumbs.forEach(t => t.classList.remove('active'));
-      if(thumbs[index]) thumbs[index].classList.add('active');
-    }
-
-    function manualSelectHero(index){ setHero(index); resetAutoSlide(); }
-    function startAutoSlide(){
-      let i = 0;
-      autoSlideInterval = setInterval(() => {
-        i = (i + 1) % sliderMovies.length;
-        setHero(i);
-      }, 5000);
-    }
-    function resetAutoSlide(){ clearInterval(autoSlideInterval); startAutoSlide(); }
-
-    /* --- TOP 10 ROW (UI mới) --- */
-    function initTop10Row(){
-      // bạn có thể đổi logic chọn top10 ở đây (rating cao / trending / random...)
-      const top10 = [...movieList].sort(() => 0.5 - Math.random()).slice(0, 10);
-
-      const track = document.getElementById('top10-track');
-      track.innerHTML = top10.map((m, i) => `
-        <div class="top10-item" ${i < 3 ? 'data-top="true"' : ''} onclick="openModal(${m.id})" title="${escapeHtml(m.title)}">
-          <div class="top10-rank">${i + 1}</div>
-          <div class="top10-poster">
-            <img src="${m.poster_path}" loading="lazy" alt="">
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function scrollTop10(amount){
-      const track = document.getElementById('top10-track');
-      track.scrollBy({ left: amount, behavior: 'smooth' });
-    }
-
-    function escapeHtml(str){
-      if(!str) return '';
-      return String(str)
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;')
-        .replaceAll('"','&quot;')
-        .replaceAll("'","&#039;");
-    }
-
-    /* --- LIVE ACTIVITY FEED --- */
-    function startLiveFeed(){
-      const container = document.getElementById('live-activity-list');
-      const users = ["Hoàng Nam","Minh Tú","Anh Tuấn","Thảo Vy","Đức Mạnh","Gia Bảo","Thu Hà","Hải Đăng","Bảo Châu","Quang Huy"];
-      const actions = ["vừa tải","đang xem","vừa thích","chia sẻ"];
-
-      const createItem = (u, a, m, t) => {
-        const div = document.createElement('div');
-        div.className = 'act-item';
-        div.innerHTML = `
-          <div class="act-time">${t}</div>
-          <img src="${m.poster_path}" class="act-img" loading="lazy" alt="">
-          <div class="act-desc">
-            <span>${u}</span> <br> ${a} "${escapeHtml(m.title)}"
-          </div>
-        `;
-        div.onclick = () => openModal(m.id);
-        return div;
-      };
-
-      container.innerHTML = '';
-      for(let i=0;i<5;i++){
-        const u = users[Math.floor(Math.random()*users.length)];
-        const a = actions[Math.floor(Math.random()*actions.length)];
-        const m = movieList[Math.floor(Math.random()*Math.min(50, movieList.length))];
-        container.appendChild(createItem(u,a,m,`${i+1}p trước`));
-      }
-
-      setInterval(() => {
-        const u = users[Math.floor(Math.random()*users.length)];
-        const a = actions[Math.floor(Math.random()*actions.length)];
-        const m = movieList[Math.floor(Math.random()*movieList.length)];
-        const newItem = createItem(u,a,m,'Vừa xong');
-        container.insertBefore(newItem, container.firstChild);
-        if(container.children.length > 5) container.lastElementChild.remove();
-      }, 4000);
-    }
-
-    /* --- RANKING --- */
-    function renderRankingItem(movie, index){
-      return `
-        <div class="rank-item" onclick="openModal(${movie.id})">
-          <div class="rank-number">${index + 1}</div>
-          <img src="${movie.backdrop_path || movie.poster_path}" class="rank-img" loading="lazy" alt="">
-          <div class="rank-info">
-            <p class="rank-title">${escapeHtml(movie.title)}</p>
-            <span class="rank-meta">⭐ ${movie.vote_average ?? ''}</span>
-          </div>
-        </div>
-      `;
-    }
-
-    function initRankings(){
-      const topRated = [...movieList].sort((a,b) => (b.vote_average||0) - (a.vote_average||0)).slice(0,5);
-      document.getElementById('rank-trending').innerHTML = topRated.map((m,i) => renderRankingItem(m,i)).join('');
-
-      const newest = movieList.slice(0,5);
-      document.getElementById('rank-newest').innerHTML = newest.map((m,i) => renderRankingItem(m,i)).join('');
-
-      const shuffled = [...movieList].sort(() => 0.5 - Math.random()).slice(0,5);
-      document.getElementById('rank-random').innerHTML = shuffled.map((m,i) => renderRankingItem(m,i)).join('');
-    }
-
-    /* --- GRID RENDER --- */
-/* --- GRID RENDER --- */
-function renderPage(page){
-  currentPage = page;
-
-  const start = (page - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  const pageItems = currentFilteredList.slice(start, end);
-
-  const grid = document.getElementById('movie-grid');
-  if(pageItems.length === 0){
-    grid.innerHTML = '<p style="color:#aaa;text-align:center;width:100%;">Không tìm thấy phim phù hợp!</p>';
-  } else {
-    grid.innerHTML = pageItems.map(m => `
-      <div class="movie-card" data-id="${m.id}">
-        <div class="rating-badge">${m.vote_average || 0}</div>
-        <img src="${m.poster_path}" class="poster" loading="lazy" alt="">
-
-        <!-- HOVER PREVIEW -->
-        <div class="hover-preview">
-          <div class="preview-media">
-            <div class="preview-backdrop" style="background-image:url('${m.backdrop_path || m.poster_path}')"></div>
-            <div class="preview-trailer" data-trailer="${m.trailer_youtube_url || ''}"></div>
-          </div>
-
-          <div class="preview-content">
-            <div class="preview-title">${escapeHtml(m.title)}</div>
-
-            <div class="preview-meta">
-              <span class="preview-badge imdb">IMDb ${m.vote_average ?? 'N/A'}</span>
-              <span class="preview-badge">${m.certification || 'T16'}</span>
-              <span>${m.release_date ? m.release_date.split('-')[0] : ''}</span>
-              ${m.runtime ? `<span>${m.runtime}m</span>` : ''}
-            </div>
-
-            <div class="preview-genres">
-              ${(Array.isArray(m.genres) ? m.genres : []).slice(0,3).join(' • ') || ''}
-            </div>
-
-            <div class="preview-actions">
-              <div class="preview-btn play" onclick="openModal(${m.id})">
-                <i class="fas fa-play"></i> Xem ngay
-              </div>
-              <div class="preview-btn detail" onclick="openModal(${m.id})">
-                Chi tiết
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- CARD GỐC (GIỮ NGUYÊN) -->
-        <div class="card-info" onclick="openModal(${m.id})">
-          <h3 class="card-title">${escapeHtml(m.title)}</h3>
-          <div class="card-year">${m.release_date ? m.release_date.split('-')[0] : ''}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // ✅ BẮT BUỘC: gọi sau khi đã render xong DOM
-  bindHoverPreview();
-
-  renderPaginationControl();
-}
-
-
-    function renderPaginationControl(){
-      const totalPages = Math.ceil(currentFilteredList.length / itemsPerPage);
-      const container = document.getElementById('pagination');
-      container.innerHTML = '';
-      if(totalPages <= 1) return;
-
-      const createBtn = (label, page, disabled, active) => {
-        const btn = document.createElement('button');
-        btn.className = `page-btn ${active ? 'active' : ''}`;
-        btn.innerHTML = label;
-        btn.disabled = disabled;
-        btn.onclick = () => renderPage(page);
-        container.appendChild(btn);
-      };
-
-      createBtn('<i class="fas fa-chevron-left"></i>', currentPage - 1, currentPage === 1, false);
-
-      let startPage = Math.max(1, currentPage - 2);
-      let endPage = Math.min(totalPages, startPage + 4);
-      if(endPage - startPage < 4) startPage = Math.max(1, endPage - 4);
-
-      for(let i = startPage; i <= endPage; i++){
-        createBtn(i, i, false, i === currentPage);
-      }
-
-      createBtn('<i class="fas fa-chevron-right"></i>', currentPage + 1, currentPage === totalPages, false);
-    }
-
-    /* --- FILTERS --- */
-    const searchInput = document.getElementById('search-input');
-    const filterYear = document.getElementById('filter-year');
-    const filterMonth = document.getElementById('filter-month');
-    const filterRating = document.getElementById('filter-rating');
-
-    function populateYears(){
-      const years = [...new Set(movieList.map(m => m.release_date ? m.release_date.split('-')[0] : null))]
-        .filter(Boolean)
-        .sort()
-        .reverse();
-
-      years.forEach(y => {
-        const opt = document.createElement('option');
-        opt.value = y;
-        opt.innerText = y;
-        filterYear.appendChild(opt);
+    // Smooth scroll for internal anchors
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', (e)=>{
+        const id = a.getAttribute('href');
+        const el = document.querySelector(id);
+        if(!el) return;
+        e.preventDefault();
+        el.scrollIntoView({behavior:'smooth', block:'start'});
       });
+    });
+  
+    // --- Random hot banners from your library (movies.js / series.js) ---
+    function _arr(x){ return Array.isArray(x) ? x : []; }
+
+    function _getSeriesArray(){
+      if(typeof seriesList !== "undefined") return _arr(seriesList);
+      if(typeof series !== "undefined" && series && typeof series === "object") return [series];
+      return [];
     }
 
-    function filterMovies(){
-      const term = (searchInput.value || '').toLowerCase();
-      const year = filterYear.value;
-      const month = filterMonth.value;
-      const minRating = parseFloat(filterRating.value) || 0;
-
-      currentFilteredList = movieList.filter(m => {
-        const mDate = m.release_date || "";
-        const mYear = mDate.split('-')[0];
-        const mMonth = mDate.split('-')[1];
-        const mRating = m.vote_average || 0;
-
-        const matchName = (m.title || '').toLowerCase().includes(term);
-        const matchYear = year === "" || mYear === year;
-        const matchMonth = month === "" || mMonth === month;
-        const matchRating = mRating >= minRating;
-
-        return matchName && matchYear && matchMonth && matchRating;
-      });
-
-      renderPage(1);
+    function _getMoviesArray(){
+      if(typeof movieList !== "undefined") return _arr(movieList);
+      return [];
     }
 
-    searchInput.addEventListener('input', filterMovies);
-    filterYear.addEventListener('change', filterMovies);
-    filterMonth.addEventListener('change', filterMovies);
-    filterRating.addEventListener('change', filterMovies);
+    function _pickImage(item){
+      const img = item.backdrop_path || item.poster_path || "";
+      return String(img || "").trim();
+    }
 
-    /* --- MODAL --- */
-    const modal = document.getElementById('movieModal');
+    function _pickTitle(item){
+      return item.title || item.name || item.original_title || item.original_name || "HOT";
+    }
 
-    function openModal(id){
-      const m = movieList.find(x => x.id === id);
-      if(!m) return;
-
-      document.getElementById('modalPoster').src = m.poster_path || '';
-      document.getElementById('modalTitle').innerText = m.title || '';
-      document.getElementById('modalYear').innerText = m.release_date || '';
-      document.getElementById('modalRating').innerText = m.vote_average ?? '';
-      document.getElementById('modalDesc').innerText = m.overview || '';
-
-      /* ✅ BỔ SUNG: set info enrich (nếu không có thì hiện —) */
-      document.getElementById('modalGenres').innerText =
-        (Array.isArray(m.genres) && m.genres.length) ? m.genres.join(', ') : '—';
-
-      document.getElementById('modalCountries').innerText =
-        (Array.isArray(m.production_countries) && m.production_countries.length) ? m.production_countries.join(', ') : '—';
-
-      document.getElementById('modalRuntime').innerText =
-        (m.runtime != null && m.runtime !== '') ? (m.runtime + ' phút') : '—';
-
-      document.getElementById('modalCert').innerText =
-        (m.certification && String(m.certification).trim()) ? m.certification : '—';
-
-      document.getElementById('modalDirector').innerText =
-        (m.director && String(m.director).trim()) ? m.director : '—';
-
-      document.getElementById('modalCast').innerText =
-        (Array.isArray(m.cast_top10) && m.cast_top10.length) ? m.cast_top10.join(', ') : '—';
-
-      const btnTrailer = document.getElementById('btnTrailer');
-      if(m.trailer_youtube_url && String(m.trailer_youtube_url).trim()){
-        btnTrailer.style.display = 'flex';
-        btnTrailer.href = m.trailer_youtube_url;
-      } else {
-        btnTrailer.style.display = 'none';
-        btnTrailer.href = '#';
+    function _shuffle(a){
+      const arr = a.slice();
+      for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [arr[i],arr[j]] = [arr[j],arr[i]];
       }
-      /* ✅ HẾT BỔ SUNG */
+      return arr;
+    }
 
-      let dbLink = m.dropbox_link || "";
-      let downloadLink = dbLink;
+    function applyRandomBanners(){
+      const all = [
+        ..._getMoviesArray(),
+        ..._getSeriesArray()
+      ];
 
-      if(downloadLink && !downloadLink.includes('dl=1')){
-        if(downloadLink.includes('dl=0')) downloadLink = downloadLink.replace('dl=0','dl=1');
-        else downloadLink += (downloadLink.includes('?') ? '&dl=1' : '?dl=1');
+      // fallback if user hasn't placed movies.js/series.js
+      if(!all.length) return;
+
+      // Prefer items that have backdrop/poster url
+      const withImg = all.filter(x => _pickImage(x));
+      const pool = withImg.length ? withImg : all;
+
+      // pick for small preview mocks
+      const picks = _shuffle(pool).slice(0,2);
+      const [p1, p2] = picks;
+
+      const mockHome = document.getElementById("mockHome");
+      const mockModal = document.getElementById("mockModal");
+      const badgeHome = document.getElementById("badgeHome");
+      const badgeModal = document.getElementById("badgeModal");
+
+      if(p1 && mockHome && badgeHome){
+        const img1 = _pickImage(p1);
+        if(img1){
+          mockHome.classList.add("has-bg");
+          mockHome.style.backgroundImage = `url('${img1}')`;
+        }
+        badgeHome.textContent = "HOT • " + _pickTitle(p1);
       }
-      document.getElementById('modalLink').href = downloadLink || '#';
+      if(p2 && mockModal && badgeModal){
+        const img2 = _pickImage(p2);
+        if(img2){
+          mockModal.classList.add("has-bg");
+          mockModal.style.backgroundImage = `url('${img2}')`;
+        }
+        badgeModal.textContent = "HOT • " + _pickTitle(p2);
+      }
 
-      let streamUrl = (dbLink || '').replace("www.dropbox.com", "dl.dropboxusercontent.com");
-      streamUrl = streamUrl.replace(/[?&]dl=[01]/g, "");
-      if(streamUrl.slice(-1) === '&' || streamUrl.slice(-1) === '?') streamUrl = streamUrl.slice(0,-1);
+      // Banner hero: show 8 thumbs + choose 1 as active banner
+      const bannerTitle = document.getElementById("bannerTitle");
+      const bannerOverview = document.getElementById("bannerOverview");
+      const bannerPills = document.getElementById("bannerPills");
+      const thumbStrip = document.getElementById("thumbStrip");
+      const bannerEl = document.getElementById("banner");
 
-      currentVlcLink = streamUrl;
-      document.getElementById('btnVLC').href = streamUrl ? `vlc://${streamUrl}` : '#';
+      const thumbPool = _shuffle(pool).slice(0, 10);
+      let active = thumbPool[0] || p1 || pool[0];
 
-      modal.style.display = 'flex';
+      function yearOf(item){
+        const d = item.release_date || item.first_air_date || "";
+        return String(d||"").split("-")[0] || "";
+      }
+
+      function scoreOf(item){
+        const v = item.vote_average;
+        if(v===0 || v===null || v===undefined) return "";
+        return Number(v).toFixed(1);
+      }
+
+      function typeOf(item){
+        // if item has episodes => series; else movie (best-effort)
+        if(item.episodes || item.number_of_seasons || item.name) return "PHIM BỘ";
+        return "PHIM LẺ";
+      }
+
+      function setBanner(item){
+        if(!item || !bannerEl) return;
+        const img = _pickImage(item);
+        const bannerBg = document.getElementById("bannerBg");
+        if(img && bannerBg) bannerBg.style.backgroundImage = `url('${img}')`;
+        // keep a css-var fallback (not required)
+        if(img) bannerEl.style.setProperty("--banner-bg", `url('${img}')`);
+
+        if(bannerTitle) bannerTitle.textContent = (_pickTitle(item) || "HOT").toUpperCase();
+
+        const ov = String(item.overview || "").trim();
+        if(bannerOverview) bannerOverview.textContent = ov ? ov : "Chưa có mô tả cho phim này.";
+
+        const y = yearOf(item);
+        const sc = scoreOf(item);
+        const tp = typeOf(item);
+
+        if(bannerPills){
+          bannerPills.innerHTML = `
+            ${sc ? `<span class="b-pill primary"><i class="fa-solid fa-star"></i> IMDb ${sc}</span>` : `<span class="b-pill primary"><i class="fa-solid fa-star"></i> IMDb</span>`}
+            ${y ? `<span class="b-pill"><i class="fa-solid fa-calendar"></i> ${y}</span>` : ""}
+            <span class="b-pill"><i class="fa-solid fa-tv"></i> ${tp}</span>
+          `;
+        }
+
+        // activate thumb highlight
+        if(thumbStrip){
+          thumbStrip.querySelectorAll(".thumb").forEach(t=>t.classList.remove("active"));
+          const hit = thumbStrip.querySelector(`.thumb[data-k='${encodeURIComponent(_pickTitle(item))}']`);
+          if(hit) hit.classList.add("active");
+        }
+
+        // store banner item so play button can lead to app (or later deep-link)
+        window.__DOWNCINE_BANNER_ITEM__ = item;
+      }
+
+      if(thumbStrip){
+        thumbStrip.innerHTML = "";
+        thumbPool.forEach((it, idx)=>{
+          const d = document.createElement("div");
+          d.className = "thumb" + (idx===0 ? " active" : "");
+          d.dataset.k = encodeURIComponent(_pickTitle(it));
+          const img = _pickImage(it);
+          d.innerHTML = `<img alt="thumb" src="${img}">`;
+          d.addEventListener("click", ()=> setBanner(it));
+          thumbStrip.appendChild(d);
+        });
+      }
+
+      setBanner(active);
     }
 
-    function copyStreamLink(){
-      if(!currentVlcLink) return;
-      navigator.clipboard.writeText(currentVlcLink).then(() => {
-        const btn = document.querySelector('.btn-copy-stream');
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> ĐÃ COPY LINK!';
-        btn.style.background = '#28a745';
-        btn.style.border = '1px solid #28a745';
-
-        setTimeout(() => {
-          btn.innerHTML = originalText;
-          btn.style.background = '#444';
-          btn.style.border = '1px solid #666';
-        }, 2000);
-      });
+    function goToAppFromBanner(){
+      // for now: just go to app.html
+      window.location.href = "app.html";
     }
 
-    function closeModal(){ modal.style.display = 'none'; }
+    // run when DOM ready (and after scripts loaded) (and after scripts loaded)
+    window.addEventListener("load", applyRandomBanners);
 
-    window.addEventListener('scroll', () => {
-      const nav = document.getElementById('navbar');
-      if(window.scrollY > 50) nav.classList.add('scrolled');
-      else nav.classList.remove('scrolled');
-    });
-    /* ===== Hover Delay + Align + Trailer loader (BỔ SUNG) ===== */
-let hoverTimer = null;
-
-function toYoutubeEmbed(url){
-  if(!url) return "";
-  // nhận dạng youtu.be/xxxx hoặc watch?v=xxxx
-  try{
-    const u = new URL(url);
-    let id = "";
-    if(u.hostname.includes("youtu.be")){
-      id = u.pathname.replace("/","");
-    } else {
-      id = u.searchParams.get("v") || "";
-    }
-    if(!id) return "";
-    // autoplay + mute để browser cho chạy khi hover
-    return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&rel=0&modestbranding=1&playsinline=1`;
-  }catch(e){
-    return "";
-  }
-}
-
-function applyAlign(card){
-  const preview = card.querySelector('.hover-preview');
-  if(!preview) return;
-
-  card.classList.remove('align-left','align-right','align-down');
-
-  // đo kích thước sau khi đã add is-hover (để đúng size)
-  const rect = preview.getBoundingClientRect();
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  // trái/phải
-  if(rect.left < 10) card.classList.add('align-left');
-  else if(rect.right > vw - 10) card.classList.add('align-right');
-
-  // nếu bị đụng top quá nhiều thì đẩy xuống (tuỳ bạn)
-  const rect2 = preview.getBoundingClientRect();
-  if(rect2.top < 10) card.classList.add('align-down');
-}
-
-function ensureTrailer(card){
-  const holder = card.querySelector('.preview-trailer');
-  if(!holder) return;
-
-  const raw = holder.getAttribute('data-trailer') || "";
-  const embed = toYoutubeEmbed(raw);
-
-  if(!embed){
-    card.classList.remove('trailer-ready');
-    holder.innerHTML = "";
-    return;
-  }
-
-  // chỉ tạo iframe lần đầu
-  if(holder.dataset.loaded === "1") return;
-
-  holder.innerHTML = `<iframe src="${embed}" allow="autoplay; encrypted-media" referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
-  holder.dataset.loaded = "1";
-  card.classList.add('trailer-ready');
-}
-
-function stopTrailer(card){
-  const holder = card.querySelector('.preview-trailer');
-  if(!holder) return;
-  // reset iframe để dừng video ngay
-  if(holder.dataset.loaded === "1"){
-    holder.innerHTML = "";
-    holder.dataset.loaded = "0";
-  }
-  card.classList.remove('trailer-ready');
-}
-
-function bindHoverPreview(){
-  const cards = document.querySelectorAll('.movie-card');
-  cards.forEach(card => {
-    // desktop hover
-    card.addEventListener('mouseenter', () => {
-      if(window.matchMedia("(max-width: 768px)").matches) return;
-
-      clearTimeout(hoverTimer);
-      hoverTimer = setTimeout(() => {
-        card.classList.add('is-hover');
-        applyAlign(card);
-        ensureTrailer(card);
-      }, 300);
-    });
-
-    card.addEventListener('mouseleave', () => {
-      clearTimeout(hoverTimer);
-      card.classList.remove('is-hover','align-left','align-right','align-down');
-      stopTrailer(card);
-    });
-  });
-}
-
-    init();
   </script>
 </body>
 </html>
