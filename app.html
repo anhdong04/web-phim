@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DOWNCINE - KHO PHIM CHẤT LƯỢNG CAO</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- 1. CẤU HÌNH CHUNG --- */
+    :root{
+      --primary:#f5c518;
+      --bg-dark:#0f0f0f;
+      --bg-card:#1a1a1a;
+      --text-white:#ffffff;
+      --text-gray:#b3b3b3;
+      --vlc-orange:#ff5722;
+    }
+    *{box-sizing:border-box}
+    body{
+      background-color:var(--bg-dark);
+      color:var(--text-white);
+      font-family:'Montserrat',sans-serif;
+      margin:0;padding:0;
+      overflow-x:hidden;
+    }
+
+    /* --- 2. NAVBAR --- */
+    .navbar{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:15px 50px;
+      position:fixed;top:0;left:0;width:100%;
+      z-index:1000;
+      background:linear-gradient(to bottom, rgba(0,0,0,0.95) 0%, transparent 100%);
+      transition:background .3s;
+      flex-wrap:wrap;
+    }
+    .navbar.scrolled{background:#0f0f0f; box-shadow:0 4px 10px rgba(0,0,0,0.8);}
+    .logo{
+      color:var(--text-white);
+      font-size:28px;
+      font-weight:900;
+      display:flex;align-items:center;gap:10px;
+      cursor:pointer;text-decoration:none;
+      margin-right:20px;
+      white-space:nowrap;
+    }
+    .logo i{color:var(--primary)}
+    .filter-container{
+      flex:1;
+      display:flex;align-items:center;gap:10px;
+      background:rgba(255,255,255,0.1);
+      padding:5px 15px;border-radius:30px;
+      border:1px solid rgba(255,255,255,0.1);
+      backdrop-filter:blur(5px);
+      max-width:850px;
+      min-width:260px;
+      flex-wrap: wrap;
+    }
+    .search-input{
+      background:transparent;border:none;color:#fff;outline:none;
+      padding:8px;flex:1;font-family:inherit;font-size:14px;min-width:120px;
+    }
+    .search-icon{color:#aaa;margin-right:5px}
+    .filter-select{
+      background:rgba(0,0,0,0.5);color:#ddd;border:none;
+      padding:8px 10px;border-radius:15px;outline:none;
+      cursor:pointer;font-size:13px;font-family:inherit;transition:.2s;
+    }
+    .filter-select:hover{background:rgba(255,255,255,0.2);color:var(--primary)}
+    .filter-select option{background:#1a1a1a;color:#fff}
+    .nav-right{display:flex;align-items:center;margin-left:20px}
+    .btn-guide-nav{
+      color:#fff;text-decoration:none;font-size:13px;font-weight:600;
+      border:1px solid rgba(255,255,255,0.5);
+      padding:8px 16px;border-radius:20px;
+      transition:.3s;margin-right:15px;
+      display:flex;align-items:center;gap:8px;
+      white-space:nowrap;
+    }
+    .btn-guide-nav:hover{background:#fff;color:#000;border-color:#fff}
+    .vip-badge{color:var(--primary);font-weight:900;font-size:14px;letter-spacing:1px;cursor:default}
+
+    /* --- 3. HERO BANNER --- */
+    .hero-section{
+      position:relative;width:100%;height:100vh;
+      background-size:cover;background-position:center center;
+      display:flex;align-items:center;
+      transition:background-image .5s ease-in-out;
+      margin-top:0;
+    }
+    .hero-overlay{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(circle at 70% 30%, transparent 0%, #0f0f0f 140%),
+        linear-gradient(to top, #0f0f0f 5%, transparent 40%),
+        linear-gradient(to right, #0f0f0f 20%, rgba(15,15,15,0.4) 50%, transparent 100%);
+    }
+    .hero-content{position:relative;z-index:10;width:50%;padding-left:60px;padding-top:80px}
+    .hero-title{
+      font-size:3.5rem;font-weight:900;line-height:1.1;margin-bottom:20px;
+      text-transform:uppercase;text-shadow:0 0 30px rgba(0,0,0,0.8);
+    }
+    .hero-meta{display:flex;gap:15px;align-items:center;margin-bottom:20px;font-size:14px;color:#ccc;flex-wrap:wrap}
+    .tag{border:1px solid rgba(255,255,255,0.4);padding:4px 10px;border-radius:4px}
+    .tag-res{background:var(--primary);color:#000;border:none;font-weight:800}
+    .hero-desc{
+      font-size:1rem;color:#ddd;line-height:1.6;margin-bottom:30px;
+      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;
+      overflow:hidden;width:85%;
+      text-shadow:1px 1px 2px #000;
+    }
+    .hero-actions{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+    .btn-circle-play{
+      width:70px;height:70px;border-radius:50%;
+      background:var(--primary);color:#000;
+      display:flex;align-items:center;justify-content:center;
+      font-size:28px;cursor:pointer;transition:.3s;
+      box-shadow:0 0 30px rgba(245,197,24,0.3);
+      animation:pulse-yellow 2s infinite;
+      user-select:none;
+    }
+    .btn-circle-play:hover{transform:scale(1.1);background:#fff}
+    .hero-thumbnails{
+      position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+      z-index:20;display:flex;gap:15px;padding:10px 20px;
+      background:rgba(0,0,0,0.6);
+      border-radius:15px;
+      backdrop-filter:blur(5px);
+      border:1px solid rgba(255,255,255,0.1);
+      max-width:90vw;
+      overflow-x:auto;
+      scrollbar-width:none;
+    }
+    .hero-thumbnails::-webkit-scrollbar{display:none}
+    .thumb-item{
+      width:60px;height:90px;border-radius:6px;overflow:hidden;
+      cursor:pointer;position:relative;transition:.3s;
+      border:2px solid transparent;opacity:.6;flex-shrink:0;
+    }
+    .thumb-item img{width:100%;height:100%;object-fit:cover}
+    .thumb-item:hover{transform:translateY(-10px);opacity:1}
+    .thumb-item.active{
+      border-color:var(--primary);
+      transform:scale(1.15) translateY(-10px);
+      opacity:1;z-index:10;
+      box-shadow:0 10px 20px rgba(0,0,0,0.5);
+    }
+
+    /* --- BẠN XEM GÌ HÔM NAY (GRADIENT TOPICS) --- */
+    .topics-section {
+      padding: 40px 60px 10px 60px;
+      background: var(--bg-dark);
+      position: relative;
+      z-index: 5;
+    }
+    .topics-header {
+      display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 900;
+      color: #fff; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .topics-header::before {
+      content: ""; display: inline-block; width: 5px; height: 24px; background: #e50914; border-radius: 4px;
+    }
+    .topics-viewport { position: relative; }
+    .topics-track {
+      display: flex; gap: 18px; overflow-x: auto; scrollbar-width: none;
+      padding-bottom: 15px; scroll-behavior: smooth;
+    }
+    .topics-track::-webkit-scrollbar { display: none; }
+    
+    .topic-card {
+      flex: 0 0 auto; width: 190px; height: 105px; border-radius: 12px; padding: 16px 20px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    }
+    .topic-card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.6); }
+    .topic-title { color: #fff; font-size: 17px; font-weight: 800; line-height: 1.3; z-index: 2; }
+    .topic-subtitle {
+      color: rgba(255,255,255,0.8); font-size: 11px; font-weight: 700;
+      text-transform: uppercase; z-index: 2; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px;
+    }
+    .topic-subtitle i { font-size: 9px; }
+
+    /* Bảng màu chuẩn */
+    .bg-blue { background: linear-gradient(135deg, #2b5876 0%, #4e4376 100%); }
+    .bg-purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .bg-teal { background: linear-gradient(135deg, #209cff 0%, #68e0cf 100%); }
+    .bg-orange { background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%); }
+    .bg-dark { background: linear-gradient(135deg, #29323c 0%, #485563 100%); }
+    .bg-yellow { background: linear-gradient(135deg, #f6d365 0%, #fda085 100%); }
+    .bg-red { background: linear-gradient(135deg, #e52d27 0%, #b31217 100%); }
+
+    /* --- 4. RANKING & ACTIVITY --- */
+    .ranking-section{
+      padding:30px 60px;background:#0f0f0f; display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:30px;border-bottom:1px solid #222;
+    }
+    .rank-column h3{
+      color:#ddd;font-size:15px;margin-bottom:20px; text-transform:uppercase;letter-spacing:1px;
+      display:flex;align-items:center;gap:10px; white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .rank-column h3 i{color:var(--primary)}
+    .rank-item,.act-item{
+      display:flex;align-items:center;gap:15px; padding:10px 0;border-bottom:1px solid #222;
+      cursor:pointer;transition:.2s;height:65px;
+    }
+    .rank-item:hover,.act-item:hover{background:#1a1a1a;padding-left:10px;border-radius:5px}
+    .rank-number{font-size:24px;font-weight:900;color:#444;width:30px;text-align:center}
+    .rank-item:nth-child(1) .rank-number{color:var(--primary)}
+    .rank-item:nth-child(2) .rank-number{color:#aaa}
+    .rank-item:nth-child(3) .rank-number{color:#cd7f32}
+    .rank-img,.act-img{ width:45px;height:65px;object-fit:cover;border-radius:4px; flex-shrink:0;border:1px solid #333; }
+    .rank-info,.act-desc{ overflow:hidden; display:flex;flex-direction:column;justify-content:center;height:100%; }
+    .rank-title{ font-size:13px;font-weight:800;color:#fff; white-space:nowrap;overflow:hidden;text-overflow:ellipsis; margin:0 0 5px 0; }
+    .rank-meta{font-size:11px;color:#777}
+    .act-item{animation:slideIn .5s ease}
+    .act-time{font-size:10px;color:#666;width:35px;text-align:right;flex-shrink:0}
+    .act-desc{font-size:12px;color:#ccc;line-height:1.4;flex:1}
+    .act-desc span{color:var(--primary);font-weight:900}
+
+    /* Nút Cuộn */
+    .scroll-nav{
+      position:absolute;top:0;bottom:0;width:56px; display:flex;align-items:center;justify-content:center;
+      border:none;cursor:pointer;z-index:10; background:linear-gradient(to right, rgba(0,0,0,0.85), rgba(0,0,0,0));
+      color:#fff; opacity:0; transition:.25s;
+    }
+    .scroll-nav.next{ right:0; background:linear-gradient(to left, rgba(0,0,0,0.85), rgba(0,0,0,0));}
+    .scroll-nav.prev{left:0}
+    .horiz-viewport:hover .scroll-nav, .topics-viewport:hover .scroll-nav, .top10-viewport:hover .scroll-nav {opacity:1}
+    .scroll-nav:hover{color:var(--primary)}
+    .scroll-nav i{font-size:26px}
+
+    /* --- 5. TOP 10 ROW --- */
+    .top10-section{
+      padding:40px 60px 10px 60px;background:#0f0f0f;position:relative;overflow:hidden;
+    }
+    .top10-header{
+      display:flex;align-items:center;gap:10px; font-size:20px;font-weight:900;color:#fff; margin-bottom:16px; letter-spacing:.2px;
+    }
+    .top10-header .crown{ color:#f5c518; filter:drop-shadow(0 2px 6px rgba(245,197,24,.35)); }
+    .top10-viewport{ position:relative; border-radius:16px; }
+    .top10-track{ display:flex; gap:18px; overflow-x:auto; scroll-behavior:smooth; padding:10px 6px 28px 6px; scrollbar-width:none; }
+    .top10-track::-webkit-scrollbar{display:none}
+
+    .top10-item{
+      position:relative; flex:0 0 auto; width:176px; height:264px; border-radius:22px;
+      overflow:visible; cursor:pointer; transform-origin:center; transition:transform .25s ease, filter .25s ease;
+    }
+    .top10-item:hover{ transform:scale(1.08); z-index:5; filter:drop-shadow(0 14px 30px rgba(0,0,0,.55)); }
+    .top10-poster{ width:100%; height:100%; border-radius:22px; overflow:hidden; background:#1a1a1a; box-shadow:0 12px 30px rgba(0,0,0,.35); position:relative; }
+    .top10-poster img{ width:100%; height:100%; object-fit:cover; display:block; mask-image:linear-gradient(to bottom, black 78%, transparent 100%); }
+    .top10-rank{
+      position:absolute; left:-14px; bottom:-22px; font-size:118px; font-weight:900;
+      line-height:1; color:rgba(0,0,0,0.25); -webkit-text-stroke:3px rgba(255,255,255,0.16);
+      text-shadow:0 10px 24px rgba(0,0,0,0.55); pointer-events:none; user-select:none; z-index:6;
+    }
+    .top10-item[data-top="true"] .top10-rank{ -webkit-text-stroke:3px rgba(245,197,24,0.65); color:rgba(0,0,0,0.18); }
+
+    /* --- LAYOUT PHIM CHIẾU RẠP --- */
+    .rap-section { padding: 40px 60px 30px 60px; background: #121318; border-top: 1px solid #222; }
+    .rap-track { display: flex; gap: 28px; overflow-x: auto; scroll-behavior: smooth; padding: 10px 5px 20px 5px; scrollbar-width: none; }
+    .rap-track::-webkit-scrollbar { display: none; }
+    
+    .rap-item { flex: 0 0 auto; width: 220px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; }
+    .rap-item:hover { transform: translateY(-8px); }
+    
+    .rap-poster-wrap { 
+      position: relative; width: 100%; height: 310px; border-radius: 12px; 
+      overflow: hidden; box-shadow: 0 8px 25px rgba(0,0,0,0.6); margin-bottom: 12px; 
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .rap-poster { width: 100%; height: 100%; object-fit: cover; }
+    
+    .rap-badges { position: absolute; bottom: 8px; right: 8px; display: flex; gap: 6px; flex-wrap: wrap-reverse; justify-content: flex-end;}
+    .rap-badge { 
+      background: rgba(255,255,255,0.95); color: #000; padding: 3px 6px; 
+      border-radius: 4px; font-size: 11px; font-weight: 800; text-transform: uppercase;
+    }
+    .rap-badge.tm { background: #00e676; color: #000; }
+    .rap-badge.lt { background: #ab47bc; color: #fff; }
+    .rap-badge.pd { background: #5c6bc0; color: #fff; }
+
+    .rap-info-row { display: flex; align-items: flex-start; gap: 12px; width: 100%;}
+    .rap-number { 
+      font-size: 55px; font-weight: 900; font-style: italic; color: var(--primary); 
+      line-height: 0.8; margin-top: 5px; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); 
+      -webkit-text-stroke: 1px rgba(255,255,255,0.1);
+    }
+    .rap-text { display: flex; flex-direction: column; gap: 4px; overflow: hidden; flex: 1; margin-top: 2px;}
+    .rap-title { color: #fff; font-size: 15px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; }
+    .rap-orig-title { color: #888; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .rap-ep { color: #aaa; font-size: 12px; font-weight: 600; margin-top: 2px; }
+
+    /* --- CÁC MỤC DANH SÁCH NGANG TIÊU CHUẨN --- */
+    .horizontal-section { padding: 30px 60px 10px 60px; background: var(--bg-dark); }
+    .horiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .horiz-header h3 { color: #fff; font-size: 22px; font-weight: 800; border-left: 4px solid var(--primary); padding-left: 12px; margin: 0; text-transform: uppercase; }
+    .view-all-btn { color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 700; border: 1px solid var(--primary); padding: 5px 15px; border-radius: 20px; transition: 0.3s; cursor: pointer; background: transparent; }
+    .view-all-btn:hover { background: var(--primary); color: #000; }
+    .horiz-viewport { position: relative; border-radius: 10px; overflow: hidden; }
+    .horiz-track { display: flex; gap: 15px; overflow-x: auto; scroll-behavior: smooth; padding: 10px 5px 20px 5px; scrollbar-width: none; }
+    .horiz-track::-webkit-scrollbar { display: none; }
+    .horiz-item { flex: 0 0 auto; width: 160px; cursor: pointer; transition: 0.3s; position: relative; }
+    .horiz-item:hover { transform: translateY(-8px); }
+    .horiz-poster { width: 100%; height: 230px; border-radius: 8px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+    .horiz-title { color: #fff; font-size: 14px; font-weight: 700; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .horiz-meta { color: #aaa; font-size: 12px; margin-top: 3px; }
+
+    /* --- 6. GRID CHÍNH KÈM HOVER PREVIEW --- */
+    .section-container{padding:40px 60px 20px 60px;position:relative;z-index:2;background:var(--bg-dark)}
+    .section-header{
+      display:flex;align-items:center;margin-bottom:25px; font-size:24px;font-weight:900;color:#fff;
+      border-left:5px solid var(--primary);padding-left:15px; gap:12px;flex-wrap:wrap;
+    }
+    #total-movies-badge{
+      font-size:14px;background:#222;color:#aaa; padding:5px 12px;border-radius:20px;
+      font-weight:600;border:1px solid #333; display:inline-flex;align-items:center;gap:8px;
+    }
+    .movie-grid{display:grid;grid-template-columns:repeat(auto-fill, minmax(190px, 1fr));gap:25px}
+    
+    .movie-card{ background:var(--bg-card); border-radius:10px; overflow:visible !important; transition:.3s; cursor:pointer; position:relative; }
+    .movie-card:hover{ z-index:30; }
+    
+    .poster{width:100%;aspect-ratio:2/3;object-fit:cover; border-radius:10px;}
+    .rating-badge{
+      position:absolute;top:10px;right:10px; background:rgba(0,0,0,0.8);color:var(--primary);
+      padding:4px 8px;border-radius:4px; font-size:12px;font-weight:900;border:1px solid var(--primary); z-index:2;
+    }
+    .card-info{padding:15px; position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.9), transparent); border-radius:0 0 10px 10px; pointer-events:none;}
+    .card-title{ margin:0;font-size:15px;font-weight:800; white-space:nowrap;overflow:hidden;text-overflow:ellipsis; text-shadow: 1px 1px 2px #000; color: #fff;}
+    .card-year{font-size:12px;color:var(--text-gray);margin-top:5px; text-shadow: 1px 1px 2px #000;}
+
+    /* Hover Preview */
+    .hover-preview{
+      position:absolute; top:50%; left:50%; transform:translate(-50%, -55%) scale(.96);
+      width:340px; background:#14161c; border-radius:14px; overflow:hidden; 
+      box-shadow:0 25px 60px rgba(0,0,0,.75); opacity:0; pointer-events:none;
+      transition:opacity .18s ease, transform .18s ease; z-index:50;
+    }
+    .movie-card:hover .hover-preview{ opacity:1; transform:translate(-50%, -60%) scale(1); pointer-events:auto; }
+    .preview-backdrop{ height:160px; background-size:cover; background-position:center; position:relative; }
+    .preview-backdrop::after{ content:''; position:absolute; inset:0; background:linear-gradient(to top,#14161c 25%,transparent 85%); }
+    .preview-content{padding:12px 16px 16px;}
+    .preview-title{font-weight:900; font-size:16px; margin-bottom:6px;}
+    .preview-meta{display:flex; gap:8px; flex-wrap:wrap; font-size:12px; color:#ccc; margin-bottom:8px;}
+    .preview-badge{background:#222; padding:3px 8px; border-radius:6px; font-weight:800;}
+    .preview-badge.imdb{color:#f5c518; border:1px solid #f5c518;}
+    .preview-actions{display:flex; gap:10px;}
+    .preview-btn{flex:1; padding:8px 0; border-radius:8px; font-weight:900; font-size:13px; text-align:center; cursor:pointer; transition:.2s;}
+    .preview-btn.play{background:#f5c518; color:#000;}
+    .preview-btn.play:hover{background:#fff}
+
+    #load-more-trigger { text-align: center; padding: 40px 0; width: 100%; color: #aaa; font-size: 16px; }
+
+    /* --- 7. FOOTER --- */
+    footer{
+      background-color:#050505; padding:60px 50px 30px 50px;
+      color:#ccc;position:relative;overflow:hidden;border-top:1px solid #222;
+    }
+    .footer-watermark{
+      position:absolute;top:50%;right:-50px;transform:translateY(-50%);
+      font-size:400px;color:rgba(255,255,255,0.02); z-index:0;pointer-events:none;
+    }
+    .footer-content{position:relative;z-index:1;max-width:1200px}
+    .badge-vn{
+      display:inline-flex;align-items:center;gap:8px; background:#b71c1c;color:#fff;
+      padding:8px 15px;border-radius:20px; font-size:13px;font-weight:900;margin-bottom:20px;
+    }
+    .footer-logo{font-size:32px;font-weight:900;color:#fff;display:flex;align-items:center;gap:10px;margin-bottom:20px}
+    .footer-logo i{color:var(--primary)}
+    .social-list{display:flex;gap:10px;margin-bottom:30px;flex-wrap:wrap}
+    .social-item{
+      width:35px;height:35px;border-radius:50%; background:#222;color:#fff;
+      display:flex;align-items:center;justify-content:center; font-size:14px;transition:.3s;cursor:pointer;text-decoration:none;
+    }
+    .social-item:hover{background:var(--primary);color:#000}
+    .footer-links{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:20px;font-size:14px;font-weight:800;color:#ddd}
+    .footer-links a{color:#ddd;text-decoration:none;transition:.2s}
+    .footer-links a:hover{color:var(--primary)}
+    .copyright{font-size:13px;color:#555;border-top:1px solid #1a1a1a;padding-top:20px;margin-top:20px}
+
+    .floating-group{position:fixed;bottom:30px;right:30px;display:flex;flex-direction:column;gap:15px;z-index:999}
+    .up-btn{
+      width:50px;height:50px;background:#222;border:2px solid var(--primary); border-radius:50%;
+      display:flex;align-items:center;justify-content:center; cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.5);transition:.3s;
+    }
+    .up-btn:hover{background:var(--primary)}
+    .up-btn i{color:var(--primary);font-size:24px}
+    .up-btn:hover i{color:#000}
+
+    @media (max-width: 768px){
+      .navbar{padding:15px 20px;flex-direction:column;gap:10px;align-items:stretch}
+      .logo{justify-content:center;margin-right:0}
+      .filter-container{width:100%;max-width:none;overflow-x:auto;margin:0;padding:10px}
+      .hero-title{font-size:2.4rem}
+      .hero-content{width:90%;padding-left:20px;padding-top:80px}
+      .hero-thumbnails{display:none}
+      .ranking-section{grid-template-columns:1fr;padding:20px}
+      .topics-section, .rap-section, .horizontal-section{padding: 20px;}
+      .section-container{padding:30px 20px 0 20px}
+      .top10-section{padding:30px 20px}
+      .nav-right{justify-content:center;width:100%;margin-left:0;margin-top:10px}
+    }
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  </style>
+</head>
+
+<body>
+  <nav class="navbar" id="navbar">
+    <a href="#" onclick="window.location.reload()" class="logo"><i class="fas fa-play-circle"></i> DOWNCINE</a>
+
+    <div class="filter-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="search-input" class="search-input" placeholder="Tìm tên phim (Online)...">
+      
+      <select id="filter-type" class="filter-select" onchange="locPhimMenu()">
+        <option value="">-- Mới Cập Nhật --</option>
+        <option value="v1/api/danh-sach/phim-le">Phim Lẻ</option>
+        <option value="v1/api/danh-sach/phim-bo">Phim Bộ</option>
+        <option value="v1/api/danh-sach/phim-chieu-rap">Phim Chiếu Rạp</option>
+        <option value="v1/api/danh-sach/phim-thuyet-minh">Phim Thuyết Minh</option>
+        <option value="v1/api/danh-sach/hoat-hinh">Hoạt Hình (Anime)</option>
+        <option value="v1/api/danh-sach/tv-shows">TV Shows</option>
+      </select>
+
+      <select id="filter-genre" class="filter-select" onchange="locPhimMenu()">
+        <option value="">-- Thể Loại --</option>
+        <option value="v1/api/the-loai/hanh-dong">Hành Động</option>
+        <option value="v1/api/the-loai/tinh-cam">Tình Cảm</option>
+        <option value="v1/api/the-loai/hai-huoc">Hài Hước</option>
+        <option value="v1/api/the-loai/kinh-di">Kinh Dị</option>
+        <option value="v1/api/the-loai/tam-ly">Tâm Lý</option>
+        <option value="v1/api/the-loai/vien-tuong">Viễn Tưởng</option>
+        <option value="v1/api/the-loai/phieu-luu">Phiêu Lưu</option>
+      </select>
+
+      <select id="filter-country" class="filter-select" onchange="locPhimMenu()">
+        <option value="">-- Quốc Gia --</option>
+        <option value="v1/api/quoc-gia/han-quoc">Hàn Quốc</option>
+        <option value="v1/api/quoc-gia/trung-quoc">Trung Quốc</option>
+        <option value="v1/api/quoc-gia/nhat-ban">Nhật Bản</option>
+        <option value="v1/api/quoc-gia/au-my">Âu Mỹ</option>
+        <option value="v1/api/quoc-gia/thai-lan">Thái Lan</option>
+        <option value="v1/api/quoc-gia/viet-nam">Việt Nam</option>
+      </select>
+    </div>
+
+    <div class="nav-right">
+      <a href="#" class="btn-guide-nav"><i class="fas fa-book-open"></i> Hướng Dẫn</a>
+      <span class="vip-badge">VIP</span>
+    </div>
+  </nav>
+
+  <div class="hero-section" id="hero-bg">
+    <div class="hero-overlay"></div>
+    <div class="hero-content" id="hero-content">
+      <h1 class="hero-title" id="hero-title">ĐANG TẢI DỮ LIỆU...</h1>
+      <div class="hero-meta">
+        <span class="tag tag-res">FHD</span>
+        <span class="tag" id="hero-year">2024</span>
+      </div>
+      <p class="hero-desc" id="hero-desc">Vui lòng chờ một chút để hệ thống cập nhật phim mới nhất từ máy chủ...</p>
+      <div class="hero-actions">
+        <div class="btn-circle-play" id="hero-play-btn" title="Xem chi tiết">
+          <i class="fas fa-play"></i>
+        </div>
+      </div>
+    </div>
+    <div class="hero-thumbnails" id="hero-thumbs"></div>
+  </div>
+
+  <section class="topics-section">
+    <div class="topics-header">BẠN XEM GÌ HÔM NAY</div>
+    <div class="topics-viewport">
+        <button class="scroll-nav prev" type="button" onclick="scrollTrack('topics-track', -400)"><i class="fas fa-chevron-left"></i></button>
+        <div class="topics-track" id="topics-track">
+          
+          <div class="topic-card bg-blue" onclick="chonMenuNhanh('type', 'v1/api/danh-sach/phim-chieu-rap')">
+            <div class="topic-title">Phim Chiếu<br>Rạp</div>
+            <div class="topic-subtitle">XEM CHỦ ĐỀ <i class="fas fa-chevron-right"></i></div>
+          </div>
+          
+          <div class="topic-card bg-purple" onclick="chonMenuNhanh('genre', 'v1/api/the-loai/vien-tuong')">
+            <div class="topic-title">Phim Viễn<br>Tưởng</div>
+            <div class="topic-subtitle">XEM CHỦ ĐỀ <i class="fas fa-chevron-right"></i></div>
+          </div>
+          
+          <div class="topic-card bg-teal" onclick="chonMenuNhanh('genre', 'v1/api/the-loai/hai-huoc')">
+            <div class="topic-title">Sitcom Hài<br>Hước</div>
+            <div class="topic-subtitle">XEM CHỦ ĐỀ <i class="fas fa-chevron-right"></i></div>
+          </div>
+          
+          <div class="topic-card bg-orange" onclick="chonMenuNhanh('genre', 'v1/api/the-loai/co-trang')">
+            <div class="topic-title">Xuyên Không<br>& Cổ Trang</div>
+            <div class="topic-subtitle">XEM CHỦ ĐỀ <i class="fas fa-chevron-right"></i></div>
+          </div>
+          
+          <div class="topic-card bg-dark" onclick="chonMenuNhanh('type', 'v1/api/danh-sach/tv-shows')">
+            <div class="topic-title">TV SHOW<br>Đình Đám</div>
+            <div class="topic-subtitle">XEM CHỦ ĐỀ <i class="fas fa-chevron-right"></i></div>
+          </div>
+          
+          <div class="topic-card bg-yellow" onclick="chonMenuNhanh('type', 'v1/api/danh-sach/hoat-hinh')">
+            <div class="topic-title">Hoạt Hình<br>Chọn Lọc</div>
+            <div class="topic-subtitle">XEM CHỦ ĐỀ <i class="fas fa-chevron-right"></i></div>
+          </div>
+          
+          <div class="topic-card bg-red" onclick="chonMenuNhanh('genre', 'v1/api/the-loai/hanh-dong')">
+            <div class="topic-title">Phim Hành<br>Động</div>
+            <div class="topic-subtitle">XEM CHỦ ĐỀ <i class="fas fa-chevron-right"></i></div>
+          </div>
+
+        </div>
+        <button class="scroll-nav next" type="button" onclick="scrollTrack('topics-track', 400)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <div class="ranking-section">
+    <div class="rank-column">
+      <h3><i class="fas fa-fire-alt"></i> Phim Mới Cập Nhật</h3>
+      <div id="rank-trending"></div>
+    </div>
+    <div class="rank-column">
+      <h3><i class="fas fa-heart"></i> Đề Cử Cho Bạn</h3>
+      <div id="rank-newest"></div>
+    </div>
+    <div class="rank-column">
+      <h3><i class="fas fa-thumbs-up"></i> Hôm Nay Xem Gì?</h3>
+      <div id="rank-random"></div>
+    </div>
+    <div class="rank-column">
+      <h3><i class="fas fa-bell"></i> Hoạt Động Mới</h3>
+      <div id="live-activity-list"></div>
+    </div>
+  </div>
+
+  <section class="top10-section">
+    <div class="top10-header">
+      <i class="fas fa-crown crown"></i>
+      TOP 10 PHIM HOT TRONG NGÀY
+    </div>
+    <div class="top10-viewport">
+      <button class="scroll-nav prev" type="button" onclick="scrollTrack('top10-track', -420)"><i class="fas fa-chevron-left"></i></button>
+      <div class="top10-track" id="top10-track"></div>
+      <button class="scroll-nav next" type="button" onclick="scrollTrack('top10-track', 420)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <section class="rap-section">
+    <div class="horiz-header">
+      <h3>Phim Chiếu Rạp Mới Nhất</h3>
+      <button class="view-all-btn" onclick="chonMenuNhanh('type', 'v1/api/danh-sach/phim-chieu-rap')">Xem tất cả <i class="fas fa-angle-right"></i></button>
+    </div>
+    <div class="horiz-viewport">
+      <button class="scroll-nav prev" type="button" onclick="scrollTrack('track-chieu-rap', -600)"><i class="fas fa-chevron-left"></i></button>
+      <div class="rap-track" id="track-chieu-rap"><div style="color:#aaa;">Đang tải dữ liệu...</div></div>
+      <button class="scroll-nav next" type="button" onclick="scrollTrack('track-chieu-rap', 600)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <section class="horizontal-section" style="background: #0a0a0a;">
+    <div class="horiz-header">
+      <h3>Phim Lẻ Mới Nhất</h3>
+      <button class="view-all-btn" onclick="chonMenuNhanh('type', 'v1/api/danh-sach/phim-le')">Xem tất cả <i class="fas fa-angle-right"></i></button>
+    </div>
+    <div class="horiz-viewport">
+      <button class="scroll-nav prev" type="button" onclick="scrollTrack('track-phim-le', -500)"><i class="fas fa-chevron-left"></i></button>
+      <div class="horiz-track" id="track-phim-le"><div style="color:#aaa;">Đang tải dữ liệu...</div></div>
+      <button class="scroll-nav next" type="button" onclick="scrollTrack('track-phim-le', 500)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <section class="horizontal-section">
+    <div class="horiz-header">
+      <h3>Phim Bộ Mới Nhất</h3>
+      <button class="view-all-btn" onclick="chonMenuNhanh('type', 'v1/api/danh-sach/phim-bo')">Xem tất cả <i class="fas fa-angle-right"></i></button>
+    </div>
+    <div class="horiz-viewport">
+      <button class="scroll-nav prev" type="button" onclick="scrollTrack('track-phim-bo', -500)"><i class="fas fa-chevron-left"></i></button>
+      <div class="horiz-track" id="track-phim-bo"><div style="color:#aaa;">Đang tải dữ liệu...</div></div>
+      <button class="scroll-nav next" type="button" onclick="scrollTrack('track-phim-bo', 500)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <section class="horizontal-section" style="background: #0a0a0a;">
+    <div class="horiz-header">
+      <h3>Phim Thuyết Minh Mới Nhất</h3>
+      <button class="view-all-btn" onclick="chonMenuNhanh('type', 'v1/api/danh-sach/phim-thuyet-minh')">Xem tất cả <i class="fas fa-angle-right"></i></button>
+    </div>
+    <div class="horiz-viewport">
+      <button class="scroll-nav prev" type="button" onclick="scrollTrack('track-thuyet-minh', -500)"><i class="fas fa-chevron-left"></i></button>
+      <div class="horiz-track" id="track-thuyet-minh"><div style="color:#aaa;">Đang tải dữ liệu...</div></div>
+      <button class="scroll-nav next" type="button" onclick="scrollTrack('track-thuyet-minh', 500)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <section class="horizontal-section">
+    <div class="horiz-header">
+      <h3>Phim Hàn Quốc Mới Nhất</h3>
+      <button class="view-all-btn" onclick="chonMenuNhanh('country', 'v1/api/quoc-gia/han-quoc')">Xem tất cả <i class="fas fa-angle-right"></i></button>
+    </div>
+    <div class="horiz-viewport">
+      <button class="scroll-nav prev" type="button" onclick="scrollTrack('track-hq', -500)"><i class="fas fa-chevron-left"></i></button>
+      <div class="horiz-track" id="track-hq"><div style="color:#aaa;">Đang tải dữ liệu...</div></div>
+      <button class="scroll-nav next" type="button" onclick="scrollTrack('track-hq', 500)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <section class="horizontal-section" style="background: #0a0a0a;">
+    <div class="horiz-header">
+      <h3>Anime Mới Nhất</h3>
+      <button class="view-all-btn" onclick="chonMenuNhanh('type', 'v1/api/danh-sach/hoat-hinh')">Xem tất cả <i class="fas fa-angle-right"></i></button>
+    </div>
+    <div class="horiz-viewport">
+      <button class="scroll-nav prev" type="button" onclick="scrollTrack('track-anime', -500)"><i class="fas fa-chevron-left"></i></button>
+      <div class="horiz-track" id="track-anime"><div style="color:#aaa;">Đang tải dữ liệu...</div></div>
+      <button class="scroll-nav next" type="button" onclick="scrollTrack('track-anime', 500)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <section class="horizontal-section">
+    <div class="horiz-header">
+      <h3>Phim Việt Nam Mới Nhất</h3>
+      <button class="view-all-btn" onclick="chonMenuNhanh('country', 'v1/api/quoc-gia/viet-nam')">Xem tất cả <i class="fas fa-angle-right"></i></button>
+    </div>
+    <div class="horiz-viewport">
+      <button class="scroll-nav prev" type="button" onclick="scrollTrack('track-vn', -500)"><i class="fas fa-chevron-left"></i></button>
+      <div class="horiz-track" id="track-vn"><div style="color:#aaa;">Đang tải dữ liệu...</div></div>
+      <button class="scroll-nav next" type="button" onclick="scrollTrack('track-vn', 500)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <div class="section-container">
+    <div class="section-header" id="grid-header">
+      Kho Phim Đầy Đủ
+      <span id="total-movies-badge">...</span>
+    </div>
+    <div class="movie-grid" id="movie-grid"></div>
+    
+    <div id="load-more-trigger">
+        <button class="view-all-btn" style="font-size: 16px; padding: 10px 30px; cursor: pointer;" onclick="loadMorePhim()">Tải thêm phim <i class="fas fa-angle-down"></i></button>
+    </div>
+  </div>
+
+  <footer>
+    <i class="fas fa-play-circle footer-watermark"></i>
+    <div class="footer-content">
+      <div class="badge-vn"><i class="fas fa-star"></i> Hoàng Sa & Trường Sa là của Việt Nam!</div>
+      <div class="footer-logo"><i class="fas fa-play-circle"></i> DOWNCINE</div>
+      <div class="copyright">© 2026 DOWNCINE (Powered by OPhim API)</div>
+    </div>
+  </footer>
+
+  <div class="floating-group">
+    <div class="up-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})" title="Lên đầu trang">
+      <i class="fas fa-arrow-up"></i>
+    </div>
+  </div>
+
+  <script>
+    // --- KHAI BÁO BIẾN TOÀN CỤC CHO API ---
+    let movieList = [];
+    const OPHIM_IMG_DOMAIN = "https://img.ophim.live/uploads/movies/";
+    
+    let currentApiPath = 'danh-sach/phim-moi-cap-nhat';
+    let currentApiPage = 1;
+    let isFetching = false;
+    let hasMore = true;
+    
+    let sliderMovies = [];
+    let autoSlideInterval;
+
+    // --- 0. TẢI DỮ LIỆU CÁC MỤC NGANG ĐẶC BIỆT ---
+    const extraCategories = [
+      { id: "track-chieu-rap", url: "v1/api/danh-sach/phim-chieu-rap", layout: "rap" },
+      { id: "track-phim-le", url: "v1/api/danh-sach/phim-le", layout: "standard" },
+      { id: "track-phim-bo", url: "v1/api/danh-sach/phim-bo", layout: "standard" },
+      { id: "track-thuyet-minh", url: "v1/api/danh-sach/phim-thuyet-minh", layout: "standard" },
+      { id: "track-hq", url: "v1/api/quoc-gia/han-quoc", layout: "standard" },
+      { id: "track-anime", url: "v1/api/danh-sach/hoat-hinh", layout: "standard" },
+      { id: "track-vn", url: "v1/api/quoc-gia/viet-nam", layout: "standard" }
+    ];
+
+    async function loadExtraCategories() {
+      for (let cat of extraCategories) {
+        try {
+          const res = await fetch(`https://ophim1.com/${cat.url}`);
+          const data = await res.json();
+          const items = data.data && data.data.items ? data.data.items : [];
+          
+          const track = document.getElementById(cat.id);
+          if (items.length > 0) {
+            track.innerHTML = items.map((m, index) => {
+              let thumb = m.thumb_url.startsWith('http') ? m.thumb_url : OPHIM_IMG_DOMAIN + m.thumb_url;
+              
+              // NẾU LÀ LAYOUT ĐẶC BIỆT (PHIM CHIẾU RẠP)
+              if (cat.layout === "rap") {
+                  let isTM = m.lang && m.lang.toLowerCase().includes('thuyết minh');
+                  let isLT = m.lang && m.lang.toLowerCase().includes('lồng tiếng');
+                  let badgeClass = isTM ? 'tm' : (isLT ? 'lt' : 'pd');
+                  let langBadge = `<div class="rap-badge ${badgeClass}">${m.lang || 'Vietsub'}</div>`;
+                  let qualBadge = m.quality ? `<div class="rap-badge">${m.quality}</div>` : '';
+                  
+                  return `
+                    <div class="rap-item" onclick="openModal('${m.slug}')" title="${m.name}">
+                      <div class="rap-poster-wrap">
+                        <img src="${thumb}" class="rap-poster" loading="lazy">
+                        <div class="rap-badges">
+                          ${qualBadge}
+                          ${langBadge}
+                        </div>
+                      </div>
+                      <div class="rap-info-row">
+                        <div class="rap-number">${index + 1}</div>
+                        <div class="rap-text">
+                          <div class="rap-title">${m.name}</div>
+                          <div class="rap-orig-title">${m.origin_name || m.name}</div>
+                          <div class="rap-ep">${m.episode_current || 'Tập Full'}</div>
+                        </div>
+                      </div>
+                    </div>
+                  `;
+              } 
+              // CÁC MỤC HORIZONTAL CHUẨN CÒN LẠI
+              else {
+                  return `
+                    <div class="horiz-item" onclick="openModal('${m.slug}')" title="${m.name}">
+                      <div class="rating-badge">${m.quality || 'HD'}</div>
+                      <img src="${thumb}" class="horiz-poster" loading="lazy">
+                      <div class="horiz-title">${m.name}</div>
+                      <div class="horiz-meta">${m.year || '2024'}</div>
+                    </div>
+                  `;
+              }
+            }).join('');
+          }
+        } catch (error) { console.error(`Lỗi tải mục ${cat.id}:`, error); }
+      }
+    }
+
+    function scrollTrack(id, amount) { 
+        document.getElementById(id).scrollBy({ left: amount, behavior: 'smooth' }); 
+    }
+
+    // --- 1. TẢI DỮ LIỆU CHÍNH TỪ OPHIM VÀ RENDER (CÓ INFINITE SCROLL) ---
+    function buildApiUrl(path, page) {
+        if(path.includes('?')) return `https://ophim1.com/${path}&page=${page}`;
+        return `https://ophim1.com/${path}?page=${page}`;
+    }
+
+    async function fetchPhimTuAPI(path = 'danh-sach/phim-moi-cap-nhat', isAppend = false) {
+        if(isFetching || (!hasMore && isAppend)) return;
+        isFetching = true;
+
+        const grid = document.getElementById('movie-grid');
+        const loader = document.getElementById('load-more-trigger');
+
+        try {
+            if (!isAppend) {
+                document.getElementById('hero-title').innerText = 'ĐANG TẢI DỮ LIỆU...';
+                grid.innerHTML = '<div style="color:white; text-align:center; width:100%; padding: 50px;"><i class="fas fa-spinner fa-spin"></i> Đang tải danh sách phim từ máy chủ...</div>';
+            } else {
+                loader.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tải thêm...';
+            }
+            
+            const response = await fetch(buildApiUrl(path, currentApiPage));
+            const data = await response.json();
+
+            let rawItems = [];
+            if (data.data && data.data.items) rawItems = data.data.items; 
+            else if (data.items) rawItems = data.items; 
+
+            if(rawItems.length === 0) {
+                hasMore = false;
+                loader.innerHTML = '<div style="color:#aaa; font-weight:bold;">Đã tải toàn bộ danh sách.</div>';
+                if(!isAppend) grid.innerHTML = '<div style="color:#aaa; text-align:center; width:100%; padding:30px;">Không tìm thấy bộ phim nào!</div>';
+                isFetching = false;
+                return;
+            }
+
+            let newMovies = rawItems.map(item => {
+                let thumb = item.thumb_url.startsWith('http') ? item.thumb_url : OPHIM_IMG_DOMAIN + item.thumb_url;
+                let poster = item.poster_url.startsWith('http') ? item.poster_url : OPHIM_IMG_DOMAIN + item.poster_url;
+                return {
+                    id: item.slug, 
+                    title: item.name,
+                    poster_path: thumb,
+                    backdrop_path: poster,
+                    release_date: item.year ? item.year.toString() : '2024'
+                };
+            });
+
+            if (isAppend) {
+                movieList = movieList.concat(newMovies);
+            } else {
+                movieList = newMovies;
+            }
+            
+            renderGridToScreen(newMovies, isAppend);
+            
+            loader.innerHTML = '<button class="view-all-btn" style="font-size: 16px; padding: 10px 30px; cursor: pointer;" onclick="loadMorePhim()">Tải thêm phim <i class="fas fa-angle-down"></i></button>';
+            isFetching = false;
+
+            if(!isAppend) {
+                initHero();
+                initRankings();
+                initTop10Row();
+                startLiveFeed();
+            }
+
+            const headerHtml = document.getElementById('grid-header').innerHTML;
+            const titleText = headerHtml.split('<span')[0].trim() || 'Kho Phim Đầy Đủ';
+            document.getElementById('grid-header').innerHTML = `${titleText} <span id="total-movies-badge"><i class="fas fa-video"></i> ${movieList.length} kết quả</span>`;
+            
+        } catch(e) {
+            console.error("Lỗi lấy dữ liệu API:", e);
+            isFetching = false;
+            loader.innerHTML = '<button class="view-all-btn" onclick="loadMorePhim()">Lỗi mạng, thử lại!</button>';
+        }
+    }
+
+    function renderGridToScreen(items, isAppend) {
+        const grid = document.getElementById('movie-grid');
+        
+        let html = items.map(m => `
+          <div class="movie-card" onclick="openModal('${m.id}')">
+            <img src="${m.poster_path}" class="poster" loading="lazy" alt="">
+            <div class="hover-preview">
+              <div class="preview-backdrop" style="background-image:url('${m.backdrop_path}')"></div>
+              <div class="preview-content">
+                <div class="preview-title">${m.title}</div>
+                <div class="preview-meta">
+                  <span class="preview-badge imdb">HD</span>
+                  <span>${m.release_date}</span>
+                </div>
+                <div class="preview-actions">
+                  <div class="preview-btn play"><i class="fas fa-play"></i> Xem ngay</div>
+                </div>
+              </div>
+            </div>
+            <div class="card-info">
+              <h3 class="card-title">${m.title}</h3>
+              <div class="card-year">${m.release_date}</div>
+            </div>
+          </div>
+        `).join('');
+
+        if (isAppend) {
+            grid.insertAdjacentHTML('beforeend', html);
+        } else {
+            grid.innerHTML = html;
+        }
+    }
+
+    // --- TÍNH NĂNG LOAD MORE ---
+    function loadMorePhim() {
+        if(isFetching || !hasMore) return;
+        currentApiPage++;
+        fetchPhimTuAPI(currentApiPath, true);
+    }
+
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if(window.scrollY > 50) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 600) {
+          if(!isFetching && hasMore) loadMorePhim();
+      }
+    });
+
+    // --- HÀM LỌC MENU VÀ TÌM KIẾM ---
+    function locPhimMenu() {
+        const type = document.getElementById('filter-type').value;
+        const genre = document.getElementById('filter-genre').value;
+        const country = document.getElementById('filter-country').value;
+        document.getElementById('search-input').value = ''; 
+
+        let path = 'danh-sach/phim-moi-cap-nhat';
+        let titleMenu = 'Kho Phim Đầy Đủ';
+        
+        if (country) { path = country; titleMenu = 'Phim ' + document.getElementById('filter-country').options[document.getElementById('filter-country').selectedIndex].text; } 
+        else if (genre) { path = genre; titleMenu = 'Phim ' + document.getElementById('filter-genre').options[document.getElementById('filter-genre').selectedIndex].text; } 
+        else if (type) { path = type; titleMenu = document.getElementById('filter-type').options[document.getElementById('filter-type').selectedIndex].text; }
+
+        document.getElementById('grid-header').innerHTML = `${titleMenu} <span id="total-movies-badge"><i class="fas fa-spinner fa-spin"></i></span>`;
+        document.getElementById('grid-header').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        currentApiPath = path;
+        currentApiPage = 1;
+        hasMore = true;
+        fetchPhimTuAPI(currentApiPath, false);
+    }
+
+    function chonMenuNhanh(type, value) {
+        document.getElementById('search-input').value = "";
+        document.getElementById('filter-type').value = "";
+        document.getElementById('filter-genre').value = "";
+        document.getElementById('filter-country').value = "";
+        
+        document.getElementById(`filter-${type}`).value = value;
+        locPhimMenu();
+    }
+
+    let searchTimeout;
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const term = e.target.value.trim();
+        
+        searchTimeout = setTimeout(() => {
+            if(term) {
+                document.getElementById('filter-type').value = "";
+                document.getElementById('filter-genre').value = "";
+                document.getElementById('filter-country').value = "";
+                
+                document.getElementById('grid-header').innerHTML = `Kết quả tìm kiếm: "${term}" <span id="total-movies-badge"><i class="fas fa-spinner fa-spin"></i></span>`;
+                
+                currentApiPath = `v1/api/tim-kiem?keyword=${encodeURIComponent(term)}`;
+                currentApiPage = 1;
+                hasMore = true;
+                fetchPhimTuAPI(currentApiPath, false);
+                
+                document.getElementById('grid-header').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+                locPhimMenu();
+            }
+        }, 800); 
+    });
+
+    // --- CÁC HÀM GIAO DIỆN PHỤ ---
+    function initHero(){
+      if(movieList.length === 0) return;
+      sliderMovies = movieList.slice(0, Math.min(10, movieList.length));
+      setHero(0);
+      const thumbContainer = document.getElementById('hero-thumbs');
+      thumbContainer.innerHTML = sliderMovies.map((m, index) => `
+        <div class="thumb-item ${index === 0 ? 'active' : ''}" onclick="manualSelectHero(${index})">
+          <img src="${m.poster_path}" loading="lazy" alt="">
+        </div>
+      `).join('');
+      startAutoSlide();
+    }
+
+    function setHero(index){
+      const m = sliderMovies[index];
+      if(!m) return;
+      const bg = m.backdrop_path || m.poster_path;
+      document.getElementById('hero-bg').style.backgroundImage = `url('${bg}')`;
+      document.getElementById('hero-title').innerText = m.title;
+      document.getElementById('hero-year').innerText = m.release_date || 'N/A';
+      document.getElementById('hero-play-btn').onclick = () => openModal(m.id);
+
+      const thumbs = document.querySelectorAll('.thumb-item');
+      thumbs.forEach(t => t.classList.remove('active'));
+      if(thumbs[index]) thumbs[index].classList.add('active');
+    }
+
+    function manualSelectHero(index){ setHero(index); resetAutoSlide(); }
+    function startAutoSlide(){
+      let i = 0;
+      clearInterval(autoSlideInterval);
+      if(sliderMovies.length > 0) {
+        autoSlideInterval = setInterval(() => { i = (i + 1) % sliderMovies.length; setHero(i); }, 5000);
+      }
+    }
+    function resetAutoSlide(){ clearInterval(autoSlideInterval); startAutoSlide(); }
+
+    function renderRankingItem(movie, index){
+      return `
+        <div class="rank-item" onclick="openModal('${movie.id}')">
+          <div class="rank-number">${index + 1}</div>
+          <img src="${movie.poster_path}" class="rank-img" loading="lazy" alt="">
+          <div class="rank-info">
+            <p class="rank-title">${movie.title}</p>
+            <span class="rank-meta">${movie.release_date}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function initRankings(){
+      if(movieList.length < 5) return;
+      document.getElementById('rank-trending').innerHTML = movieList.slice(0,5).map((m,i) => renderRankingItem(m,i)).join('');
+      document.getElementById('rank-newest').innerHTML = movieList.slice(5,10).map((m,i) => renderRankingItem(m,i)).join('');
+      const shuffled = [...movieList].sort(() => 0.5 - Math.random()).slice(0,5);
+      document.getElementById('rank-random').innerHTML = shuffled.map((m,i) => renderRankingItem(m,i)).join('');
+    }
+
+    function initTop10Row(){
+      if(movieList.length === 0) return;
+      const top10 = [...movieList].sort(() => 0.5 - Math.random()).slice(0, 10);
+      const track = document.getElementById('top10-track');
+      track.innerHTML = top10.map((m, i) => `
+        <div class="top10-item" ${i < 3 ? 'data-top="true"' : ''} onclick="openModal('${m.id}')" title="${m.title}">
+          <div class="top10-rank">${i + 1}</div>
+          <div class="top10-poster"><img src="${m.poster_path}" loading="lazy" alt=""></div>
+        </div>
+      `).join('');
+    }
+
+    function startLiveFeed(){
+      if(movieList.length === 0) return;
+      const container = document.getElementById('live-activity-list');
+      const users = ["Hoàng Nam","Minh Tú","Anh Tuấn","Thảo Vy","Gia Bảo"];
+      const actions = ["đang xem","vừa thích","chia sẻ"];
+      setInterval(() => {
+        const u = users[Math.floor(Math.random()*users.length)];
+        const a = actions[Math.floor(Math.random()*actions.length)];
+        const m = movieList[Math.floor(Math.random()*movieList.length)];
+        
+        const div = document.createElement('div');
+        div.className = 'act-item';
+        div.innerHTML = `
+          <div class="act-time">Vừa xong</div>
+          <img src="${m.poster_path}" class="act-img" loading="lazy">
+          <div class="act-desc"><span>${u}</span> <br> ${a} "${m.title}"</div>
+        `;
+        div.onclick = () => openModal(m.id);
+        
+        container.insertBefore(div, container.firstChild);
+        if(container.children.length > 5) container.lastElementChild.remove();
+      }, 5000);
+    }
+
+    // --- 3. CHUYỂN HƯỚNG SANG TRANG XEM PHIM (play.html) ---
+    function openModal(slug) {
+        window.location.href = `play.html?slug=${slug}`;
+    }
+
+    // CHẠY CHƯƠNG TRÌNH KHI TẢI TRANG XONG
+    document.addEventListener('DOMContentLoaded', () => {
+        loadExtraCategories(); 
+        fetchPhimTuAPI(currentApiPath, false); 
+    });
+
+  </script>
+</body>
+</html>
