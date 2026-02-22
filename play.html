@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đang tải phim... - DOWNCINE</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- CẤU HÌNH CHUNG --- */
+    :root{ --primary:#f5c518; --bg-dark:#0f0f0f; --bg-card:#1a1a1a; --text-white:#ffffff; --text-gray:#b3b3b3;}
+    *{box-sizing:border-box}
+    body{ background-color:var(--bg-dark); color:var(--text-white); font-family:'Montserrat',sans-serif; margin:0;padding:0; overflow-x:hidden;}
+
+    /* --- NAVBAR --- */
+    .navbar{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:15px 50px; background:linear-gradient(to bottom, rgba(0,0,0,0.95), transparent); 
+      position:fixed;top:0;left:0;width:100%; z-index:1000; flex-wrap:wrap; transition: background 0.3s;
+    }
+    .navbar.scrolled { background:#0f0f0f; box-shadow:0 4px 10px rgba(0,0,0,0.8); border-bottom: 1px solid #222; }
+    .logo{ color:var(--text-white); font-size:28px; font-weight:900; display:flex;align-items:center;gap:10px; cursor:pointer;text-decoration:none; }
+    .logo i{color:var(--primary)}
+    .nav-right { display:flex; gap: 15px; align-items: center;}
+    .btn-guide-nav{
+      color:#fff;text-decoration:none;font-size:13px;font-weight:600;
+      border:1px solid rgba(255,255,255,0.5); padding:8px 16px;border-radius:20px; transition:.3s; display:flex;align-items:center;gap:8px;
+    }
+    .btn-guide-nav:hover{background:#fff;color:#000;border-color:#fff}
+
+    /* --- BANNER PHIM --- */
+    .movie-banner { width: 100%; height: 70vh; min-height: 500px; max-height: 750px; background-color: #111; background-size: cover; background-position: center top; position: relative; }
+    .movie-banner::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(15,15,15,0.1) 0%, rgba(15,15,15,0.8) 60%, var(--bg-dark) 100%); }
+
+    /* --- KHU VỰC MAIN --- */
+    .play-container { max-width: 1200px; margin: -250px auto 40px auto; padding: 0 20px; position: relative; z-index: 10; }
+    .breadcrumb { color: #ccc; font-size: 14px; margin-bottom: 20px; display: flex; gap: 8px; align-items: center; text-shadow: 1px 1px 3px #000; }
+    .breadcrumb a { color: var(--primary); text-decoration: none; font-weight: 700; }
+
+    /* --- THÔNG TIN PHIM --- */
+    .info-section {
+      display: flex; gap: 35px; margin-bottom: 40px; background: rgba(21, 22, 28, 0.7); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      padding: 35px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.05); align-items: flex-start; 
+    }
+    .info-poster { width: 240px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.8); object-fit: cover; flex-shrink: 0; aspect-ratio: 2 / 3; }
+    .info-content { flex: 1; display: flex; flex-direction: column; justify-content: center;}
+    .info-title { font-size: 38px; font-weight: 900; color: #fff; margin: 0 0 8px 0; line-height: 1.2; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);}
+    .info-orig-title { color: #aaa; font-size: 18px; margin-bottom: 18px; font-weight: 600; font-style: italic;}
+    .info-meta-tags { display: flex; gap: 10px; margin-bottom: 25px; flex-wrap: wrap;}
+    .meta-tag { background: rgba(0,0,0,0.6); color: #fff; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 800; border: 1px solid rgba(255,255,255,0.1);}
+    .meta-tag.quality { background: var(--primary); color: #000; border: none;}
+    .info-text { color: #ddd; line-height: 1.8; margin-bottom: 25px; font-size: 15px;}
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px; color: #999;}
+    .info-grid span { color: #fff; font-weight: 600; }
+    
+    /* ACTIONS BUTTONS */
+    .actions-row { display: flex; gap: 15px; flex-wrap: wrap; margin-top: 20px;}
+    .btn-scroll-play {
+        display: inline-flex; align-items: center; gap: 10px; width: fit-content; background: var(--primary); color: #000; font-weight: 800; font-size: 15px;
+        padding: 12px 30px; border-radius: 30px; cursor: pointer; text-decoration: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(245,197,24,0.4);
+    }
+    .btn-scroll-play:hover { transform: translateY(-3px); background: #fff; box-shadow: 0 8px 20px rgba(255,255,255,0.4);}
+    
+    .btn-bookmark {
+        display: inline-flex; align-items: center; gap: 10px; width: fit-content; background: rgba(255,255,255,0.1); color: #fff; font-weight: 800; font-size: 15px;
+        padding: 12px 25px; border-radius: 30px; cursor: pointer; border: 1px solid rgba(255,255,255,0.2); transition: 0.3s;
+    }
+    .btn-bookmark:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px);}
+    .btn-bookmark.active { background: #e50914; color: #fff; border-color: #e50914; box-shadow: 0 5px 15px rgba(229,9,20,0.4); }
+    
+    /* --- PLAYER VÀ TẬP PHIM MULTI-SERVER --- */
+    .player-header { font-size: 24px; font-weight: 900; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; border-left: 5px solid var(--primary); padding-left: 15px; }
+    .player-wrapper {
+      width: 100%; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative;
+      aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center; margin-bottom: 25px; border: 1px solid #222;
+    }
+    .player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+    
+    .episodes-section { background: #15161c; border-radius: 12px; padding: 25px; border: 1px solid #222; margin-bottom: 40px; }
+    
+    .server-tabs-container { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+    .btn-server { 
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #aaa; padding: 8px 16px; border-radius: 20px;
+      font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-server:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .btn-server.active { background: rgba(245,197,24,0.15); color: var(--primary); border-color: var(--primary); }
+
+    .lang-tabs-container { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; border-bottom: 1px solid #333; padding-bottom: 15px; }
+    .btn-lang {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #ccc;
+      padding: 6px 15px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; transition: 0.3s;
+    }
+    .btn-lang:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .btn-lang.active { background: #e50914; border-color: #e50914; color: #fff; box-shadow: 0 4px 10px rgba(229,9,20,0.3); }
+
+    .server-name { color: #fff; font-size: 16px; font-weight: 800; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    .server-name i { color: var(--primary); }
+    .episodes-list { display: flex; gap: 10px; flex-wrap: wrap; max-height: 300px; overflow-y: auto; padding-right: 5px; }
+    .episodes-list::-webkit-scrollbar { width: 6px; }
+    .episodes-list::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+    .btn-episode {
+      background: #222; color: #ddd; border: 1px solid #333; padding: 10px 20px; border-radius: 6px; cursor: pointer;
+      font-weight: 700; font-size: 14px; transition: 0.2s; min-width: 60px; text-align: center;
+    }
+    .btn-episode:hover { background: #444; color: #fff; border-color: #666;}
+    .btn-episode.active { background: var(--primary); color: #000; border-color: var(--primary); box-shadow: 0 0 15px rgba(245,197,24,0.4); }
+
+    /* --- BÌNH LUẬN FACEBOOK --- */
+    .comments-section { background: #15161c; border-radius: 12px; padding: 25px; border: 1px solid #222; margin-bottom: 40px; }
+    /* Fix nhẹ màu nền cho box bình luận của FB để chữ rõ hơn */
+    .fb-comments-wrapper { background: rgba(255,255,255,0.02); padding: 10px; border-radius: 8px; }
+
+    /* --- ĐỀ XUẤT PHIM --- */
+    .recommend-section { background: #15161c; padding: 30px 25px; border-radius: 12px; border: 1px solid #222; }
+    .recommend-header { display: flex; align-items: center; margin-bottom: 20px; }
+    .recommend-header h3 { color: #fff; font-size: 20px; font-weight: 800; border-left: 4px solid var(--primary); padding-left: 12px; margin: 0; text-transform: uppercase; }
+    .recommend-track { display: flex; gap: 18px; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 10px; scrollbar-width: none; }
+    .recommend-track::-webkit-scrollbar { display: none; }
+    .recommend-item { flex: 0 0 auto; width: 160px; cursor: pointer; transition: 0.3s; position: relative; text-decoration: none; display: block; }
+    .recommend-item:hover { transform: translateY(-8px); }
+    .recommend-poster { width: 100%; height: 230px; border-radius: 8px; object-fit: cover; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+    .recommend-title { color: #fff; font-size: 14px; font-weight: 700; margin-top: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .recommend-meta { color: #aaa; font-size: 12px; margin-top: 3px; }
+    .rating-badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.8); color: var(--primary); padding: 3px 6px; border-radius: 4px; font-size: 11px; font-weight: 900; border: 1px solid var(--primary); z-index: 2; }
+
+    /* --- TỦ PHIM MODAL --- */
+    .modal-overlay{ display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9); z-index:3000;align-items:center;justify-content:center; backdrop-filter:blur(5px);animation:fadeIn .3s; }
+    .tuphim-box { background:#15161c; width:900px; max-width:95%; max-height:85vh; border-radius:15px; display:flex; flex-direction: column; padding: 30px; border: 1px solid #333; box-shadow:0 0 50px rgba(0,0,0,0.8); position:relative; }
+    .tuphim-tabs { display: flex; gap: 15px; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 15px;}
+    .tuphim-tab { background: transparent; color: #aaa; border: none; font-size: 16px; font-weight: 800; cursor: pointer; padding: 10px 25px; border-radius: 8px; transition: 0.3s; }
+    .tuphim-tab:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .tuphim-tab.active { color: #000; background: var(--primary); }
+    .tuphim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; overflow-y: auto; padding-right: 5px; align-content: start;}
+    .tuphim-grid::-webkit-scrollbar { width: 6px; }
+    .tuphim-grid::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+    .empty-msg { grid-column: 1 / -1; text-align: center; color: #aaa; padding: 50px 0; font-size: 16px;}
+
+    /* FOOTER */
+    footer{ background-color:#050505; padding:40px 50px; color:#ccc;position:relative;overflow:hidden;border-top:1px solid #222; margin-top: 50px; }
+    .footer-content{position:relative;z-index:1;max-width:1200px; margin: auto; text-align: center;}
+    .footer-logo{font-size:24px;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center; gap:10px;margin-bottom:10px}
+    .footer-logo i{color:var(--primary)}
+
+    @media (max-width: 768px){
+      .navbar{padding:15px 20px;}
+      .movie-banner { height: 45vh; min-height: 350px;}
+      .play-container { margin-top: -120px; padding: 0 15px; }
+      .info-section { flex-direction: column; padding: 25px; gap: 20px;}
+      .info-poster { width: 160px; margin: 0 auto; aspect-ratio: 2/3;}
+      .info-title { font-size: 26px; text-align: center; }
+      .info-orig-title { text-align: center; font-size: 15px;}
+      .info-meta-tags { justify-content: center; }
+      .actions-row { justify-content: center; }
+      .info-grid { grid-template-columns: 1fr; }
+      .recommend-section, .comments-section { padding: 20px 15px; }
+      .tuphim-box { padding: 20px; }
+      .tuphim-tab { padding: 8px 15px; font-size: 14px;}
+      .server-tabs-container { justify-content: center; }
+    }
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  </style>
+</head>
+
+<body>
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v19.0" nonce="xyz"></script>
+
+  <nav class="navbar" id="navbar">
+    <a href="index.html" class="logo"><i class="fas fa-play-circle"></i> DOWNCINE</a>
+    <div class="nav-right">
+        <a href="#" onclick="openTuPhimModal(); return false;" class="btn-guide-nav"><i class="fas fa-bookmark"></i> Tủ Phim</a>
+        <a href="index.html" class="btn-guide-nav"><i class="fas fa-arrow-left"></i> Về trang chủ</a>
+    </div>
+  </nav>
+
+  <div class="movie-banner" id="movie-banner"></div>
+
+  <div class="play-container">
+    <div class="breadcrumb">
+      <a href="index.html"><i class="fas fa-home"></i> Trang chủ</a> / 
+      <span id="bc-title">Đang tải...</span>
+    </div>
+
+    <div class="info-section">
+      <img src="https://via.placeholder.com/300x450?text=Loading..." id="info-poster" class="info-poster" alt="">
+      
+      <div class="info-content">
+        <h1 class="info-title" id="info-title">Đang tải thông tin...</h1>
+        <div class="info-orig-title" id="info-orig-title">Loading...</div>
+        
+        <div class="info-meta-tags">
+          <span class="meta-tag quality" id="tag-quality">HD</span>
+          <span class="meta-tag" id="tag-lang">Vietsub</span>
+          <span class="meta-tag" id="tag-year">2024</span>
+        </div>
+
+        <div class="info-text" id="info-desc">Đang tải nội dung phim từ hệ thống OPhim... Vui lòng chờ trong giây lát.</div>
+        
+        <div class="info-grid">
+          <div>Trạng thái: <span id="info-status">Đang cập nhật</span></div>
+          <div>Thời lượng: <span id="info-time">Đang cập nhật</span></div>
+          <div>Quốc gia: <span id="info-country">Đang cập nhật</span></div>
+          <div>Thể loại: <span id="info-genres">Đang cập nhật</span></div>
+          <div>Đạo diễn: <span id="info-director">Đang cập nhật</span></div>
+          <div>Diễn viên: <span id="info-cast">Đang cập nhật</span></div>
+        </div>
+        
+        <div class="actions-row">
+            <a href="#player-area" class="btn-scroll-play"><i class="fas fa-play"></i> XEM PHIM NGAY</a>
+            <button id="btn-bookmark" class="btn-bookmark" onclick="toggleBookmark()"><i class="far fa-heart"></i> LƯU PHIM</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="player-area" class="player-header">Trình Phát Video</div>
+    <div class="player-wrapper" id="player-wrapper">
+      <div style="color:white; font-size: 18px; font-weight: bold;">
+        <i class="fas fa-spinner fa-spin"></i> Đang kết nối máy chủ phim...
+      </div>
+    </div>
+
+    <div class="episodes-section" id="episodes-section" style="display: none;">
+      <div class="server-tabs-container">
+        <button class="btn-server active" id="btn-server-ophim" onclick="switchServer('ophim')"><i class="fas fa-hdd"></i> Nguồn 1 (OPhim)</button>
+        <button class="btn-server" id="btn-server-kkphim" onclick="switchServer('kkphim')"><i class="fas fa-bolt"></i> Nguồn 2 (KKPhim)</button>
+        <button class="btn-server" id="btn-server-nguonc" onclick="switchServer('nguonc')"><i class="fas fa-shield-alt"></i> Nguồn 3 (NguonC)</button>
+        <span id="current-server-badge" style="color:#888; font-weight:normal; font-size: 13px; line-height: 32px; margin-left: auto;"></span>
+      </div>
+
+      <div class="lang-tabs-container" id="lang-tabs-container"></div>
+
+      <div class="server-name"><i class="fas fa-list-ol"></i> Danh sách tập phim:</div>
+      <div class="episodes-list" id="episodes-list">
+         <div style="color:#888;">Đang tải danh sách tập...</div>
+      </div>
+    </div>
+
+    <div class="comments-section" id="comments-section">
+      <div class="server-name" style="font-size: 20px; border-left: 4px solid var(--primary); padding-left: 10px;"><i class="fas fa-comments"></i> Thảo luận về phim</div>
+      
+      <div class="fb-comments-wrapper" id="fb-comment-container">
+          <div style="color: #aaa; text-align: center; padding: 20px;">Đang tải hệ thống bình luận...</div>
+      </div>
+    </div>
+
+    <div class="recommend-section">
+      <div class="recommend-header"><h3>Có thể bạn muốn xem</h3></div>
+      <div class="recommend-track" id="recommend-list">
+         <div style="color:#aaa;">Đang tải danh sách đề xuất...</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tuPhimModal" class="modal-overlay">
+    <div class="tuphim-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h2 style="color: var(--primary); margin: 0; font-weight: 900;"><i class="fas fa-box-open"></i> TỦ PHIM CỦA TÔI</h2>
+        <span style="font-size: 35px; color: #fff; cursor: pointer; line-height: 1;" onclick="document.getElementById('tuPhimModal').style.display='none'">&times;</span>
+      </div>
+      <div class="tuphim-tabs">
+        <button class="tuphim-tab active" id="tab-bookmark" onclick="renderTuPhim('bookmark')">Phim Đã Lưu</button>
+        <button class="tuphim-tab" id="tab-history" onclick="renderTuPhim('history')">Lịch Sử Xem</button>
+      </div>
+      <div class="tuphim-grid" id="tuphim-grid"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-logo"><i class="fas fa-play-circle"></i> DOWNCINE</div>
+      <div style="font-size: 13px; color: #666; margin-top: 10px;">Dữ liệu phim được cung cấp tự động bởi OPhim API. Trang web phi thương mại.</div>
+    </div>
+  </footer>
+
+  <script>
+    const OPHIM_IMG_DOMAIN = "https://img.ophim.live/uploads/movies/";
+    let currentMovieData = null; 
+    let globalSlug = new URLSearchParams(window.location.search).get('slug');
+    let currentServerLists = []; 
+
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      if(window.scrollY > 50) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    });
+
+    if (!globalSlug) { window.location.href = 'index.html'; }
+
+    // --- QUẢN LÝ TỦ PHIM ---
+    function getSavedList(key) { return JSON.parse(localStorage.getItem(key) || '[]'); }
+    function saveToHistory(movieObj) {
+        let history = getSavedList('downcine_history');
+        history = history.filter(m => m.slug !== movieObj.slug); 
+        history.unshift(movieObj); 
+        if(history.length > 24) history.pop(); 
+        localStorage.setItem('downcine_history', JSON.stringify(history));
+    }
+    function checkBookmarkStatus() {
+        if(!currentMovieData) return;
+        let bookmarks = getSavedList('downcine_bookmarks');
+        const btn = document.getElementById('btn-bookmark');
+        if (bookmarks.find(m => m.slug === currentMovieData.slug)) {
+            btn.classList.add('active'); btn.innerHTML = '<i class="fas fa-heart"></i> ĐÃ LƯU';
+        } else {
+            btn.classList.remove('active'); btn.innerHTML = '<i class="far fa-heart"></i> LƯU PHIM';
+        }
+    }
+    function toggleBookmark() {
+        if(!currentMovieData) return;
+        let bookmarks = getSavedList('downcine_bookmarks');
+        const index = bookmarks.findIndex(m => m.slug === currentMovieData.slug);
+        if (index > -1) { bookmarks.splice(index, 1); } 
+        else { bookmarks.unshift(currentMovieData); }
+        localStorage.setItem('downcine_bookmarks', JSON.stringify(bookmarks));
+        checkBookmarkStatus();
+    }
+    function openTuPhimModal() { document.getElementById('tuPhimModal').style.display = 'flex'; renderTuPhim('bookmark'); }
+    function renderTuPhim(type) {
+        document.getElementById('tab-bookmark').classList.remove('active');
+        document.getElementById('tab-history').classList.remove('active');
+        document.getElementById('tab-' + type).classList.add('active');
+
+        const key = type === 'bookmark' ? 'downcine_bookmarks' : 'downcine_history';
+        const list = getSavedList(key);
+        const grid = document.getElementById('tuphim-grid');
+
+        if (list.length === 0) {
+            grid.innerHTML = `<div class="empty-msg">Bạn chưa có bộ phim nào trong danh sách này!</div>`;
+            return;
+        }
+        grid.innerHTML = list.map(m => `
+            <a href="play.html?slug=${m.slug}" class="recommend-item" style="display:block;">
+                <img src="${m.thumb}" class="recommend-poster" loading="lazy">
+                <div class="recommend-title">${m.name}</div>
+                <div class="recommend-meta">${m.year}</div>
+            </a>
+        `).join('');
+    }
+
+    // --- MAIN LOGIC TẢI THÔNG TIN PHIM ---
+    async function loadMovieInfo() {
+        try {
+            const response = await fetch(`https://ophim1.com/phim/${globalSlug}`);
+            const data = await response.json();
+
+            if (!data.status) {
+                document.getElementById('player-wrapper').innerHTML = `<div style="color:red; font-weight:bold;">Lỗi! Không tìm thấy dữ liệu phim.</div>`;
+                return;
+            }
+
+            const movie = data.movie;
+            
+            let thumb = movie.thumb_url.startsWith('http') ? movie.thumb_url : OPHIM_IMG_DOMAIN + movie.thumb_url;
+            let poster = movie.poster_url.startsWith('http') ? movie.poster_url : OPHIM_IMG_DOMAIN + movie.poster_url;
+            
+            currentMovieData = { slug: movie.slug, name: movie.name, thumb: thumb, year: movie.year || '2024' };
+            saveToHistory(currentMovieData);
+            checkBookmarkStatus();
+
+            document.getElementById('movie-banner').style.backgroundImage = `url('${poster || thumb}')`;
+            document.getElementById('info-poster').src = thumb;
+
+            document.title = `Xem phim ${movie.name} - DOWNCINE`;
+            document.getElementById('bc-title').innerText = movie.name;
+            document.getElementById('info-title').innerText = movie.name;
+            document.getElementById('info-orig-title').innerText = movie.origin_name || movie.name;
+            
+            document.getElementById('tag-quality').innerText = movie.quality || 'HD';
+            document.getElementById('tag-lang').innerText = movie.lang || 'Vietsub';
+            document.getElementById('tag-year').innerText = movie.year || 'Đang cập nhật';
+
+            document.getElementById('info-desc').innerHTML = movie.content || 'Chưa có tóm tắt cho phim này.';
+            document.getElementById('info-status').innerText = movie.episode_current || 'Full';
+            document.getElementById('info-time').innerText = movie.time || 'Đang cập nhật';
+            document.getElementById('info-country').innerText = (movie.country && movie.country.length) ? movie.country.map(c=>c.name).join(', ') : 'Đang cập nhật';
+            document.getElementById('info-genres').innerText = (movie.category && movie.category.length) ? movie.category.map(c=>c.name).join(', ') : 'Đang cập nhật';
+            document.getElementById('info-director').innerText = (movie.director && movie.director[0] !== "") ? movie.director.join(', ') : 'Đang cập nhật';
+            document.getElementById('info-cast').innerText = (movie.actor && movie.actor[0] !== "") ? movie.actor.join(', ') : 'Đang cập nhật';
+
+            document.getElementById('episodes-section').style.display = 'block';
+            switchServer('ophim'); 
+            
+            // Xử lý nạp link cho Bình luận FB
+            initFacebookComments();
+
+            loadRecommendedMovies();
+
+        } catch (error) {
+            console.error("Lỗi Info:", error);
+            document.getElementById('player-wrapper').innerHTML = `<div style="color:red; font-weight:bold;">Lỗi kết nối mạng, vui lòng tải lại trang!</div>`;
+        }
+    }
+
+    // --- HỆ THỐNG MULTI-SERVER & PHỤ ĐỀ/THUYẾT MINH ---
+    async function switchServer(serverName) {
+        const playerWrapper = document.getElementById('player-wrapper');
+        const episodesList = document.getElementById('episodes-list');
+        const langTabs = document.getElementById('lang-tabs-container');
+        const badge = document.getElementById('current-server-badge');
+        
+        document.querySelectorAll('.btn-server').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`btn-server-${serverName}`).classList.add('active');
+
+        playerWrapper.innerHTML = `<div style="color:var(--primary); font-size: 16px; font-weight: bold;"><i class="fas fa-spinner fa-spin"></i> Đang tìm link từ máy chủ ${serverName.toUpperCase()}...</div>`;
+        episodesList.innerHTML = '';
+        langTabs.innerHTML = ''; 
+        
+        let apiUrl = '';
+        if (serverName === 'ophim') { apiUrl = `https://ophim1.com/phim/${globalSlug}`; badge.innerText = "Tốc độ: Nhanh nhất"; }
+        else if (serverName === 'kkphim') { apiUrl = `https://phimapi.com/phim/${globalSlug}`; badge.innerText = "Tốc độ: Nhanh"; }
+        else if (serverName === 'nguonc') { apiUrl = `https://phim.nguonc.com/api/film/${globalSlug}`; badge.innerText = "Tốc độ: Ổn định"; }
+
+        try {
+            const res = await fetch(apiUrl);
+            const data = await res.json();
+            
+            currentServerLists = []; 
+            
+            if (serverName === 'ophim' && data.status) { currentServerLists = data.episodes; } 
+            else if (serverName === 'kkphim' && data.status) { currentServerLists = data.episodes; } 
+            else if (serverName === 'nguonc' && data.status === 'success') {
+                currentServerLists = data.movie.episodes.map(e => ({
+                    server_name: e.server_name, 
+                    server_data: e.items.map(item => ({ name: item.name, link_embed: item.embed }))
+                }));
+            }
+
+            if (currentServerLists && currentServerLists.length > 0) {
+                langTabs.innerHTML = currentServerLists.map((list, index) => {
+                    let icon = list.server_name.toLowerCase().includes('thuyết minh') || list.server_name.toLowerCase().includes('lồng tiếng') 
+                               ? '<i class="fas fa-microphone-alt"></i>' : '<i class="fas fa-closed-captioning"></i>';
+                    return `<button class="btn-lang ${index === 0 ? 'active' : ''}" onclick="selectLangTab(${index})">${icon} ${list.server_name || 'Mặc định'}</button>`;
+                }).join('');
+                selectLangTab(0);
+            } else {
+                playerWrapper.innerHTML = `<div style="color:red; font-weight:bold;"><i class="fas fa-exclamation-triangle"></i> Máy chủ ${serverName.toUpperCase()} chưa cập nhật bộ phim này. Vui lòng chọn Nguồn khác!</div>`;
+                episodesList.innerHTML = `<div style="color:#aaa;">Không có tập phim nào.</div>`;
+            }
+        } catch (err) {
+            console.error(`Lỗi Server ${serverName}:`, err);
+            playerWrapper.innerHTML = `<div style="color:red; font-weight:bold;"><i class="fas fa-times-circle"></i> Không thể kết nối đến máy chủ ${serverName.toUpperCase()}. Vui lòng thử lại sau!</div>`;
+        }
+    }
+
+    // --- RENDER TẬP PHIM KHI CHỌN ĐỊNH DẠNG ---
+    function selectLangTab(index) {
+        const list = currentServerLists[index];
+        if(!list) return;
+
+        const tabs = document.querySelectorAll('.btn-lang');
+        tabs.forEach(t => t.classList.remove('active'));
+        if(tabs[index]) tabs[index].classList.add('active');
+
+        const eps = list.server_data;
+        const playerWrapper = document.getElementById('player-wrapper');
+        const episodesList = document.getElementById('episodes-list');
+
+        if(eps && eps.length > 0) {
+            playerWrapper.innerHTML = `<iframe src="${eps[0].link_embed}" allowfullscreen frameborder="0"></iframe>`;
+            episodesList.innerHTML = '';
+            
+            eps.forEach((tap, i) => {
+                const btnTap = document.createElement('button');
+                btnTap.className = `btn-episode ${i === 0 ? 'active' : ''}`;
+                btnTap.innerText = tap.name;
+
+                btnTap.onclick = () => {
+                    document.querySelectorAll('.btn-episode').forEach(btn => btn.classList.remove('active'));
+                    btnTap.classList.add('active');
+                    playerWrapper.innerHTML = `<iframe src="${tap.link_embed}" allowfullscreen frameborder="0"></iframe>`;
+                    document.getElementById('player-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                };
+                episodesList.appendChild(btnTap);
+            });
+        } else {
+            episodesList.innerHTML = `<div style="color:#aaa;">Không có tập phim nào cho định dạng này.</div>`;
+        }
+    }
+
+    // --- HÀM KHỞI TẠO BÌNH LUẬN FACEBOOK CHUẨN XÁC ---
+    function initFacebookComments() {
+        const commentContainer = document.getElementById('fb-comment-container');
+        
+        // Lấy domain hiện tại ghép với thẻ Slug để FB tạo URL định danh duy nhất cho bộ phim
+        const currentUrl = window.location.origin + window.location.pathname + "?slug=" + globalSlug;
+
+        // Chèn thẻ div chuẩn của FB
+        commentContainer.innerHTML = `
+            <div class="fb-comments" 
+                 data-href="${currentUrl}" 
+                 data-width="100%" 
+                 data-numposts="5" 
+                 data-colorscheme="dark">
+            </div>
+        `;
+
+        // Báo cho SDK của Facebook biết là có mã HTML mới để nó biến đổi thành giao diện bình luận
+        if (typeof FB !== 'undefined') {
+            FB.XFBML.parse(commentContainer);
+        }
+    }
+
+    // --- HÀM TẢI PHIM ĐỀ XUẤT ---
+    async function loadRecommendedMovies() {
+        try {
+            const randomPage = Math.floor(Math.random() * 2) + 1; 
+            const res = await fetch(`https://ophim1.com/danh-sach/phim-moi-cap-nhat?page=${randomPage}`);
+            const data = await res.json();
+            const items = data.items || [];
+            const filteredItems = items.filter(m => m.slug !== globalSlug).slice(0, 12); 
+            
+            const track = document.getElementById('recommend-list');
+            if(filteredItems.length > 0) {
+                track.innerHTML = filteredItems.map(m => {
+                    let thumb = m.thumb_url.startsWith('http') ? m.thumb_url : OPHIM_IMG_DOMAIN + m.thumb_url;
+                    return `
+                        <a href="play.html?slug=${m.slug}" class="recommend-item" title="${m.name}">
+                            <div class="rating-badge">${m.quality || 'HD'}</div>
+                            <img src="${thumb}" class="recommend-poster" loading="lazy" alt="">
+                            <div class="recommend-title">${m.name}</div>
+                            <div class="recommend-meta">${m.year || '2024'}</div>
+                        </a>
+                    `;
+                }).join('');
+            } else { track.innerHTML = '<div style="color:#aaa;">Không có đề xuất lúc này.</div>'; }
+        } catch (error) { document.getElementById('recommend-list').innerHTML = ''; }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMovieInfo);
+  </script>
+</body>
+</html>
