@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>DOWNCINE - Kho phim HD miễn phí chất lượng cao</title>
+<meta name="description" content="DOWNCINE - Xem phim HD Vietsub, thuyết minh, lồng tiếng miễn phí. Kho phim mới cập nhật mỗi ngày.">
+<meta property="og:title" content="DOWNCINE - Kho phim HD miễn phí">
+<meta property="og:description" content="Xem phim chất lượng cao miễn phí, không quảng cáo, cập nhật mỗi ngày.">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#f5c518;
+  --primary-grad:linear-gradient(135deg,#f5c518 0%,#ffaa00 100%);
+  --bg-dark:#0a0a0d;--bg-2:#13131a;
+  --text-white:#fff;--text-gray:#9aa0a6;--text-dim:#6c7177;
+  --border:rgba(255,255,255,.07);
+  --shadow-glow:0 8px 24px rgba(245,197,24,.28);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg-dark);color:var(--text-white);font-family:'Be Vietnam Pro',sans-serif;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer;}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px;}
+
+/* NAVBAR */
+.nav{position:sticky;top:0;z-index:50;background:rgba(10,10,13,.85);backdrop-filter:blur(20px) saturate(180%);border-bottom:1px solid var(--border);}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;padding:14px 24px;}
+.brand{display:flex;align-items:center;gap:8px;font-weight:900;font-size:20px;color:var(--primary);letter-spacing:-.5px;}
+.brand i{font-size:22px;}
+.brand .dot{color:#fff;}
+.navlinks{display:flex;gap:6px;align-items:center;}
+.navlinks a{color:var(--text-gray);font-weight:600;font-size:14px;padding:8px 14px;border-radius:20px;transition:.2s;}
+.navlinks a:hover{background:rgba(255,255,255,.06);color:#fff;}
+.btn{display:inline-flex;align-items:center;gap:10px;border-radius:30px;padding:12px 22px;font-weight:800;font-size:14px;transition:.25s;cursor:pointer;}
+.btn-primary{background:var(--primary);color:#000;box-shadow:var(--shadow-glow);}
+.btn-primary:hover{transform:translateY(-2px);background:#fff;}
+.btn-ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid var(--border);}
+.btn-ghost:hover{background:rgba(255,255,255,.15);}
+
+/* HERO BANNER */
+.hero-banner{position:relative;overflow:hidden;border-bottom:1px solid var(--border);background:#0b0b0b;min-height:560px;}
+.banner-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.03);opacity:.95;transition:background-image .6s ease;}
+.hero-banner::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,13,.85) 0%,rgba(10,10,13,.55) 45%,rgba(10,10,13,.15) 75%,rgba(10,10,13,0) 100%),linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,.45) 70%,var(--bg-dark) 100%);}
+.hero-banner .wrap{position:relative;z-index:2;padding:60px 24px 50px;display:grid;grid-template-columns:1.3fr .7fr;gap:30px;align-items:end;}
+.eyebrow-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:20px;background:rgba(245,197,24,.13);color:var(--primary);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;border:1px solid rgba(245,197,24,.3);}
+.eyebrow.alt{background:rgba(255,255,255,.06);color:#fff;border-color:var(--border);}
+.banner-title{margin:0;font-size:54px;line-height:1.05;font-weight:900;letter-spacing:-1px;text-transform:uppercase;text-shadow:0 6px 30px rgba(0,0,0,.6);}
+.banner-pills{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 16px;}
+.b-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:8px;background:rgba(0,0,0,.45);border:1px solid var(--border);font-weight:700;font-size:12px;color:#fff;backdrop-filter:blur(6px);}
+.b-pill.primary{background:var(--primary);color:#000;border:none;}
+.banner-overview{color:rgba(255,255,255,.85);line-height:1.6;max-width:65ch;margin:0 0 22px;font-size:14px;text-shadow:0 8px 28px rgba(0,0,0,.45);}
+.banner-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center;}
+.banner-right{display:flex;justify-content:flex-end;align-items:flex-end;}
+.thumbstrip{width:min(420px,100%);background:rgba(0,0,0,.45);border:1px solid var(--border);border-radius:14px;padding:10px;display:flex;gap:8px;overflow-x:auto;backdrop-filter:blur(8px);scrollbar-width:none;}
+.thumbstrip::-webkit-scrollbar{display:none;}
+.thumb{flex:0 0 auto;width:54px;height:80px;border-radius:8px;overflow:hidden;border:2px solid transparent;background:#111;cursor:pointer;opacity:.7;transition:.2s;}
+.thumb img{width:100%;height:100%;object-fit:cover;}
+.thumb:hover{opacity:1;}
+.thumb.active{opacity:1;border-color:var(--primary);transform:scale(1.08);box-shadow:var(--shadow-glow);}
+
+/* SECTIONS */
+.section{padding:60px 0;}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.section-head h2{margin:0;font-size:28px;font-weight:900;letter-spacing:-.5px;}
+.section-head h2::before{content:"";display:inline-block;width:5px;height:28px;background:var(--primary-grad);border-radius:3px;vertical-align:-5px;margin-right:12px;}
+.section p.lead{margin:0 0 22px;color:var(--text-gray);line-height:1.6;font-size:15px;max-width:65ch;}
+
+/* FEATURES GRID */
+.features{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+.feat{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:24px;transition:.25s;}
+.feat:hover{background:rgba(255,255,255,.06);transform:translateY(-4px);border-color:rgba(245,197,24,.3);}
+.feat-icon{width:48px;height:48px;border-radius:12px;background:rgba(245,197,24,.15);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;}
+.feat h3{margin:0 0 8px;font-size:16px;font-weight:800;}
+.feat p{margin:0;color:var(--text-gray);font-size:13px;line-height:1.6;}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;background:rgba(245,197,24,.05);border:1px solid rgba(245,197,24,.2);border-radius:18px;padding:30px;}
+.stat{text-align:center;}
+.stat-num{font-size:36px;font-weight:900;background:var(--primary-grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;}
+.stat-lbl{font-size:12px;color:var(--text-gray);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:8px;}
+
+/* PREVIEWS */
+.previews{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.shot{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:18px;padding:16px;transition:.25s;}
+.shot:hover{transform:translateY(-4px);}
+.shot-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;color:var(--primary);font-weight:800;font-size:14px;}
+.mock{aspect-ratio:16/9;border-radius:14px;border:1px solid var(--border);background:radial-gradient(1200px 600px at 20% 0%,rgba(245,197,24,.18),transparent 50%),linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));overflow:hidden;position:relative;background-size:cover !important;background-position:center !important;}
+.mock::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.65));}
+.mock .badge{position:absolute;left:14px;top:14px;background:rgba(0,0,0,.7);border:1px solid var(--border);padding:6px 12px;border-radius:20px;font-weight:800;font-size:12px;z-index:1;backdrop-filter:blur(4px);}
+
+/* FAQ */
+.faq{display:grid;gap:10px;}
+.qa{border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,.03);overflow:hidden;transition:.2s;}
+.qa:hover{border-color:rgba(245,197,24,.2);}
+.q{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 22px;color:#fff;font-weight:700;text-align:left;font-size:15px;}
+.q i.chev{color:var(--primary);transition:.2s;}
+.a{display:none;padding:0 22px 18px;color:var(--text-gray);line-height:1.7;font-size:14px;}
+.qa.open .a{display:block;}
+.qa.open .chev{transform:rotate(180deg);}
+
+/* CTA SECTION */
+.cta-section{background:linear-gradient(135deg,rgba(245,197,24,.1),rgba(255,170,0,.05));border:1px solid rgba(245,197,24,.2);border-radius:24px;padding:50px;text-align:center;}
+.cta-section h2{margin:0 0 14px;font-size:34px;font-weight:900;letter-spacing:-.5px;}
+.cta-section p{margin:0 auto 28px;color:var(--text-gray);max-width:50ch;line-height:1.6;}
+
+/* FOOTER */
+.footer{padding:36px 0;border-top:1px solid var(--border);color:var(--text-gray);font-size:13px;background:var(--bg-2);}
+.footer .row{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center;}
+.footer-brand{display:flex;align-items:center;gap:10px;font-weight:800;color:#fff;}
+.footer-brand i{color:var(--primary);}
+.footer-links{display:flex;gap:8px;flex-wrap:wrap;}
+.footer-links a{padding:7px 14px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--border);transition:.2s;}
+.footer-links a:hover{background:var(--primary);color:#000;border-color:transparent;}
+
+@media (max-width:980px){
+  .hero-banner .wrap{grid-template-columns:1fr;padding:40px 18px 30px;}
+  .banner-right{justify-content:flex-start;}
+  .features,.stats{grid-template-columns:repeat(2,1fr);}
+  .previews{grid-template-columns:1fr;}
+}
+@media (max-width:520px){
+  .nav .wrap{padding:12px 16px;}
+  .navlinks a:not(.btn){display:none;}
+  .brand{font-size:18px;}
+  .banner-title{font-size:36px;}
+  .section{padding:40px 0;}
+  .section-head h2{font-size:22px;}
+  .features,.stats{grid-template-columns:1fr;}
+  .cta-section{padding:36px 22px;}
+  .cta-section h2{font-size:24px;}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <div class="brand"><i class="fas fa-play-circle"></i> DOWN<span class="dot">CINE</span></div>
+    <nav class="navlinks">
+      <a href="#tinh-nang">Tính năng</a>
+      <a href="#giao-dien">Giao diện</a>
+      <a href="#faq">FAQ</a>
+      <a href="app.html" class="btn btn-primary"><i class="fas fa-play"></i> Vào xem phim</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero-banner" id="banner">
+  <div class="banner-bg" id="bannerBg"></div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow-row">
+        <span class="eyebrow"><i class="fas fa-fire"></i> Đang Hot</span>
+        <span class="eyebrow alt"><i class="fas fa-bolt"></i> Cập nhật liên tục</span>
+      </div>
+      <h1 class="banner-title" id="bannerTitle">DOWNCINE</h1>
+      <div class="banner-pills" id="bannerPills">
+        <span class="b-pill primary"><i class="fas fa-star"></i> IMDb</span>
+        <span class="b-pill"><i class="fas fa-calendar"></i> 2026</span>
+        <span class="b-pill"><i class="fas fa-film"></i> Full HD</span>
+      </div>
+      <p class="banner-overview" id="bannerOverview">Kho phim HD chất lượng cao, miễn phí, cập nhật mỗi ngày. Vietsub, thuyết minh, lồng tiếng — tìm phim ưng ý chỉ trong vài giây.</p>
+      <div class="banner-actions">
+        <a class="btn btn-primary" href="app.html"><i class="fas fa-play"></i> Vào xem phim ngay</a>
+        <a class="btn btn-ghost" href="#tinh-nang"><i class="fas fa-info-circle"></i> Tìm hiểu thêm</a>
+      </div>
+    </div>
+    <div class="banner-right">
+      <div class="thumbstrip" id="thumbStrip"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tinh-nang">
+  <div class="wrap">
+    <div class="section-head"><h2>Vì sao chọn DOWNCINE?</h2></div>
+    <p class="lead">Trải nghiệm xem phim hiện đại, mượt mà, không phiền phức.</p>
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon"><i class="fas fa-bolt"></i></div>
+        <h3>Tốc độ siêu nhanh</h3>
+        <p>3 nguồn dự phòng OPhim/KKPhim/NguonC tự động chuyển khi quá tải.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><i class="fas fa-tv"></i></div>
+        <h3>Chất lượng HD/4K</h3>
+        <p>Ưu tiên bản đẹp WEB-DL, HEVC. Hỗ trợ Vietsub, thuyết minh, lồng tiếng.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><i class="fas fa-ban"></i></div>
+        <h3>Không quảng cáo</h3>
+        <p>Trang web cá nhân phi thương mại. Không có pop-up, không ads phiền hà.</p>
+      </div>
+      <div class="feat">
+        <div class="feat-icon"><i class="fas fa-bookmark"></i></div>
+        <h3>Tủ phim cá nhân</h3>
+        <p>Lưu phim yêu thích, theo dõi lịch sử xem. Dữ liệu lưu ngay tại trình duyệt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">35K+</div>
+        <div class="stat-lbl">Bộ phim</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-lbl">Nguồn server</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">HD/4K</div>
+        <div class="stat-lbl">Chất lượng</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24/7</div>
+        <div class="stat-lbl">Cập nhật</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="giao-dien">
+  <div class="wrap">
+    <div class="section-head"><h2>Giao diện đẹp như rạp</h2></div>
+    <p class="lead">Thiết kế hiện đại, mượt mà trên cả desktop và mobile.</p>
+    <div class="previews">
+      <div class="shot">
+        <div class="shot-head"><i class="fas fa-house"></i> Trang chủ • Mới cập nhật</div>
+        <div class="mock" id="mockHome"><div class="badge" id="badgeHome">DOWNCINE • Home</div></div>
+      </div>
+      <div class="shot">
+        <div class="shot-head"><i class="fas fa-play-circle"></i> Trang xem phim chi tiết</div>
+        <div class="mock" id="mockModal"><div class="badge" id="badgeModal">Trang Play</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="faq">
+  <div class="wrap">
+    <div class="section-head"><h2>Câu hỏi thường gặp</h2></div>
+    <p class="lead">Có thắc mắc gì? Xem ở đây trước nhé.</p>
+    <div class="faq">
+      <div class="qa">
+        <button class="q" type="button">DOWNCINE có miễn phí không? <i class="fas fa-chevron-down chev"></i></button>
+        <div class="a">Hoàn toàn miễn phí. Trang web cá nhân, phi thương mại, không thu phí, không quảng cáo.</div>
+      </div>
+      <div class="qa">
+        <button class="q" type="button">Mở phim trên điện thoại được không? <i class="fas fa-chevron-down chev"></i></button>
+        <div class="a">Có, giao diện responsive hỗ trợ tốt mọi kích thước màn hình từ điện thoại đến desktop.</div>
+      </div>
+      <div class="qa">
+        <button class="q" type="button">Phim bộ chọn tập ở đâu? <i class="fas fa-chevron-down chev"></i></button>
+        <div class="a">Vào trang xem phim, danh sách tập hiển thị ngay dưới trình phát. Có thể chọn nguồn (Vietsub / Thuyết minh / Lồng tiếng) và tập tương ứng.</div>
+      </div>
+      <div class="qa">
+        <button class="q" type="button">Phim không phát thì sao? <i class="fas fa-chevron-down chev"></i></button>
+        <div class="a">Web có 3 nguồn server (OPhim, KKPhim, NguonC). Nếu nguồn 1 lỗi, bấm sang nguồn khác. Đa số phim đều có ở ít nhất 1 nguồn.</div>
+      </div>
+      <div class="qa">
+        <button class="q" type="button">Dữ liệu tủ phim có bị mất không? <i class="fas fa-chevron-down chev"></i></button>
+        <div class="a">Tủ phim lưu trong localStorage trình duyệt. Sẽ mất nếu xoá cookies/cache hoặc dùng trình duyệt khác. Sắp tới sẽ có chức năng xuất/nhập sao lưu.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="cta-section">
+      <h2>Sẵn sàng xem phim chưa?</h2>
+      <p>Khám phá hơn 35.000 bộ phim đang chờ bạn. Vào ngay để bắt đầu.</p>
+      <a href="app.html" class="btn btn-primary" style="font-size:16px;padding:16px 36px;"><i class="fas fa-play"></i> Vào xem phim ngay</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="row">
+      <div class="footer-brand">
+        <i class="fas fa-play-circle"></i>
+        <span>DOWNCINE</span>
+        <span style="color:var(--text-dim);font-weight:400;">© 2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="app.html"><i class="fas fa-play"></i> Vào xem</a>
+        <a href="guide.html"><i class="fas fa-book-open"></i> Hướng dẫn</a>
+        <a href="#tinh-nang"><i class="fas fa-sparkles"></i> Tính năng</a>
+        <a href="#faq"><i class="fas fa-question-circle"></i> FAQ</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="movies.js"></script>
+<script src="series.js"></script>
+<script>
+'use strict';
+
+// FAQ toggle
+document.querySelectorAll('.qa .q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const qa=btn.closest('.qa');
+    const open=qa.classList.contains('open');
+    document.querySelectorAll('.qa').forEach(x=>x.classList.remove('open'));
+    if(!open) qa.classList.add('open');
+  });
+});
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const id=a.getAttribute('href');
+    const el=document.querySelector(id);
+    if(!el)return;
+    e.preventDefault();
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+});
+
+// Random banner từ movies.js / series.js
+function _arr(x){return Array.isArray(x)?x:[];}
+function _getSeries(){if(typeof seriesList!=='undefined')return _arr(seriesList);if(typeof series!=='undefined'&&series&&typeof series==='object')return[series];return[];}
+function _getMovies(){if(typeof movieList!=='undefined')return _arr(movieList);return[];}
+function _img(it){return String(it.backdrop_path||it.poster_path||'').trim();}
+function _title(it){return it.title||it.name||it.original_title||it.original_name||'HOT';}
+function _shuffle(a){const r=a.slice();for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+
+function applyBanners(){
+  const all=[..._getMovies(),..._getSeries()];
+  if(!all.length)return;
+  const withImg=all.filter(_img);
+  const pool=withImg.length?withImg:all;
+  const picks=_shuffle(pool).slice(0,2);
+  const [p1,p2]=picks;
+
+  // Mocks
+  if(p1){
+    const m=document.getElementById('mockHome');
+    const b=document.getElementById('badgeHome');
+    if(_img(p1))m.style.backgroundImage=`url('${_img(p1)}')`;
+    if(b)b.textContent='HOT • '+_title(p1);
+  }
+  if(p2){
+    const m=document.getElementById('mockModal');
+    const b=document.getElementById('badgeModal');
+    if(_img(p2))m.style.backgroundImage=`url('${_img(p2)}')`;
+    if(b)b.textContent='HOT • '+_title(p2);
+  }
+
+  // Banner + thumb strip
+  const bg=document.getElementById('bannerBg');
+  const title=document.getElementById('bannerTitle');
+  const pills=document.getElementById('bannerPills');
+  const overview=document.getElementById('bannerOverview');
+  const strip=document.getElementById('thumbStrip');
+  const thumbs=_shuffle(pool).slice(0,8);
+
+  function yearOf(it){return String(it.release_date||it.first_air_date||'').split('-')[0]||'';}
+  function scoreOf(it){const v=it.vote_average;if(!v)return '';return Number(v).toFixed(1);}
+  function typeOf(it){return (it.episodes||it.number_of_seasons||it.first_air_date)?'PHIM BỘ':'PHIM LẺ';}
+
+  function setActive(it){
+    if(!it)return;
+    const img=_img(it);
+    if(bg&&img)bg.style.backgroundImage=`url('${img}')`;
+    if(title)title.textContent=(_title(it)||'').toUpperCase();
+    const ov=(it.overview||'').trim();
+    if(overview)overview.textContent=ov||'Kho phim HD chất lượng cao, miễn phí, cập nhật mỗi ngày.';
+    const y=yearOf(it),s=scoreOf(it),tp=typeOf(it);
+    if(pills){
+      pills.innerHTML=`
+        ${s?`<span class="b-pill primary"><i class="fas fa-star"></i> IMDb ${s}</span>`:`<span class="b-pill primary"><i class="fas fa-star"></i> Hot</span>`}
+        ${y?`<span class="b-pill"><i class="fas fa-calendar"></i> ${y}</span>`:''}
+        <span class="b-pill"><i class="fas fa-tv"></i> ${tp}</span>
+      `;
+    }
+    strip.querySelectorAll('.thumb').forEach(t=>t.classList.toggle('active',t.dataset.k===_title(it)));
+  }
+
+  if(strip){
+    strip.innerHTML='';
+    thumbs.forEach((it,idx)=>{
+      const d=document.createElement('div');
+      d.className='thumb'+(idx===0?' active':'');
+      d.dataset.k=_title(it);
+      d.innerHTML=`<img alt="" src="${_img(it)}">`;
+      d.addEventListener('click',()=>setActive(it));
+      strip.appendChild(d);
+    });
+  }
+  setActive(thumbs[0]);
+}
+
+window.addEventListener('load',applyBanners);
+</script>
+</body>
+</html>
