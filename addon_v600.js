@@ -1,6 +1,7 @@
 // Web Phim v6.0.0 launcher.
 // Builds on v5.4 and adds AI Vietnamese subtitles + per-share Personal Home.
 const fs = require('node:fs');
+const vm = require('node:vm');
 const applyV420 = require('./v420_patch');
 const applyV430 = require('./v430_patch');
 const applyV440 = require('./v440_patch');
@@ -19,6 +20,20 @@ if (!launcher.includes(finalEval)) {
   process.exit(1);
 }
 
-launcher = launcher.replace(finalEval, 'source = applyV420(source); source = applyV430(source); source = applyV440(source); source = applyV500(source); source = applyV510(source); source = applyV520(source); source = applyV530(source); source = applyV540(source); source = applyV600(source); eval(source);');
+const runV6 = [
+  'source = applyV420(source);',
+  'source = applyV430(source);',
+  'source = applyV440(source);',
+  'source = applyV500(source);',
+  'source = applyV510(source);',
+  'source = applyV520(source);',
+  'source = applyV530(source);',
+  'source = applyV540(source);',
+  'source = applyV600(source);',
+  "try { new vm.Script(source, { filename: 'web-phim-generated.js' }); } catch (e) { const m = String(e.stack || e).match(/web-phim-generated\\.js:(\\d+)/); const n = m ? Number(m[1]) : 0; const lines = source.split('\\n'); if (n) console.error(lines.slice(Math.max(0,n-6),Math.min(lines.length,n+5)).map((x,i)=>(Math.max(0,n-6)+i+1)+': '+x).join('\\n')); throw e; }",
+  'eval(source);'
+].join(' ');
+
+launcher = launcher.replace(finalEval, runV6);
 
 eval(launcher);
