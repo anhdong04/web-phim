@@ -58,6 +58,19 @@ ${relayFn}`;
   if (!source.includes(rangeLine)) throw new Error('v6.2.8 patch target missing: range forwarding');
   source = source.replace(rangeLine, rangeLine + "\n  if (req.headers['if-range']) headers['If-Range'] = req.headers['if-range'];\n  if (req.headers['if-none-match']) headers['If-None-Match'] = req.headers['if-none-match'];");
 
+  const serverMarker = 'const server = http.createServer(async (req, res) => {';
+  if (!source.includes(serverMarker)) throw new Error('v6.2.8 patch target missing: server marker');
+  source = source.replace(serverMarker, serverMarker + String.raw`
+  if (req.method === 'OPTIONS') {
+    let v628Path = '';
+    try { v628Path = new URL(req.url, 'http://localhost').pathname; } catch {}
+    if (v628Path.startsWith('/yanhh3d/relay/')) {
+      res.writeHead(204, v628CorsHeaders({ 'cache-control':'public, max-age=86400' }));
+      res.end();
+      return;
+    }
+  }`);
+
   const diagRoute = "  let v627DiagMatch = path.match(/^\\/yanhh3d\\/relay-diag\\/([A-Za-z0-9_-]+)\\.([A-Za-z0-9_-]+)(?:\\.[A-Za-z0-9]{1,10})?$/);";
   if (!source.includes(diagRoute)) throw new Error('v6.2.8 patch target missing: diag route');
   const deepRoute = String.raw`  let v628DeepMatch = path.match(/^\/yanhh3d\/relay-check\/([A-Za-z0-9_-]+)\.([A-Za-z0-9_-]+)(?:\.[A-Za-z0-9]{1,10})?$/);
