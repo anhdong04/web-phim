@@ -1,0 +1,275 @@
+const http = require('node:http');
+
+const PORT = Number(process.env.PORT || 7000);
+const TMDB_API_KEY = process.env.TMDB_API_KEY || '';
+const TMDB_LANGUAGE = process.env.TMDB_LANGUAGE || 'vi-VN';
+const TMDB_REGION = process.env.TMDB_REGION || 'VN';
+const KKPHIM_API = process.env.KKPHIM_API || 'https://phimapi.com';
+const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 12000);
+const MAX_STREAMS_PER_RESOLUTION = Number(process.env.MAX_STREAMS_PER_RESOLUTION || 6);
+const MAX_STREAMS_TOTAL = Number(process.env.MAX_STREAMS_TOTAL || 30);
+const MAX_SIZE_GB = Number(process.env.MAX_SIZE_GB || 0);
+
+const manifest = {
+  id: 'vn.webphim.nuvio.v3',
+  version: '3.0.0',
+  name: 'Phim Việt + TorBox',
+  description: 'Vietnamese TMDB catalogs and metadata with KKPhim + Comet/TorBox streams',
+  resources: [
+    'catalog',
+    { name: 'meta', types: ['movie', 'series'], idPrefixes: ['tmdb:'] },
+    { name: 'stream', types: ['movie', 'series'], idPrefixes: ['tmdb:', 'tt'] }
+  ],
+  types: ['movie', 'series'],
+  catalogs: [
+    { type: 'movie', id: 'tmdb-trending-movies', name: '🔥 Đang thịnh hành • Phim', extra: [{ name: 'skip', isRequired: false }] },
+    { type: 'movie', id: 'tmdb-popular-movies', name: '⭐ Phim phổ biến', extra: [{ name: 'skip', isRequired: false }] },
+    { type: 'movie', id: 'tmdb-now-playing', name: '🎬 Đang chiếu', extra: [{ name: 'skip', isRequired: false }] },
+    { type: 'series', id: 'tmdb-trending-tv', name: '🔥 Đang thịnh hành • Phim bộ', extra: [{ name: 'skip', isRequired: false }] },
+    { type: 'series', id: 'tmdb-popular-tv', name: '📺 Phim bộ phổ biến', extra: [{ name: 'skip', isRequired: false }] }
+  ]
+};
+
+function sendJson(res, status, body, cache = 0) {
+  const json = JSON.stringify(body);
+  res.writeHead(status, {
+    'content-type': 'application/json; charset=utf-8',
+    'content-length': Buffer.byteLength(json),
+    'access-control-allow-origin': '*',
+    'cache-control': cache ? `public, max-age=${cache}` : 'no-store'
+  });
+  res.end(json);
+}
+
+async function fetchJson(url, label = 'upstream') {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    const r = await fetch(url, { headers: { accept: 'application/json', 'user-agent': 'web-phim-v3/3.0' }, signal: controller.signal });
+    if (!r.ok) throw new Error(`${label} HTTP ${r.status}`);
+    return await r.json();
+  } finally { clearTimeout(timer); }
+}
+
+function tmdbUrl(path, params = {}) {
+  if (!TMDB_API_KEY) throw new Error('TMDB_API_KEY is not configured');
+  const u = new URL(`https://api.themoviedb.org/3${path}`);
+  u.searchParams.set('api_key', TMDB_API_KEY);
+  u.searchParams.set('language', TMDB_LANGUAGE);
+  for (const [k, v] of Object.entries(params)) if (v !== undefined && v !== null && v !== '') u.searchParams.set(k, String(v));
+  return u.toString();
+}
+
+function img(path, size = 'w500') { return path ? `https://image.tmdb.org/t/p/${size}${path}` : undefined; }
+function pageFromSkip(skip) { return Math.floor((Number(skip) || 0) / 20) + 1; }
+
+function catalogEndpoint(id) {
+  return {
+    'tmdb-trending-movies': ['/trending/movie/week', 'movie'],
+    'tmdb-popular-movies': ['/movie/popular', 'movie'],
+    'tmdb-now-playing': ['/movie/now_playing', 'movie'],
+    'tmdb-trending-tv': ['/trending/tv/week', 'series'],
+    'tmdb-popular-tv': ['/tv/popular', 'series']
+  }[id];
+}
+
+function toPreview(item, type) {
+  const name = type === 'movie' ? item.title : item.name;
+  const date = type === 'movie' ? item.release_date : item.first_air_date;
+  return {
+    id: `tmdb:${item.id}`,
+    type,
+    name: name || item.original_title || item.original_name || `TMDB ${item.id}`,
+    poster: img(item.poster_path),
+    background: img(item.backdrop_path, 'w1280'),
+    description: item.overview || undefined,
+    releaseInfo: date ? String(date).slice(0, 4) : undefined
+  };
+}
+
+async function getCatalog(type, id, skip) {
+  const spec = catalogEndpoint(id);
+  if (!spec || spec[1] !== type) return [];
+  const payload = await fetchJson(tmdbUrl(spec[0], { page: pageFromSkip(skip), region: type === 'movie' ? TMDB_REGION : undefined }), 'TMDB catalog');
+  return (payload.results || []).map(x => toPreview(x, type));
+}
+
+function genres(list) { return Array.isArray(list) ? list.map(x => x.name).filter(Boolean) : []; }
+function castNames(credits) { return (credits?.cast || []).slice(0, 12).map(x => x.name).filter(Boolean); }
+function directorNames(credits) { return (credits?.crew || []).filter(x => x.job === 'Director').slice(0, 5).map(x => x.name).filter(Boolean); }
+
+async function fetchTvVideos(tvId, seasons) {
+  const valid = (seasons || []).filter(s => Number(s.season_number) > 0).slice(0, 30);
+  const settled = await Promise.allSettled(valid.map(s => fetchJson(tmdbUrl(`/tv/${tvId}/season/${s.season_number}`), 'TMDB season')));
+  const videos = [];
+  for (const r of settled) {
+    if (r.status !== 'fulfilled') continue;
+    for (const ep of r.value.episodes || []) {
+      videos.push({
+        id: `tmdb:${tvId}:${ep.season_number}:${ep.episode_number}`,
+        title: ep.name ? `Tập ${ep.episode_number} • ${ep.name}` : `Tập ${ep.episode_number}`,
+        season: ep.season_number,
+        episode: ep.episode_number,
+        released: ep.air_date ? `${ep.air_date}T00:00:00.000Z` : undefined,
+        thumbnail: img(ep.still_path, 'w500'),
+        overview: ep.overview || undefined
+      });
+    }
+  }
+  return videos;
+}
+
+async function getMeta(type, id) {
+  const m = String(id).match(/^tmdb:(\d+)$/);
+  if (!m) return null;
+  const tmdbId = m[1];
+  if (type === 'movie') {
+    const p = await fetchJson(tmdbUrl(`/movie/${tmdbId}`, { append_to_response: 'external_ids,credits' }), 'TMDB movie');
+    return {
+      id, type, name: p.title || p.original_title,
+      poster: img(p.poster_path), background: img(p.backdrop_path, 'w1280'),
+      description: p.overview || undefined, releaseInfo: p.release_date?.slice(0,4),
+      genres: genres(p.genres), cast: castNames(p.credits), director: directorNames(p.credits),
+      runtime: p.runtime ? `${p.runtime} phút` : undefined,
+      imdbRating: p.vote_average ? Number(p.vote_average).toFixed(1) : undefined,
+      behaviorHints: { defaultVideoId: id }
+    };
+  }
+  const p = await fetchJson(tmdbUrl(`/tv/${tmdbId}`, { append_to_response: 'external_ids,credits' }), 'TMDB tv');
+  const videos = await fetchTvVideos(tmdbId, p.seasons);
+  return {
+    id, type, name: p.name || p.original_name,
+    poster: img(p.poster_path), background: img(p.backdrop_path, 'w1280'),
+    description: p.overview || undefined, releaseInfo: p.first_air_date?.slice(0,4),
+    genres: genres(p.genres), cast: castNames(p.credits),
+    runtime: p.episode_run_time?.[0] ? `${p.episode_run_time[0]} phút/tập` : undefined,
+    imdbRating: p.vote_average ? Number(p.vote_average).toFixed(1) : undefined,
+    videos
+  };
+}
+
+function parseId(type, id) {
+  let m = String(id).match(/^tmdb:(\d+)(?::(\d+))?(?::(\d+))?$/);
+  if (m) return { kind: 'tmdb', tmdbId: m[1], season: Number(m[2]) || null, episode: Number(m[3]) || null };
+  m = String(id).match(/^(tt\d+)(?::(\d+))?(?::(\d+))?$/i);
+  if (m) return { kind: 'imdb', imdbId: m[1], season: Number(m[2]) || null, episode: Number(m[3]) || null };
+  return null;
+}
+
+async function resolveImdb(type, parsed) {
+  if (parsed?.imdbId) return parsed.imdbId;
+  if (!parsed?.tmdbId) return null;
+  const path = type === 'movie' ? `/movie/${parsed.tmdbId}/external_ids` : `/tv/${parsed.tmdbId}/external_ids`;
+  const p = await fetchJson(tmdbUrl(path), 'TMDB external ids');
+  return p.imdb_id || null;
+}
+
+function normalizeText(v) { return String(v || '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+function inferEpisode(item) {
+  for (const v of [item?.name,item?.slug,item?.filename]) {
+    const t = normalizeText(v);
+    let m = t.match(/^0*(\d+)$/); if (m) return Number(m[1]);
+    m = t.match(/(?:tap|episode|ep|e)\s*[-_. ]*0*(\d+)\b/); if (m) return Number(m[1]);
+  }
+  return null;
+}
+
+async function getKKPhim(type, parsed) {
+  let url;
+  if (parsed.kind === 'tmdb') url = `${KKPHIM_API}/tmdb/${type === 'series' ? 'tv' : 'movie'}/${parsed.tmdbId}`;
+  else url = `${KKPHIM_API}/imdb/title/${parsed.imdbId}`;
+  try {
+    const p = await fetchJson(url, 'KKPhim');
+    const movie = p.movie || {}, out = [];
+    for (const group of p.episodes || []) for (const item of group.server_data || []) {
+      if (!item.link_m3u8) continue;
+      if (type === 'series' && parsed.episode && inferEpisode(item) !== parsed.episode) continue;
+      out.push({ name: `🇻🇳 KKPhim • ${group.server_name || 'Server'}`, title: [movie.quality,movie.lang,item.name].filter(Boolean).join(' • '), url: item.link_m3u8 });
+    }
+    return out;
+  } catch { return []; }
+}
+
+function configuredUpstreams() {
+  const defs = [
+    ['AIOStreams','AIOSTREAMS_MANIFEST_URL'], ['TorBox','TORBOX_MANIFEST_URL'], ['Comet','COMET_MANIFEST_URL'],
+    ['MediaFusion','MEDIAFUSION_MANIFEST_URL'], ['Torrentio','TORRENTIO_MANIFEST_URL']
+  ];
+  const out = [];
+  for (const [name,key] of defs) if (process.env[key]) out.push({name,url:process.env[key].trim()});
+  for (const raw of String(process.env.UPSTREAM_ADDON_URLS || '').split(/[\n,]/).map(x=>x.trim()).filter(Boolean)) {
+    const i = raw.indexOf('|'); out.push(i>0 ? {name:raw.slice(0,i),url:raw.slice(i+1)} : {name:'Upstream',url:raw});
+  }
+  return out;
+}
+
+function streamEndpoint(manifestUrl, type, id) {
+  const u = new URL(manifestUrl);
+  if (!u.pathname.endsWith('/manifest.json')) u.pathname = `${u.pathname.replace(/\/$/,'')}/manifest.json`;
+  u.pathname = u.pathname.replace(/\/manifest\.json$/, `/stream/${type}/${encodeURIComponent(id)}.json`);
+  return u.toString();
+}
+
+async function getUpstream(source, type, id) {
+  try {
+    const p = await fetchJson(streamEndpoint(source.url, type, id), source.name);
+    return (p.streams || []).map(s => ({...s, name: source.name === 'Comet' ? '⚡ Comet / TorBox' : `${source.name}${s.name ? ` • ${s.name}` : ''}`}));
+  } catch { return []; }
+}
+
+function resolution(s) {
+  const t = `${s.name||''} ${s.title||''} ${s.description||''}`.toLowerCase();
+  if (/2160p|4k/.test(t)) return 2160; if (/1440p|qhd/.test(t)) return 1440; if (/1080p|fhd/.test(t)) return 1080; if (/720p|hd/.test(t)) return 720; return 0;
+}
+function sizeBytes(s) { return Number(s?.behaviorHints?.videoSize || 0); }
+function streamKey(s) { return s.url || s.externalUrl || (s.infoHash ? `${s.infoHash}:${s.fileIdx??''}` : JSON.stringify(s)); }
+function curate(streams) {
+  const seen = new Set(); let a = streams.filter(s => { const k=streamKey(s); if (!k || seen.has(k)) return false; seen.add(k); return true; });
+  if (MAX_SIZE_GB > 0) a = a.filter(s => !sizeBytes(s) || sizeBytes(s) <= MAX_SIZE_GB*1024**3 || String(s.name||'').includes('KKPhim'));
+  a.sort((x,y) => {
+    const kx = String(x.name||'').includes('KKPhim') ? 3 : /TorBox|Comet/.test(String(x.name||'')) ? 2 : 1;
+    const ky = String(y.name||'').includes('KKPhim') ? 3 : /TorBox|Comet/.test(String(y.name||'')) ? 2 : 1;
+    return ky-kx || resolution(y)-resolution(x) || sizeBytes(x)-sizeBytes(y);
+  });
+  const counts = new Map(), out=[];
+  for (const s of a) {
+    if (String(s.name||'').includes('KKPhim')) { out.push(s); continue; }
+    const r=resolution(s); const c=counts.get(r)||0; if (c>=MAX_STREAMS_PER_RESOLUTION) continue; counts.set(r,c+1); out.push(s);
+    if (out.length >= MAX_STREAMS_TOTAL) break;
+  }
+  return out.slice(0, MAX_STREAMS_TOTAL);
+}
+
+async function getStreams(type, id) {
+  const parsed = parseId(type, id); if (!parsed) return [];
+  const imdb = await resolveImdb(type, parsed).catch(()=>null);
+  const upstreamId = imdb ? `${imdb}${type==='series'&&parsed.season?`:${parsed.season}:${parsed.episode||1}`:''}` : id;
+  const tasks = [getKKPhim(type, parsed), ...configuredUpstreams().map(s => getUpstream(s,type,upstreamId))];
+  const parts = await Promise.all(tasks);
+  return curate(parts.flat());
+}
+
+const server = http.createServer(async (req,res) => {
+  if (req.method === 'OPTIONS') { res.writeHead(204, {'access-control-allow-origin':'*','access-control-allow-methods':'GET,OPTIONS'}); return res.end(); }
+  const u = new URL(req.url, `http://${req.headers.host||'localhost'}`);
+  if (u.pathname === '/manifest.json') return sendJson(res,200,manifest,3600);
+  if (u.pathname === '/') return sendJson(res,200,{name:manifest.name,version:manifest.version,tmdbConfigured:Boolean(TMDB_API_KEY)},60);
+  let m = u.pathname.match(/^\/catalog\/(movie|series)\/([^/.]+)(?:\/([^/]+))?\.json$/);
+  if (m) {
+    try { const extra = m[3] ? JSON.parse(decodeURIComponent(m[3])) : {}; return sendJson(res,200,{metas:await getCatalog(m[1],m[2],extra.skip)},900); }
+    catch(e){ console.error(e); return sendJson(res,200,{metas:[]},60); }
+  }
+  m = u.pathname.match(/^\/meta\/(movie|series)\/(.+)\.json$/);
+  if (m) {
+    try { return sendJson(res,200,{meta:await getMeta(m[1],decodeURIComponent(m[2]))},900); }
+    catch(e){ console.error(e); return sendJson(res,200,{meta:null},60); }
+  }
+  m = u.pathname.match(/^\/stream\/(movie|series)\/(.+)\.json$/);
+  if (m) {
+    try { return sendJson(res,200,{streams:await getStreams(m[1],decodeURIComponent(m[2]))},180); }
+    catch(e){ console.error(e); return sendJson(res,200,{streams:[]},60); }
+  }
+  return sendJson(res,404,{error:'Not found'});
+});
+
+server.listen(PORT,'0.0.0.0',()=>console.log(`Phim Việt + TorBox v3 listening on ${PORT}`));
