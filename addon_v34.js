@@ -5,19 +5,47 @@ const PORT = Number(process.env.PORT || 7000);
 const INNER_PORT = Number(process.env.INNER_PORT || 7002);
 const SUBSENSE_MANIFEST_URL = String(process.env.SUBSENSE_MANIFEST_URL || '').trim();
 
-const existingSubtitleAddons = String(process.env.SUBTITLE_ADDON_URLS || '')
-  .split(/[\n,]/)
-  .map(x => x.trim())
-  .filter(Boolean);
-
-if (SUBSENSE_MANIFEST_URL && !existingSubtitleAddons.includes(SUBSENSE_MANIFEST_URL)) {
-  existingSubtitleAddons.unshift(`SubSense|${SUBSENSE_MANIFEST_URL}`);
+function splitSubtitleAddonEntries(value) {
+  return String(value || '')
+    .split(/[\n,]/)
+    .map(x => x.trim())
+    .filter(Boolean);
 }
+
+function entryUrl(entry) {
+  const i = String(entry || '').indexOf('|');
+  return (i >= 0 ? entry.slice(i + 1) : entry).trim();
+}
+
+function uniqueSubtitleEntries(entries) {
+  const seen = new Set();
+  const out = [];
+  for (const entry of entries) {
+    const url = entryUrl(entry);
+    if (!url || seen.has(url)) continue;
+    seen.add(url);
+    out.push(entry);
+  }
+  return out;
+}
+
+let subtitleAddonEntries = uniqueSubtitleEntries(
+  splitSubtitleAddonEntries(process.env.SUBTITLE_ADDON_URLS)
+);
+
+if (
+  SUBSENSE_MANIFEST_URL &&
+  !subtitleAddonEntries.some(entry => entryUrl(entry) === SUBSENSE_MANIFEST_URL)
+) {
+  subtitleAddonEntries.unshift(`SubSense|${SUBSENSE_MANIFEST_URL}`);
+}
+
+subtitleAddonEntries = uniqueSubtitleEntries(subtitleAddonEntries);
 
 const childEnv = {
   ...process.env,
   PORT: String(INNER_PORT),
-  SUBTITLE_ADDON_URLS: existingSubtitleAddons.join('\n')
+  SUBTITLE_ADDON_URLS: subtitleAddonEntries.join('\n')
 };
 
 const child = spawn(process.execPath, ['addon_v331.js'], {
@@ -57,9 +85,9 @@ function proxyRequest(req, res) {
         } else if (url.pathname === '/') {
           payload.version = '3.4.0';
           payload.subSenseConfigured = Boolean(SUBSENSE_MANIFEST_URL);
-          payload.subtitleSources = SUBSENSE_MANIFEST_URL
-            ? ['SubSense', ...(payload.subtitleSources || [])]
-            : (payload.subtitleSources || []);
+          payload.subtitleSources = [
+            ...new Set((payload.subtitleSources || []).filter(Boolean))
+          ];
         }
 
         const json = JSON.stringify(payload);
