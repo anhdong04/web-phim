@@ -34,12 +34,12 @@ jobs:
             if (url === 'https://yanhh3d.im' || url === 'https://yanhh3d.im/' || url.includes('/moi-cap-nhat?page=1')) return html(catalog);
             if (url.includes('/search?keysearch=')) return html(catalog);
             if (url.includes('/phim/dau-pha-thuong-khung')) return html(detail);
-            if (url.endsWith('/xem/dau-pha-thuong-khung')) return html(tmList);
             if (url.endsWith('/sever2/xem/dau-pha-thuong-khung')) return html(vsList);
-            if (url.includes('/watch/dptk-1-tm')) return html(streamPage('tm'));
+            if (url.endsWith('/xem/dau-pha-thuong-khung')) return html(tmList);
             if (url.includes('/sever2/watch/dptk-1-vs')) return html(streamPage('vs'));
-            if (url.includes('/watch/dptk-2-tm')) return html(streamPage('tm2'));
+            if (url.includes('/watch/dptk-1-tm')) return html(streamPage('tm'));
             if (url.includes('/sever2/watch/dptk-2-vs')) return html(streamPage('vs2'));
+            if (url.includes('/watch/dptk-2-tm')) return html(streamPage('tm2'));
             if (url.startsWith('https://cdn.test/')) return html('#EXTM3U\n#EXT-X-VERSION:3\n#EXTINF:10,\nseg.ts\n');
             if (url.includes('api.themoviedb.org')) return json({results:[]});
             return realFetch(input, init);
