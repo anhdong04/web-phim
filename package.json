@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "1.0.0",
-  "description": "Stremio-compatible KKPhim stream addon for Nuvio",
-  "main": "addon.js",
+  "version": "2.0.0",
+  "description": "Vietnamese KKPhim catalog, metadata and stream aggregator for Nuvio",
+  "main": "addon_v2.js",
   "scripts": {
-    "start": "node addon.js",
-    "check": "node --check addon.js"
+    "start": "node addon_v2.js",
+    "check": "node --check addon_v2.js"
   },
   "engines": {
     "node": ">=18"
