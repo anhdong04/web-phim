@@ -17,7 +17,18 @@ jobs:
           node-version: '20'
       - name: Syntax check
         run: npm run check
-      - name: v5 startup and share smoke test
+      - name: Rendered browser script syntax
+        run: |
+          node - <<'NODE'
+          for (const file of ['./v500_admin_page','./v500_public_page']) {
+            const html = require(file)();
+            const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+            if (!scripts.length) throw new Error('No inline script found in ' + file);
+            for (const script of scripts) new Function(script);
+            console.log(file + ': rendered browser JS syntax OK');
+          }
+          NODE
+      - name: v5 startup and share/admin smoke test
         shell: bash
         run: |
           set -euo pipefail
@@ -37,7 +48,11 @@ jobs:
           grep -q "v5.0.0 listening" /tmp/web-phim.log
           grep -q '"persistent":false' /tmp/settings.json
           curl -fsS http://127.0.0.1:7799/ | grep -q "Tạo link xem phim"
-          curl -fsS http://127.0.0.1:7799/admin | grep -q "Web Phim Admin v5"
+          curl -fsS http://127.0.0.1:7799/admin > /tmp/admin.html
+          grep -q "Web Phim Admin v5" /tmp/admin.html
+          grep -q "Đăng nhập" /tmp/admin.html
+          curl -fsS http://127.0.0.1:7799/admin/api > /tmp/admin-public.json
+          grep -q '"authorized":false' /tmp/admin-public.json
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/api > /tmp/admin.json
           grep -q '"authorized":true' /tmp/admin.json
           curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI Test","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
@@ -45,3 +60,5 @@ jobs:
           id=$(node -e "const d=require('/tmp/share.json');process.stdout.write(d.id)")
           curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" > /tmp/manifest.json
           grep -q '"version":"5.0.0"' /tmp/manifest.json
+          curl -fsS -X POST http://127.0.0.1:7799/admin/action -H 'content-type: application/json' -H 'x-admin-token: test-admin' -d '{"action":"share-toggle","id":"'"$id"'"}' > /tmp/action.json
+          grep -q '"ok":true' /tmp/action.json
