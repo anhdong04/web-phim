@@ -1,0 +1,85 @@
+name: Web Phim v6.3.0 Nuvio Desktop Compatibility
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  yanhh3d-nuvio-desktop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Fresh episode identity and Nuvio stream type regression
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cat > /tmp/mock-v630-fetch.js <<'NODE'
+          const realFetch = global.fetch;
+          const html = (body,status=200,headers={}) => new Response(body,{status,headers:{'content-type':'text/html; charset=utf-8',...headers}});
+          const hls = body => new Response(body,{status:200,headers:{'content-type':'application/vnd.apple.mpegurl'}});
+          const catalog = `<!doctype html><div class="film_list-wrap"><div class="flw-item"><img class="film-poster-img" data-src="https://img.test/show.jpg"><div class="tick-rate">Tập 1</div><h3 class="film-name"><a href="/phim/test-show">Test Show</a></h3></div></div>`;
+          const detail = `<!doctype html><div class="anisc-poster"><img class="film-poster-img" src="https://img.test/show.jpg"></div><h1 class="film-name">Test Show</h1><a class="btn-play" href="/xem/test-show">TM</a>`;
+          const eps = `<div id="top-comment"><div class="ss-list"><a class="ssl-item ep-item" href="/watch/test-1" title="1">1</a></div></div>`;
+          const player = `<a class="btn3dsv" data-src="https://media.test/master.m3u8">1080P</a>`;
+          global.fetch = async function(input, init={}) {
+            const url=String(input), headers=new Headers(init.headers||{});
+            if (url === 'https://yanhh3d.im' || url === 'https://yanhh3d.im/' || url.includes('/moi-cap-nhat?page=1')) return html(catalog);
+            if (url.includes('/phim/test-show')) return html(detail);
+            if (url.endsWith('/xem/test-show')) return html(eps);
+            if (url.includes('/watch/test-1')) return html(player);
+            if (url === 'https://media.test/master.m3u8') {
+              if (!headers.get('referer')) return html('forbidden',403);
+              return hls('#EXTM3U\n#EXT-X-VERSION:3\n#EXTINF:10,\nseg1.ts\n#EXT-X-ENDLIST\n');
+            }
+            if (url === 'https://media.test/seg1.ts') return new Response(Buffer.from([0x47,...new Array(187).fill(0)]),{status:200,headers:{'content-type':'video/mp2t'}});
+            if (url.includes('api.themoviedb.org')) return new Response(JSON.stringify({results:[]}),{status:200,headers:{'content-type':'application/json'}});
+            return realFetch(input,init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-v630-fetch.js" PORT=7817 PUBLIC_BASE_URL=http://127.0.0.1:7817 TMDB_API_KEY=test HH3D_PIKPAK_ENABLED=false YANHH3D_ENABLED=true YANHH3D_MAIN_URL=https://yanhh3d.im YANHH3D_MEDIA_RELAY=true INLINE_STREAM_SUBTITLES=false node addon_v630.js >/tmp/v630.log 2>&1 &
+          pid=$!
+          trap 'cat /tmp/v630.log; kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7817/yanhh3d/manifest.json >/tmp/m.json 2>/dev/null && break || sleep 0.25; done
+          node - <<'NODE'
+          const m=require('/tmp/m.json');
+          if(m.version!=='1.1.0') throw new Error('YanHH3D 1.1.0 manifest missing '+JSON.stringify(m));
+          NODE
+          curl -fsS http://127.0.0.1:7817/yanhh3d/catalog/series/yanhh3d.json >/tmp/c.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/c.json'),id=d.metas?.[0]?.id;
+          if(!id) throw new Error('catalog missing'); fs.writeFileSync('/tmp/metaid',id);
+          NODE
+          metaid=$(cat /tmp/metaid)
+          curl -fsS "http://127.0.0.1:7817/yanhh3d/meta/series/$metaid.json" >/tmp/meta.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/meta.json'),v=d.meta?.videos?.[0];
+          if(!v?.id || !/:r2:1$/.test(v.id)) throw new Error('fresh YanHH3D playback id missing '+JSON.stringify(d));
+          if(d.meta?.id===v.id) throw new Error('parent meta id unexpectedly changed');
+          fs.writeFileSync('/tmp/newvid',v.id);
+          fs.writeFileSync('/tmp/oldvid',v.id.replace(':r2:',':'));
+          NODE
+          newvid=$(cat /tmp/newvid)
+          oldvid=$(cat /tmp/oldvid)
+          curl -fsS "http://127.0.0.1:7817/yanhh3d/stream/series/$newvid.json" >/tmp/snew.json
+          node - <<'NODE'
+          const d=require('/tmp/snew.json'),s=d.streams?.[0];
+          if(!s?.url || !s.url.endsWith('.m3u8')) throw new Error('relay stream missing '+JSON.stringify(d));
+          // Nuvio Desktop StreamParser reads `type`, not mimeType/sourceType.
+          if(s.type!=='hls') throw new Error('Nuvio Desktop stream type missing '+JSON.stringify(s));
+          if(s.behaviorHints?.notWebReady!==false) throw new Error('relay should be web/player ready '+JSON.stringify(s));
+          if(s.behaviorHints?.proxyHeaders) throw new Error('relay must not require client proxyHeaders');
+          if(s.behaviorHints?.bingeGroup!=='webphim-yanhh3d-relay-r2') throw new Error('fresh binge group missing');
+          NODE
+          # Old episode IDs remain accepted so existing links do not hard-break.
+          curl -fsS "http://127.0.0.1:7817/yanhh3d/stream/series/$oldvid.json" >/tmp/sold.json
+          node - <<'NODE'
+          const d=require('/tmp/sold.json'); if(!d.streams?.[0]?.url) throw new Error('legacy YanHH3D episode id no longer resolves '+JSON.stringify(d));
+          NODE
+          echo 'v6.3.0 Nuvio Desktop compatibility regression OK'
