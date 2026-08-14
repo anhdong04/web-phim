@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "4.4.0",
-  "description": "Vietnamese TMDB catalogs with configurable Home, smart-ranked streams, identity cache, runtime metrics and protected admin dashboard for Nuvio",
-  "main": "addon_v440.js",
+  "version": "5.0.0",
+  "description": "Managed Web Phim sharing service with public configurator, short manifest links, invite codes, admin controls and smart-ranked streams for Nuvio",
+  "main": "addon_v500.js",
   "scripts": {
-    "start": "node addon_v440.js",
-    "check": "node --check addon_v440.js && node --check v440_patch.js && node --check v440_admin_page.js && node --check addon_v430.js && node --check v430_patch.js && node --check addon_v420.js && node --check v420_patch.js && node --check addon_v410.js && node --check addon_v4.js"
+    "start": "node addon_v500.js",
+    "check": "node --check addon_v500.js && node --check v500_patch.js && node --check v500_public_page.js && node --check v500_admin_page.js && node --check addon_v440.js && node --check v440_patch.js && node --check v440_admin_page.js && node --check addon_v430.js && node --check v430_patch.js && node --check addon_v420.js && node --check v420_patch.js && node --check addon_v410.js && node --check addon_v4.js"
   },
   "engines": {
     "node": ">=18"
