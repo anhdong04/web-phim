@@ -20,7 +20,7 @@ jobs:
       - name: Rendered browser script syntax
         run: |
           node - <<'NODE'
-          for (const file of ['./v500_admin_page','./v500_public_page']) {
+          for (const file of ['./v510_admin_page','./v500_public_page']) {
             const html = require(file)();
             const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
             if (!scripts.length) throw new Error('No inline script found in ' + file);
@@ -28,11 +28,11 @@ jobs:
             console.log(file + ': rendered browser JS syntax OK');
           }
           NODE
-      - name: v5 startup and share/admin smoke test
+      - name: v5.1 startup share admin backup restore smoke test
         shell: bash
         run: |
           set -euo pipefail
-          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true node addon_v500.js > /tmp/web-phim.log 2>&1 &
+          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true node addon_v510.js > /tmp/web-phim.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           ok=0
@@ -45,20 +45,40 @@ jobs:
           done
           cat /tmp/web-phim.log
           test "$ok" -eq 1
-          grep -q "v5.0.0 listening" /tmp/web-phim.log
+          grep -q "v5.1.0 listening" /tmp/web-phim.log
           grep -q '"persistent":false' /tmp/settings.json
           curl -fsS http://127.0.0.1:7799/ | grep -q "Tạo link xem phim"
           curl -fsS http://127.0.0.1:7799/admin > /tmp/admin.html
-          grep -q "Web Phim Admin v5" /tmp/admin.html
-          grep -q "Đăng nhập" /tmp/admin.html
-          curl -fsS http://127.0.0.1:7799/admin/api > /tmp/admin-public.json
-          grep -q '"authorized":false' /tmp/admin-public.json
+          grep -q "Web Phim Admin v5.1" /tmp/admin.html
+          grep -q "Backup / Restore" /tmp/admin.html
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/api > /tmp/admin.json
           grep -q '"authorized":true' /tmp/admin.json
-          curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI Test","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
+          grep -q '"version":"5.1.0"' /tmp/admin.json
+          grep -q '"backupSupported":true' /tmp/admin.json
+          grep -q '"mode":"memory"' /tmp/admin.json
+
+          curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI Backup Test","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
           grep -q '"ok":true' /tmp/share.json
           id=$(node -e "const d=require('/tmp/share.json');process.stdout.write(d.id)")
           curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" > /tmp/manifest.json
-          grep -q '"version":"5.0.0"' /tmp/manifest.json
-          curl -fsS -X POST http://127.0.0.1:7799/admin/action -H 'content-type: application/json' -H 'x-admin-token: test-admin' -d '{"action":"share-toggle","id":"'"$id"'"}' > /tmp/action.json
-          grep -q '"ok":true' /tmp/action.json
+          grep -q '"version":"5.1.0"' /tmp/manifest.json
+
+          curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/backup > /tmp/backup.json
+          grep -q '"format":"webphim-backup"' /tmp/backup.json
+          grep -q '"schemaVersion":1' /tmp/backup.json
+          grep -q "$id" /tmp/backup.json
+
+          curl -fsS -X POST http://127.0.0.1:7799/admin/action -H 'content-type: application/json' -H 'x-admin-token: test-admin' -d '{"action":"share-delete","id":"'"$id"'"}' > /tmp/delete.json
+          grep -q '"ok":true' /tmp/delete.json
+          test "$(curl -s -o /tmp/missing.json -w '%{http_code}' http://127.0.0.1:7799/u/$id/manifest.json)" = "404"
+
+          node - <<'NODE'
+          const fs=require('fs');
+          const backup=JSON.parse(fs.readFileSync('/tmp/backup.json','utf8'));
+          fs.writeFileSync('/tmp/restore.json',JSON.stringify({mode:'replace',backup}));
+          NODE
+          curl -fsS -X POST http://127.0.0.1:7799/admin/restore -H 'content-type: application/json' -H 'x-admin-token: test-admin' --data-binary @/tmp/restore.json > /tmp/restore-result.json
+          grep -q '"ok":true' /tmp/restore-result.json
+          grep -q '"shares":1' /tmp/restore-result.json
+          curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" > /tmp/restored-manifest.json
+          grep -q '"version":"5.1.0"' /tmp/restored-manifest.json
