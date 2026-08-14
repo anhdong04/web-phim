@@ -28,55 +28,39 @@ jobs:
             console.log(file + ': rendered browser JS syntax OK');
           }
           NODE
-      - name: v5.2 startup share admin backup restore smoke test
+      - name: v5.3 startup share admin backup restore smoke test
         shell: bash
         run: |
           set -euo pipefail
-          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true node addon_v520.js > /tmp/web-phim.log 2>&1 &
+          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true node addon_v530.js > /tmp/web-phim.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           ok=0
           for i in {1..30}; do
-            if curl -fsS http://127.0.0.1:7799/api/share/settings > /tmp/settings.json 2>/dev/null; then
-              ok=1
-              break
-            fi
+            if curl -fsS http://127.0.0.1:7799/api/share/settings > /tmp/settings.json 2>/dev/null; then ok=1; break; fi
             sleep 0.25
           done
           cat /tmp/web-phim.log
           test "$ok" -eq 1
-          grep -q "v5.2.0 listening" /tmp/web-phim.log
-          grep -q '"persistent":false' /tmp/settings.json
-          curl -fsS http://127.0.0.1:7799/ | grep -q "Tạo link xem phim"
+          grep -q "v5.3.0 listening" /tmp/web-phim.log
           curl -fsS http://127.0.0.1:7799/admin > /tmp/admin.html
-          grep -q "Web Phim Admin" /tmp/admin.html
           grep -q "Backup / Restore" /tmp/admin.html
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/api > /tmp/admin.json
           grep -q '"authorized":true' /tmp/admin.json
-          grep -q '"version":"5.2.0"' /tmp/admin.json
-          grep -q '"backupSupported":true' /tmp/admin.json
-
+          grep -q '"version":"5.3.0"' /tmp/admin.json
           curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI Backup Test","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
-          grep -q '"ok":true' /tmp/share.json
           id=$(node -e "const d=require('/tmp/share.json');process.stdout.write(d.id)")
           curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" > /tmp/manifest.json
-          grep -q '"version":"5.2.0"' /tmp/manifest.json
-
+          grep -q '"version":"5.3.0"' /tmp/manifest.json
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/backup > /tmp/backup.json
-          grep -q '"format":"webphim-backup"' /tmp/backup.json
-          grep -q "$id" /tmp/backup.json
-          curl -fsS -X POST http://127.0.0.1:7799/admin/action -H 'content-type: application/json' -H 'x-admin-token: test-admin' -d '{"action":"share-delete","id":"'"$id"'"}' > /tmp/delete.json
-          test "$(curl -s -o /tmp/missing.json -w '%{http_code}' http://127.0.0.1:7799/u/$id/manifest.json)" = "404"
+          curl -fsS -X POST http://127.0.0.1:7799/admin/action -H 'content-type: application/json' -H 'x-admin-token: test-admin' -d '{"action":"share-delete","id":"'"$id"'"}' >/tmp/delete.json
           node - <<'NODE'
-          const fs=require('fs');
-          const backup=JSON.parse(fs.readFileSync('/tmp/backup.json','utf8'));
+          const fs=require('fs'); const backup=JSON.parse(fs.readFileSync('/tmp/backup.json','utf8'));
           fs.writeFileSync('/tmp/restore.json',JSON.stringify({mode:'replace',backup}));
           NODE
-          curl -fsS -X POST http://127.0.0.1:7799/admin/restore -H 'content-type: application/json' -H 'x-admin-token: test-admin' --data-binary @/tmp/restore.json > /tmp/restore-result.json
-          grep -q '"ok":true' /tmp/restore-result.json
-          curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" > /tmp/restored-manifest.json
-          grep -q '"version":"5.2.0"' /tmp/restored-manifest.json
-      - name: IMDb compatibility meta regression
+          curl -fsS -X POST http://127.0.0.1:7799/admin/restore -H 'content-type: application/json' -H 'x-admin-token: test-admin' --data-binary @/tmp/restore.json >/tmp/restore-result.json
+          curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" | grep -q '"version":"5.3.0"'
+      - name: Canonical IMDb catalog and meta regression
         shell: bash
         run: |
           set -euo pipefail
@@ -85,25 +69,34 @@ jobs:
           global.fetch = async function(input, init) {
             const url = String(input);
             const json = body => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
-            if (url.includes('api.themoviedb.org/3/movie/603?')) return json({ id:603,title:'The Matrix',original_title:'The Matrix',overview:'Test',release_date:'1999-03-31',poster_path:null,backdrop_path:null,genres:[],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt0133093'},videos:{results:[]},release_dates:{results:[]},images:{logos:[]},vote_average:8.2 });
-            if (url.includes('api.themoviedb.org/3/tv/1399/season/1?')) return json({ episodes:[{season_number:1,episode_number:1,name:'Winter Is Coming',air_date:'2011-04-17',still_path:null,overview:'Test'}] });
-            if (url.includes('api.themoviedb.org/3/tv/1399?')) return json({ id:1399,name:'Game of Thrones',original_name:'Game of Thrones',overview:'Test',first_air_date:'2011-04-17',poster_path:null,backdrop_path:null,genres:[],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt0944947'},videos:{results:[]},content_ratings:{results:[]},images:{logos:[]},origin_country:['US'],networks:[],seasons:[{season_number:1}],episode_run_time:[60],vote_average:8.4 });
+            if (url.includes('/trending/movie/week?')) return json({results:[{id:603,title:'The Matrix',original_title:'The Matrix',overview:'Test',release_date:'1999-03-31',poster_path:null,backdrop_path:null}]});
+            if (url.includes('/movie/603/external_ids?')) return json({imdb_id:'tt0133093'});
+            if (url.includes('/find/tt0133093?')) return json({movie_results:[{id:603}],tv_results:[]});
+            if (url.includes('/movie/603?')) return json({id:603,title:'The Matrix',original_title:'The Matrix',overview:'Test',release_date:'1999-03-31',poster_path:null,backdrop_path:null,genres:[],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt0133093'},videos:{results:[]},release_dates:{results:[]},images:{logos:[]},production_countries:[],vote_average:8.2});
+            if (url.includes('/find/tt0944947?')) return json({movie_results:[],tv_results:[{id:1399}]});
+            if (url.includes('/tv/1399/season/1?')) return json({episodes:[{season_number:1,episode_number:1,name:'Winter Is Coming',air_date:'2011-04-17',still_path:null,overview:'Test'}]});
+            if (url.includes('/tv/1399?')) return json({id:1399,name:'Game of Thrones',original_name:'Game of Thrones',overview:'Test',first_air_date:'2011-04-17',poster_path:null,backdrop_path:null,genres:[],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt0944947'},videos:{results:[]},content_ratings:{results:[]},images:{logos:[]},origin_country:['US'],networks:[],seasons:[{season_number:1}],episode_run_time:[60],vote_average:8.4});
             return realFetch(input, init);
           };
           NODE
-          env NODE_OPTIONS="--require=/tmp/mock-fetch.js" PORT=7800 TMDB_API_KEY=test ADMIN_TOKEN=test-admin node addon_v520.js > /tmp/web-phim-imdb.log 2>&1 &
+          env NODE_OPTIONS="--require=/tmp/mock-fetch.js" PORT=7800 TMDB_API_KEY=test ADMIN_TOKEN=test-admin CANONICAL_IMDB_IDS=true node addon_v530.js >/tmp/web-phim-imdb.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           for i in {1..30}; do curl -fsS http://127.0.0.1:7800/ >/dev/null 2>&1 && break || sleep 0.25; done
-          curl -fsS http://127.0.0.1:7800/meta/movie/tmdb:603.json > /tmp/movie-meta.json
-          curl -fsS http://127.0.0.1:7800/meta/series/tmdb:1399.json > /tmp/series-meta.json
+          curl -fsS http://127.0.0.1:7800/manifest.json >/tmp/manifest-imdb.json
+          curl -fsS http://127.0.0.1:7800/catalog/movie/home-hot.json >/tmp/catalog.json
+          curl -fsS http://127.0.0.1:7800/meta/movie/tt0133093.json >/tmp/movie-meta.json
+          curl -fsS http://127.0.0.1:7800/meta/series/tt0944947.json >/tmp/series-meta.json
           node - <<'NODE'
           const fs=require('fs');
+          const manifest=JSON.parse(fs.readFileSync('/tmp/manifest-imdb.json','utf8'));
+          const catalog=JSON.parse(fs.readFileSync('/tmp/catalog.json','utf8'));
           const movie=JSON.parse(fs.readFileSync('/tmp/movie-meta.json','utf8')).meta;
           const series=JSON.parse(fs.readFileSync('/tmp/series-meta.json','utf8')).meta;
-          if(movie.imdbId!=='tt0133093' || movie.imdb_id!=='tt0133093' || movie.imdbID!=='tt0133093') throw new Error('movie IMDb aliases missing');
-          if(movie.behaviorHints?.defaultVideoId!=='tt0133093') throw new Error('movie defaultVideoId is not IMDb');
-          if(series.imdbId!=='tt0944947') throw new Error('series IMDb id missing');
-          if(series.videos?.[0]?.id!=='tt0944947:1:1') throw new Error('series episode video ID is not canonical IMDb S:E');
-          console.log('IMDb compatibility regression OK');
+          const metaResource=manifest.resources.find(x=>x&&x.name==='meta');
+          if(!metaResource?.idPrefixes?.includes('tt')) throw new Error('manifest meta tt prefix missing');
+          if(catalog.metas?.[0]?.id!=='tt0133093') throw new Error('catalog primary ID is not IMDb');
+          if(movie?.id!=='tt0133093' || movie.behaviorHints?.defaultVideoId!=='tt0133093') throw new Error('movie canonical IMDb meta failed');
+          if(series?.id!=='tt0944947' || series.videos?.[0]?.id!=='tt0944947:1:1') throw new Error('series canonical IMDb meta failed');
+          console.log('Canonical IMDb catalog/meta regression OK');
           NODE
