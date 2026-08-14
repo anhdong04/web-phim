@@ -1,0 +1,58 @@
+name: Web Phim v6.2.1 PikPak Fix
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pikpak-fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: HH3D uses net hosts, root scan and diagnostics
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/mock-pikpak621.js <<'NODE'
+          const realFetch = global.fetch;
+          global.fetch = async function(input, init) {
+            const url = String(input);
+            const json = body => new Response(JSON.stringify(body), {status:200,headers:{'content-type':'application/json'}});
+            if (url.includes('user.mypikpak.net/v1/shield/captcha/init')) return json({captcha_token:'captcha-ok'});
+            if (url.includes('api-drive.mypikpak.net/drive/v1/share/detail')) {
+              const u = new URL(url), parent = u.searchParams.get('parent_id') || '';
+              if (parent === '') return json({share_status:'OK',files:[{kind:'drive#folder',id:'folder1',name:'Đấu Phá Thương Khung'}]});
+              if (parent === 'folder1') return json({share_status:'OK',files:[{kind:'drive#file',id:'ep1',name:'Dau.Pha.Thuong.Khung.EP01.1080p.mp4',size:'2000000000'}]});
+              if (parent === 'ui-only-parent') return json({share_status:'OK',files:[]});
+              return json({share_status:'OK',files:[]});
+            }
+            if (url.includes('api-drive.mypikpak.net/drive/v1/share/file_info')) return json({file_info:{web_content_link:'https://cdn.pikpak.test/ep1.mp4'}});
+            if (url.includes('api.themoviedb.org/3/search/tv?')) return json({results:[{id:123,name:'Đấu Phá Thương Khung',original_name:'Battle Through the Heavens',overview:'HH3D',first_air_date:'2017-01-07'}]});
+            if (url.includes('api.themoviedb.org/3/tv/123?')) return json({id:123,name:'Đấu Phá Thương Khung',original_name:'Battle Through the Heavens',overview:'HH3D',first_air_date:'2017-01-07',genres:[],credits:{cast:[],crew:[]},external_ids:{},videos:{results:[]},content_ratings:{results:[]},images:{logos:[]},origin_country:['CN'],networks:[],seasons:[],episode_run_time:[24]});
+            return realFetch(input, init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-pikpak621.js" PORT=7810 TMDB_API_KEY=test HH3D_PIKPAK_ENABLED=true HH3D_PIKPAK_SHARE_URL=https://mypikpak.com/s/testshare/ui-only-parent node addon_v621.js >/tmp/v621.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:7810/hh3d/manifest.json >/tmp/manifest.json 2>/dev/null && break || sleep 0.25; done
+          grep -q '"version":"1.0.1"' /tmp/manifest.json
+          curl -fsS http://127.0.0.1:7810/hh3d/diag >/tmp/diag.json
+          node - <<'NODE'
+          const d=require('/tmp/diag.json');
+          if(d.version!=='6.2.1') throw new Error('wrong version');
+          if(!d.ok || d.fileCount!==1 || d.groupCount<1) throw new Error('root scan failed: '+JSON.stringify(d));
+          if(d.apiHost!=='api-drive.mypikpak.net' || d.userHost!=='user.mypikpak.net') throw new Error('wrong live hosts');
+          NODE
+          curl -fsS http://127.0.0.1:7810/hh3d/catalog/series/hh3d.json >/tmp/catalog.json
+          node - <<'NODE'
+          const d=require('/tmp/catalog.json'); if(!d.metas?.length) throw new Error('HH3D catalog empty');
+          NODE
