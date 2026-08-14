@@ -1,0 +1,103 @@
+name: Web Phim v6.2.7 YanHH3D HLS Detection
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  yanhh3d-hls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: HLS-aware relay and MIME regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/mock-v627-fetch.js <<'NODE'
+          const realFetch = global.fetch;
+          const html = (body,status=200,headers={}) => new Response(body,{status,headers:{'content-type':'text/html; charset=utf-8',...headers}});
+          const hls = body => new Response(body,{status:200,headers:{'content-type':'application/vnd.apple.mpegurl'}});
+          const bytes = (body,status=200,headers={}) => new Response(Buffer.from(body),{status,headers:{'content-type':'video/mp2t','accept-ranges':'bytes',...headers}});
+          const catalog = `<!doctype html><div class="film_list-wrap"><div class="flw-item"><img class="film-poster-img" data-src="https://img.test/show.jpg"><div class="tick-rate">Tập 1</div><span class="tick-quality">1080P</span><h3 class="film-name"><a href="/phim/test-show">Test Show</a></h3></div></div>`;
+          const detail = `<!doctype html><div class="anisc-poster"><img class="film-poster-img" src="https://img.test/show.jpg"></div><h1 class="film-name">Test Show</h1><a class="btn-play" href="/xem/test-show">TM</a>`;
+          const eps = `<div id="top-comment"><div class="ss-list"><a class="ssl-item ep-item" href="/watch/test-1" title="1">1</a></div></div>`;
+          const player = `<a class="btn3dsv" data-src="https://media.test/path/master.m3u8">1080P</a>`;
+          global.fetch = async function(input, init={}) {
+            const url=String(input), headers=new Headers(init.headers||{});
+            if (url === 'https://yanhh3d.im' || url === 'https://yanhh3d.im/' || url.includes('/moi-cap-nhat?page=1')) return html(catalog);
+            if (url.includes('/phim/test-show')) return html(detail);
+            if (url.endsWith('/xem/test-show')) return html(eps);
+            if (url.includes('/watch/test-1')) return html(player);
+            if (url === 'https://media.test/path/master.m3u8') {
+              if (!headers.get('referer')?.includes('/watch/test-1')) return html('forbidden',403);
+              if (!String(headers.get('accept')||'').includes('mpegurl')) return html('bad accept',406);
+              return hls('#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-KEY:METHOD=AES-128,URI="key.bin"\n#EXTINF:10,\nseg1.ts\n#EXT-X-ENDLIST\n');
+            }
+            if (url === 'https://media.test/path/key.bin') {
+              if (!headers.get('referer')?.includes('/watch/test-1')) return html('forbidden',403);
+              return new Response(Buffer.from('0123456789abcdef'),{status:200,headers:{'content-type':'application/octet-stream'}});
+            }
+            if (url === 'https://media.test/path/seg1.ts') {
+              if (!headers.get('referer')?.includes('/watch/test-1')) return html('forbidden',403);
+              if (headers.get('range')) return bytes('SEGM',206,{'content-range':'bytes 0-3/8','content-length':'4'});
+              return bytes('SEGMENT1');
+            }
+            if (url.includes('api.themoviedb.org')) return new Response(JSON.stringify({results:[]}),{status:200,headers:{'content-type':'application/json'}});
+            return realFetch(input,init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-v627-fetch.js" PORT=7815 PUBLIC_BASE_URL=http://127.0.0.1:7815 TMDB_API_KEY=test HH3D_PIKPAK_ENABLED=false YANHH3D_ENABLED=true YANHH3D_MAIN_URL=https://yanhh3d.im YANHH3D_MEDIA_RELAY=true INLINE_STREAM_SUBTITLES=false node addon_v627.js >/tmp/v627.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7815/yanhh3d/manifest.json >/tmp/m.json 2>/dev/null && break || sleep 0.25; done
+          cat /tmp/v627.log
+          node - <<'NODE'
+          const m=require('/tmp/m.json'); if(m.version!=='1.0.2') throw new Error('YanHH3D 1.0.2 manifest missing '+JSON.stringify(m));
+          NODE
+          curl -fsS http://127.0.0.1:7815/yanhh3d/catalog/series/yanhh3d.json >/tmp/c.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/c.json'),id=d.metas?.[0]?.id; if(!id) throw new Error('catalog missing'); fs.writeFileSync('/tmp/id',id);
+          NODE
+          id=$(cat /tmp/id)
+          curl -fsS "http://127.0.0.1:7815/yanhh3d/meta/series/$id.json" >/tmp/meta.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/meta.json'),vid=d.meta?.videos?.[0]?.id; if(!vid) throw new Error('video missing '+JSON.stringify(d)); fs.writeFileSync('/tmp/vid',vid);
+          NODE
+          vid=$(cat /tmp/vid)
+          curl -fsS "http://127.0.0.1:7815/yanhh3d/stream/series/$vid.json" >/tmp/s.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/s.json'),s=d.streams?.[0],u=s?.url;
+          if(!u || !u.includes('/yanhh3d/relay/') || !u.endsWith('.m3u8')) throw new Error('HLS relay URL missing extension '+JSON.stringify(d));
+          if(s.mimeType!=='application/vnd.apple.mpegurl' || s.sourceType!=='hls') throw new Error('HLS MIME/sourceType missing '+JSON.stringify(s));
+          if(s.behaviorHints?.notWebReady!==false) throw new Error('relay should be web ready');
+          fs.writeFileSync('/tmp/relay',u);
+          fs.writeFileSync('/tmp/diag',u.replace('/relay/','/relay-diag/'));
+          NODE
+          relay=$(cat /tmp/relay)
+          diag=$(cat /tmp/diag)
+          curl -fsS "$diag" >/tmp/diag.json
+          node - <<'NODE'
+          const d=require('/tmp/diag.json'); if(!d.ok || !d.isHls || d.status!==200) throw new Error('relay diag failed '+JSON.stringify(d));
+          NODE
+          curl -fsS "$relay" >/tmp/pl.m3u8
+          grep -q '#EXTM3U' /tmp/pl.m3u8
+          grep -q '/yanhh3d/relay/' /tmp/pl.m3u8
+          grep -q '\.ts' /tmp/pl.m3u8
+          node - <<'NODE'
+          const fs=require('fs'),t=fs.readFileSync('/tmp/pl.m3u8','utf8');
+          const urls=[...t.matchAll(/http:\/\/127\.0\.0\.1:7815\/yanhh3d\/relay\/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9]+/g)].map(x=>x[0]);
+          if(urls.length<2) throw new Error('key/segment were not rewritten with suffixes '+t);
+          const seg=urls.find(u=>u.endsWith('.ts')); if(!seg) throw new Error('segment relay lacks .ts suffix '+t);
+          fs.writeFileSync('/tmp/segurl',seg);
+          NODE
+          seg=$(cat /tmp/segurl)
+          curl -fsS -H 'Range: bytes=0-3' "$seg" >/tmp/seg.bin
+          test "$(cat /tmp/seg.bin)" = "SEGM"
+          echo 'v6.2.7 YanHH3D HLS-aware relay regression OK'
