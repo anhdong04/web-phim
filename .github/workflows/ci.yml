@@ -17,17 +17,23 @@ jobs:
           node-version: '20'
       - name: Syntax check
         run: npm run check
-      - name: Startup smoke test
+      - name: Startup and admin smoke test
         shell: bash
         run: |
-          set +e
-          timeout 4s env PORT=7799 node addon_v430.js > /tmp/web-phim.log 2>&1
-          code=$?
+          set -euo pipefail
+          env PORT=7799 node addon_v440.js > /tmp/web-phim.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          ok=0
+          for i in {1..24}; do
+            if curl -fsS http://127.0.0.1:7799/admin/api > /tmp/admin.json 2>/dev/null; then
+              ok=1
+              break
+            fi
+            sleep 0.25
+          done
           cat /tmp/web-phim.log
-          if grep -q "v4.3.0 listening" /tmp/web-phim.log; then
-            exit 0
-          fi
-          if [ "$code" -eq 124 ]; then
-            echo "Server timed out without expected startup marker"
-          fi
-          exit 1
+          test "$ok" -eq 1
+          grep -q "v4.4.0 listening" /tmp/web-phim.log
+          grep -q '"version":"4.4.0"' /tmp/admin.json
+          curl -fsS http://127.0.0.1:7799/admin | grep -q "Web Phim Admin"
