@@ -1,26 +1,24 @@
-# KKPhim Streams for Nuvio
+# KKPhim + Streams for Nuvio
 
-A small **Stremio-compatible stream addon** that exposes streams from the public KKPhim API (`phimapi.com`) to Nuvio and other compatible clients.
+A small Stremio-compatible stream aggregator for Nuvio. It keeps KKPhim as the built-in source and can also merge streams from other configured Stremio-compatible addons.
 
 ## How it works
 
 ```text
-Nuvio / Stremio-compatible client
-        |
-        | movie/series external ID
-        v
-KKPhim Streams addon
-        |
-        | IMDb or TMDB lookup
-        v
-https://phimapi.com
-        |
-        | episodes[].server_data[].link_m3u8
-        v
-Nuvio player
+Nuvio
+  -> this addon
+     -> KKPhim
+     -> AIOStreams (optional)
+     -> TorBox addon (optional)
+     -> Comet (optional)
+     -> MediaFusion (optional)
+     -> Torrentio (optional)
+     -> any other compatible stream addon
+  -> deduplicate
+  -> return one stream list to Nuvio
 ```
 
-The addon is intentionally **stream-only**. It does not create a duplicate movie catalog. When Nuvio requests a movie or episode using a supported IMDb/TMDB ID, the addon asks KKPhim for matching playback sources.
+The addon is stream-only and does not create a duplicate movie catalog.
 
 ## Supported IDs
 
@@ -29,91 +27,65 @@ The addon is intentionally **stream-only**. It does not create a duplicate movie
 - Movie TMDB: `tmdb:12345`
 - Series TMDB: `tmdb:12345:1:2`
 
-## Requirements
-
-- Node.js 18+
-- No third-party Node dependencies
-
-## Run locally
-
-```bash
-npm start
-```
-
-Default manifest:
-
-```text
-http://127.0.0.1:7000/manifest.json
-```
-
-You can change the port:
-
-```bash
-PORT=8080 npm start
-```
-
 ## Environment variables
 
-| Variable | Default | Meaning |
-|---|---|---|
-| `PORT` | `7000` | HTTP port |
-| `KKPHIM_API` | `https://phimapi.com` | KKPhim API base URL |
-| `REQUEST_TIMEOUT_MS` | `10000` | Upstream timeout |
+| Variable | Meaning |
+|---|---|
+| `PORT` | HTTP port, default `7000` |
+| `KKPHIM_API` | KKPhim API base URL |
+| `REQUEST_TIMEOUT_MS` | Per-upstream timeout |
+| `MANIFEST_CACHE_MS` | Cache time for upstream manifests |
+| `AIOSTREAMS_MANIFEST_URL` | Full configured AIOStreams manifest URL |
+| `TORBOX_MANIFEST_URL` | Full configured TorBox-compatible addon manifest URL |
+| `COMET_MANIFEST_URL` | Full configured Comet manifest URL |
+| `MEDIAFUSION_MANIFEST_URL` | Full configured MediaFusion manifest URL |
+| `TORRENTIO_MANIFEST_URL` | Full configured Torrentio manifest URL |
+| `UPSTREAM_ADDON_URLS` | Other manifests, comma/newline separated; optional `Name|URL` syntax |
 
-## Test
+Important: for addons that have a configuration page, paste the final configured `manifest.json` URL, not just the addon home page. If an upstream service uses a debrid account, configure that service on the upstream addon itself and then paste its generated manifest URL here. Do not put API keys directly in this repository.
 
-Manifest:
+## Render setup
 
-```bash
-curl http://localhost:7000/manifest.json
-```
+The repository already includes `render.yaml`. After Render deploys the repository, add the desired manifest URLs in Render under:
 
-Example movie stream request:
+`Web Service -> Environment`
 
-```bash
-curl http://localhost:7000/stream/movie/tt1254207.json
-```
+For example, set only the providers you want to use. Empty variables are ignored.
 
-Example series episode request:
-
-```bash
-curl http://localhost:7000/stream/series/tt0944947:1:1.json
-```
-
-Whether a given title returns streams depends on whether KKPhim has a matching external ID and playback source.
-
-## Deploy to Render
-
-1. Push this repository to GitHub.
-2. Create a new **Web Service** in Render and select the repository.
-3. Runtime: Node.
-4. Build command: leave empty (or `npm install`).
-5. Start command: `npm start`.
-6. After deployment, install this URL in Nuvio:
+After saving environment variables, redeploy/restart the Render service. Nuvio continues to use the same manifest URL:
 
 ```text
 https://YOUR-SERVICE.onrender.com/manifest.json
 ```
 
-A `render.yaml` file is included for Blueprint deployment as well.
+## Local run
 
-## Deploy with Docker
+Node.js 18+ is required. There are no third-party Node dependencies.
 
 ```bash
-docker build -t kkphim-nuvio-addon .
-docker run --rm -p 7000:7000 kkphim-nuvio-addon
+npm start
 ```
 
-Then open:
+Manifest:
 
 ```text
-http://localhost:7000/manifest.json
+http://127.0.0.1:7000/manifest.json
 ```
 
-## Notes about TV / phone clients
+Example request:
 
-`localhost` on a phone or TV points to that phone/TV, not your computer. For normal Nuvio use, deploy the addon to a public HTTPS URL (Render, Railway, Fly.io, VPS, etc.).
+```bash
+curl http://127.0.0.1:7000/stream/movie/tt0133093.json
+```
+
+## Behavior
+
+- Providers are queried in parallel.
+- A failed or slow provider does not stop the others.
+- Manifest metadata is cached.
+- Duplicate direct URLs, external URLs, and torrent hashes/file indexes are removed.
+- Upstream stream objects are preserved, so compatible fields such as direct `url`, `externalUrl`, or `infoHash` can pass through.
 
 ## Legal / access note
 
-This project is only an adapter. Use it only with content and sources you are authorized to access, and comply with the terms of the upstream service and applicable law.
+Use this adapter only with content and sources you are authorized to access, and comply with the terms of upstream services and applicable law.
