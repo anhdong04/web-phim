@@ -19,7 +19,7 @@ jobs:
       - name: Browser CORS OPTIONS Range and deep media regression
         shell: bash
         run: |
-          set -euo pipefail
+          set -euxo pipefail
           cat > /tmp/mock-v628-fetch.js <<'NODE'
           const realFetch = global.fetch;
           const html = (body,status=200,headers={}) => new Response(body,{status,headers:{'content-type':'text/html; charset=utf-8',...headers}});
@@ -71,6 +71,7 @@ jobs:
           NODE
           vid=$(cat /tmp/vid)
           curl -fsS "http://127.0.0.1:7815/yanhh3d/stream/series/$vid.json" >/tmp/s.json
+          cat /tmp/s.json
           node - <<'NODE'
           const fs=require('fs'),d=require('/tmp/s.json'),u=d.streams?.[0]?.url;
           if(!u || !/\/yanhh3d\/relay\/.+\.m3u8$/.test(u)) throw new Error('HLS relay URL missing '+JSON.stringify(d));
@@ -78,15 +79,19 @@ jobs:
           NODE
           relay=$(cat /tmp/relay)
           curl -sS -D /tmp/opt.headers -o /dev/null -X OPTIONS -H 'Origin: http://nuvio.local' -H 'Access-Control-Request-Method: GET' -H 'Access-Control-Request-Headers: range' "$relay"
+          cat /tmp/opt.headers
           grep -qi '^HTTP/.* 204' /tmp/opt.headers
           grep -qi '^access-control-allow-origin: \*' /tmp/opt.headers
           grep -qi '^access-control-allow-methods: .*OPTIONS' /tmp/opt.headers
           grep -qi '^access-control-allow-headers: .*Range' /tmp/opt.headers
           curl -fsS -D /tmp/pl.headers "$relay" >/tmp/pl.m3u8
+          cat /tmp/pl.headers
+          cat /tmp/pl.m3u8
           grep -qi '^access-control-allow-origin: \*' /tmp/pl.headers
           grep -q '#EXTM3U' /tmp/pl.m3u8
           check=${relay/\/yanhh3d\/relay\//\/yanhh3d\/relay-check\/}
           curl -fsS "$check" >/tmp/check.json
+          cat /tmp/check.json
           node - <<'NODE'
           const d=require('/tmp/check.json');
           if(!d.ok || d.stage!=='media' || !d.media?.ok || !d.key?.ok) throw new Error('deep relay check failed '+JSON.stringify(d));
@@ -99,6 +104,7 @@ jobs:
           NODE
           seg=$(cat /tmp/seg)
           curl -fsS -D /tmp/seg.headers -H 'Range: bytes=0-3' "$seg" >/tmp/seg.bin
+          cat /tmp/seg.headers
           grep -qi '^HTTP/.* 206' /tmp/seg.headers
           grep -qi '^access-control-allow-origin: \*' /tmp/seg.headers
           test "$(cat /tmp/seg.bin)" = "SEGM"
