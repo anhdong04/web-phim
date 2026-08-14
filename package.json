@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "3.3.0",
-  "description": "Vietnamese TMDB home/search metadata with accurate KKPhim/TorBox stream matching, presets and subtitles for Nuvio",
-  "main": "addon_v33.js",
+  "version": "3.3.1",
+  "description": "Vietnamese TMDB home/search metadata with accurate KKPhim/TorBox stream matching, presets and filtered subtitles for Nuvio",
+  "main": "addon_v331.js",
   "scripts": {
-    "start": "node addon_v33.js",
-    "check": "node --check addon_v33.js"
+    "start": "node addon_v331.js",
+    "check": "node --check addon_v331.js && node --check addon_v33.js"
   },
   "engines": {
     "node": ">=18"
