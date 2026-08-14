@@ -49,7 +49,7 @@ jobs:
           grep -q '"persistent":false' /tmp/settings.json
           curl -fsS http://127.0.0.1:7799/ | grep -q "Tạo link xem phim"
           curl -fsS http://127.0.0.1:7799/admin > /tmp/admin.html
-          grep -q "Web Phim Admin v5.2" /tmp/admin.html
+          grep -q "Web Phim Admin" /tmp/admin.html
           grep -q "Backup / Restore" /tmp/admin.html
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/api > /tmp/admin.json
           grep -q '"authorized":true' /tmp/admin.json
