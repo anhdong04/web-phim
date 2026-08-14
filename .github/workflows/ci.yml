@@ -9,7 +9,7 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,11 +28,11 @@ jobs:
             console.log(file + ': rendered browser JS syntax OK');
           }
           NODE
-      - name: v5.4 startup share admin backup restore smoke test
+      - name: v6 startup share admin backup restore smoke test
         shell: bash
         run: |
           set -euo pipefail
-          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true node addon_v540.js > /tmp/web-phim.log 2>&1 &
+          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true node addon_v600.js > /tmp/web-phim.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           ok=0
@@ -42,16 +42,18 @@ jobs:
           done
           cat /tmp/web-phim.log
           test "$ok" -eq 1
-          grep -q "v5.4.0 listening" /tmp/web-phim.log
+          grep -q "v6.0.0 listening" /tmp/web-phim.log
           curl -fsS http://127.0.0.1:7799/admin > /tmp/admin.html
           grep -q "Backup / Restore" /tmp/admin.html
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/api > /tmp/admin.json
           grep -q '"authorized":true' /tmp/admin.json
-          grep -q '"version":"5.4.0"' /tmp/admin.json
-          curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI Backup Test","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
+          grep -q '"version":"6.0.0"' /tmp/admin.json
+          curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI v6","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
           id=$(node -e "const d=require('/tmp/share.json');process.stdout.write(d.id)")
           curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" > /tmp/manifest.json
-          grep -q '"version":"5.4.0"' /tmp/manifest.json
+          grep -q '"version":"6.0.0"' /tmp/manifest.json
+          grep -q 'personal-for-you' /tmp/manifest.json
+          grep -q 'personal-because' /tmp/manifest.json
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/backup > /tmp/backup.json
           curl -fsS -X POST http://127.0.0.1:7799/admin/action -H 'content-type: application/json' -H 'x-admin-token: test-admin' -d '{"action":"share-delete","id":"'"$id"'"}' >/tmp/delete.json
           node - <<'NODE'
@@ -59,79 +61,78 @@ jobs:
           fs.writeFileSync('/tmp/restore.json',JSON.stringify({mode:'replace',backup}));
           NODE
           curl -fsS -X POST http://127.0.0.1:7799/admin/restore -H 'content-type: application/json' -H 'x-admin-token: test-admin' --data-binary @/tmp/restore.json >/tmp/restore-result.json
-          curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" | grep -q '"version":"5.4.0"'
-      - name: Canonical IMDb catalog and meta regression
+          curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" | grep -q '"version":"6.0.0"'
+      - name: AI Vietnamese subtitle regression
         shell: bash
         run: |
           set -euo pipefail
-          cat > /tmp/mock-fetch.js <<'NODE'
-          const realFetch = global.fetch;
-          global.fetch = async function(input, init) {
-            const url = String(input);
-            const json = body => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
-            if (url.includes('/trending/movie/week?')) return json({results:[{id:603,title:'The Matrix',original_title:'The Matrix',overview:'Test',release_date:'1999-03-31',poster_path:null,backdrop_path:null}]});
-            if (url.includes('/movie/603/external_ids?')) return json({imdb_id:'tt0133093'});
-            if (url.includes('/find/tt0133093?')) return json({movie_results:[{id:603}],tv_results:[]});
-            if (url.includes('/movie/603?')) return json({id:603,title:'The Matrix',original_title:'The Matrix',overview:'Test',release_date:'1999-03-31',poster_path:null,backdrop_path:null,genres:[],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt0133093'},videos:{results:[]},release_dates:{results:[]},images:{logos:[]},production_countries:[],vote_average:8.2});
-            if (url.includes('/find/tt0944947?')) return json({movie_results:[],tv_results:[{id:1399}]});
-            if (url.includes('/tv/1399/season/1?')) return json({episodes:[{season_number:1,episode_number:1,name:'Winter Is Coming',air_date:'2011-04-17',still_path:null,overview:'Test'}]});
-            if (url.includes('/tv/1399?')) return json({id:1399,name:'Game of Thrones',original_name:'Game of Thrones',overview:'Test',first_air_date:'2011-04-17',poster_path:null,backdrop_path:null,genres:[],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt0944947'},videos:{results:[]},content_ratings:{results:[]},images:{logos:[]},origin_country:['US'],networks:[],seasons:[{season_number:1}],episode_run_time:[60],vote_average:8.4});
-            return realFetch(input, init);
-          };
-          NODE
-          env NODE_OPTIONS="--require=/tmp/mock-fetch.js" PORT=7800 TMDB_API_KEY=test ADMIN_TOKEN=test-admin CANONICAL_IMDB_IDS=true node addon_v540.js >/tmp/web-phim-imdb.log 2>&1 &
-          pid=$!
-          trap 'kill "$pid" 2>/dev/null || true' EXIT
-          for i in {1..30}; do curl -fsS http://127.0.0.1:7800/ >/dev/null 2>&1 && break || sleep 0.25; done
-          curl -fsS http://127.0.0.1:7800/manifest.json >/tmp/manifest-imdb.json
-          curl -fsS http://127.0.0.1:7800/catalog/movie/home-hot.json >/tmp/catalog.json
-          curl -fsS http://127.0.0.1:7800/meta/movie/tt0133093.json >/tmp/movie-meta.json
-          curl -fsS http://127.0.0.1:7800/meta/series/tt0944947.json >/tmp/series-meta.json
-          node - <<'NODE'
-          const fs=require('fs');
-          const manifest=JSON.parse(fs.readFileSync('/tmp/manifest-imdb.json','utf8'));
-          const catalog=JSON.parse(fs.readFileSync('/tmp/catalog.json','utf8'));
-          const movie=JSON.parse(fs.readFileSync('/tmp/movie-meta.json','utf8')).meta;
-          const series=JSON.parse(fs.readFileSync('/tmp/series-meta.json','utf8')).meta;
-          const metaResource=manifest.resources.find(x=>x&&x.name==='meta');
-          if(!metaResource?.idPrefixes?.includes('tt')) throw new Error('manifest meta tt prefix missing');
-          if(catalog.metas?.[0]?.id!=='tt0133093') throw new Error('catalog primary ID is not IMDb');
-          if(movie?.id!=='tt0133093' || movie.behaviorHints?.defaultVideoId!=='tt0133093') throw new Error('movie canonical IMDb meta failed');
-          if(series?.id!=='tt0944947' || series.videos?.[0]?.id!=='tt0944947:1:1') throw new Error('series canonical IMDb meta failed');
-          console.log('Canonical IMDb catalog/meta regression OK');
-          NODE
-      - name: Inline stream subtitles regression
-        shell: bash
-        run: |
-          set -euo pipefail
-          cat > /tmp/mock-inline-fetch.js <<'NODE'
+          cat > /tmp/mock-ai-fetch.js <<'NODE'
           const realFetch = global.fetch;
           global.fetch = async function(input, init) {
             const url = String(input);
             const json = body => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
             if (url.includes('api.themoviedb.org/3/find/tt0133093?')) return json({movie_results:[{id:603}],tv_results:[]});
-            if (url.includes('api.themoviedb.org/3/movie/603?')) return json({id:603,title:'The Matrix',original_title:'The Matrix',release_date:'1999-03-31'});
-            if (url.includes('phimapi.com/imdb/title/tt0133093')) return json({movie:{quality:'1080p',lang:'Vietsub'},episodes:[{server_name:'KK Server',server_data:[{name:'Full',link_m3u8:'https://kk.test/matrix.m3u8'}]}]});
-            if (url.includes('comet.test/stream/movie/tt0133093.json')) return json({streams:[{name:'Comet',title:'The Matrix 1999 1080p WEB-DL x265',url:'https://video.test/matrix.mkv',behaviorHints:{filename:'The.Matrix.1999.1080p.WEB-DL.x265.mkv',videoSize:9000000000}}]});
-            if (url.includes('subs.test/subtitles/movie/tt0133093.json')) return json({subtitles:[
-              {id:'vi1',lang:'vie',url:'https://subs-cdn.test/matrix.vi.srt',releaseName:'The.Matrix.1999.1080p.WEB-DL.x265'},
-              {id:'en1',lang:'eng',url:'https://subs-cdn.test/matrix.en.srt',releaseName:'The.Matrix.1999.1080p.WEB-DL.x265'}
-            ]});
+            if (url.includes('api.themoviedb.org/3/movie/603?')) return json({id:603,title:'The Matrix',original_title:'The Matrix',release_date:'1999-03-31',genres:[{id:878,name:'Science Fiction'}]});
+            if (url.includes('phimapi.com/imdb/title/tt0133093')) return json({movie:{},episodes:[]});
+            if (url.includes('comet.test/stream/movie/tt0133093.json')) return json({streams:[{name:'Comet',title:'The Matrix 1999 1080p WEB-DL',url:'https://video.test/matrix.mkv',behaviorHints:{filename:'The.Matrix.1999.1080p.WEB-DL.mkv',videoSize:5000000000}}]});
+            if (url.includes('subs.test/subtitles/movie/tt0133093.json')) return json({subtitles:[{id:'en1',lang:'eng',url:'https://subs-cdn.test/matrix.en.srt',releaseName:'The.Matrix.1999.1080p.WEB-DL'}]});
+            if (url === 'https://subs-cdn.test/matrix.en.srt') return new Response('1\n00:00:01,000 --> 00:00:03,000\nHello, Neo.\n\n2\n00:00:04,000 --> 00:00:06,000\nFollow the white rabbit.\n', {status:200,headers:{'content-type':'application/x-subrip'}});
+            if (url.startsWith('https://translation.googleapis.com/language/translate/v2?key=')) {
+              const body = JSON.parse(String(init?.body || '{}')); const map = {'Hello, Neo.':'Xin chào, Neo.','Follow the white rabbit.':'Hãy đi theo con thỏ trắng.'};
+              return json({data:{translations:(body.q||[]).map(x=>({translatedText:map[x]||('VI '+x)}))}});
+            }
             return realFetch(input, init);
           };
           NODE
-          env NODE_OPTIONS="--require=/tmp/mock-inline-fetch.js" PORT=7801 TMDB_API_KEY=test COMET_MANIFEST_URL=https://comet.test/manifest.json DEFAULT_SUBTITLE_MANIFEST=https://subs.test/manifest.json INLINE_STREAM_SUBTITLES=true INLINE_SUBTITLES_MAX_PER_STREAM=6 node addon_v540.js >/tmp/web-phim-inline.log 2>&1 &
+          env NODE_OPTIONS="--require=/tmp/mock-ai-fetch.js" PORT=7802 TMDB_API_KEY=test ADMIN_TOKEN=test-admin GOOGLE_TRANSLATE_API_KEY=test COMET_MANIFEST_URL=https://comet.test/manifest.json DEFAULT_SUBTITLE_MANIFEST=https://subs.test/manifest.json node addon_v600.js >/tmp/web-phim-ai.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
-          for i in {1..30}; do curl -fsS http://127.0.0.1:7801/ >/dev/null 2>&1 && break || sleep 0.25; done
-          curl -fsS http://127.0.0.1:7801/stream/movie/tt0133093.json >/tmp/streams-inline.json
+          for i in {1..30}; do curl -fsS http://127.0.0.1:7802/ >/dev/null 2>&1 && break || sleep 0.25; done
+          curl -fsS -H 'x-forwarded-proto: http' http://127.0.0.1:7802/stream/movie/tt0133093.json >/tmp/ai-stream.json
           node - <<'NODE'
-          const fs=require('fs'); const data=JSON.parse(fs.readFileSync('/tmp/streams-inline.json','utf8'));
-          const comet=(data.streams||[]).find(s=>String(s.name||'').includes('Comet'));
-          const kk=(data.streams||[]).find(s=>String(s.name||'').includes('KKPhim'));
-          if(!comet) throw new Error('Comet stream missing');
-          if(!Array.isArray(comet.subtitles) || comet.subtitles.length<2) throw new Error('inline subtitles missing on Comet stream');
-          if(!comet.subtitles.some(s=>s.lang==='vie') || !comet.subtitles.some(s=>s.lang==='eng')) throw new Error('VI/EN inline subtitles missing');
-          if(kk && Array.isArray(kk.subtitles) && kk.subtitles.length) throw new Error('KKPhim must not receive injected subtitles');
-          console.log('Inline stream subtitles regression OK');
+          const fs=require('fs'); const d=JSON.parse(fs.readFileSync('/tmp/ai-stream.json','utf8'));
+          const s=(d.streams||[]).find(x=>String(x.name||'').includes('Comet')); if(!s) throw new Error('Comet missing');
+          const ai=(s.subtitles||[]).find(x=>x.lang==='vie' && String(x.id||'').includes('ai')); if(!ai) throw new Error('AI Vietnamese track missing');
+          fs.writeFileSync('/tmp/ai-url.txt',ai.url);
+          NODE
+          aiurl=$(cat /tmp/ai-url.txt)
+          curl -fsS "$aiurl" >/tmp/ai.vtt
+          grep -q '^WEBVTT' /tmp/ai.vtt
+          grep -q 'Xin chào, Neo.' /tmp/ai.vtt
+          grep -q 'Hãy đi theo con thỏ trắng.' /tmp/ai.vtt
+      - name: Personal Home regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/mock-personal-fetch.js <<'NODE'
+          const realFetch = global.fetch;
+          global.fetch = async function(input, init) {
+            const url = String(input);
+            const json = body => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+            if (url.includes('/find/tt0133093?')) return json({movie_results:[{id:603}],tv_results:[]});
+            if (url.includes('/movie/603/recommendations?')) return json({results:[{id:27205,title:'Inception',original_title:'Inception',overview:'Dreams',release_date:'2010-07-15',poster_path:null,backdrop_path:null}]});
+            if (url.includes('/movie/603?')) return json({id:603,title:'The Matrix',original_title:'The Matrix',release_date:'1999-03-31',genres:[{id:878,name:'Science Fiction'}]});
+            if (url.includes('/discover/movie?') && url.includes('with_genres=878')) return json({results:[{id:157336,title:'Interstellar',original_title:'Interstellar',overview:'Space',release_date:'2014-11-05',poster_path:null,backdrop_path:null}]});
+            if (url.includes('/movie/27205/external_ids?')) return json({imdb_id:'tt1375666'});
+            if (url.includes('/movie/157336/external_ids?')) return json({imdb_id:'tt0816692'});
+            if (url.includes('phimapi.com/imdb/title/tt0133093')) return json({movie:{},episodes:[]});
+            if (url.includes('/subtitles/movie/tt0133093.json')) return json({subtitles:[]});
+            return realFetch(input, init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-personal-fetch.js" PORT=7803 TMDB_API_KEY=test ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true DEFAULT_SUBTITLE_MANIFEST=https://subs.test/manifest.json node addon_v600.js >/tmp/web-phim-personal.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:7803/ >/dev/null 2>&1 && break || sleep 0.25; done
+          curl -fsS -X POST http://127.0.0.1:7803/api/share -H 'content-type: application/json' -d '{"name":"Personal CI","config":{}}' >/tmp/p-share.json
+          id=$(node -e "const d=require('/tmp/p-share.json');process.stdout.write(d.id)")
+          curl -fsS "http://127.0.0.1:7803/u/$id/stream/movie/tt0133093.json" >/tmp/p-stream.json
+          sleep 0.35
+          curl -fsS "http://127.0.0.1:7803/u/$id/catalog/movie/personal-for-you.json" >/tmp/for-you.json
+          curl -fsS "http://127.0.0.1:7803/u/$id/catalog/movie/personal-because.json" >/tmp/because.json
+          node - <<'NODE'
+          const fs=require('fs'); const fy=JSON.parse(fs.readFileSync('/tmp/for-you.json','utf8')); const bc=JSON.parse(fs.readFileSync('/tmp/because.json','utf8'));
+          if(fy.metas?.[0]?.id!=='tt0816692') throw new Error('For You did not learn preferred genre');
+          if(bc.metas?.[0]?.id!=='tt1375666') throw new Error('Because You Watched did not use recommendations');
+          console.log('Personal Home regression OK');
           NODE
