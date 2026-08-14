@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "4.2.0",
-  "description": "Vietnamese TMDB catalogs with smart stream scoring v2, provider-specific timeouts, configurable device profiles and ranked subtitles for Nuvio",
-  "main": "addon_v420.js",
+  "version": "4.3.0",
+  "description": "Vietnamese TMDB catalogs with configurable Home, enriched metadata, fail-soft smart-ranked streams, provider priorities, identity cache and ranked subtitles for Nuvio",
+  "main": "addon_v430.js",
   "scripts": {
-    "start": "node addon_v420.js",
-    "check": "node --check addon_v420.js && node --check v420_patch.js && node --check addon_v410.js && node --check addon_v4.js"
+    "start": "node addon_v430.js",
+    "check": "node --check addon_v430.js && node --check v430_patch.js && node --check addon_v420.js && node --check v420_patch.js && node --check addon_v410.js && node --check addon_v4.js"
   },
   "engines": {
     "node": ">=18"
