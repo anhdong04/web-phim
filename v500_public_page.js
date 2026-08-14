@@ -33,7 +33,7 @@ module.exports = function v500PublicPage() {
       <div class="field"><label>Tên link</label><input id="name" maxlength="80" placeholder="Ví dụ: TV phòng khách"></div>
       <div class="field"><label>Thời hạn</label><select id="expires"><option value="0">Không hết hạn</option><option value="30">30 ngày</option><option value="90">90 ngày</option><option value="365">1 năm</option></select></div>
       <div class="field"><label>Subtitle</label><select id="subtitle"><option value="vie,vi,eng,en">Tiếng Việt + English</option><option value="vie,vi">Chỉ tiếng Việt</option><option value="eng,en">Chỉ English</option></select></div>
-      <div class="field"><label>Ưu tiên nguồn</label><select id="priority"><option value="kkphim-first">KKPhim trước</option><option value="cached-first">Cached debrid trước</option><option value="quality-first">Chất lượng trước</option><option value="balanced">Cân bằng</option></select></div>
+      <div class="field"><label>Ưu tiên nguồn</label><select id="priority"><option value="kkphim-first">KKPhim trước</option><option value="cached-first">Cached debrid trước</option><option value="quality-first">Chất lượng trước</option><option value="small-first">File nhỏ trước</option><option value="balanced">Cân bằng</option></select></div>
     </div>
     <div class="checks"><label><input id="preferCached" type="checkbox" checked>Ưu tiên cached</label><label><input id="removeCam" type="checkbox" checked>Ẩn CAM/TS</label></div>
     <details class="advanced" style="margin-top:16px"><summary>Nâng cao</summary><div class="grid" style="margin-top:13px">
