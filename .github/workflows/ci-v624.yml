@@ -1,0 +1,78 @@
+name: Web Phim v6.2.4 HH3D Artwork Matcher
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  hh3d-artwork:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Smart TMDB matching and fallback poster regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/mock-v624-fetch.js <<'NODE'
+          const realFetch = global.fetch;
+          global.fetch = async function(input, init) {
+            const url = String(input);
+            const json = body => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+            if (url.includes('user.mypikpak.net/v1/shield/captcha/init')) return json({captcha_token:'captcha-ok'});
+            if (url.includes('api-drive.mypikpak.net/drive/v1/share/detail')) {
+              const u = new URL(url), parent = u.searchParams.get('parent_id') || '';
+              if (parent === '') return json({share_status:'OK',files:[{kind:'drive#folder',id:'wrapper-real',name:'HH3D'}]});
+              if (parent === 'wrapper-real') return json({share_status:'OK',files:[
+                {kind:'drive#folder',id:'trach',name:'Trạch Thiên Ký 4K ###'},
+                {kind:'drive#folder',id:'ngao',name:'Ngạo Thế Đan Thần 4K'},
+                {kind:'drive#folder',id:'huyen',name:'Huyền Giới Chi Môn 4K - Vọng Ngữ'},
+                {kind:'drive#folder',id:'unknown',name:'Bộ HH3D Không Có Trên TMDB 4K'}
+              ]});
+              return json({share_status:'OK',files:[]});
+            }
+            if (url.includes('api.themoviedb.org/3/search/tv?')) {
+              const q = new URL(url).searchParams.get('query') || '';
+              if (q === 'Trạch Thiên Ký') return json({results:[{id:101,name:'Trạch Thiên Ký',original_name:'择天记',overview:'Matched cleaned title',first_air_date:'2017-04-17',poster_path:'/trach.jpg',backdrop_path:'/trach-bg.jpg'}]});
+              if (q === 'Ngạo Thế Đan Thần') return json({results:[{id:102,name:'Ngạo Thế Đan Thần',original_name:'傲世丹神',overview:'Backdrop fallback',first_air_date:'2025-01-01',poster_path:null,backdrop_path:'/ngao-bg.jpg'}]});
+              if (q === 'Huyền Giới Chi Môn') return json({results:[{id:103,name:'Huyền Giới Chi Môn',original_name:'玄界之门',overview:'Suffix cleaned',first_air_date:'2025-01-01',poster_path:'/huyen.jpg',backdrop_path:'/huyen-bg.jpg'}]});
+              if (q.includes('Huyền Giới Chi Môn')) return json({results:[{id:999,name:'Một Phim Khác',original_name:'Other Show',poster_path:'/wrong.jpg'}]});
+              return json({results:[]});
+            }
+            return realFetch(input, init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-v624-fetch.js" PORT=7812 TMDB_API_KEY=test PUBLIC_BASE_URL=http://127.0.0.1:7812 HH3D_PIKPAK_ENABLED=true HH3D_PIKPAK_SHARE_URL=https://mypikpak.com/s/testshare/ui-only-id INLINE_STREAM_SUBTITLES=false node addon_v624.js >/tmp/v624.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7812/hh3d/manifest.json >/tmp/manifest.json 2>/dev/null && break || sleep 0.25; done
+          cat /tmp/v624.log
+          node - <<'NODE'
+          const m=require('/tmp/manifest.json');
+          if(m.version!=='1.0.4') throw new Error('HH3D 1.0.4 manifest missing '+JSON.stringify(m));
+          NODE
+          curl --max-time 15 -fsS http://127.0.0.1:7812/hh3d/catalog/series/hh3d.json >/tmp/catalog.json
+          node - <<'NODE'
+          const fs=require('fs'), d=require('/tmp/catalog.json');
+          if(d.metas?.length!==4) throw new Error('expected 4 HH3D metas '+JSON.stringify(d));
+          for(const m of d.metas) if(!m.poster) throw new Error('blank poster remains '+JSON.stringify(m));
+          const trach=d.metas.find(x=>String(x.name).includes('Trạch Thiên Ký'));
+          if(!trach || !String(trach.poster).includes('/trach.jpg')) throw new Error('clean-title TMDB poster failed '+JSON.stringify(trach));
+          const ngao=d.metas.find(x=>String(x.name).includes('Ngạo Thế Đan Thần'));
+          if(!ngao || !String(ngao.poster).includes('/ngao-bg.jpg')) throw new Error('backdrop-as-poster failed '+JSON.stringify(ngao));
+          const huyen=d.metas.find(x=>String(x.name).includes('Huyền Giới Chi Môn'));
+          if(!huyen || !String(huyen.poster).includes('/huyen.jpg')) throw new Error('dash-suffix cleanup failed '+JSON.stringify(huyen));
+          const unknown=d.metas.find(x=>String(x.name).includes('Không Có Trên TMDB'));
+          if(!unknown || !String(unknown.poster).includes('/hh3d/poster/')) throw new Error('generated fallback poster missing '+JSON.stringify(unknown));
+          fs.writeFileSync('/tmp/fallback-url.txt', unknown.poster);
+          NODE
+          curl --max-time 8 -fsS "$(cat /tmp/fallback-url.txt)" >/tmp/fallback.svg
+          grep -q '<svg' /tmp/fallback.svg
+          grep -q 'HH3D' /tmp/fallback.svg
+          echo 'v6.2.4 HH3D artwork matcher regression OK'
