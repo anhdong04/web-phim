@@ -1,0 +1,33 @@
+name: Web Phim CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Startup smoke test
+        shell: bash
+        run: |
+          set +e
+          timeout 4s env PORT=7799 node addon_v430.js > /tmp/web-phim.log 2>&1
+          code=$?
+          cat /tmp/web-phim.log
+          if grep -q "v4.3.0 listening" /tmp/web-phim.log; then
+            exit 0
+          fi
+          if [ "$code" -eq 124 ]; then
+            echo "Server timed out without expected startup marker"
+          fi
+          exit 1
