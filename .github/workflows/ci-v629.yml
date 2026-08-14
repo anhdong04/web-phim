@@ -27,7 +27,9 @@ jobs:
           const catalog = `<!doctype html><div class="film_list-wrap"><div class="flw-item"><img class="film-poster-img" data-src="https://img.test/show.jpg"><div class="tick-rate">Tập 1</div><h3 class="film-name"><a href="/phim/test-show">Test Show</a></h3></div></div>`;
           const detail = `<!doctype html><div class="anisc-poster"><img class="film-poster-img" src="https://img.test/show.jpg"></div><h1 class="film-name">Test Show</h1><a class="btn-play" href="/xem/test-show">TM</a>`;
           const eps = `<div id="top-comment"><div class="ss-list"><a class="ssl-item ep-item" href="/watch/test-1" title="1">1</a></div></div>`;
-          const player = `<a class="btn3dsv" data-src="https://scontent.test/stream/m3u8/test.m3u8">1080P</a>`;
+          const player = `<a class="btn3dsv" data-src="https://scontent.test/o1/v/player.m3u8">1080P</a>`;
+          const obf = Buffer.from(JSON.stringify({pU:'https://scontent.test/stream/m3u8/test.m3u8'}),'utf8').toString('base64');
+          const fbPlayer = `<div id="player" data-obf="${obf}"></div>`;
           const tsPayload = Buffer.concat([Buffer.from([0x47]), Buffer.alloc(187,0), Buffer.from([0x47]), Buffer.alloc(187,0)]);
           global.fetch = async function(input, init={}) {
             const url=String(input), headers=new Headers(init.headers||{});
@@ -35,12 +37,13 @@ jobs:
             if (url.includes('/phim/test-show')) return html(detail);
             if (url.endsWith('/xem/test-show')) return html(eps);
             if (url.includes('/watch/test-1')) return html(player);
+            if (url === 'https://scontent.test/o1/v/player.m3u8') return html(fbPlayer);
             if (url === 'https://scontent.test/stream/m3u8/test.m3u8') {
-              if (!headers.get('referer')) return html('forbidden',403);
+              if (!headers.get('referer')?.includes('/o1/v/player.m3u8')) return html('forbidden',403);
               return hls('#EXTM3U\n#EXT-X-VERSION:3\n#EXTINF:10,\nsegment-0001.png\n#EXT-X-ENDLIST\n');
             }
             if (url === 'https://scontent.test/stream/m3u8/segment-0001.png') {
-              if (!headers.get('referer')) return html('forbidden',403);
+              if (!headers.get('referer')?.includes('/o1/v/player.m3u8')) return html('forbidden',403);
               if (headers.get('range')) return new Response(tsPayload.subarray(0,64),{status:206,headers:{'content-type':'image/png','content-range':'bytes 0-63/'+tsPayload.length,'content-length':'64','accept-ranges':'bytes'}});
               return new Response(tsPayload,{status:200,headers:{'content-type':'image/png','content-length':String(tsPayload.length),'accept-ranges':'bytes'}});
             }
