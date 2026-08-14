@@ -1,0 +1,96 @@
+name: Web Phim v6.2.9 YanHH3D Media Normalization
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  yanhh3d-media-normalization:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Disguised PNG HLS media regression
+        shell: bash
+        run: |
+          set -euxo pipefail
+          cat > /tmp/mock-v629-fetch.js <<'NODE'
+          const realFetch = global.fetch;
+          const html = (body,status=200,headers={}) => new Response(body,{status,headers:{'content-type':'text/html; charset=utf-8',...headers}});
+          const hls = body => new Response(body,{status:200,headers:{'content-type':'application/vnd.apple.mpegurl'}});
+          const catalog = `<!doctype html><div class="film_list-wrap"><div class="flw-item"><img class="film-poster-img" data-src="https://img.test/show.jpg"><div class="tick-rate">Tập 1</div><h3 class="film-name"><a href="/phim/test-show">Test Show</a></h3></div></div>`;
+          const detail = `<!doctype html><div class="anisc-poster"><img class="film-poster-img" src="https://img.test/show.jpg"></div><h1 class="film-name">Test Show</h1><a class="btn-play" href="/xem/test-show">TM</a>`;
+          const eps = `<div id="top-comment"><div class="ss-list"><a class="ssl-item ep-item" href="/watch/test-1" title="1">1</a></div></div>`;
+          const player = `<a class="btn3dsv" data-src="https://scontent.test/stream/m3u8/test.m3u8">1080P</a>`;
+          const tsPayload = Buffer.concat([Buffer.from([0x47]), Buffer.alloc(187,0), Buffer.from([0x47]), Buffer.alloc(187,0)]);
+          global.fetch = async function(input, init={}) {
+            const url=String(input), headers=new Headers(init.headers||{});
+            if (url === 'https://yanhh3d.im' || url === 'https://yanhh3d.im/' || url.includes('/moi-cap-nhat?page=1')) return html(catalog);
+            if (url.includes('/phim/test-show')) return html(detail);
+            if (url.endsWith('/xem/test-show')) return html(eps);
+            if (url.includes('/watch/test-1')) return html(player);
+            if (url === 'https://scontent.test/stream/m3u8/test.m3u8') {
+              if (!headers.get('referer')) return html('forbidden',403);
+              return hls('#EXTM3U\n#EXT-X-VERSION:3\n#EXTINF:10,\nsegment-0001.png\n#EXT-X-ENDLIST\n');
+            }
+            if (url === 'https://scontent.test/stream/m3u8/segment-0001.png') {
+              if (!headers.get('referer')) return html('forbidden',403);
+              if (headers.get('range')) return new Response(tsPayload.subarray(0,64),{status:206,headers:{'content-type':'image/png','content-range':'bytes 0-63/'+tsPayload.length,'content-length':'64','accept-ranges':'bytes'}});
+              return new Response(tsPayload,{status:200,headers:{'content-type':'image/png','content-length':String(tsPayload.length),'accept-ranges':'bytes'}});
+            }
+            if (url.includes('api.themoviedb.org')) return new Response(JSON.stringify({results:[]}),{status:200,headers:{'content-type':'application/json'}});
+            return realFetch(input,init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-v629-fetch.js" PORT=7816 PUBLIC_BASE_URL=http://127.0.0.1:7816 TMDB_API_KEY=test HH3D_PIKPAK_ENABLED=false YANHH3D_ENABLED=true YANHH3D_MAIN_URL=https://yanhh3d.im YANHH3D_MEDIA_RELAY=true INLINE_STREAM_SUBTITLES=false node addon_v629.js >/tmp/v629.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7816/yanhh3d/manifest.json >/tmp/m.json 2>/dev/null && break || sleep 0.25; done
+          cat /tmp/v629.log
+          node - <<'NODE'
+          const m=require('/tmp/m.json'); if(m.version!=='1.0.4') throw new Error('YanHH3D 1.0.4 manifest missing '+JSON.stringify(m));
+          NODE
+          curl -fsS http://127.0.0.1:7816/yanhh3d/catalog/series/yanhh3d.json >/tmp/c.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/c.json'),id=d.metas?.[0]?.id; if(!id) throw new Error('catalog missing'); fs.writeFileSync('/tmp/id',id);
+          NODE
+          id=$(cat /tmp/id)
+          curl -fsS "http://127.0.0.1:7816/yanhh3d/meta/series/$id.json" >/tmp/meta.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/meta.json'),vid=d.meta?.videos?.[0]?.id; if(!vid) throw new Error('video missing'); fs.writeFileSync('/tmp/vid',vid);
+          NODE
+          vid=$(cat /tmp/vid)
+          curl -fsS "http://127.0.0.1:7816/yanhh3d/stream/series/$vid.json" >/tmp/s.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/s.json'),u=d.streams?.[0]?.url; if(!u || !u.endsWith('.m3u8')) throw new Error('relay missing '+JSON.stringify(d)); fs.writeFileSync('/tmp/relay',u);
+          NODE
+          relay=$(cat /tmp/relay)
+          curl -fsS "$relay" >/tmp/pl.m3u8
+          grep -q '#EXTM3U' /tmp/pl.m3u8
+          grep -q '\.ts' /tmp/pl.m3u8
+          node - <<'NODE'
+          const fs=require('fs'),t=fs.readFileSync('/tmp/pl.m3u8','utf8'); const m=t.match(/http:\/\/127\.0\.0\.1:7816\/yanhh3d\/relay\/[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.ts/); if(!m) throw new Error('normalized ts child missing '+t); fs.writeFileSync('/tmp/seg',m[0]);
+          NODE
+          seg=$(cat /tmp/seg)
+          curl -fsS -D /tmp/h -H 'Range: bytes=0-63' "$seg" >/tmp/b
+          grep -qi '^HTTP/.* 206' /tmp/h
+          grep -qi '^content-type: video/mp2t' /tmp/h
+          grep -qi '^x-web-phim-upstream-content-type: image/png' /tmp/h
+          python3 - <<'PY'
+          from pathlib import Path
+          b=Path('/tmp/b').read_bytes()
+          assert b and b[0] == 0x47, b[:16]
+          PY
+          check=${relay/\/yanhh3d\/relay\//\/yanhh3d\/relay-check\/}
+          curl -fsS "$check" >/tmp/check.json
+          cat /tmp/check.json
+          node - <<'NODE'
+          const d=require('/tmp/check.json'); if(!d.ok || d.stage!=='media' || d.media?.magic!=='mpegts') throw new Error('magic detection failed '+JSON.stringify(d));
+          NODE
+          echo 'v6.2.9 YanHH3D disguised-media normalization OK'
