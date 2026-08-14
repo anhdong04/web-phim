@@ -17,16 +17,16 @@ jobs:
           node-version: '20'
       - name: Syntax check
         run: npm run check
-      - name: Startup and admin smoke test
+      - name: v5 startup and share smoke test
         shell: bash
         run: |
           set -euo pipefail
-          env PORT=7799 node addon_v440.js > /tmp/web-phim.log 2>&1 &
+          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true node addon_v500.js > /tmp/web-phim.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           ok=0
-          for i in {1..24}; do
-            if curl -fsS http://127.0.0.1:7799/admin/api > /tmp/admin.json 2>/dev/null; then
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:7799/api/share/settings > /tmp/settings.json 2>/dev/null; then
               ok=1
               break
             fi
@@ -34,6 +34,14 @@ jobs:
           done
           cat /tmp/web-phim.log
           test "$ok" -eq 1
-          grep -q "v4.4.0 listening" /tmp/web-phim.log
-          grep -q '"version":"4.4.0"' /tmp/admin.json
-          curl -fsS http://127.0.0.1:7799/admin | grep -q "Web Phim Admin"
+          grep -q "v5.0.0 listening" /tmp/web-phim.log
+          grep -q '"persistent":false' /tmp/settings.json
+          curl -fsS http://127.0.0.1:7799/ | grep -q "Tạo link xem phim"
+          curl -fsS http://127.0.0.1:7799/admin | grep -q "Web Phim Admin v5"
+          curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/api > /tmp/admin.json
+          grep -q '"authorized":true' /tmp/admin.json
+          curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI Test","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
+          grep -q '"ok":true' /tmp/share.json
+          id=$(node -e "const d=require('/tmp/share.json');process.stdout.write(d.id)")
+          curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" > /tmp/manifest.json
+          grep -q '"version":"5.0.0"' /tmp/manifest.json
