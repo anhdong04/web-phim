@@ -4,10 +4,13 @@ const PORT = Number(process.env.PORT || 7000);
 const KKPHIM_API = process.env.KKPHIM_API || 'https://phimapi.com';
 const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 10000);
 const MANIFEST_CACHE_MS = Number(process.env.MANIFEST_CACHE_MS || 15 * 60 * 1000);
+const MAX_STREAMS_PER_RESOLUTION = Number(process.env.MAX_STREAMS_PER_RESOLUTION || 6);
+const MAX_STREAMS_TOTAL = Number(process.env.MAX_STREAMS_TOTAL || 30);
+const MAX_SIZE_GB = Number(process.env.MAX_SIZE_GB || 0);
 
 const manifest = {
   id: 'vn.kkphim.nuvio.streams',
-  version: '1.1.0',
+  version: '1.2.0',
   name: 'KKPhim + Streams',
   description: 'KKPhim plus optional Stremio-compatible upstream stream addons for Nuvio',
   resources: [
@@ -70,7 +73,7 @@ async function fetchJson(url, sourceName = 'upstream') {
     const response = await fetch(url, {
       headers: {
         accept: 'application/json',
-        'user-agent': 'kkphim-nuvio-aggregator/1.1'
+        'user-agent': 'kkphim-nuvio-aggregator/1.2'
       },
       signal: controller.signal
     });
@@ -123,12 +126,85 @@ function inferEpisodeNumber(item) {
   return null;
 }
 
+function streamText(stream) {
+  return [stream?.name, stream?.title, stream?.description, stream?.behaviorHints?.filename]
+    .filter(Boolean)
+    .join(' ');
+}
+
+function detectResolution(stream) {
+  const text = streamText(stream).toLowerCase();
+  if (/\b(2160p|4k|uhd)\b/.test(text)) return 2160;
+  if (/\b(1440p|qhd)\b/.test(text)) return 1440;
+  if (/\b1080p\b/.test(text)) return 1080;
+  if (/\b720p\b/.test(text)) return 720;
+  if (/\b480p\b/.test(text)) return 480;
+  return 0;
+}
+
+function resolutionLabel(resolution) {
+  if (resolution === 2160) return '4K';
+  if (resolution > 0) return `${resolution}p`;
+  return '';
+}
+
+function detectSizeBytes(stream) {
+  const hinted = Number(stream?.behaviorHints?.videoSize || 0);
+  if (Number.isFinite(hinted) && hinted > 0) return hinted;
+
+  const text = streamText(stream);
+  const gb = text.match(/(?:^|\s)(\d+(?:\.\d+)?)\s*GB\b/i);
+  if (gb) return Number(gb[1]) * 1024 ** 3;
+
+  const mb = text.match(/(?:^|\s)(\d+(?:\.\d+)?)\s*MB\b/i);
+  if (mb) return Number(mb[1]) * 1024 ** 2;
+
+  return 0;
+}
+
+function formatSize(bytes) {
+  if (!bytes) return '';
+  const gb = bytes / 1024 ** 3;
+  if (gb >= 1) return `${gb.toFixed(gb >= 10 ? 0 : 1)} GB`;
+  return `${Math.round(bytes / 1024 ** 2)} MB`;
+}
+
+function detectFeatures(stream) {
+  const text = streamText(stream).toLowerCase();
+  const features = [];
+  if (/dolby vision|\bdv\b/.test(text)) features.push('DV');
+  if (/hdr10\+/.test(text)) features.push('HDR10+');
+  else if (/\bhdr\b/.test(text)) features.push('HDR');
+  if (/atmos/.test(text)) features.push('Atmos');
+  if (/truehd/.test(text)) features.push('TrueHD');
+  else if (/ddp|dolby digital plus/.test(text)) features.push('DD+');
+  if (/\bhevc\b|\bh265\b|\bx265\b/.test(text)) features.push('HEVC');
+  else if (/\bavc\b|\bh264\b|\bx264\b/.test(text)) features.push('H.264');
+  return [...new Set(features)].slice(0, 4);
+}
+
+function isKKPhim(stream) {
+  return stream?._source === 'KKPhim' || /^KKPhim\b/i.test(String(stream?.name || ''));
+}
+
+function isDebridStream(stream) {
+  const text = streamText(stream);
+  return /\[TB⚡\]|\bTorBox\b|\bdebrid\b|\bcached\b/i.test(text);
+}
+
 function streamKey(stream) {
-  if (stream?.url) return `url:${stream.url}`;
-  if (stream?.externalUrl) return `external:${stream.externalUrl}`;
+  const bingeGroup = stream?.behaviorHints?.bingeGroup;
+  if (bingeGroup) return `binge:${String(bingeGroup).toLowerCase()}`;
+
+  const filename = stream?.behaviorHints?.filename;
+  const size = detectSizeBytes(stream);
+  if (filename) return `file:${normalizeText(filename)}:${size || ''}`;
+
   if (stream?.infoHash) {
     return `torrent:${String(stream.infoHash).toLowerCase()}:${stream.fileIdx ?? ''}`;
   }
+  if (stream?.url) return `url:${stream.url}`;
+  if (stream?.externalUrl) return `external:${stream.externalUrl}`;
   return JSON.stringify(stream);
 }
 
@@ -165,8 +241,10 @@ function flattenKKPhimStreams(payload, requestedEpisode) {
         .join(' • ');
 
       streams.push({
-        name: `KKPhim • ${serverName}`,
+        _source: 'KKPhim',
+        name: '🇻🇳 KKPhim',
         title: details || serverName,
+        description: serverName,
         url: item.link_m3u8
       });
     }
@@ -272,7 +350,6 @@ function supportsStreamRequest(upstreamManifest, type, id) {
 
   if (!entry) return false;
   if (entry === 'stream') return true;
-
   if (Array.isArray(entry.types) && !entry.types.includes(type)) return false;
 
   if (Array.isArray(entry.idPrefixes) && entry.idPrefixes.length > 0) {
@@ -288,9 +365,7 @@ function labelUpstreamStreams(streams, sourceName) {
     .filter((stream) => stream && typeof stream === 'object')
     .map((stream) => ({
       ...stream,
-      name: sourceName
-        ? `${sourceName}${stream.name ? ` • ${stream.name}` : ''}`
-        : stream.name
+      _source: sourceName || 'Upstream'
     }));
 }
 
@@ -301,6 +376,93 @@ async function getUpstreamStreams(source, type, id) {
   const endpoint = streamEndpointFromManifest(source.manifestUrl, type, id);
   const payload = await fetchJson(endpoint, info.name);
   return labelUpstreamStreams(payload?.streams, info.name);
+}
+
+function sourcePriority(stream) {
+  if (isKKPhim(stream)) return 0;
+  if (isDebridStream(stream)) return 1;
+
+  const source = String(stream?._source || '').toLowerCase();
+  if (source.includes('comet')) return 2;
+  if (source.includes('mediafusion')) return 3;
+  if (source.includes('torrentio')) return 4;
+  return 5;
+}
+
+function cleanStreamForClient(stream) {
+  const resolution = detectResolution(stream);
+  const sizeBytes = detectSizeBytes(stream);
+  const features = detectFeatures(stream);
+
+  if (isKKPhim(stream)) {
+    const { _source, ...clean } = stream;
+    return clean;
+  }
+
+  const source = String(stream?._source || 'Stream');
+  const debrid = isDebridStream(stream);
+  const tags = [resolutionLabel(resolution), ...features, formatSize(sizeBytes)].filter(Boolean);
+  const originalDescription = String(stream?.description || '').trim();
+  const filename = String(stream?.behaviorHints?.filename || '').trim();
+  const compactDetails = tags.join(' • ');
+
+  const cleanName = debrid
+    ? `⚡ ${source}${/torbox/i.test(streamText(stream)) ? ' / TorBox' : ''}`
+    : `🌐 ${source}`;
+
+  const clean = {
+    ...stream,
+    name: cleanName,
+    title: compactDetails || stream?.title || source,
+    description: filename || originalDescription || stream?.title || ''
+  };
+
+  delete clean._source;
+  return clean;
+}
+
+function filterSortAndLimit(streams) {
+  let items = dedupeStreams(streams).map((stream, index) => ({
+    stream,
+    index,
+    resolution: detectResolution(stream),
+    sizeBytes: detectSizeBytes(stream),
+    sourcePriority: sourcePriority(stream)
+  }));
+
+  if (MAX_SIZE_GB > 0) {
+    const maxBytes = MAX_SIZE_GB * 1024 ** 3;
+    items = items.filter((item) => !item.sizeBytes || item.sizeBytes <= maxBytes || isKKPhim(item.stream));
+  }
+
+  items.sort((a, b) => {
+    if (a.sourcePriority !== b.sourcePriority) return a.sourcePriority - b.sourcePriority;
+    if (a.resolution !== b.resolution) return b.resolution - a.resolution;
+    if (a.sizeBytes && b.sizeBytes && a.sizeBytes !== b.sizeBytes) return a.sizeBytes - b.sizeBytes;
+    return a.index - b.index;
+  });
+
+  const perResolution = new Map();
+  const selected = [];
+
+  for (const item of items) {
+    if (isKKPhim(item.stream)) {
+      selected.push(item);
+      continue;
+    }
+
+    const bucket = item.resolution || 'unknown';
+    const count = perResolution.get(bucket) || 0;
+    if (MAX_STREAMS_PER_RESOLUTION > 0 && count >= MAX_STREAMS_PER_RESOLUTION) continue;
+    perResolution.set(bucket, count + 1);
+    selected.push(item);
+  }
+
+  const limited = MAX_STREAMS_TOTAL > 0
+    ? selected.slice(0, MAX_STREAMS_TOTAL)
+    : selected;
+
+  return limited.map((item) => cleanStreamForClient(item.stream));
 }
 
 async function getAllStreams(type, id) {
@@ -331,7 +493,7 @@ async function getAllStreams(type, id) {
     console.error(`[${task.name}] ${type}/${id}: ${message}`);
   });
 
-  return dedupeStreams(streams);
+  return filterSortAndLimit(streams);
 }
 
 function sendJson(res, statusCode, body, cacheSeconds = 0) {
@@ -369,7 +531,7 @@ const server = http.createServer(async (req, res) => {
     });
     const upstreamCount = parseUpstreamConfig().length;
     return res.end(
-      `KKPhim + Streams aggregator\nManifest: /manifest.json\nConfigured upstream addons: ${upstreamCount}\n`
+      `KKPhim + Streams aggregator v1.2\nManifest: /manifest.json\nConfigured upstream addons: ${upstreamCount}\n`
     );
   }
 
@@ -380,7 +542,7 @@ const server = http.createServer(async (req, res) => {
 
     try {
       const streams = await getAllStreams(type, id);
-      console.log(`[Aggregator] ${type}/${id}: ${streams.length} unique stream(s)`);
+      console.log(`[Aggregator] ${type}/${id}: ${streams.length} final stream(s)`);
       return sendJson(res, 200, { streams }, 180);
     } catch (error) {
       const message = error?.name === 'AbortError'
