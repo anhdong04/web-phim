@@ -3,12 +3,13 @@ const http = require('node:http');
 const PORT = Number(process.env.PORT || 7000);
 const KKPHIM_API = process.env.KKPHIM_API || 'https://phimapi.com';
 const REQUEST_TIMEOUT_MS = Number(process.env.REQUEST_TIMEOUT_MS || 10000);
+const MANIFEST_CACHE_MS = Number(process.env.MANIFEST_CACHE_MS || 15 * 60 * 1000);
 
 const manifest = {
   id: 'vn.kkphim.nuvio.streams',
-  version: '1.0.0',
-  name: 'KKPhim Streams',
-  description: 'Vietnamese KKPhim streams for Nuvio / Stremio-compatible clients',
+  version: '1.1.0',
+  name: 'KKPhim + Streams',
+  description: 'KKPhim plus optional Stremio-compatible upstream stream addons for Nuvio',
   resources: [
     {
       name: 'stream',
@@ -19,6 +20,8 @@ const manifest = {
   types: ['movie', 'series'],
   catalogs: []
 };
+
+const manifestCache = new Map();
 
 function toPositiveInt(value) {
   const n = Number.parseInt(value, 10);
@@ -59,7 +62,7 @@ function parseVideoId(id) {
   return null;
 }
 
-async function fetchJson(url) {
+async function fetchJson(url, sourceName = 'upstream') {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
@@ -67,13 +70,13 @@ async function fetchJson(url) {
     const response = await fetch(url, {
       headers: {
         accept: 'application/json',
-        'user-agent': 'kkphim-nuvio-addon/1.0'
+        'user-agent': 'kkphim-nuvio-aggregator/1.1'
       },
       signal: controller.signal
     });
 
     if (!response.ok) {
-      throw new Error(`KKPhim API returned HTTP ${response.status}`);
+      throw new Error(`${sourceName} returned HTTP ${response.status}`);
     }
 
     return response.json();
@@ -84,11 +87,17 @@ async function fetchJson(url) {
 
 function fetchKKPhimTitle(type, parsed) {
   if (parsed.provider === 'imdb') {
-    return fetchJson(`${KKPHIM_API}/imdb/title/${encodeURIComponent(parsed.externalId)}`);
+    return fetchJson(
+      `${KKPHIM_API}/imdb/title/${encodeURIComponent(parsed.externalId)}`,
+      'KKPhim API'
+    );
   }
 
   const tmdbType = type === 'series' ? 'tv' : 'movie';
-  return fetchJson(`${KKPHIM_API}/tmdb/${tmdbType}/${encodeURIComponent(parsed.externalId)}`);
+  return fetchJson(
+    `${KKPHIM_API}/tmdb/${tmdbType}/${encodeURIComponent(parsed.externalId)}`,
+    'KKPhim API'
+  );
 }
 
 function normalizeText(value) {
@@ -114,16 +123,26 @@ function inferEpisodeNumber(item) {
   return null;
 }
 
-function dedupeByUrl(streams) {
+function streamKey(stream) {
+  if (stream?.url) return `url:${stream.url}`;
+  if (stream?.externalUrl) return `external:${stream.externalUrl}`;
+  if (stream?.infoHash) {
+    return `torrent:${String(stream.infoHash).toLowerCase()}:${stream.fileIdx ?? ''}`;
+  }
+  return JSON.stringify(stream);
+}
+
+function dedupeStreams(streams) {
   const seen = new Set();
   return streams.filter((stream) => {
-    if (!stream.url || seen.has(stream.url)) return false;
-    seen.add(stream.url);
+    const key = streamKey(stream);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
     return true;
   });
 }
 
-function flattenStreams(payload, requestedEpisode) {
+function flattenKKPhimStreams(payload, requestedEpisode) {
   const movie = payload?.movie || {};
   const groups = Array.isArray(payload?.episodes) ? payload.episodes : [];
   const streams = [];
@@ -153,10 +172,10 @@ function flattenStreams(payload, requestedEpisode) {
     }
   }
 
-  return dedupeByUrl(streams);
+  return dedupeStreams(streams);
 }
 
-async function getStreams(type, id) {
+async function getKKPhimStreams(type, id) {
   if (!['movie', 'series'].includes(type)) return [];
 
   const parsed = parseVideoId(id);
@@ -166,7 +185,153 @@ async function getStreams(type, id) {
   if (!payload || payload.status === false) return [];
 
   const requestedEpisode = type === 'series' ? parsed.episode : null;
-  return flattenStreams(payload, requestedEpisode);
+  return flattenKKPhimStreams(payload, requestedEpisode);
+}
+
+function splitConfiguredUrls(value) {
+  return String(value || '')
+    .split(/[\n,]/)
+    .map((v) => v.trim())
+    .filter(Boolean);
+}
+
+function parseUpstreamConfig() {
+  const sources = [];
+
+  const namedEnv = [
+    ['AIOStreams', 'AIOSTREAMS_MANIFEST_URL'],
+    ['TorBox', 'TORBOX_MANIFEST_URL'],
+    ['Comet', 'COMET_MANIFEST_URL'],
+    ['MediaFusion', 'MEDIAFUSION_MANIFEST_URL'],
+    ['Torrentio', 'TORRENTIO_MANIFEST_URL']
+  ];
+
+  for (const [name, envName] of namedEnv) {
+    for (const url of splitConfiguredUrls(process.env[envName])) {
+      sources.push({ name, manifestUrl: url });
+    }
+  }
+
+  for (const value of splitConfiguredUrls(process.env.UPSTREAM_ADDON_URLS)) {
+    const separator = value.indexOf('|');
+    if (separator > 0) {
+      sources.push({
+        name: value.slice(0, separator).trim(),
+        manifestUrl: value.slice(separator + 1).trim()
+      });
+    } else {
+      sources.push({ name: '', manifestUrl: value });
+    }
+  }
+
+  const unique = new Map();
+  for (const source of sources) {
+    if (!/^https?:\/\//i.test(source.manifestUrl)) continue;
+    unique.set(source.manifestUrl, source);
+  }
+
+  return [...unique.values()];
+}
+
+function normalizeManifestUrl(value) {
+  const url = new URL(value);
+  if (!url.pathname.endsWith('/manifest.json')) {
+    url.pathname = `${url.pathname.replace(/\/$/, '')}/manifest.json`;
+  }
+  return url.toString();
+}
+
+function streamEndpointFromManifest(manifestUrl, type, id) {
+  const url = new URL(normalizeManifestUrl(manifestUrl));
+  url.pathname = url.pathname.replace(/\/manifest\.json$/, `/stream/${type}/${encodeURIComponent(id)}.json`);
+  return url.toString();
+}
+
+async function getManifestInfo(source) {
+  const normalizedUrl = normalizeManifestUrl(source.manifestUrl);
+  const cached = manifestCache.get(normalizedUrl);
+  const now = Date.now();
+
+  if (cached && now - cached.time < MANIFEST_CACHE_MS) return cached.value;
+
+  const payload = await fetchJson(normalizedUrl, source.name || 'addon manifest');
+  const value = {
+    name: source.name || payload?.name || 'Upstream',
+    manifest: payload || {}
+  };
+  manifestCache.set(normalizedUrl, { time: now, value });
+  return value;
+}
+
+function supportsStreamRequest(upstreamManifest, type, id) {
+  const resources = Array.isArray(upstreamManifest?.resources) ? upstreamManifest.resources : [];
+  const entry = resources.find((resource) => {
+    if (resource === 'stream') return true;
+    return resource && typeof resource === 'object' && resource.name === 'stream';
+  });
+
+  if (!entry) return false;
+  if (entry === 'stream') return true;
+
+  if (Array.isArray(entry.types) && !entry.types.includes(type)) return false;
+
+  if (Array.isArray(entry.idPrefixes) && entry.idPrefixes.length > 0) {
+    const matchesPrefix = entry.idPrefixes.some((prefix) => String(id).startsWith(prefix));
+    if (!matchesPrefix) return false;
+  }
+
+  return true;
+}
+
+function labelUpstreamStreams(streams, sourceName) {
+  return (Array.isArray(streams) ? streams : [])
+    .filter((stream) => stream && typeof stream === 'object')
+    .map((stream) => ({
+      ...stream,
+      name: sourceName
+        ? `${sourceName}${stream.name ? ` • ${stream.name}` : ''}`
+        : stream.name
+    }));
+}
+
+async function getUpstreamStreams(source, type, id) {
+  const info = await getManifestInfo(source);
+  if (!supportsStreamRequest(info.manifest, type, id)) return [];
+
+  const endpoint = streamEndpointFromManifest(source.manifestUrl, type, id);
+  const payload = await fetchJson(endpoint, info.name);
+  return labelUpstreamStreams(payload?.streams, info.name);
+}
+
+async function getAllStreams(type, id) {
+  const upstreams = parseUpstreamConfig();
+  const tasks = [
+    { name: 'KKPhim', promise: getKKPhimStreams(type, id) },
+    ...upstreams.map((source) => ({
+      name: source.name || source.manifestUrl,
+      promise: getUpstreamStreams(source, type, id)
+    }))
+  ];
+
+  const settled = await Promise.allSettled(tasks.map((task) => task.promise));
+  const streams = [];
+
+  settled.forEach((result, index) => {
+    const task = tasks[index];
+    if (result.status === 'fulfilled') {
+      console.log(`[${task.name}] ${type}/${id}: ${result.value.length} stream(s)`);
+      streams.push(...result.value);
+      return;
+    }
+
+    const error = result.reason;
+    const message = error?.name === 'AbortError'
+      ? 'upstream timeout'
+      : error?.message || String(error);
+    console.error(`[${task.name}] ${type}/${id}: ${message}`);
+  });
+
+  return dedupeStreams(streams);
 }
 
 function sendJson(res, statusCode, body, cacheSeconds = 0) {
@@ -202,7 +367,10 @@ const server = http.createServer(async (req, res) => {
       'content-type': 'text/plain; charset=utf-8',
       'access-control-allow-origin': '*'
     });
-    return res.end(`KKPhim Streams addon\nManifest: /manifest.json\n`);
+    const upstreamCount = parseUpstreamConfig().length;
+    return res.end(
+      `KKPhim + Streams aggregator\nManifest: /manifest.json\nConfigured upstream addons: ${upstreamCount}\n`
+    );
   }
 
   const match = url.pathname.match(/^\/stream\/(movie|series)\/(.+)\.json$/);
@@ -211,14 +379,14 @@ const server = http.createServer(async (req, res) => {
     const id = decodeURIComponent(match[2]);
 
     try {
-      const streams = await getStreams(type, id);
-      console.log(`[KKPhim] ${type}/${id}: ${streams.length} stream(s)`);
-      return sendJson(res, 200, { streams }, 300);
+      const streams = await getAllStreams(type, id);
+      console.log(`[Aggregator] ${type}/${id}: ${streams.length} unique stream(s)`);
+      return sendJson(res, 200, { streams }, 180);
     } catch (error) {
       const message = error?.name === 'AbortError'
         ? 'upstream timeout'
         : error?.message || String(error);
-      console.error(`[KKPhim] ${type}/${id}: ${message}`);
+      console.error(`[Aggregator] ${type}/${id}: ${message}`);
       return sendJson(res, 200, { streams: [] }, 60);
     }
   }
@@ -227,6 +395,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`KKPhim addon listening on port ${PORT}`);
+  console.log(`KKPhim + Streams aggregator listening on port ${PORT}`);
   console.log(`Manifest: http://127.0.0.1:${PORT}/manifest.json`);
+  console.log(`Configured upstream addons: ${parseUpstreamConfig().length}`);
 });
