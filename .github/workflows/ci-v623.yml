@@ -1,0 +1,87 @@
+name: Web Phim v6.2.3 HH3D Root First
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  hh3d-root-first:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Ignore UI parent id and discover real folders from root
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/mock-v623-fetch.js <<'NODE'
+          const realFetch = global.fetch;
+          global.fetch = async function(input, init) {
+            const url = String(input);
+            const json = body => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+            if (url.includes('user.mypikpak.net/v1/shield/captcha/init')) return json({captcha_token:'captcha-ok'});
+            if (url.includes('api-drive.mypikpak.net/drive/v1/share/detail')) {
+              const u = new URL(url), parent = u.searchParams.get('parent_id') || '';
+              if (parent === 'ui-only-id') return json({error_code:5,error_description:'File or folder is not found'});
+              if (parent === '') return json({share_status:'OK',files:[{kind:'drive#folder',id:'wrapper-real',name:'HH3D'}]});
+              if (parent === 'wrapper-real') return json({share_status:'OK',files:[{kind:'drive#folder',id:'showfolder',name:'Đấu Phá Thương Khung'}]});
+              if (parent === 'showfolder') return json({share_status:'OK',files:[
+                {kind:'drive#file',id:'ep1',name:'Dau.Pha.Thuong.Khung.EP01.1080p.mp4',size:'2000000000'},
+                {kind:'drive#file',id:'ep2',name:'Dau.Pha.Thuong.Khung.EP02.1080p.mp4',size:'2100000000'}
+              ]});
+              return json({share_status:'OK',files:[]});
+            }
+            if (url.includes('api-drive.mypikpak.net/drive/v1/share/file_info')) {
+              const u = new URL(url), id = u.searchParams.get('file_id');
+              return json({file_info:{web_content_link:'https://cdn.pikpak.test/'+id+'.mp4'}});
+            }
+            if (url.includes('api.themoviedb.org/3/search/tv?')) return json({results:[{id:123,name:'Đấu Phá Thương Khung',original_name:'Battle Through the Heavens',overview:'HH3D test',first_air_date:'2017-01-07',poster_path:'/poster.jpg',backdrop_path:'/bg.jpg'}]});
+            if (url.includes('api.themoviedb.org/3/tv/123?')) return json({id:123,name:'Đấu Phá Thương Khung',original_name:'Battle Through the Heavens',overview:'HH3D test',first_air_date:'2017-01-07',poster_path:'/poster.jpg',backdrop_path:'/bg.jpg',genres:[{id:16,name:'Animation'}],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt1234567'},videos:{results:[]},content_ratings:{results:[]},images:{logos:[]},origin_country:['CN'],networks:[],seasons:[],episode_run_time:[24],vote_average:8.2});
+            return realFetch(input, init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-v623-fetch.js" PORT=7811 TMDB_API_KEY=test HH3D_PIKPAK_ENABLED=true HH3D_PIKPAK_SHARE_URL=https://mypikpak.com/s/testshare/ui-only-id INLINE_STREAM_SUBTITLES=false node addon_v623.js >/tmp/v623.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7811/hh3d/manifest.json >/tmp/manifest.json 2>/dev/null && break || sleep 0.25; done
+          cat /tmp/v623.log
+          node - <<'NODE'
+          const m=require('/tmp/manifest.json');
+          if(m.version!=='1.0.3') throw new Error('HH3D 1.0.3 manifest missing');
+          NODE
+          curl --max-time 12 -fsS http://127.0.0.1:7811/hh3d/diag >/tmp/diag.json
+          node - <<'NODE'
+          const d=require('/tmp/diag.json');
+          if(!d.ok || d.version!=='6.2.3') throw new Error('diag failed '+JSON.stringify(d));
+          if(d.ignoredUiParentId!=='ui-only-id') throw new Error('UI id was not preserved only for diagnostics '+JSON.stringify(d));
+          if(d.resolvedContainerParentId!=='wrapper-real') throw new Error('wrapper folder was not discovered from root '+JSON.stringify(d));
+          if(d.folderCount!==1) throw new Error('catalog container should have one show folder '+JSON.stringify(d));
+          if(d.apiHost!=='api-drive.mypikpak.net') throw new Error('wrong PikPak host '+JSON.stringify(d));
+          NODE
+          curl --max-time 12 -fsS http://127.0.0.1:7811/hh3d/catalog/series/hh3d.json >/tmp/catalog.json
+          node - <<'NODE'
+          const fs=require('fs'), d=require('/tmp/catalog.json');
+          const id=d.metas?.[0]?.id;
+          if(!String(id||'').startsWith('hh3d:f:')) throw new Error('root-first folder catalog missing '+JSON.stringify(d));
+          fs.writeFileSync('/tmp/id.txt',id);
+          NODE
+          id=$(cat /tmp/id.txt)
+          curl --max-time 20 -fsS "http://127.0.0.1:7811/hh3d/meta/series/$id.json" >/tmp/meta.json
+          node - <<'NODE'
+          const fs=require('fs'), d=require('/tmp/meta.json');
+          if(!d.meta || !Array.isArray(d.meta.videos) || d.meta.videos.length!==2) throw new Error('folder meta episodes missing '+JSON.stringify(d));
+          fs.writeFileSync('/tmp/video.txt',d.meta.videos[0].id);
+          NODE
+          vid=$(cat /tmp/video.txt)
+          curl --max-time 20 -fsS "http://127.0.0.1:7811/hh3d/stream/series/$vid.json" >/tmp/stream.json
+          node - <<'NODE'
+          const d=require('/tmp/stream.json'), s=d.streams?.[0];
+          if(!s || !String(s.url||'').startsWith('https://cdn.pikpak.test/')) throw new Error('direct stream missing '+JSON.stringify(d));
+          console.log('v6.2.3 HH3D root-first regression OK');
+          NODE
