@@ -1,0 +1,90 @@
+name: Web Phim v6.2.5 YanHH3D Provider
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  yanhh3d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: YanHH3D catalog meta episode stream regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/mock-v625-fetch.js <<'NODE'
+          const realFetch = global.fetch;
+          const html = body => new Response(body, {status:200,headers:{'content-type':'text/html; charset=utf-8'}});
+          const json = body => new Response(JSON.stringify(body), {status:200,headers:{'content-type':'application/json'}});
+          const catalog = `<!doctype html><div class="film_list-wrap"><div class="flw-item"><img class="film-poster-img" data-src="https://img.test/show.jpg"><div class="tick-rate">Tập 12</div><span class="tick-quality">4K</span><h3 class="film-name"><a href="/phim/dau-pha-thuong-khung">Đấu Phá Thương Khung</a></h3></div></div>`;
+          const detail = `<!doctype html><html><head><meta property="og:image" content="https://img.test/show-og.jpg"></head><body><div class="anis-cover" style="background-image:url('https://img.test/show-bg.jpg')"></div><div class="anisc-poster"><img class="film-poster-img" src="https://img.test/show-poster.jpg"></div><h1 class="film-name dynamic-name">Đấu Phá Thương Khung</h1><div class="film-description"><div class="text">Thiếu niên Tiêu Viêm bước vào hành trình tu luyện.</div></div><div class="anisc-info"><a class="genre">Hoạt hình 3D</a><span class="item-head">Năm:</span><span class="name">2017</span></div><a class="btn-play" href="/xem/dau-pha-thuong-khung">Xem TM</a><a class="btn-play custom-button-sub" href="/sever2/xem/dau-pha-thuong-khung">Xem VS</a></body></html>`;
+          const tmList = `<div id="top-comment"><div class="ss-list"><a class="ssl-item ep-item" href="/watch/dptk-1-tm" title="1"><span class="ssli-order">1</span></a><a class="ssl-item ep-item" href="/watch/dptk-2-tm" title="2">2</a></div></div>`;
+          const vsList = `<div id="sever2"><div class="ss-list"><a class="ssl-item ep-item" href="/sever2/watch/dptk-1-vs" title="1">1</a><a class="ssl-item ep-item" href="/sever2/watch/dptk-2-vs" title="2">2</a></div></div>`;
+          const streamPage = mode => `<a class="btn3dsv" data-src="https://cdn.test/${mode}.m3u8">1080P</a>`;
+          global.fetch = async function(input, init) {
+            const url = String(input);
+            if (url === 'https://yanhh3d.im' || url === 'https://yanhh3d.im/' || url.includes('/moi-cap-nhat?page=1')) return html(catalog);
+            if (url.includes('/search?keysearch=')) return html(catalog);
+            if (url.includes('/phim/dau-pha-thuong-khung')) return html(detail);
+            if (url.endsWith('/xem/dau-pha-thuong-khung')) return html(tmList);
+            if (url.endsWith('/sever2/xem/dau-pha-thuong-khung')) return html(vsList);
+            if (url.includes('/watch/dptk-1-tm')) return html(streamPage('tm'));
+            if (url.includes('/sever2/watch/dptk-1-vs')) return html(streamPage('vs'));
+            if (url.includes('/watch/dptk-2-tm')) return html(streamPage('tm2'));
+            if (url.includes('/sever2/watch/dptk-2-vs')) return html(streamPage('vs2'));
+            if (url.startsWith('https://cdn.test/')) return html('#EXTM3U\n#EXT-X-VERSION:3\n#EXTINF:10,\nseg.ts\n');
+            if (url.includes('api.themoviedb.org')) return json({results:[]});
+            return realFetch(input, init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-v625-fetch.js" PORT=7813 TMDB_API_KEY=test HH3D_PIKPAK_ENABLED=false YANHH3D_ENABLED=true YANHH3D_MAIN_URL=https://yanhh3d.im INLINE_STREAM_SUBTITLES=false node addon_v625.js >/tmp/v625.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7813/yanhh3d/manifest.json >/tmp/yanmanifest.json 2>/dev/null && break || sleep 0.25; done
+          cat /tmp/v625.log
+          node - <<'NODE'
+          const m=require('/tmp/yanmanifest.json');
+          if(m.version!=='1.0.0' || m.id!=='vn.webphim.yanhh3d.v1') throw new Error('YanHH3D manifest invalid '+JSON.stringify(m));
+          NODE
+          curl --max-time 12 -fsS http://127.0.0.1:7813/yanhh3d/diag >/tmp/yandiag.json
+          node - <<'NODE'
+          const d=require('/tmp/yandiag.json');
+          if(!d.ok || d.itemCount<1) throw new Error('YanHH3D diag failed '+JSON.stringify(d));
+          NODE
+          curl --max-time 12 -fsS http://127.0.0.1:7813/yanhh3d/catalog/series/yanhh3d.json >/tmp/yancatalog.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/yancatalog.json'),m=d.metas?.[0];
+          if(!m || m.name!=='Đấu Phá Thương Khung' || !String(m.poster||'').includes('show.jpg')) throw new Error('YanHH3D catalog failed '+JSON.stringify(d));
+          fs.writeFileSync('/tmp/yanid.txt',m.id);
+          NODE
+          id=$(cat /tmp/yanid.txt)
+          curl --max-time 20 -fsS "http://127.0.0.1:7813/yanhh3d/meta/series/$id.json" >/tmp/yanmeta.json
+          node - <<'NODE'
+          const fs=require('fs'),d=require('/tmp/yanmeta.json'),m=d.meta;
+          if(!m || m.videos?.length!==2 || !String(m.background||'').includes('show-bg.jpg')) throw new Error('YanHH3D meta failed '+JSON.stringify(d));
+          fs.writeFileSync('/tmp/yanvideo.txt',m.videos[0].id);
+          NODE
+          vid=$(cat /tmp/yanvideo.txt)
+          curl --max-time 25 -fsS "http://127.0.0.1:7813/yanhh3d/stream/series/$vid.json" >/tmp/yanstream.json
+          node - <<'NODE'
+          const d=require('/tmp/yanstream.json'),s=d.streams||[];
+          if(s.length!==2) throw new Error('Expected TM+VS streams '+JSON.stringify(d));
+          if(!s.every(x=>String(x.url||'').startsWith('https://cdn.test/'))) throw new Error('Direct HLS missing '+JSON.stringify(d));
+          if(!s.some(x=>String(x.title||'').includes('TM')) || !s.some(x=>String(x.title||'').includes('VS'))) throw new Error('TM/VS labels missing '+JSON.stringify(d));
+          if(!s.every(x=>x.behaviorHints?.proxyHeaders?.request?.Referer)) throw new Error('Playback headers missing '+JSON.stringify(d));
+          console.log('v6.2.5 YanHH3D regression OK');
+          NODE
+          curl --max-time 10 -fsS http://127.0.0.1:7813/manifest.json >/tmp/mainmanifest.json
+          node - <<'NODE'
+          const m=require('/tmp/mainmanifest.json');
+          if(m.version!=='6.2.5') throw new Error('Web Phim version not 6.2.5');
+          if(!m.catalogs?.some(x=>x.id==='yanhh3d')) throw new Error('YanHH3D missing from Web Phim catalogs');
+          NODE
