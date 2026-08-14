@@ -1,0 +1,88 @@
+name: Web Phim v6.2 Standalone HH3D
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  standalone-hh3d:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Standalone HH3D manifest catalog meta stream
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/mock-hh3d-v620.js <<'NODE'
+          const realFetch = global.fetch;
+          global.fetch = async function(input, init) {
+            const url = String(input);
+            const json = body => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+            if (url.includes('user.mypikpak.com/v1/shield/captcha/init')) return json({captcha_token:'captcha-ok'});
+            if (url.includes('api-drive.mypikpak.com/drive/v1/share/detail')) {
+              const u = new URL(url), parent = u.searchParams.get('parent_id') || '';
+              if (parent === 'rootfolder') return json({share_status:'OK',files:[{kind:'drive#folder',id:'folder1',name:'Đấu Phá Thương Khung'}]});
+              if (parent === 'folder1') return json({share_status:'OK',files:[
+                {kind:'drive#file',id:'ep1',name:'Dau.Pha.Thuong.Khung.EP01.1080p.mp4',size:'2000000000'},
+                {kind:'drive#file',id:'ep2',name:'Dau.Pha.Thuong.Khung.EP02.1080p.mp4',size:'2100000000'}
+              ]});
+              return json({share_status:'OK',files:[]});
+            }
+            if (url.includes('api-drive.mypikpak.com/drive/v1/share/file_info')) {
+              const u = new URL(url), id = u.searchParams.get('file_id');
+              return json({file_info:{web_content_link:'https://cdn.pikpak.test/'+id+'.mp4'}});
+            }
+            if (url.includes('api.themoviedb.org/3/search/tv?')) return json({results:[{id:123,name:'Đấu Phá Thương Khung',original_name:'Battle Through the Heavens',overview:'HH3D test',first_air_date:'2017-01-07',poster_path:'/poster.jpg',backdrop_path:'/bg.jpg'}]});
+            if (url.includes('api.themoviedb.org/3/find/tt1234567?')) return json({movie_results:[],tv_results:[{id:123}]});
+            if (url.includes('api.themoviedb.org/3/tv/123?')) return json({id:123,name:'Đấu Phá Thương Khung',original_name:'Battle Through the Heavens',overview:'HH3D test',first_air_date:'2017-01-07',poster_path:'/poster.jpg',backdrop_path:'/bg.jpg',genres:[{id:16,name:'Animation'}],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt1234567'},videos:{results:[]},content_ratings:{results:[]},images:{logos:[]},origin_country:['CN'],networks:[],seasons:[],episode_run_time:[24],vote_average:8.2});
+            if (url.includes('phimapi.com/imdb/title/tt1234567')) return json({movie:{},episodes:[]});
+            if (url.includes('/subtitles/series/tt1234567')) return json({subtitles:[]});
+            return realFetch(input, init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-hh3d-v620.js" PORT=7810 TMDB_API_KEY=test HH3D_PIKPAK_ENABLED=true HH3D_PIKPAK_SHARE_URL=https://mypikpak.com/s/testshare/rootfolder INLINE_STREAM_SUBTITLES=false node addon_v620.js >/tmp/v620.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7810/hh3d/manifest.json >/tmp/hh-manifest.json 2>/dev/null && break || sleep 0.25; done
+          cat /tmp/v620.log
+          node - <<'NODE'
+          const fs=require('fs'); const m=JSON.parse(fs.readFileSync('/tmp/hh-manifest.json','utf8'));
+          if(m.id!=='vn.webphim.hh3d.pikpak.v1') throw new Error('Standalone addon ID wrong');
+          if(m.version!=='1.0.0') throw new Error('Standalone addon version wrong');
+          if(m.catalogs?.[0]?.id!=='hh3d') throw new Error('Standalone HH3D catalog missing');
+          const stream=m.resources.find(x=>x?.name==='stream');
+          for(const p of ['hh3d:','tt','tmdb:']) if(!stream?.idPrefixes?.includes(p)) throw new Error('Stream prefix missing '+p);
+          NODE
+          curl -fsS http://127.0.0.1:7810/hh3d/catalog/series/hh3d.json >/tmp/hh-cat.json
+          node - <<'NODE'
+          const fs=require('fs'); const d=JSON.parse(fs.readFileSync('/tmp/hh-cat.json','utf8'));
+          const id=d.metas?.[0]?.id; if(!String(id||'').startsWith('hh3d:')) throw new Error('Standalone catalog item missing');
+          fs.writeFileSync('/tmp/hh-id.txt',id);
+          NODE
+          hhid=$(cat /tmp/hh-id.txt)
+          curl -fsS "http://127.0.0.1:7810/hh3d/meta/series/$hhid.json" >/tmp/hh-meta.json
+          node - <<'NODE'
+          const fs=require('fs'); const meta=JSON.parse(fs.readFileSync('/tmp/hh-meta.json','utf8')).meta;
+          if(!meta || !Array.isArray(meta.videos) || meta.videos.length<2) throw new Error('Standalone HH3D meta episodes missing');
+          fs.writeFileSync('/tmp/hh-video.txt',meta.videos[0].id);
+          NODE
+          videoid=$(cat /tmp/hh-video.txt)
+          curl -fsS "http://127.0.0.1:7810/hh3d/stream/series/$videoid.json" >/tmp/hh-stream.json
+          curl -fsS "http://127.0.0.1:7810/hh3d/stream/series/tt1234567:1:1.json" >/tmp/hh-imdb.json
+          node - <<'NODE'
+          const fs=require('fs');
+          for(const f of ['/tmp/hh-stream.json','/tmp/hh-imdb.json']){
+            const d=JSON.parse(fs.readFileSync(f,'utf8')), s=(d.streams||[]).find(x=>String(x.name||'').includes('HH3D'));
+            if(!s) throw new Error('Standalone HH3D stream missing: '+f);
+            if(!String(s.url||'').startsWith('https://cdn.pikpak.test/')) throw new Error('Direct PikPak URL missing');
+          }
+          console.log('Standalone HH3D addon regression OK');
+          NODE
