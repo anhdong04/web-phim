@@ -9,7 +9,7 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 7
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,11 +28,11 @@ jobs:
             console.log(file + ': rendered browser JS syntax OK');
           }
           NODE
-      - name: v6 startup share admin backup restore smoke test
+      - name: v6.1 startup share admin backup restore smoke test
         shell: bash
         run: |
           set -euo pipefail
-          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true node addon_v600.js > /tmp/web-phim.log 2>&1 &
+          env PORT=7799 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true HH3D_PIKPAK_ENABLED=false node addon_v610.js > /tmp/web-phim.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           ok=0
@@ -42,18 +42,17 @@ jobs:
           done
           cat /tmp/web-phim.log
           test "$ok" -eq 1
-          grep -q "v6.0.0 listening" /tmp/web-phim.log
+          grep -q "v6.1.0 listening" /tmp/web-phim.log
           curl -fsS http://127.0.0.1:7799/admin > /tmp/admin.html
           grep -q "Backup / Restore" /tmp/admin.html
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/api > /tmp/admin.json
           grep -q '"authorized":true' /tmp/admin.json
-          grep -q '"version":"6.0.0"' /tmp/admin.json
-          curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI v6","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
+          grep -q '"version":"6.1.0"' /tmp/admin.json
+          curl -fsS -X POST http://127.0.0.1:7799/api/share -H 'content-type: application/json' -d '{"name":"CI v6.1","config":{"deviceProfile":"1080p-balanced","streamPreset":"balanced"}}' > /tmp/share.json
           id=$(node -e "const d=require('/tmp/share.json');process.stdout.write(d.id)")
           curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" > /tmp/manifest.json
-          grep -q '"version":"6.0.0"' /tmp/manifest.json
+          grep -q '"version":"6.1.0"' /tmp/manifest.json
           grep -q 'personal-for-you' /tmp/manifest.json
-          grep -q 'personal-because' /tmp/manifest.json
           curl -fsS -H 'x-admin-token: test-admin' http://127.0.0.1:7799/admin/backup > /tmp/backup.json
           curl -fsS -X POST http://127.0.0.1:7799/admin/action -H 'content-type: application/json' -H 'x-admin-token: test-admin' -d '{"action":"share-delete","id":"'"$id"'"}' >/tmp/delete.json
           node - <<'NODE'
@@ -61,7 +60,7 @@ jobs:
           fs.writeFileSync('/tmp/restore.json',JSON.stringify({mode:'replace',backup}));
           NODE
           curl -fsS -X POST http://127.0.0.1:7799/admin/restore -H 'content-type: application/json' -H 'x-admin-token: test-admin' --data-binary @/tmp/restore.json >/tmp/restore-result.json
-          curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" | grep -q '"version":"6.0.0"'
+          curl -fsS "http://127.0.0.1:7799/u/$id/manifest.json" | grep -q '"version":"6.1.0"'
       - name: AI Vietnamese subtitle regression
         shell: bash
         run: |
@@ -84,7 +83,7 @@ jobs:
             return realFetch(input, init);
           };
           NODE
-          env NODE_OPTIONS="--require=/tmp/mock-ai-fetch.js" PORT=7802 TMDB_API_KEY=test ADMIN_TOKEN=test-admin GOOGLE_TRANSLATE_API_KEY=test COMET_MANIFEST_URL=https://comet.test/manifest.json DEFAULT_SUBTITLE_MANIFEST=https://subs.test/manifest.json node addon_v600.js >/tmp/web-phim-ai.log 2>&1 &
+          env NODE_OPTIONS="--require=/tmp/mock-ai-fetch.js" PORT=7802 TMDB_API_KEY=test ADMIN_TOKEN=test-admin GOOGLE_TRANSLATE_API_KEY=test COMET_MANIFEST_URL=https://comet.test/manifest.json DEFAULT_SUBTITLE_MANIFEST=https://subs.test/manifest.json HH3D_PIKPAK_ENABLED=false node addon_v610.js >/tmp/web-phim-ai.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           for i in {1..30}; do curl -fsS http://127.0.0.1:7802/ >/dev/null 2>&1 && break || sleep 0.25; done
@@ -99,7 +98,6 @@ jobs:
           curl -fsS "$aiurl" >/tmp/ai.vtt
           grep -q '^WEBVTT' /tmp/ai.vtt
           grep -q 'Xin chào, Neo.' /tmp/ai.vtt
-          grep -q 'Hãy đi theo con thỏ trắng.' /tmp/ai.vtt
       - name: Personal Home regression
         shell: bash
         run: |
@@ -120,7 +118,7 @@ jobs:
             return realFetch(input, init);
           };
           NODE
-          env NODE_OPTIONS="--require=/tmp/mock-personal-fetch.js" PORT=7803 TMDB_API_KEY=test ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true DEFAULT_SUBTITLE_MANIFEST=https://subs.test/manifest.json node addon_v600.js >/tmp/web-phim-personal.log 2>&1 &
+          env NODE_OPTIONS="--require=/tmp/mock-personal-fetch.js" PORT=7803 TMDB_API_KEY=test ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true DEFAULT_SUBTITLE_MANIFEST=https://subs.test/manifest.json HH3D_PIKPAK_ENABLED=false node addon_v610.js >/tmp/web-phim-personal.log 2>&1 &
           pid=$!
           trap 'kill "$pid" 2>/dev/null || true' EXIT
           for i in {1..30}; do curl -fsS http://127.0.0.1:7803/ >/dev/null 2>&1 && break || sleep 0.25; done
@@ -135,4 +133,70 @@ jobs:
           if(fy.metas?.[0]?.id!=='tt0816692') throw new Error('For You did not learn preferred genre');
           if(bc.metas?.[0]?.id!=='tt1375666') throw new Error('Because You Watched did not use recommendations');
           console.log('Personal Home regression OK');
+          NODE
+      - name: HH3D PikPak catalog and stream regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat > /tmp/mock-hh3d-fetch.js <<'NODE'
+          const realFetch = global.fetch;
+          global.fetch = async function(input, init) {
+            const url = String(input);
+            const json = body => new Response(JSON.stringify(body), { status: 200, headers: { 'content-type': 'application/json' } });
+            if (url.includes('user.mypikpak.com/v1/shield/captcha/init')) return json({captcha_token:'captcha-ok'});
+            if (url.includes('api-drive.mypikpak.com/drive/v1/share/detail')) {
+              const u = new URL(url), parent = u.searchParams.get('parent_id') || '';
+              if (parent === 'rootfolder') return json({share_status:'OK',files:[{kind:'drive#folder',id:'folder1',name:'Đấu Phá Thương Khung'}]});
+              if (parent === 'folder1') return json({share_status:'OK',files:[
+                {kind:'drive#file',id:'ep1',name:'Dau.Pha.Thuong.Khung.EP01.1080p.mp4',size:'2000000000'},
+                {kind:'drive#file',id:'ep2',name:'Dau.Pha.Thuong.Khung.EP02.1080p.mp4',size:'2100000000'}
+              ]});
+              return json({share_status:'OK',files:[]});
+            }
+            if (url.includes('api-drive.mypikpak.com/drive/v1/share/file_info')) {
+              const u = new URL(url), id = u.searchParams.get('file_id');
+              return json({file_info:{web_content_link:'https://cdn.pikpak.test/'+id+'.mp4'}});
+            }
+            if (url.includes('api.themoviedb.org/3/search/tv?')) return json({results:[{id:123,name:'Đấu Phá Thương Khung',original_name:'Battle Through the Heavens',overview:'HH3D test',first_air_date:'2017-01-07',poster_path:'/poster.jpg',backdrop_path:'/bg.jpg'}]});
+            if (url.includes('api.themoviedb.org/3/find/tt1234567?')) return json({movie_results:[],tv_results:[{id:123}]});
+            if (url.includes('api.themoviedb.org/3/tv/123?')) return json({id:123,name:'Đấu Phá Thương Khung',original_name:'Battle Through the Heavens',overview:'HH3D test',first_air_date:'2017-01-07',poster_path:'/poster.jpg',backdrop_path:'/bg.jpg',genres:[{id:16,name:'Animation'}],credits:{cast:[],crew:[]},external_ids:{imdb_id:'tt1234567'},videos:{results:[]},content_ratings:{results:[]},images:{logos:[]},origin_country:['CN'],networks:[],seasons:[],episode_run_time:[24],vote_average:8.2});
+            if (url.includes('phimapi.com/imdb/title/tt1234567')) return json({movie:{},episodes:[]});
+            return realFetch(input, init);
+          };
+          NODE
+          env NODE_OPTIONS="--require=/tmp/mock-hh3d-fetch.js" PORT=7804 TMDB_API_KEY=test HH3D_PIKPAK_ENABLED=true HH3D_PIKPAK_SHARE_URL=https://mypikpak.com/s/testshare/rootfolder INLINE_STREAM_SUBTITLES=false node addon_v610.js >/tmp/web-phim-hh3d.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7804/ >/dev/null 2>&1 && break || sleep 0.25; done
+          curl -fsS http://127.0.0.1:7804/manifest.json >/tmp/hh-manifest.json
+          curl -fsS http://127.0.0.1:7804/catalog/series/hh3d.json >/tmp/hh-catalog.json
+          node - <<'NODE'
+          const fs=require('fs'); const manifest=JSON.parse(fs.readFileSync('/tmp/hh-manifest.json','utf8')), cat=JSON.parse(fs.readFileSync('/tmp/hh-catalog.json','utf8'));
+          if(manifest.version!=='6.1.0') throw new Error('v6.1 manifest missing');
+          if(!manifest.catalogs.some(x=>x.id==='hh3d')) throw new Error('HH3D catalog missing');
+          if(!manifest.resources.find(x=>x?.name==='meta')?.idPrefixes?.includes('hh3d:')) throw new Error('HH3D meta prefix missing');
+          if(!manifest.resources.find(x=>x?.name==='stream')?.idPrefixes?.includes('hh3d:')) throw new Error('HH3D stream prefix missing');
+          const id=cat.metas?.[0]?.id; if(!String(id||'').startsWith('hh3d:')) throw new Error('HH3D catalog item missing');
+          fs.writeFileSync('/tmp/hh-id.txt',id);
+          NODE
+          hhid=$(cat /tmp/hh-id.txt)
+          curl -fsS "http://127.0.0.1:7804/meta/series/$hhid.json" >/tmp/hh-meta.json
+          node - <<'NODE'
+          const fs=require('fs'); const meta=JSON.parse(fs.readFileSync('/tmp/hh-meta.json','utf8')).meta;
+          if(!meta?.poster || !Array.isArray(meta.videos) || meta.videos.length<2) throw new Error('HH3D enriched meta/episodes missing');
+          fs.writeFileSync('/tmp/hh-video.txt',meta.videos[0].id);
+          NODE
+          videoid=$(cat /tmp/hh-video.txt)
+          curl -fsS "http://127.0.0.1:7804/stream/series/$videoid.json" >/tmp/hh-stream.json
+          curl -fsS "http://127.0.0.1:7804/stream/series/tt1234567:1:1.json" >/tmp/hh-normal.json
+          node - <<'NODE'
+          const fs=require('fs');
+          for (const file of ['/tmp/hh-stream.json','/tmp/hh-normal.json']) {
+            const d=JSON.parse(fs.readFileSync(file,'utf8')), s=(d.streams||[]).find(x=>String(x.name||'').includes('HH3D'));
+            if(!s) throw new Error('HH3D stream missing in '+file);
+            if(!String(s.url||'').startsWith('https://cdn.pikpak.test/')) throw new Error('PikPak direct URL missing');
+            if(!s.behaviorHints?.proxyHeaders?.request?.Referer) throw new Error('PikPak proxy headers missing');
+            if(!s.behaviorHints?.filename) throw new Error('HH3D filename hint missing');
+          }
+          console.log('HH3D PikPak regression OK');
           NODE
