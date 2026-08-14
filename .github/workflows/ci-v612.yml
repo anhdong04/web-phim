@@ -1,0 +1,56 @@
+name: Web Phim v6.1.2 Share Manifest
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  share-manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Managed share manifest must expose HH3D with unique addon ID
+        shell: bash
+        run: |
+          set -euo pipefail
+          env PORT=7812 ADMIN_TOKEN=test-admin PUBLIC_SIGNUP=true HH3D_PIKPAK_ENABLED=true node addon_v612.js >/tmp/v612.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..40}; do curl -fsS http://127.0.0.1:7812/api/share/settings >/dev/null 2>&1 && break || sleep 0.25; done
+
+          curl -fsS -X POST http://127.0.0.1:7812/api/share -H 'content-type: application/json' -d '{"name":"HH3D User A","config":{}}' >/tmp/a.json
+          curl -fsS -X POST http://127.0.0.1:7812/api/share -H 'content-type: application/json' -d '{"name":"HH3D User B","config":{}}' >/tmp/b.json
+          aid=$(node -e "const d=require('/tmp/a.json');process.stdout.write(d.id)")
+          bid=$(node -e "const d=require('/tmp/b.json');process.stdout.write(d.id)")
+
+          curl -fsS "http://127.0.0.1:7812/u/$aid/manifest.json" >/tmp/am.json
+          curl -fsS "http://127.0.0.1:7812/u/$bid/manifest.json" >/tmp/bm.json
+          curl -fsS "http://127.0.0.1:7812/u/$aid/hh3d/status" >/tmp/status.json
+
+          node - <<'NODE'
+          const fs=require('fs');
+          const a=JSON.parse(fs.readFileSync('/tmp/a.json','utf8'));
+          const b=JSON.parse(fs.readFileSync('/tmp/b.json','utf8'));
+          const am=JSON.parse(fs.readFileSync('/tmp/am.json','utf8'));
+          const bm=JSON.parse(fs.readFileSync('/tmp/bm.json','utf8'));
+          const st=JSON.parse(fs.readFileSync('/tmp/status.json','utf8'));
+          if(am.version!=='6.1.2') throw new Error('share manifest version is not 6.1.2');
+          if(!am.catalogs?.some(x=>x.id==='hh3d' && x.type==='series')) throw new Error('HH3D missing from managed share manifest');
+          if(!am.resources?.find(x=>x?.name==='meta')?.idPrefixes?.includes('hh3d:')) throw new Error('HH3D meta prefix missing');
+          if(!am.resources?.find(x=>x?.name==='stream')?.idPrefixes?.includes('hh3d:')) throw new Error('HH3D stream prefix missing');
+          const expectedA='vn.webphim.share.'+a.id.toLowerCase()+'.v612';
+          const expectedB='vn.webphim.share.'+b.id.toLowerCase()+'.v612';
+          if(am.id!==expectedA) throw new Error('share A addon id not unique: '+am.id+' != '+expectedA);
+          if(bm.id!==expectedB) throw new Error('share B addon id not unique: '+bm.id+' != '+expectedB);
+          if(am.id===bm.id) throw new Error('two managed shares still collide on addon id');
+          if(st.version!=='6.1.2' || st.catalogAdvertised!==true || st.addonId!==am.id) throw new Error('HH3D status does not match share manifest');
+          console.log('v6.1.2 managed share manifest HH3D regression OK');
+          NODE
