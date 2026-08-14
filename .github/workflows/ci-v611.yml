@@ -1,0 +1,45 @@
+name: Web Phim v6.1.1 HH3D Hotfix
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  hh3d-hotfix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: HH3D catalog advertised and manifest not cached
+        shell: bash
+        run: |
+          set -euo pipefail
+          env PORT=7811 HH3D_PIKPAK_ENABLED=true node addon_v611.js >/tmp/web-phim-v611.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          for i in {1..30}; do curl -fsS http://127.0.0.1:7811/ >/dev/null 2>&1 && break || sleep 0.25; done
+          cat /tmp/web-phim-v611.log
+          grep -q 'v6.1.1 listening' /tmp/web-phim-v611.log
+          curl -fsS -D /tmp/manifest.headers http://127.0.0.1:7811/manifest.json >/tmp/manifest.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const m=JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          if(m.version!=='6.1.1') throw new Error('manifest version is not 6.1.1');
+          const hh=(m.catalogs||[]).find(x=>x.id==='hh3d' && x.type==='series');
+          if(!hh || !String(hh.name||'').includes('HH3D')) throw new Error('HH3D catalog is not advertised');
+          console.log('HH3D catalog advertised:', hh.name);
+          NODE
+          grep -qi '^cache-control: no-store' /tmp/manifest.headers
+          curl -fsS http://127.0.0.1:7811/hh3d/status >/tmp/hh3d-status.json
+          node - <<'NODE'
+          const d=require('/tmp/hh3d-status.json');
+          if(d.version!=='6.1.1' || d.enabled!==true || d.configured!==true || d.catalogAdvertised!==true) throw new Error('HH3D status hotfix failed');
+          console.log('HH3D status:', d);
+          NODE
