@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "5.4.0",
-  "description": "Managed Web Phim sharing service with inline stream subtitles for non-KKPhim sources, canonical IMDb catalog IDs, persistent storage and backup restore",
-  "main": "addon_v540.js",
+  "version": "6.0.0",
+  "description": "Web Phim v6 with AI Vietnamese subtitles, per-share Personal Home, inline stream subtitles, canonical IMDb IDs, persistent storage and backup restore",
+  "main": "addon_v600.js",
   "scripts": {
-    "start": "node addon_v540.js",
-    "check": "node --check addon_v540.js && node --check v540_patch.js && node --check addon_v530.js && node --check v530_patch.js && node --check addon_v520.js && node --check v520_patch.js && node --check addon_v510.js && node --check v510_patch.js && node --check v510_admin_page.js && node --check addon_v500.js && node --check v500_patch.js && node --check v500_public_page.js && node --check v500_admin_page.js && node --check addon_v440.js && node --check v440_patch.js && node --check v440_admin_page.js && node --check addon_v430.js && node --check v430_patch.js && node --check addon_v420.js && node --check v420_patch.js && node --check addon_v410.js && node --check addon_v4.js"
+    "start": "node addon_v600.js",
+    "check": "node --check addon_v600.js && node --check v600_patch.js && node --check addon_v540.js && node --check v540_patch.js && node --check addon_v530.js && node --check v530_patch.js && node --check addon_v520.js && node --check v520_patch.js && node --check addon_v510.js && node --check v510_patch.js && node --check v510_admin_page.js && node --check addon_v500.js && node --check v500_patch.js && node --check v500_public_page.js && node --check v500_admin_page.js && node --check addon_v440.js && node --check v440_patch.js && node --check v440_admin_page.js && node --check addon_v430.js && node --check v430_patch.js && node --check addon_v420.js && node --check v420_patch.js && node --check addon_v410.js && node --check addon_v4.js"
   },
   "engines": {
     "node": ">=18"
