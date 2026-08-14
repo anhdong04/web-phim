@@ -5,7 +5,7 @@
   "main": "addon_v420.js",
   "scripts": {
     "start": "node addon_v420.js",
-    "check": "node --check addon_v420.js && node --check addon_v410.js && node --check addon_v4.js"
+    "check": "node --check addon_v420.js && node --check v420_patch.js && node --check addon_v410.js && node --check addon_v4.js"
   },
   "engines": {
     "node": ">=18"
