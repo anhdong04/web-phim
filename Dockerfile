@@ -4,6 +4,6 @@ COPY package*.json ./
 RUN npm install --omit=dev
 COPY . .
 ENV PORT=7000
-ENV WEB_PHIM_VERSION=5.4.0
+ENV WEB_PHIM_VERSION=6.0.0
 EXPOSE 7000
-CMD ["node", "addon_v540.js"]
+CMD ["node", "addon_v600.js"]
