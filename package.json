@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "3.1.0",
-  "description": "Vietnamese TMDB home catalogs with KKPhim and Comet/TorBox streams for Nuvio",
-  "main": "addon_v31.js",
+  "version": "3.2.0",
+  "description": "Vietnamese TMDB home/search metadata with KKPhim and Comet/TorBox streams for Nuvio",
+  "main": "addon_v32.js",
   "scripts": {
-    "start": "node addon_v31.js",
-    "check": "node --check addon_v31.js"
+    "start": "node addon_v32.js",
+    "check": "node --check addon_v32.js"
   },
   "engines": {
     "node": ">=18"
