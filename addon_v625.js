@@ -45,7 +45,9 @@ const runV625 = [
   'source = applyV622(source);',
   'source = applyV623(source);',
   'source = applyV624(source);',
+  "source = source.replace(\"if (V610_HH3D_ENABLED && V610_HH3D_SHARE_URL) catalogs.unshift({ type: 'series', id: 'hh3d', name: '🐉 HH3D', extra: homeExtra });\", \"if (v610Hh3d) catalogs.unshift({ type: 'series', id: 'hh3d', name: '🐉 HH3D', extra: homeExtra });\");",
   'source = applyV625(source);',
+  "source = source.replace(\"if (v610Hh3d) catalogs.unshift({ type: 'series', id: 'hh3d', name: '🐉 HH3D', extra: homeExtra });\", \"if (V610_HH3D_ENABLED && V610_HH3D_SHARE_URL) catalogs.unshift({ type: 'series', id: 'hh3d', name: '🐉 HH3D', extra: homeExtra });\");",
   "try { new vm.Script(source, { filename: 'web-phim-generated.js' }); } catch (e) { const m = String(e.stack || e).match(/web-phim-generated\\.js:(\\d+)/); const n = m ? Number(m[1]) : 0; const lines = source.split('\\n'); if (n) console.error(lines.slice(Math.max(0,n-6),Math.min(lines.length,n+5)).map((x,i)=>(Math.max(0,n-6)+i+1)+': '+x).join('\\n')); throw e; }",
   'eval(source);'
 ].join(' ');
