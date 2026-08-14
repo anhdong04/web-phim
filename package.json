@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Vietnamese TMDB catalogs with smart-ranked KKPhim/TorBox streams, configurable presets and multi-source subtitles for Nuvio",
-  "main": "addon_v4.js",
+  "main": "addon_v401.js",
   "scripts": {
-    "start": "node addon_v4.js",
-    "check": "node --check addon_v4.js"
+    "start": "node addon_v401.js",
+    "check": "node --check addon_v401.js && node --check addon_v4.js"
   },
   "engines": {
     "node": ">=18"
