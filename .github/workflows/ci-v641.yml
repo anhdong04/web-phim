@@ -27,6 +27,7 @@ jobs:
             "'/full/manifest.json'",
             "startsWith('/full/')",
             "slice('/full'.length)",
+            "let path = parsedBase.rest",
             "🎬 Web Phim Full",
             "TMDB Việt + KKPhim + HH3D + YanHH3D",
             "6.4.1"
@@ -53,9 +54,11 @@ jobs:
           if (j.name !== '🎬 Web Phim Full') throw new Error('manifest name ' + j.name);
           if (!Array.isArray(j.resources) || !j.resources.includes('catalog')) throw new Error('catalog resource missing');
           NODE
-          curl -fsS 'http://127.0.0.1:7000/full/catalog/movie/home-hot.json' >/tmp/catalog.json
+          curl -fsS 'http://127.0.0.1:7000/full/catalog/series/yanhh3d.json' >/tmp/catalog.json
           node <<'NODE'
           const j=require('/tmp/catalog.json');
           if (!Array.isArray(j.metas)) throw new Error('full catalog did not return metas array');
           NODE
+          curl -fsS http://127.0.0.1:7000/full/manifest.json >/tmp/full-again.json
+          kill -0 $pid
           kill $pid || true
