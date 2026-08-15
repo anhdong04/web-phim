@@ -1,4 +1,20 @@
 module.exports = function applyV642(source) {
+  // Fix the existing HH3D/PikPak catalog from v6.1: it previously ignored extra.search
+  // and exposed the catalog with homeExtra, so clients could not search it properly.
+  const hh3dCatalogMarker = "  const skip = Math.max(0, Number(extra?.skip || 0)), page = groups.slice(skip, skip + 20);";
+  if (!source.includes(hh3dCatalogMarker)) throw new Error('v6.4.2 patch target missing: HH3D catalog pagination');
+  const hh3dSearchLogic = [
+    "  const q = String(extra?.search || '').trim().normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase();",
+    "  if (q) groups = groups.filter(group => String(group?.title || '').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').toLowerCase().includes(q));",
+    "  const skip = Math.max(0, Number(extra?.skip || 0)), page = groups.slice(skip, skip + 20);"
+  ].join('\n');
+  source = source.replace(hh3dCatalogMarker, hh3dSearchLogic);
+
+  const hh3dManifestHome = "catalogs.unshift({ type: 'series', id: 'hh3d', name: '🐉 HH3D', extra: homeExtra });";
+  if (source.includes(hh3dManifestHome)) {
+    source = source.replace(hh3dManifestHome, "catalogs.unshift({ type: 'series', id: 'hh3d', name: '🐉 HH3D', extra: searchExtra });");
+  }
+
   const mutableMarker = "  const parsedBase = v500Resolved.parsedBase, cfg = parsedBase.config; let path = parsedBase.rest;";
   if (!source.includes(mutableMarker)) throw new Error('v6.4.2 patch target missing: mutable request path');
 
