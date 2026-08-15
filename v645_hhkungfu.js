@@ -9,7 +9,6 @@ function decodeHtml(s='') {
     .replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&');
 }
 function stripHtml(s='') { return decodeHtml(String(s).replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ')).replace(/\s+/g,' ').trim(); }
-function enc(s) { return encodeURIComponent(String(s)); }
 async function fetchText(url, referer='') {
   const c = new AbortController(); const t = setTimeout(()=>c.abort(), 15000);
   try {
@@ -24,9 +23,15 @@ async function fetchJson(url, referer='') { return JSON.parse(await fetchText(ur
 function slugFromId(id) { const m=String(id||'').match(/^hhu:([^:]+)(?::(tap-[^:]+))?$/); return m ? {slug:m[1], chapter:m[2]||null} : null; }
 function idFor(slug) { return 'hhu:'+slug; }
 function metaTag(html, prop) {
-  const a = html.match(new RegExp('<meta[^>]+(?:property|name)=["\\']'+prop.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'["\\'][^>]+content=["\\']([^"\\']+)', 'i'));
-  const b = html.match(new RegExp('<meta[^>]+content=["\\']([^"\\']+)["\\'][^>]+(?:property|name)=["\\']'+prop.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'["\\']', 'i'));
-  return decodeHtml((a||b||[])[1]||'');
+  const re=/<meta\b[^>]*>/gi; let m;
+  while ((m=re.exec(String(html||'')))) {
+    const tag=m[0];
+    const key=(tag.match(/(?:property|name)\s*=\s*["']([^"']+)["']/i)||[])[1];
+    if (String(key||'').toLowerCase() !== String(prop||'').toLowerCase()) continue;
+    const value=(tag.match(/content\s*=\s*["']([^"']*)["']/i)||[])[1]||'';
+    return decodeHtml(value);
+  }
+  return '';
 }
 function wpToPreview(p) {
   const slug=String(p?.slug||''); if (!slug) return null;
@@ -51,7 +56,7 @@ async function catalog(extra={}) {
   catch (e) { if (page>1) return []; throw e; }
   return (Array.isArray(posts)?posts:[]).map(wpToPreview).filter(Boolean);
 }
-function parseEpisodes(html, slug) {
+function parseEpisodes(html) {
   const re=/<a\b([^>]*\bdata-post-id=["']([^"']+)["'][^>]*)>([\s\S]*?)<\/a>/gi;
   const byChapter=new Map(); let m;
   while ((m=re.exec(html))) {
@@ -68,14 +73,14 @@ function parseEpisodes(html, slug) {
   arr.sort((a,b)=>{ const na=Number((a.ep.match(/\d+(?:\.\d+)?/)||[])[0]||0), nb=Number((b.ep.match(/\d+(?:\.\d+)?/)||[])[0]||0); return na-nb; });
   return arr;
 }
-async function detail(slug) { const url=BASE+'/'+slug; const html=await fetchText(url); return {html,url,episodes:parseEpisodes(html,slug)}; }
+async function detail(slug) { const url=BASE+'/'+slug; const html=await fetchText(url); return {html,url,episodes:parseEpisodes(html)}; }
 async function meta(id) {
   const parsed=slugFromId(id); if (!parsed) return null;
   const {html,url,episodes}=await detail(parsed.slug);
   const name=metaTag(html,'og:title').replace(/\s*[-–|]\s*HHKungfu.*$/i,'').trim() || parsed.slug.replace(/-/g,' ');
   const poster=metaTag(html,'og:image');
   const description=metaTag(html,'og:description') || metaTag(html,'description');
-  const videos=episodes.map((e,i)=>({ id:idFor(parsed.slug)+':'+e.ep, title:e.title||('Tập '+(i+1)), season:1, episode:i+1, released:new Date().toISOString() }));
+  const videos=episodes.map((e,i)=>({ id:idFor(parsed.slug)+':'+e.ep, title:e.title||('Tập '+(i+1)), season:1, episode:i+1 }));
   return { id:idFor(parsed.slug), type:'series', name, poster, background:poster, description, videos, behaviorHints:{ defaultVideoId:videos[0]?.id || idFor(parsed.slug), website:url } };
 }
 async function playerIframe(postId, chapter, sv, type, referer) {
