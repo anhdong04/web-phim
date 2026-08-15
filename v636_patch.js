@@ -1,3 +1,4 @@
+// v6.3.6: reject wrong-film Dailymotion fallbacks by requiring a strong core-title match.
 module.exports = function applyV636(source) {
   const oldRequire = "const v625YanModule = require('./v634_yanhh3d');";
   if (!source.includes(oldRequire)) throw new Error('v6.3.6 patch target missing: YanHH3D module require');
