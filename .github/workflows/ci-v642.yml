@@ -1,0 +1,62 @@
+name: Web Phim v6.4.2 VN Bridge
+on:
+  push:
+    paths:
+      - 'v642_patch.js'
+      - 'addon_v642.js'
+      - 'package.json'
+      - '.github/workflows/ci-v642.yml'
+  workflow_dispatch:
+
+jobs:
+  vn-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax check
+        run: node --check v642_patch.js && node --check addon_v642.js
+      - name: Static regression
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('v642_patch.js','utf8');
+          for (const needle of [
+            "'/vn/manifest.json'",
+            "'stp:'",
+            "'hh3d:'",
+            "'clbpx:'",
+            "'stp-movie'",
+            "'hh3d-series'",
+            "'clbpx-series'",
+            "https://sc.k-20.xyz"
+          ]) if (!s.includes(needle)) throw new Error('missing ' + needle);
+          console.log('v6.4.2 VN bridge assertions passed');
+          NODE
+      - name: Local manifest smoke
+        env:
+          PORT: 7000
+          HH3D_PIKPAK_ENABLED: 'false'
+          YANHH3D_ENABLED: 'false'
+        run: |
+          node addon_v642.js >/tmp/v642.log 2>&1 &
+          pid=$!
+          ok=0
+          for i in {1..30}; do
+            if curl -fsS http://127.0.0.1:7000/vn/manifest.json >/tmp/vn.json; then ok=1; break; fi
+            sleep 0.5
+          done
+          if [ "$ok" != "1" ]; then cat /tmp/v642.log; exit 1; fi
+          node <<'NODE'
+          const j=require('/tmp/vn.json');
+          if (j.version !== '6.4.2') throw new Error('VN manifest version ' + j.version);
+          if (!j.catalogs.some(c => c.id === 'stp-movie')) throw new Error('STP missing');
+          if (!j.catalogs.some(c => c.id === 'hh3d-series')) throw new Error('HH3D missing');
+          if (!j.catalogs.some(c => c.id === 'clbpx-series')) throw new Error('CLBPX missing');
+          NODE
+          curl -fsS http://127.0.0.1:7000/manifest.json >/tmp/root.json
+          curl -fsS http://127.0.0.1:7000/full/manifest.json >/tmp/full.json
+          kill -0 $pid
+          kill $pid || true
