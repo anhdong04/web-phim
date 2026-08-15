@@ -25,14 +25,15 @@ jobs:
           const s = fs.readFileSync('v641_patch.js','utf8');
           for (const needle of [
             "'/full/manifest.json'",
-            "startsWith('/full/')",
-            "slice('/full'.length)",
+            "v620Hh3dStandaloneCatalog",
+            "v620Hh3dStandaloneMeta",
+            "v620Hh3dStandaloneStreams",
+            "id: 'hh3d'",
             "let path = parsedBase.rest",
             "🎬 Web Phim Full",
-            "TMDB Việt + KKPhim + HH3D + YanHH3D",
             "6.4.1"
           ]) if (!s.includes(needle)) throw new Error('missing ' + needle);
-          console.log('full addon base-path assertions passed');
+          console.log('full HH3D merge assertions passed');
           NODE
       - name: Generated full addon smoke
         env:
@@ -53,11 +54,21 @@ jobs:
           if (j.version !== '6.4.1') throw new Error('manifest version ' + j.version);
           if (j.name !== '🎬 Web Phim Full') throw new Error('manifest name ' + j.name);
           if (!Array.isArray(j.resources) || !j.resources.includes('catalog')) throw new Error('catalog resource missing');
+          if (!Array.isArray(j.catalogs) || !j.catalogs.some(c => c.type === 'series' && c.id === 'hh3d')) throw new Error('HH3D catalog missing from Full manifest');
+          const meta = j.resources.find(r => r && typeof r === 'object' && r.name === 'meta');
+          const stream = j.resources.find(r => r && typeof r === 'object' && r.name === 'stream');
+          if (!meta?.idPrefixes?.includes('hh3d:')) throw new Error('HH3D meta prefix missing');
+          if (!stream?.idPrefixes?.includes('hh3d:')) throw new Error('HH3D stream prefix missing');
           NODE
-          curl -fsS 'http://127.0.0.1:7000/full/catalog/series/yanhh3d.json' >/tmp/catalog.json
+          curl -fsS 'http://127.0.0.1:7000/full/catalog/series/hh3d.json' >/tmp/hh3d.json
           node <<'NODE'
-          const j=require('/tmp/catalog.json');
-          if (!Array.isArray(j.metas)) throw new Error('full catalog did not return metas array');
+          const j=require('/tmp/hh3d.json');
+          if (!Array.isArray(j.metas)) throw new Error('HH3D Full catalog did not return metas array');
+          NODE
+          curl -fsS 'http://127.0.0.1:7000/full/catalog/series/yanhh3d.json' >/tmp/yan.json
+          node <<'NODE'
+          const j=require('/tmp/yan.json');
+          if (!Array.isArray(j.metas)) throw new Error('YanHH3D Full catalog did not return metas array');
           NODE
           curl -fsS http://127.0.0.1:7000/full/manifest.json >/tmp/full-again.json
           kill -0 $pid
