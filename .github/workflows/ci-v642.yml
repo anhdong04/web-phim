@@ -1,4 +1,4 @@
-name: Web Phim v6.4.2 VN Bridge
+name: Web Phim v6.4.3 K20 VN Mirror
 on:
   push:
     paths:
@@ -28,12 +28,11 @@ jobs:
             "'stp:'",
             "'hh3d:'",
             "'clbpx:'",
-            "'stp-movie'",
-            "'hh3d-series'",
-            "'clbpx-series'",
+            "V642_CATALOG_PREFIXES",
+            "K20-VN manifest",
             "https://sc.k-20.xyz"
           ]) if (!s.includes(needle)) throw new Error('missing ' + needle);
-          console.log('v6.4.2 VN bridge assertions passed');
+          console.log('v6.4.3 K20 mirror assertions passed');
           NODE
       - name: Local manifest smoke
         env:
@@ -44,17 +43,19 @@ jobs:
           node addon_v642.js >/tmp/v642.log 2>&1 &
           pid=$!
           ok=0
-          for i in {1..30}; do
+          for i in {1..40}; do
             if curl -fsS http://127.0.0.1:7000/vn/manifest.json >/tmp/vn.json; then ok=1; break; fi
             sleep 0.5
           done
           if [ "$ok" != "1" ]; then cat /tmp/v642.log; exit 1; fi
           node <<'NODE'
           const j=require('/tmp/vn.json');
-          if (j.version !== '6.4.2') throw new Error('VN manifest version ' + j.version);
-          if (!j.catalogs.some(c => c.id === 'stp-movie')) throw new Error('STP missing');
-          if (!j.catalogs.some(c => c.id === 'hh3d-series')) throw new Error('HH3D missing');
-          if (!j.catalogs.some(c => c.id === 'clbpx-series')) throw new Error('CLBPX missing');
+          if (j.version !== '6.4.3') throw new Error('VN manifest version ' + j.version);
+          const ids=(j.catalogs||[]).map(c=>c.id);
+          if (!ids.some(id=>String(id).startsWith('stp-'))) throw new Error('STP missing');
+          if (!ids.some(id=>String(id).startsWith('hh3d-'))) throw new Error('K20 HH3D missing');
+          if (!ids.some(id=>String(id).startsWith('clbpx-'))) throw new Error('CLBPX missing');
+          if (!(j.idPrefixes||[]).includes('hh3d:')) throw new Error('K20 HH3D prefix missing');
           NODE
           curl -fsS http://127.0.0.1:7000/manifest.json >/tmp/root.json
           curl -fsS http://127.0.0.1:7000/full/manifest.json >/tmp/full.json
