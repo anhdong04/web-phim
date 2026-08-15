@@ -1,5 +1,7 @@
 // Web Phim v6.4.1 launcher.
-// Builds on v6.4.0 and adds one-install full manifest support.
+// Builds on v6.4.0, adds one-install full manifest support,
+// and now also exposes the isolated /vn bridge for Render services
+// whose dashboard start command is pinned to addon_v641.js.
 const fs = require('node:fs');
 const vm = require('node:vm');
 const applyV420 = require('./v420_patch');
@@ -36,6 +38,7 @@ const applyV638 = require('./v638_patch');
 const applyV639 = require('./v639_patch');
 const applyV640 = require('./v640_patch');
 const applyV641 = require('./v641_patch');
+const applyV642 = require('./v642_patch');
 
 let launcher = fs.readFileSync(require.resolve('./addon_v410.js'), 'utf8');
 const finalEval = 'eval(source);';
@@ -80,6 +83,7 @@ const runV641 = [
   'source = applyV639(source);',
   'source = applyV640(source);',
   'source = applyV641(source);',
+  'source = applyV642(source);',
   "try { new vm.Script(source, { filename: 'web-phim-generated.js' }); } catch (e) { const m = String(e.stack || e).match(/web-phim-generated\\.js:(\\d+)/); const n = m ? Number(m[1]) : 0; const lines = source.split('\\n'); if (n) console.error(lines.slice(Math.max(0,n-6),Math.min(lines.length,n+5)).map((x,i)=>(Math.max(0,n-6)+i+1)+': '+x).join('\\n')); throw e; }",
   'eval(source);'
 ].join(' ');
