@@ -1,0 +1,40 @@
+name: Web Phim v6.3.8 Fresh Dailymotion Bridge
+on:
+  push:
+    paths:
+      - 'v638_patch.js'
+      - 'addon_v638.js'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/ci-v638.yml'
+  workflow_dispatch:
+jobs:
+  dm-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax check
+        run: node --check v638_patch.js && node --check addon_v638.js
+      - name: Bridge regression
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const p = fs.readFileSync('v638_patch.js','utf8');
+          if (!p.includes("/yanhh3d/dm/")) throw new Error('Dailymotion bridge route missing');
+          if (!p.includes("fresh-server-bridge")) throw new Error('delivery policy missing');
+          if (!p.includes(":r5:")) throw new Error('r5 playback identity missing');
+          if (!p.includes("v626RewriteHls")) throw new Error('HLS rewrite bridge missing');
+          console.log('bridge patch regression ok');
+          NODE
+      - name: Generated source and manifest smoke
+        run: |
+          PORT=17000 node addon_v638.js >/tmp/v638.log 2>&1 &
+          pid=$!
+          trap 'kill $pid 2>/dev/null || true' EXIT
+          sleep 3
+          if ! kill -0 $pid 2>/dev/null; then cat /tmp/v638.log; exit 1; fi
+          curl -fsS http://127.0.0.1:17000/yanhh3d/manifest.json >/tmp/manifest.json
+          node -e "const j=require('/tmp/manifest.json'); if(j.version!=='1.1.8') throw new Error('manifest version '+j.version); console.log(j.version,j.name)"
