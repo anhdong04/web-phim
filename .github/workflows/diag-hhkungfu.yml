@@ -15,7 +15,7 @@ jobs:
           node-version: 20
       - name: Install runtime deps
         run: npm install --omit=dev
-      - name: Call Streamfree internal HLS builder
+      - name: Capture Streamfree natural HLS build
         env:
           HHKUNGFU_CHROMIUM_PATH: /usr/bin/google-chrome
         run: |
@@ -25,7 +25,7 @@ jobs:
           const watch='https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html';
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-          function functionEnd(src,name){
+          function functionRange(src,name){
             const m=new RegExp('function\\s+'+name.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\s*\\([^)]*\\)\\s*\\{').exec(src);
             if(!m) throw new Error('missing '+name);
             const p=src.indexOf('{',m.index); let d=0,q=null,esc=false;
@@ -33,28 +33,37 @@ jobs:
               const c=src[i];
               if(q){if(esc)esc=false;else if(c==='\\\\')esc=true;else if(c===q)q=null;continue}
               if(c==='"'||c==="'"||c==='`'){q=c;continue}
-              if(c==='{')d++; else if(c==='}'&&--d===0)return i+1;
+              if(c==='{')d++; else if(c==='}'&&--d===0)return {start:m.index,end:i+1};
             }
             throw new Error('unclosed '+name);
           }
           function patchApp(src){
-            const end=functionEnd(src,'_0x40236b');
+            const r=functionRange(src,'_0x40236b');
+            const f=src.slice(r.start,r.end);
+            const ri=f.indexOf('return '), semi=f.lastIndexOf(';');
+            if(ri<0||semi<ri)throw new Error('builder return not found');
+            const expr=f.slice(ri+7,semi);
+            const replacement=`globalThis.__sfNaturalArgs=Array.from(arguments).slice(1);var __sfR=${expr};globalThis.__sfNaturalPromise=Promise.resolve(__sfR).then(function(v){globalThis.__sfNaturalResult=v;return v;},function(e){globalThis.__sfNaturalError=String(e&&e.stack||e);throw e;});return __sfR;`;
+            const nf=f.slice(0,ri)+replacement+f.slice(semi+1);
             const hook=`;globalThis.__sfBuild=_0x40236b;globalThis.__sfDecryptM3u8=async function(content,nonce){const k=new _0x73517d().update(_0x387157(nonce)).hex().split('').reverse().join('');return _0x4a0bea(content,k);};`;
-            return src.slice(0,end)+hook+src.slice(end);
+            return src.slice(0,r.start)+nf+hook+src.slice(r.end);
           }
 
           (async()=>{
             const browser=await puppeteer.launch({headless:true,executablePath:process.env.HHKUNGFU_CHROMIUM_PATH,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
             const page=await browser.newPage();
             await page.setUserAgent(UA);
+            let captured='';
             await page.setRequestInterception(true);
             page.on('request',async req=>{
               try{
                 const u=req.url();
+                if(/streamfree\.vip\/hls\/.*\.m3u8/i.test(u)){
+                  captured=u; console.log('CAPTURED_HLS',u);
+                }
                 if(/streamfree\.vip\/public\/static\/app\.[^/?]+\.js/i.test(u)){
-                  const r=await fetch(u,{headers:{'user-agent':UA,'referer':req.headers().referer||'https://streamfree.vip/'}});
-                  const src=await r.text();
-                  const body=patchApp(src);
+                  const rr=await fetch(u,{headers:{'user-agent':UA,'referer':req.headers().referer||'https://streamfree.vip/'}});
+                  const src=await rr.text(); const body=patchApp(src);
                   console.log('PATCHED_APP',u,'bytes',body.length);
                   return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
                 }
@@ -63,60 +72,39 @@ jobs:
             });
             await page.goto(watch,{waitUntil:'domcontentloaded',timeout:45000});
             let frame=null;
-            for(let i=0;i<50;i++){
-              frame=page.frames().find(f=>/streamfree\.vip\/embed\//i.test(f.url()));
-              if(frame)break;
-              await sleep(300);
-            }
+            for(let i=0;i<60;i++){frame=page.frames().find(f=>/streamfree\.vip\/embed\//i.test(f.url()));if(frame)break;await sleep(250)}
             if(!frame)throw new Error('Streamfree iframe missing');
             console.log('FRAME',frame.url());
-            let ready=false;
-            for(let i=0;i<60;i++){
-              ready=await frame.evaluate(()=>typeof globalThis.__sfBuild==='function').catch(()=>false);
-              if(ready)break;
+            for(let i=0;i<80&&!captured;i++){
+              const state=await frame.evaluate(()=>({
+                ready:typeof globalThis.__sfBuild==='function',
+                natural:globalThis.__sfNaturalResult?String(globalThis.__sfNaturalResult?.[0]||''):'',
+                err:globalThis.__sfNaturalError||'',
+                body:document.body?.innerText?.slice(0,140)||''
+              })).catch(()=>({}));
+              if(state.natural){captured=state.natural;console.log('NATURAL_HLS',captured);break}
+              if(state.err)console.log('NATURAL_ERR',state.err.slice(0,600));
               await sleep(250);
             }
-            if(!ready)throw new Error('__sfBuild hook missing');
             const input=await frame.evaluate(()=>{
-              const els=[...document.querySelectorAll('[data-id]')];
-              const el=els.find(x=>x.dataset?.nonce)||els[0];
-              const meta=document.querySelector('meta[name="bytecode"]');
-              return {
-                href:location.href,
-                origin:location.origin,
-                pathId:location.pathname.split('/')[3]||'',
-                id:el?.dataset?.id||'',
-                uip:el?.dataset?.uip||'',
-                nonce:el?.dataset?.nonce||'',
-                checksum:el?.dataset?.checksum||'',
-                time:Number(el?.dataset?.time||Date.now()),
-                bytecode:meta?.getAttribute('content')||'',
-                element:el?.outerHTML?.slice(0,1200)||''
-              };
+              const el=[...document.querySelectorAll('[data-id]')].find(x=>x.dataset?.nonce)||document.querySelector('[data-id]');
+              return {nonce:el?.dataset?.nonce||'',state:el?.dataset?.state||'',message:document.body?.innerText?.slice(0,240)||''};
             });
-            console.log('INPUT',JSON.stringify({...input,bytecode:input.bytecode.slice(0,120)+'...'}));
-            if(!input.id||!input.nonce||!input.bytecode)throw new Error('required embed inputs missing');
-            const built=await frame.evaluate(async input=>{
-              const out=await globalThis.__sfBuild(window,input.id,input.pathId,input.nonce,input.bytecode,input.time,input.uip,input.checksum,null);
-              return {url:String(out?.[0]||''),types:(out||[]).map(x=>typeof x)};
-            },input);
-            console.log('BUILT',JSON.stringify(built));
-            if(!/\/hls\/.*\.m3u8/i.test(built.url))throw new Error('HLS builder returned unexpected URL');
-            const fetched=await frame.evaluate(async url=>{
-              const r=await fetch(url); const text=await r.text();
-              return {status:r.status,url:r.url,text:text.slice(0,10000)};
-            },built.url);
-            console.log('HLS_FETCH',fetched.status,fetched.url,'head',JSON.stringify(fetched.text.slice(0,300)));
+            console.log('FRAME_STATE',JSON.stringify(input));
+            if(!/\/hls\/.*\.m3u8/i.test(captured))throw new Error('natural HLS URL not captured');
+            const fetched=await frame.evaluate(async url=>{const r=await fetch(url);return {status:r.status,url:r.url,text:(await r.text()).slice(0,12000)}},captured);
+            console.log('HLS_FETCH',fetched.status,fetched.url,'head',JSON.stringify(fetched.text.slice(0,320)));
             let playlist=fetched.text;
             if(playlist.includes('#ENC-AESGCM')){
               const dec=await frame.evaluate(async ({text,nonce})=>{
                 const out=await globalThis.__sfDecryptM3u8(text,nonce);
-                return {playlist:typeof out?.[0]==='string'?out[0]:new TextDecoder().decode(out?.[0]||new Uint8Array()),initType:typeof out?.[1]};
+                const p=out?.[0];
+                return typeof p==='string'?p:new TextDecoder().decode(p||new Uint8Array());
               },{text:playlist,nonce:input.nonce});
-              playlist=dec.playlist;
-              console.log('DECRYPTED',JSON.stringify(playlist.slice(0,500)),'initType',dec.initType);
+              playlist=dec;
+              console.log('DECRYPTED_HEAD',JSON.stringify(playlist.slice(0,800)));
             }
-            if(!playlist.startsWith('#EXTM3U'))throw new Error('decrypted playlist is not HLS');
+            if(!playlist.startsWith('#EXTM3U'))throw new Error('playlist is not HLS');
             console.log('NATIVE_HLS_OK');
             await browser.close();
           })().catch(e=>{console.error('PROBE_FAIL',e);process.exit(1)});
