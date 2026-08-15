@@ -15,7 +15,7 @@ jobs:
           node-version: 20
       - name: Install runtime deps
         run: npm install --omit=dev
-      - name: Capture HLS with anti-devtools disabled
+      - name: Capture HLS with detector-only patch
         env:
           HHKUNGFU_CHROMIUM_PATH: /usr/bin/google-chrome
         run: |
@@ -24,36 +24,60 @@ jobs:
           const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36';
           const watch='https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html';
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-          function functionRange(src,name){
-            const m=new RegExp('function\\s+'+name.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\s*\\([^)]*\\)\\s*\\{').exec(src);if(!m)throw Error('missing '+name);
-            const p=src.indexOf('{',m.index);let d=0,q=null,e=false;
-            for(let i=p;i<src.length;i++){const c=src[i];if(q){if(e)e=false;else if(c==='\\\\')e=true;else if(c===q)q=null;continue}if(c==='"'||c==="'"||c==='`'){q=c;continue}if(c==='{')d++;else if(c==='}'&&--d===0)return{start:m.index,end:i+1}}
-            throw Error('unclosed '+name);
-          }
+
           function patchApp(src){
             const anti=/_0xfcc099\s*=\s*new\s+_0x57bd03\s*\(\s*_0x1b1b2c\s*\)/;
-            const am=anti.test(src); console.log('ANTI_MATCH',am);
-            if(am)src=src.replace(anti,"_0xfcc099=new Proxy({}, {get:function(t,p){if(p==='co')return async function(){return false};if(p==='al')return function(){};return function(){return false}}})");
-            const r=functionRange(src,'_0x40236b'),f=src.slice(r.start,r.end),ri=f.indexOf('return '),semi=f.lastIndexOf(';');
-            if(ri<0||semi<ri)throw Error('builder return missing');
-            const expr=f.slice(ri+7,semi);
-            const rep=`globalThis.__sfNaturalArgs=Array.from(arguments).slice(1);var __sfR=${expr};globalThis.__sfNaturalPromise=Promise.resolve(__sfR).then(function(v){globalThis.__sfNaturalResult=v;return v;},function(e){globalThis.__sfNaturalError=String(e&&e.stack||e);throw e;});return __sfR;`;
-            const nf=f.slice(0,ri)+rep+f.slice(semi+1);
-            const hook=`;globalThis.__sfDecryptM3u8=async function(content,nonce){const k=new _0x73517d().update(_0x387157(nonce)).hex().split('').reverse().join('');return _0x4a0bea(content,k);};`;
-            return src.slice(0,r.start)+nf+hook+src.slice(r.end);
+            const matched=anti.test(src);
+            console.log('ANTI_MATCH',matched);
+            if(!matched) return src;
+            return src.replace(anti,"_0xfcc099=new Proxy({}, {get:function(t,p){if(p==='co')return async function(){return false};if(p==='al')return function(){};return function(){return false}}})");
           }
+
           (async()=>{
             const browser=await puppeteer.launch({headless:true,executablePath:process.env.HHKUNGFU_CHROMIUM_PATH,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
-            const page=await browser.newPage();await page.setUserAgent(UA);let captured='';
+            const page=await browser.newPage();
+            await page.setUserAgent(UA);
+            let captured='';
+            let hlsResponse=null;
             await page.setRequestInterception(true);
-            page.on('request',async req=>{try{const u=req.url();if(/streamfree\.vip\/hls\/.*\.m3u8/i.test(u)){captured=u;console.log('CAPTURED_HLS',u)}if(/streamfree\.vip\/public\/static\/app\.[^/?]+\.js/i.test(u)){const rr=await fetch(u,{headers:{'user-agent':UA,'referer':req.headers().referer||'https://streamfree.vip/'}});const body=patchApp(await rr.text());return req.respond({status:200,contentType:'application/javascript',body})}return req.continue()}catch(e){console.error('INT',e.message);try{await req.continue()}catch{}}});
+            page.on('request',async req=>{
+              try{
+                const u=req.url();
+                if(/streamfree\.vip\/hls\/.*\.m3u8/i.test(u)){
+                  captured=u; console.log('CAPTURED_HLS',u);
+                }
+                if(/streamfree\.vip\/public\/static\/app\.[^/?]+\.js/i.test(u)){
+                  const rr=await fetch(u,{headers:{'user-agent':UA,'referer':req.headers().referer||'https://streamfree.vip/'}});
+                  const body=patchApp(await rr.text());
+                  return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
+                }
+                return req.continue();
+              }catch(e){console.error('INTERCEPT',e.message);try{await req.continue()}catch{}}
+            });
+            page.on('response',async resp=>{
+              const u=resp.url();
+              if(/streamfree\.vip\/hls\/.*\.m3u8/i.test(u)){
+                try{hlsResponse={status:resp.status(),url:u,text:(await resp.text()).slice(0,16000)}}catch(e){console.log('HLS_RESPONSE_ERR',e.message)}
+              }
+            });
             await page.goto(watch,{waitUntil:'domcontentloaded',timeout:45000});
-            let frame=null;for(let i=0;i<80;i++){frame=page.frames().find(f=>/streamfree\.vip\/embed\//i.test(f.url()));if(frame)break;await sleep(250)}if(!frame)throw Error('iframe missing');
-            for(let i=0;i<100&&!captured;i++){const s=await frame.evaluate(()=>({n:globalThis.__sfNaturalResult?String(globalThis.__sfNaturalResult?.[0]||''):'',e:globalThis.__sfNaturalError||'',m:document.body?.innerText?.slice(0,120)||''})).catch(()=>({}));if(s.n){captured=s.n;console.log('NATURAL_HLS',captured);break}if(i%20===0)console.log('STATE',JSON.stringify(s));await sleep(250)}
-            const input=await frame.evaluate(()=>{const el=[...document.querySelectorAll('[data-id]')].find(x=>x.dataset?.nonce)||document.querySelector('[data-id]');return{nonce:el?.dataset?.nonce||'',state:el?.dataset?.state||'',msg:document.body?.innerText?.slice(0,200)||''}});console.log('FRAME_STATE',JSON.stringify(input));
-            if(!/\/hls\/.*\.m3u8/i.test(captured))throw Error('HLS not captured');
-            const got=await frame.evaluate(async u=>{const r=await fetch(u);return{status:r.status,url:r.url,text:(await r.text()).slice(0,16000)}},captured);console.log('HLS_FETCH',got.status,JSON.stringify(got.text.slice(0,320)));
-            let p=got.text;if(p.includes('#ENC-AESGCM'))p=await frame.evaluate(async x=>{const o=await globalThis.__sfDecryptM3u8(x.text,x.nonce),v=o?.[0];return typeof v==='string'?v:new TextDecoder().decode(v||new Uint8Array())},{text:p,nonce:input.nonce});
-            console.log('PLAYLIST_HEAD',JSON.stringify(p.slice(0,1000)));if(!p.startsWith('#EXTM3U'))throw Error('not HLS');console.log('NATIVE_HLS_OK');await browser.close();
+            let frame=null;
+            for(let i=0;i<100;i++){frame=page.frames().find(f=>/streamfree\.vip\/embed\//i.test(f.url()));if(frame)break;await sleep(200)}
+            if(!frame)throw new Error('iframe missing');
+            for(let i=0;i<160&&!captured;i++){
+              if(i%20===0){
+                const state=await frame.evaluate(()=>{const el=document.querySelector('[data-id]');return{state:el?.dataset?.state||'',msg:document.body?.innerText?.slice(0,180)||''}}).catch(()=>({}));
+                console.log('STATE',JSON.stringify(state));
+              }
+              await sleep(250);
+            }
+            const state=await frame.evaluate(()=>{const el=document.querySelector('[data-id]');return{state:el?.dataset?.state||'',nonce:el?.dataset?.nonce||'',msg:document.body?.innerText?.slice(0,220)||''}}).catch(()=>({}));
+            console.log('FINAL_STATE',JSON.stringify(state));
+            if(!captured) throw new Error('HLS not captured');
+            for(let i=0;i<20&&!hlsResponse;i++) await sleep(250);
+            console.log('HLS_RESPONSE',JSON.stringify(hlsResponse && {status:hlsResponse.status,url:hlsResponse.url,head:hlsResponse.text.slice(0,500)}));
+            if(!hlsResponse || hlsResponse.status!==200) throw new Error('HLS response missing/bad');
+            console.log('DETECTOR_ONLY_HLS_OK');
+            await browser.close();
           })().catch(e=>{console.error('PROBE_FAIL',e);process.exit(1)});
           NODE
