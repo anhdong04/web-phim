@@ -46,8 +46,6 @@ module.exports = function applyV642(source) {
 
   if (path === '/vn/manifest.json') return sendJson(res, 200, v642Manifest(), 300);
 
-  // Keep the Stremio route exactly as received and only remove the /vn base.
-  // This preserves K20's search/skip/genre extra syntax and episode ids.
   if (path.startsWith('/vn/catalog/') || path.startsWith('/vn/meta/') || path.startsWith('/vn/stream/')) {
     const upstreamPath = path.slice('/vn'.length);
 
@@ -77,7 +75,5 @@ module.exports = function applyV642(source) {
 `;
 
   source = source.replace(mutableMarker, mutableMarker + vnRoute);
-  source = source.replaceAll('6.4.1', '6.4.2');
-  source = source.replaceAll('single-process-v6.4.1', 'single-process-v6.4.2');
   return source;
 };
