@@ -10,36 +10,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Locate Streamfree bootstrap after string table
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Decode bootstrapped Streamfree runtime
         run: |
           python3 <<'PY'
-          import urllib.request,re
-          url='https://streamfree.vip/public/static/app.bb288bfe.js'
-          req=urllib.request.Request(url,headers={
+          import urllib.request
+          req=urllib.request.Request('https://streamfree.vip/public/static/app.bb288bfe.js',headers={
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36',
             'Referer':'https://streamfree.vip/embed/v/Dgh6TOLS'
           })
-          s=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','replace')
-          def function_end(name):
-              m=re.search(r'function\s+'+re.escape(name)+r'\s*\([^)]*\)\s*\{',s)
-              if not m: raise RuntimeError('missing '+name)
-              p=s.find('{',m.start()); depth=0; quote=None; esc=False
-              for i in range(p,len(s)):
-                  c=s[i]
-                  if quote:
-                      if esc: esc=False
-                      elif c=='\\': esc=True
-                      elif c==quote: quote=None
-                      continue
-                  if c in "'\"`": quote=c; continue
-                  if c=='{': depth+=1
-                  elif c=='}':
-                      depth-=1
-                      if depth==0: return i+1
-              raise RuntimeError('unclosed '+name)
-          e=function_end('a0_0x34f2')
-          print('function_end=',e,'total=',len(s))
-          print('BEGIN_AFTER_TABLE')
-          print(s[e:e+12000])
-          print('END_AFTER_TABLE')
+          open('/tmp/app.js','wb').write(urllib.request.urlopen(req,timeout=30).read())
           PY
+          node --input-type=commonjs <<'NODE'
+          const fs=require('fs'),vm=require('vm');
+          const src=fs.readFileSync('/tmp/app.js','utf8');
+          function fn(name){
+            const m=new RegExp('function\\s+'+name+'\\s*\\([^)]*\\)\\s*\\{').exec(src); if(!m)throw Error('missing '+name);
+            const p=src.indexOf('{',m.index);let d=0,q=null,e=false;
+            for(let i=p;i<src.length;i++){const c=src[i];if(q){if(e)e=false;else if(c==='\\\\')e=true;else if(c===q)q=null;continue}if(c==='"'||c==="'"){q=c;continue}if(c==='{')d++;else if(c==='}'&&--d===0)return {text:src.slice(m.index,i+1),end:i+1}}
+            throw Error('unclosed '+name);
+          }
+          const f24=fn('a0_0x24a9'), f34=fn('a0_0x34f2');
+          const bootStart=f34.end, bootEnd=src.indexOf(',!(function',bootStart);
+          if(bootEnd<0)throw Error('bootstrap marker missing');
+          const bootstrap=src.slice(bootStart,bootEnd);
+          const ctx={decodeURIComponent,parseInt,console};vm.createContext(ctx);
+          vm.runInContext(f24.text+'\n'+f34.text+'\n'+bootstrap,ctx,{timeout:10000});
+          const dec=ctx.a0_0x24a9;
+          const aliases=new Set(['a0_0x24a9']);
+          for(const m of src.matchAll(/\b(_0x[0-9a-f]+)\s*=\s*a0_0x24a9\b/gi))aliases.add(m[1]);
+          let out=src,total=0;
+          for(const alias of aliases){
+            const esc=alias.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+            const re=new RegExp('\\b'+esc+'\\(\\s*(0x[0-9a-fA-F]+|\\d+)\\s*,\\s*([\\\'\"])(.*?)\\2\\s*\\)','g');
+            out=out.replace(re,(all,n,q,key)=>{try{total++;return JSON.stringify(dec(Number(n),key))}catch{return all}});
+          }
+          console.log('decoded='+total+' aliases='+aliases.size);
+          const clean=s=>String(s).replace(/\\\//g,'/').replace(/\\n/g,' ').replace(/\s+/g,' ').trim();
+          console.log('\n## STRINGS');
+          const seen=new Set();let m;
+          const lr=/(?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')/g;
+          while((m=lr.exec(out))){const s=clean(m[1]??m[2]??'');if(s.length>0&&s.length<=300&&/helvid|m3u8|\/api\/|cdn|stream|token|auth|bytecode|jwplayer|playlist|source|embed|player|license|wasm|decrypt|manifest|media/i.test(s)&&!seen.has(s)){seen.add(s);console.log(s);if(seen.size>=220)break}}
+          function ctxs(term,limit=6,r=650){const low=out.toLowerCase(),n=term.toLowerCase();let p=0,c=0;console.log('\n## '+term);while(c<limit&&(p=low.indexOf(n,p))>=0){console.log('['+(++c)+'] '+clean(out.slice(Math.max(0,p-r),Math.min(out.length,p+n.length+r))));p+=n.length}if(!c)console.log('(none)')}
+          for(const t of ['helvid','master.m3u8','m3u8','/api/','cdn/stream','jwplayer','bytecode','WebAssembly','license','fetch(','XMLHttpRequest'])ctxs(t);
+          NODE
