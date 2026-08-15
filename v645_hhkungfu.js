@@ -1,5 +1,10 @@
+const fs = require('node:fs');
 const BASE = String(process.env.HHKUNGFU_BASE_URL || 'https://hhkungfu.ee').replace(/\/+$/, '');
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36';
+const HLS_TTL_MS = Math.max(60_000, Number(process.env.HHKUNGFU_HLS_TTL_MS || 15 * 60_000));
+const HLS_TIMEOUT_MS = Math.max(8_000, Number(process.env.HHKUNGFU_HLS_TIMEOUT_MS || 25_000));
+const hlsCache = new Map();
+let browserPromise = null;
 
 function decodeHtml(s='') {
   return String(s)
@@ -83,28 +88,96 @@ async function meta(id) {
   const videos=episodes.map((e,i)=>({ id:idFor(parsed.slug)+':'+e.ep, title:e.title||('Tập '+(i+1)), season:1, episode:i+1 }));
   return { id:idFor(parsed.slug), type:'series', name, poster, background:poster, description, videos, behaviorHints:{ defaultVideoId:videos[0]?.id || idFor(parsed.slug), website:url } };
 }
-async function playerIframe(postId, chapter, sv, type, referer) {
-  const q=new URLSearchParams({ action:'dox_ajax_player', post_id:String(postId), chapter_st:String(chapter), type:String(type), sv:String(sv) });
-  const out=await fetchText(BASE+'/player/player.php?'+q.toString(), referer);
-  return decodeHtml((out.match(/<iframe[^>]+src=["']([^"']+)/i)||[])[1]||'');
+
+function chromiumPath() {
+  const configured=String(process.env.HHKUNGFU_CHROMIUM_PATH||'').trim();
+  const candidates=[configured,'/usr/bin/chromium-browser','/usr/bin/chromium','/usr/bin/google-chrome'].filter(Boolean);
+  return candidates.find(p=>fs.existsSync(p)) || '';
 }
+async function getBrowser() {
+  if (browserPromise) return browserPromise;
+  browserPromise=(async()=>{
+    const { chromium } = require('playwright-core');
+    const executablePath=chromiumPath();
+    if (!executablePath) throw new Error('HHKungfu Chromium executable not found');
+    return chromium.launch({
+      executablePath,
+      headless:true,
+      args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--mute-audio','--autoplay-policy=no-user-gesture-required']
+    });
+  })().catch(e=>{browserPromise=null;throw e;});
+  return browserPromise;
+}
+async function resolveHls(watchUrl, cacheKey) {
+  const cached=hlsCache.get(cacheKey);
+  if (cached && cached.expiresAt>Date.now()) return cached.url;
+  const browser=await getBrowser();
+  const context=await browser.newContext({
+    userAgent:UA,
+    viewport:{width:1280,height:720},
+    screen:{width:1920,height:1080},
+    locale:'vi-VN'
+  });
+  let page;
+  try {
+    page=await context.newPage();
+    await page.addInitScript(()=>{
+      try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined,configurable:true});}catch{}
+      try{Object.defineProperty(window,'outerWidth',{get:()=>window.innerWidth,configurable:true});}catch{}
+      try{Object.defineProperty(window,'outerHeight',{get:()=>window.innerHeight,configurable:true});}catch{}
+      try{
+        const noop=function(){};
+        for(const k of ['log','table','clear','debug','dir','dirxml','profile','profileEnd']){
+          try{Object.defineProperty(console,k,{value:noop,writable:false,configurable:false});}catch{}
+        }
+      }catch{}
+    });
+    let settled=false;
+    const hlsPromise=new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>{ if(!settled){settled=true;reject(new Error('HHKungfu HLS timeout'));}},HLS_TIMEOUT_MS);
+      page.on('request',req=>{
+        const u=req.url();
+        if(!settled && /\/master\.m3u8(?:\?|$)/i.test(u)){
+          settled=true; clearTimeout(timer); resolve(u);
+        }
+      });
+    });
+    await page.goto(watchUrl,{waitUntil:'domcontentloaded',timeout:HLS_TIMEOUT_MS});
+    const hls=String(await hlsPromise);
+    if(!/^https:\/\/[^/]*helvid\.net\//i.test(hls)) throw new Error('Unexpected HHKungfu HLS host');
+    hlsCache.set(cacheKey,{url:hls,expiresAt:Date.now()+HLS_TTL_MS});
+    return hls;
+  } finally {
+    try{await context.close();}catch{}
+  }
+}
+
 async function streams(id) {
   const parsed=slugFromId(id); if (!parsed?.chapter) return [];
   const {episodes}=await detail(parsed.slug); const ep=episodes.find(x=>x.ep===parsed.chapter); if (!ep) return [];
   const servers=ep.servers.length ? ep.servers : [{sv:'1',href:BASE+'/watch-'+parsed.slug+'/'+parsed.chapter+'-sv1.html'}];
   const out=[];
-  for (const server of servers) {
+  for (const server of servers.slice(0,2)) {
     const label=server.sv==='2' ? 'Thuyết minh' : 'Vietsub';
     const watchUrl=server.href || BASE+'/watch-'+parsed.slug+'/'+parsed.chapter+'-sv'+server.sv+'.html';
-    if (!watchUrl || out.some(x=>x.externalUrl===watchUrl)) continue;
-    out.push({
-      name:'🐉 HHKungfu • '+label,
-      title:label+' • mở player HHKungfu',
-      externalUrl:watchUrl,
-      description:'HHKungfu • '+ep.title+' • '+label,
-      behaviorHints:{ bingeGroup:'hhkungfu-watch-'+server.sv }
-    });
+    try {
+      const hls=await resolveHls(watchUrl, parsed.slug+'|'+parsed.chapter+'|'+server.sv);
+      if(out.some(x=>x.url===hls)) continue;
+      out.push({
+        name:'🐉 HHKungfu • '+label,
+        title:'1080P • '+label,
+        url:hls,
+        description:'HHKungfu • '+ep.title+' • '+label,
+        behaviorHints:{
+          bingeGroup:'hhkungfu-native-'+server.sv,
+          notWebReady:false,
+          proxyHeaders:{ request:{ Referer:'https://streamfree.vip/' } }
+        }
+      });
+    } catch(e) {
+      console.error('HHKungfu native HLS resolve failed:', label, e.message);
+    }
   }
   return out;
 }
-module.exports={ BASE, parseExtra, catalog, meta, streams, idFor, slugFromId };
+module.exports={ BASE, parseExtra, catalog, meta, streams, idFor, slugFromId, resolveHls };
