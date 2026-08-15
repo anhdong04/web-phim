@@ -1,0 +1,82 @@
+name: Web Phim v6.3.3 Plain HLS Resolver
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'addon_v633.js'
+      - 'v633_patch.js'
+      - 'v633_yanhh3d.js'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/ci-v633.yml'
+  workflow_dispatch:
+
+jobs:
+  plain-hls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Plain stream beats PNG carrier
+        run: |
+          node - <<'NODE'
+          const mod = require('./v633_yanhh3d');
+          const p = mod.createProvider({ mainUrl:'https://yanhh3d.test' });
+          const ts = Buffer.alloc(564); ts[0]=0x47; ts[188]=0x47; ts[376]=0x47;
+          const png = Buffer.concat([Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a]), Buffer.alloc(1024)]);
+          const obj = {
+            sU:'https://cdn.test/stream/m3u8/carrier.m3u8',
+            nested:{ backup:'https://cdn.test/stream-plain?token=ok' },
+            pU:'https://cdn.test/stream/m3u8/also-carrier.m3u8'
+          };
+          p.fetchHtml = async () => `<div data-obf="${Buffer.from(JSON.stringify(obj)).toString('base64')}"></div>`;
+          p.rawFetch = async (url, opts={}) => {
+            url=String(url);
+            if (url.includes('stream-plain')) return new Response('#EXTM3U\n#EXT-X-TARGETDURATION:5\n#EXTINF:5,\nhttps://cdn.test/plain.ts\n#EXT-X-ENDLIST\n',{status:200,headers:{'content-type':'application/vnd.apple.mpegurl'}});
+            if (url.endsWith('plain.ts')) return new Response(ts,{status:206,headers:{'content-type':'video/mp2t','content-range':'bytes 0-563/564'}});
+            if (url.includes('carrier.m3u8') || url.includes('also-carrier.m3u8')) return new Response('#EXTM3U\n#EXT-X-TARGETDURATION:5\n#EXTINF:5,\nhttps://cdn.test/carrier.png\n#EXT-X-ENDLIST\n',{status:200,headers:{'content-type':'application/vnd.apple.mpegurl'}});
+            if (url.endsWith('carrier.png')) return new Response(png,{status:206,headers:{'content-type':'image/png'}});
+            throw new Error('unexpected URL '+url);
+          };
+          (async()=>{
+            const out=await p.resolveFbPage('https://cdn.test/player','TM - FB','https://yanhh3d.test/watch');
+            if(!out) throw new Error('resolver returned null');
+            if(!out.url.includes('stream-plain')) throw new Error('did not choose stream-plain: '+out.url);
+            const d=p.getFbDecision();
+            if(!d || d.chosen!=='stream-plain') throw new Error('diagnostic did not choose stream-plain: '+JSON.stringify(d));
+            if(!d.attempts.some(x=>x.reason==='png-carrier')) throw new Error('PNG carrier was not detected/rejected: '+JSON.stringify(d));
+            console.log(JSON.stringify({chosen:d.chosen,attempts:d.attempts}));
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Generated source smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT=17833 ADMIN_TOKEN=test-admin YANHH3D_RELAY_SECRET=test-relay PUBLIC_BASE_URL=http://127.0.0.1:17833 node addon_v633.js > /tmp/web-phim-v633.log 2>&1 &
+          PID=$!
+          trap 'kill $PID 2>/dev/null || true; cat /tmp/web-phim-v633.log' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:17833/status >/tmp/status.json; then break; fi
+            sleep 0.25
+          done
+          curl -fsS http://127.0.0.1:17833/yanhh3d/manifest.json >/tmp/yan.json
+          curl -fsS http://127.0.0.1:17833/yanhh3d/source-diag >/tmp/diag.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const status=JSON.parse(fs.readFileSync('/tmp/status.json','utf8'));
+          if(!JSON.stringify(status).includes('6.3.3')) throw new Error('status not 6.3.3');
+          const m=JSON.parse(fs.readFileSync('/tmp/yan.json','utf8'));
+          if(m.version!=='1.1.3') throw new Error('manifest not 1.1.3');
+          const d=JSON.parse(fs.readFileSync('/tmp/diag.json','utf8'));
+          if(d.version!=='6.3.3') throw new Error('source diag not 6.3.3');
+          NODE
+          kill $PID
+          wait $PID || true
+          trap - EXIT
+          cat /tmp/web-phim-v633.log
