@@ -1,0 +1,63 @@
+name: Web Phim v6.3.5 Direct Dailymotion
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'addon_v635.js'
+      - 'v635_patch.js'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/ci-v635.yml'
+  workflow_dispatch:
+
+jobs:
+  direct-dailymotion:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Patch regression
+        run: |
+          node - <<'NODE'
+          const apply=require('./v635_patch');
+          let s=`function v625YanStreamObject(link, title = '') {\n  const fmt = link.isM3u8 ? 'HLS' : 'MP4';\n  const relay = V626_YANHH3D_MEDIA_RELAY ? v626RelayUrl(link.url, link.headers || {}, Boolean(link.isM3u8)) : link.url;\n  return { url:relay };\n}\n  const videos = nums.map(n => ({ id: 'yanhh3d:' + m[1] + ':r2:' + n, title: 'Tập ' + n, season: 1, episode: n }));\nconst m = String(id).match(/^yanhh3d:([A-Za-z0-9_-]+)(?::(?:r2:)?(\\d+(?:\\.\\d+)?))?$/);\nreturn sendJson(res, 200, { version:'6.3.4', ok:Boolean(d || r), decision:d, resolution:r }, 0);\nversion: '1.1.4', name: '🐲 YanHH3D'\ndescription: 'YanHH3D 1.1.4 • compatible-server priority • Dailymotion fallback • Thuyết minh/Vietsub streams'\n6.3.4\nsingle-process-v6.3.4`;
+          const out=apply(s);
+          if(!out.includes("if (/dailymotion\\.com|dailymotion\\.net|dmcdn\\.net/.test(src)) return 'direct';")) throw new Error('Dailymotion is not direct');
+          if(!out.includes(":r3:' + n")) throw new Error('r3 video id missing');
+          if(!out.includes('(?:r2|r3)')) throw new Error('r2/r3 compatibility parser missing');
+          if(!out.includes("version: '1.1.5'")) throw new Error('manifest 1.1.5 missing');
+          console.log('v6.3.5 patch regression OK');
+          NODE
+      - name: Generated source smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT=17835 ADMIN_TOKEN=test-admin YANHH3D_RELAY_SECRET=test-relay PUBLIC_BASE_URL=http://127.0.0.1:17835 node addon_v635.js >/tmp/web-phim-v635.log 2>&1 &
+          PID=$!
+          trap 'kill $PID 2>/dev/null || true; cat /tmp/web-phim-v635.log' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:17835/status >/tmp/status.json; then break; fi
+            sleep 0.25
+          done
+          curl -fsS http://127.0.0.1:17835/yanhh3d/manifest.json >/tmp/yan.json
+          curl -fsS http://127.0.0.1:17835/yanhh3d/source-diag >/tmp/diag.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const status=JSON.parse(fs.readFileSync('/tmp/status.json','utf8'));
+          if(!JSON.stringify(status).includes('6.3.5')) throw new Error('status not 6.3.5');
+          const m=JSON.parse(fs.readFileSync('/tmp/yan.json','utf8'));
+          if(m.version!=='1.1.5') throw new Error('manifest not 1.1.5');
+          const d=JSON.parse(fs.readFileSync('/tmp/diag.json','utf8'));
+          if(d.version!=='6.3.5') throw new Error('source diag not 6.3.5');
+          if(d.deliveryPolicy?.dailymotion!=='direct') throw new Error('delivery policy missing');
+          NODE
+          kill $PID
+          wait $PID || true
+          trap - EXIT
+          cat /tmp/web-phim-v635.log
