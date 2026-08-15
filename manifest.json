@@ -1,0 +1,19 @@
+{
+  "name": "HHKungfu",
+  "version": "1.0.0",
+  "scrapers": [
+    {
+      "id": "hhkungfu",
+      "name": "HHKungfu",
+      "description": "Hoạt hình 3D từ hhkungfu.ee",
+      "version": "1.0.0",
+      "author": "anhdong04",
+      "supportedTypes": ["movie", "tv"],
+      "filename": "providers/hhkungfu.js",
+      "enabled": true,
+      "formats": ["m3u8", "mp4"],
+      "logo": "https://www.google.com/s2/favicons?domain=hhkungfu.ee&sz=128",
+      "contentLanguage": ["vi"]
+    }
+  ]
+}
