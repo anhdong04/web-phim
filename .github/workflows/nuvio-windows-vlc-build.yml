@@ -1,4 +1,4 @@
-name: Build Nuvio Windows VLC Test
+name: Build Nuvio Windows Full
 
 on:
   workflow_dispatch:
@@ -7,6 +7,9 @@ on:
     paths:
       - '.github/workflows/nuvio-windows-vlc-build.yml'
       - 'scripts/patch-nuvio-yanhh3d-auto-vlc.ps1'
+      - 'scripts/patch-nuvio-full-addon.ps1'
+      - 'addon_v641.js'
+      - 'v641_patch.js'
 
 permissions:
   contents: read
@@ -20,11 +23,11 @@ jobs:
       - name: Checkout Web Phim
         uses: actions/checkout@v4
 
-      - name: Clone Nuvio Desktop
+      - name: Clone latest released Nuvio Desktop
         shell: pwsh
         run: |
           $env:GIT_LFS_SKIP_SMUDGE = '1'
-          git clone --depth 1 --branch Dev https://github.com/NuvioMedia/NuvioDesktop.git nuvio
+          git clone --depth 1 --branch 0.1.19-alpha https://github.com/NuvioMedia/NuvioDesktop.git nuvio
           Set-Location nuvio
           git lfs install
           git lfs pull --include="composeApp/src/desktopMain/native/windows/runtime/**,composeApp/src/desktopMain/resources/torrserver/windows-amd64/TorrServer.exe" --exclude=""
@@ -51,7 +54,8 @@ jobs:
               actual val trailerPlaybackMode: TrailerPlaybackMode =
                   if (isWindowsDesktop) TrailerPlaybackMode.EXTERNAL else TrailerPlaybackMode.IN_APP
               actual val heroTrailerPlaybackSupported: Boolean = !isWindowsDesktop
-              actual val inAppUpdaterEnabled: Boolean = true
+              // Custom Full build must not offer an official update that would overwrite VLC/full-addon patches.
+              actual val inAppUpdaterEnabled: Boolean = false
               actual val imdbRatingLogoEnabled: Boolean = true
               actual val mediaPlaybackForegroundServiceEnabled: Boolean = false
           }
@@ -170,7 +174,11 @@ jobs:
         shell: pwsh
         run: ./scripts/patch-nuvio-yanhh3d-auto-vlc.ps1
 
-      - name: Configure test build
+      - name: Bundle Web Phim Full addon
+        shell: pwsh
+        run: ./scripts/patch-nuvio-full-addon.ps1
+
+      - name: Configure unsigned Full build
         shell: pwsh
         run: |
           @'
@@ -201,7 +209,7 @@ jobs:
           if (-not (Test-Path $loader)) { throw "WebView2Loader.dll.lib missing: $loader" }
           "WEBVIEW2_ROOT=$root" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
-      - name: Build Nuvio VLC MSI
+      - name: Build Nuvio Full MSI
         shell: pwsh
         working-directory: nuvio
         run: |
@@ -220,13 +228,13 @@ jobs:
           New-Item -ItemType Directory -Force -Path artifact | Out-Null
           $msi = Get-ChildItem -Path nuvio -Filter '*.msi' -Recurse | Select-Object -First 1
           if (-not $msi) { throw 'Nuvio MSI was not produced' }
-          Copy-Item $msi.FullName 'artifact/Nuvio-Windows-YanHH3D-Auto-VLC.msi'
+          Copy-Item $msi.FullName 'artifact/Nuvio-Windows-Full-0.1.19-alpha.msi'
           Write-Host "Collected $($msi.FullName)"
 
       - name: Upload MSI
         uses: actions/upload-artifact@v4
         with:
-          name: Nuvio-Windows-YanHH3D-Auto-VLC
-          path: artifact/Nuvio-Windows-YanHH3D-Auto-VLC.msi
+          name: Nuvio-Windows-Full-0.1.19-alpha
+          path: artifact/Nuvio-Windows-Full-0.1.19-alpha.msi
           if-no-files-found: error
           retention-days: 7
