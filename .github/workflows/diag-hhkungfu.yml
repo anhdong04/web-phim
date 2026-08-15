@@ -1,4 +1,4 @@
-name: Diagnose Streamfree Detector Flow
+name: Diagnose Streamfree Key Derivation
 on:
   push:
     paths:
@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Fetch and decode Streamfree call sites
+      - name: Decode key derivation implementation
         run: |
           python3 <<'PY'
           import urllib.request
@@ -24,21 +24,12 @@ jobs:
           open('/tmp/app.js','wb').write(urllib.request.urlopen(req,timeout=30).read())
           PY
           node --input-type=commonjs <<'NODE'
-          const fs=require('fs'),vm=require('vm');
-          const src=fs.readFileSync('/tmp/app.js','utf8');
-          function balancedFunction(text,name){
-            const m=new RegExp('function\\s+'+name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*\\([^)]*\\)\\s*\\{').exec(text);if(!m)return '';
-            const p=text.indexOf('{',m.index);let d=0,q=null,e=false;
-            for(let i=p;i<text.length;i++){const c=text[i];if(q){if(e)e=false;else if(c==='\\\\')e=true;else if(c===q)q=null;continue}if(c==='"'||c==="'"||c==='`'){q=c;continue}if(c==='{')d++;else if(c==='}'&&--d===0)return text.slice(m.index,i+1)}return '';
-          }
-          function fn0(name){const f=balancedFunction(src,name);if(!f)throw Error('missing '+name);return{text:f,end:src.indexOf(f)+f.length}}
-          const f24=fn0('a0_0x24a9'),f34=fn0('a0_0x34f2');const be=src.indexOf(',!(function',f34.end);if(be<0)throw Error('bootstrap marker');
-          const ctx={decodeURIComponent,parseInt,console};vm.createContext(ctx);vm.runInContext(f24.text+'\n'+f34.text+'\n'+src.slice(f34.end,be)+')',ctx,{timeout:10000});
-          const dec=ctx.a0_0x24a9,aliases=new Set(['a0_0x24a9']);for(const m of src.matchAll(/\b(_0x[0-9a-f]+)\s*=\s*a0_0x24a9\b/gi))aliases.add(m[1]);
-          let out=src;for(const alias of aliases){const esc=alias.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');const re=new RegExp('\\b'+esc+'\\(\\s*(0x[0-9a-fA-F]+|\\d+)\\s*,\\s*([\\\'\"])(.*?)\\2\\s*\\)','g');out=out.replace(re,(all,n,q,k)=>{try{return JSON.stringify(dec(Number(n),k))}catch{return all}})}
+          const fs=require('fs'),vm=require('vm'); const src=fs.readFileSync('/tmp/app.js','utf8');
+          function bf(text,name){const m=new RegExp('function\\s+'+name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*\\([^)]*\\)\\s*\\{').exec(text);if(!m)return'';const p=text.indexOf('{',m.index);let d=0,q=null,e=false;for(let i=p;i<text.length;i++){const c=text[i];if(q){if(e)e=false;else if(c==='\\\\')e=true;else if(c===q)q=null;continue}if(c==='"'||c==="'"||c==='`'){q=c;continue}if(c==='{')d++;else if(c==='}'&&--d===0)return text.slice(m.index,i+1)}return''}
+          const f24=bf(src,'a0_0x24a9'),f34=bf(src,'a0_0x34f2');const e34=src.indexOf(f34)+f34.length,be=src.indexOf(',!(function',e34);const ctx={decodeURIComponent,parseInt,console};vm.createContext(ctx);vm.runInContext(f24+'\n'+f34+'\n'+src.slice(e34,be)+')',ctx,{timeout:10000});
+          const dec=ctx.a0_0x24a9,aliases=new Set(['a0_0x24a9']);for(const m of src.matchAll(/\b(_0x[0-9a-f]+)\s*=\s*a0_0x24a9\b/gi))aliases.add(m[1]);let out=src;for(const a of aliases){const x=a.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');out=out.replace(new RegExp('\\b'+x+'\\(\\s*(0x[0-9a-fA-F]+|\\d+)\\s*,\\s*([\\\'\"])(.*?)\\2\\s*\\)','g'),(z,n,q,k)=>{try{return JSON.stringify(dec(Number(n),k))}catch{return z}})}
           const clean=s=>String(s).replace(/\\\//g,'/').replace(/\s+/g,' ').trim();
-          function allContexts(term,r=1600,max=12){const low=out.toLowerCase(),needle=term.toLowerCase();let p=0,n=0;console.log('\n===== '+term+' =====');while(n<max&&(p=low.indexOf(needle,p))>=0){console.log('['+(++n)+'] '+clean(out.slice(Math.max(0,p-r),Math.min(out.length,p+needle.length+r))));p+=needle.length}if(!n)console.log('(none)')}
-          for(const t of ['_0xfcc099','._co','["co"]','._al','["al"]','_0x40236b(','(-3)','công cụ nhà phát triển','devtools']) allContexts(t,1800,16);
-          console.log('\n===== DETECTOR CLASS =====');
-          for(const name of ['_0x57bd03','_0x1b1b2c']){const f=balancedFunction(out,name);if(f)console.log(name+'\n'+clean(f));else allContexts(name,2500,5)}
+          const names=['_0x528a1c','_0x4dfaa9','_0x1429fd','_0x420231','_0x52ff6f','_0x1759bc','_0x34e5b5','_0x387157','_0x4a0bea','_0x4619d3','_0x733455','_0x152c9a','_0x3ea307'];
+          function ctxs(term,r=3500,max=3){let p=0,n=0;console.log('\n=====CTX '+term+'=====');while(n<max&&(p=out.indexOf(term,p))>=0){console.log(clean(out.slice(Math.max(0,p-r),Math.min(out.length,p+r))));p+=term.length;n++}if(!n)console.log('(none)')}
+          for(const name of names){console.log('\n=====FUNC '+name+'=====');const f=bf(out,name);if(f)console.log(clean(f));else ctxs(name,4500,2)}
           NODE
