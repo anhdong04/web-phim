@@ -50,8 +50,9 @@ jobs:
             if(!out.url.includes('stream-plain')) throw new Error('did not choose stream-plain: '+out.url);
             const d=p.getFbDecision();
             if(!d || d.chosen!=='stream-plain') throw new Error('diagnostic did not choose stream-plain: '+JSON.stringify(d));
-            if(!d.attempts.some(x=>x.reason==='png-carrier')) throw new Error('PNG carrier was not detected/rejected: '+JSON.stringify(d));
-            console.log(JSON.stringify({chosen:d.chosen,attempts:d.attempts}));
+            const bad=await p.deepProbeHls('https://cdn.test/stream/m3u8/carrier.m3u8','https://cdn.test/player');
+            if(bad.ok || bad.reason!=='png-carrier') throw new Error('PNG carrier was not rejected: '+JSON.stringify(bad));
+            console.log(JSON.stringify({chosen:d.chosen,plainMagic:out._probe?.magic,pngProbe:bad}));
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
       - name: Generated source smoke
