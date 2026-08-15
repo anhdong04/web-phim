@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/nuvio-windows-vlc-build.yml'
+      - 'scripts/patch-nuvio-yanhh3d-auto-vlc.ps1'
 
 permissions:
   contents: read
@@ -165,6 +166,10 @@ jobs:
           '@
           Set-Content -Path 'nuvio/composeApp/src/desktopMain/kotlin/com/nuvio/app/features/player/ExternalPlayerPlatform.desktop.kt' -Value $external -Encoding UTF8
 
+      - name: Patch YanHH3D single-click VLC routing
+        shell: pwsh
+        run: ./scripts/patch-nuvio-yanhh3d-auto-vlc.ps1
+
       - name: Configure test build
         shell: pwsh
         run: |
@@ -215,13 +220,13 @@ jobs:
           New-Item -ItemType Directory -Force -Path artifact | Out-Null
           $msi = Get-ChildItem -Path nuvio -Filter '*.msi' -Recurse | Select-Object -First 1
           if (-not $msi) { throw 'Nuvio MSI was not produced' }
-          Copy-Item $msi.FullName 'artifact/Nuvio-Windows-VLC-Test.msi'
+          Copy-Item $msi.FullName 'artifact/Nuvio-Windows-YanHH3D-Auto-VLC.msi'
           Write-Host "Collected $($msi.FullName)"
 
       - name: Upload MSI
         uses: actions/upload-artifact@v4
         with:
-          name: Nuvio-Windows-VLC-Test
-          path: artifact/Nuvio-Windows-VLC-Test.msi
+          name: Nuvio-Windows-YanHH3D-Auto-VLC
+          path: artifact/Nuvio-Windows-YanHH3D-Auto-VLC.msi
           if-no-files-found: error
           retention-days: 7
