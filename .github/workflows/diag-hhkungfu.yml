@@ -3,7 +3,8 @@ on:
   push:
     paths:
       - '.github/workflows/diag-hhkungfu.yml'
-      - 'v645_hhkungfu.js'
+      - 'v647_hhkungfu_resolver.js'
+      - 'v647_hhkungfu_provider.js'
       - 'package.json'
   workflow_dispatch:
 
@@ -21,17 +22,18 @@ jobs:
         run: |
           which google-chrome
           google-chrome --version
-      - name: Resolve one HHKungfu HLS
+      - name: Resolve one HHKungfu HLS with retries
         env:
           HHKUNGFU_CHROMIUM_PATH: /usr/bin/google-chrome
-          HHKUNGFU_HLS_TIMEOUT_MS: 30000
+          HHKUNGFU_HLS_TIMEOUT_MS: 45000
+          HHKUNGFU_HLS_ATTEMPTS: 3
         run: |
-          timeout 40s node --input-type=commonjs <<'NODE'
-          const h=require('./v645_hhkungfu');
+          timeout 90s node --input-type=commonjs <<'NODE'
+          const h=require('./v647_hhkungfu_resolver');
           (async()=>{
             const u=await h.resolveHls(
               'https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html',
-              'diag-tap164-sv1'
+              'diag-resilient-tap164-sv1'
             );
             console.log('RESOLVED',u);
             if(!/https:\/\/[^/]*helvid\.net\/api\/v1\/cdn\/stream\/.+\/master\.m3u8/i.test(u)) throw new Error('Unexpected HLS '+u);
