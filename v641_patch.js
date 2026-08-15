@@ -1,19 +1,21 @@
 module.exports = function applyV641(source) {
-  const manifestRoute = "if (path === '/manifest.json') return sendJson(res, 200, buildManifest(), 300);";
-  if (!source.includes(manifestRoute)) throw new Error('v6.4.1 patch target missing: root manifest route');
-  source = source.replace(
-    manifestRoute,
-    "if (path === '/manifest.json' || path === '/full/manifest.json') return sendJson(res, 200, buildManifest(), 300);"
-  );
+  const requestMarker = "  const parsedBase = v500Resolved.parsedBase, path = parsedBase.rest, cfg = parsedBase.config;";
+  if (!source.includes(requestMarker)) throw new Error('v6.4.1 patch target missing: v5 request marker');
 
-  // Give the already-unified root addon a clear one-install identity.
-  source = source.replace("name: 'Phim Việt + TorBox'", "name: '🎬 Web Phim Full'");
-  source = source.replace(
-    "description: 'TMDB Việt + KKPhim + smart-ranked debrid streams + multi-source subtitles'",
-    "description: 'Một addon duy nhất: TMDB Việt + KKPhim + HH3D + YanHH3D + debrid streams + phụ đề đa nguồn'"
-  );
+  const fullRoute = String.raw`
+  if (path === '/full/manifest.json') {
+    const fullManifest = buildManifest();
+    return sendJson(res, 200, {
+      ...fullManifest,
+      version: '6.4.1',
+      name: '🎬 Web Phim Full',
+      description: 'Một addon duy nhất: TMDB Việt + KKPhim + HH3D + YanHH3D + debrid streams + phụ đề đa nguồn',
+      behaviorHints: { ...(fullManifest.behaviorHints || {}), configurable: false, configurationRequired: false }
+    }, 300);
+  }
+`;
+  source = source.replace(requestMarker, requestMarker + fullRoute);
 
-  // Expose the full manifest in the landing/status hints when those strings are present.
   source = source.replaceAll('6.4.0', '6.4.1');
   source = source.replaceAll('single-process-v6.4.0', 'single-process-v6.4.1');
   return source;
