@@ -3,9 +3,9 @@ module.exports = function applyV642(source) {
   if (!source.includes(mutableMarker)) throw new Error('v6.4.2 patch target missing: mutable request path');
 
   const vnRoute = String.raw`
-  // v6.4.2 parallel Vietnamese-source bridge. This is isolated under /vn
-  // so the existing root and /full addons keep their current behavior.
-  const V642_K20_BASE = String(process.env.K20_VN_BASE_URL || 'https://sc.k-20.xyz').replace(/\\/+$/, '');
+  // v6.4.2 parallel Vietnamese-source bridge. Isolated under /vn.
+  let V642_K20_BASE = String(process.env.K20_VN_BASE_URL || 'https://sc.k-20.xyz');
+  while (V642_K20_BASE.endsWith('/')) V642_K20_BASE = V642_K20_BASE.slice(0, -1);
   const V642_PREFIXES = ['stp:', 'hh3d:', 'clbpx:'];
   const V642_CATALOGS = new Set(['stp-movie', 'stp-series', 'hh3d-movie', 'hh3d-series', 'clbpx-movie', 'clbpx-series']);
 
@@ -48,27 +48,27 @@ module.exports = function applyV642(source) {
 
   if (path.startsWith('/vn/catalog/') || path.startsWith('/vn/meta/') || path.startsWith('/vn/stream/')) {
     const upstreamPath = path.slice('/vn'.length);
+    const parts = upstreamPath.split('/').filter(Boolean);
+    const resource = parts[0] || '';
+    const type = parts[1] || '';
+    const rawThird = parts[2] || '';
+    const third = decodeURIComponent(rawThird.replace('.json', ''));
 
-    const cat = upstreamPath.match(/^\\/catalog\\/(movie|series)\\/([^/]+)(?:\\/[^/]+)?\\.json$/);
-    if (cat && !V642_CATALOGS.has(decodeURIComponent(cat[2]))) {
+    if (resource === 'catalog' && !V642_CATALOGS.has(third)) {
       return sendJson(res, 200, { metas: [] }, 30);
     }
 
-    const media = upstreamPath.match(/^\\/(meta|stream)\\/(movie|series)\\/([^/]+)\\.json$/);
-    if (media) {
-      const mediaId = decodeURIComponent(media[3]);
-      if (!V642_PREFIXES.some(prefix => mediaId.startsWith(prefix))) {
-        return sendJson(res, 200, media[1] === 'stream' ? { streams: [] } : { meta: null }, 30);
-      }
+    if ((resource === 'meta' || resource === 'stream') && !V642_PREFIXES.some(prefix => third.startsWith(prefix))) {
+      return sendJson(res, 200, resource === 'stream' ? { streams: [] } : { meta: null }, 30);
     }
 
     try {
       const data = await fetchJson(V642_K20_BASE + upstreamPath, 'K20-VN');
-      return sendJson(res, 200, data, upstreamPath.startsWith('/stream/') ? 0 : 30);
+      return sendJson(res, 200, data, resource === 'stream' ? 0 : 30);
     } catch (e) {
       console.error('v6.4.2 VN bridge failed:', e.message);
-      if (upstreamPath.startsWith('/catalog/')) return sendJson(res, 200, { metas: [] }, 0);
-      if (upstreamPath.startsWith('/stream/')) return sendJson(res, 200, { streams: [] }, 0);
+      if (resource === 'catalog') return sendJson(res, 200, { metas: [] }, 0);
+      if (resource === 'stream') return sendJson(res, 200, { streams: [] }, 0);
       return sendJson(res, 200, { meta: null }, 0);
     }
   }
