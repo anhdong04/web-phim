@@ -25,13 +25,15 @@ jobs:
           const s = fs.readFileSync('v641_patch.js','utf8');
           for (const needle of [
             "'/full/manifest.json'",
+            "startsWith('/full/')",
+            "slice('/full'.length)",
             "🎬 Web Phim Full",
             "TMDB Việt + KKPhim + HH3D + YanHH3D",
             "6.4.1"
           ]) if (!s.includes(needle)) throw new Error('missing ' + needle);
-          console.log('full manifest assertions passed');
+          console.log('full addon base-path assertions passed');
           NODE
-      - name: Generated full manifest smoke
+      - name: Generated full addon smoke
         env:
           PORT: 7000
           HH3D_PIKPAK_ENABLED: 'false'
@@ -45,11 +47,15 @@ jobs:
             sleep 0.5
           done
           if [ "$ok" != "1" ]; then cat /tmp/v641.log; exit 1; fi
-          cat /tmp/full.json
           node <<'NODE'
           const j=require('/tmp/full.json');
           if (j.version !== '6.4.1') throw new Error('manifest version ' + j.version);
           if (j.name !== '🎬 Web Phim Full') throw new Error('manifest name ' + j.name);
           if (!Array.isArray(j.resources) || !j.resources.includes('catalog')) throw new Error('catalog resource missing');
+          NODE
+          curl -fsS 'http://127.0.0.1:7000/full/catalog/movie/home-hot.json' >/tmp/catalog.json
+          node <<'NODE'
+          const j=require('/tmp/catalog.json');
+          if (!Array.isArray(j.metas)) throw new Error('full catalog did not return metas array');
           NODE
           kill $pid || true
