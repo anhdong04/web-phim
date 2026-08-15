@@ -1,4 +1,4 @@
-name: Diagnose Streamfree Token Internals
+name: Probe Streamfree Native HLS
 on:
   push:
     paths:
@@ -6,27 +6,46 @@ on:
   workflow_dispatch:
 
 jobs:
-  inspect:
+  probe:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Decode token internals
+      - name: Install deps
+        run: npm install --omit=dev
+      - name: Capture native HLS after targeted anti-tamper bypass
+        env:
+          HHKUNGFU_CHROMIUM_PATH: /usr/bin/google-chrome
         run: |
-          python3 <<'PY'
-          import urllib.request
-          req=urllib.request.Request('https://streamfree.vip/public/static/app.bb288bfe.js',headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36','Referer':'https://streamfree.vip/embed/v/Dgh6TOLS'})
-          open('/tmp/app.js','wb').write(urllib.request.urlopen(req,timeout=30).read())
-          PY
-          node --input-type=commonjs <<'NODE'
-          const fs=require('fs'),vm=require('vm');const src=fs.readFileSync('/tmp/app.js','utf8');
-          function bf(text,name){const m=new RegExp('function\\s+'+name.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\s*\\([^)]*\\)\\s*\\{').exec(text);if(!m)return'';const p=text.indexOf('{',m.index);let d=0,q=null,e=false;for(let i=p;i<text.length;i++){const c=text[i];if(q){if(e)e=false;else if(c==='\\\\')e=true;else if(c===q)q=null;continue}if(c==='"'||c==="'"||c==='`'){q=c;continue}if(c==='{')d++;else if(c==='}'&&--d===0)return text.slice(m.index,i+1)}return''}
-          const f24=bf(src,'a0_0x24a9'),f34=bf(src,'a0_0x34f2'),e34=src.indexOf(f34)+f34.length,be=src.indexOf(',!(function',e34);const ctx={decodeURIComponent,parseInt,console};vm.createContext(ctx);vm.runInContext(f24+'\n'+f34+'\n'+src.slice(e34,be)+')',ctx,{timeout:10000});
-          const dec=ctx.a0_0x24a9,aliases=new Set(['a0_0x24a9']);for(const m of src.matchAll(/\b(_0x[0-9a-f]+)\s*=\s*a0_0x24a9\b/gi))aliases.add(m[1]);let out=src;for(const a of aliases){const x=a.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&');out=out.replace(new RegExp('\\b'+x+'\\(\\s*(0x[0-9a-fA-F]+|\\d+)\\s*,\\s*([\\\'\"])(.*?)\\2\\s*\\)','g'),(z,n,q,k)=>{try{return JSON.stringify(dec(Number(n),k))}catch{return z}})}
-          const clean=s=>String(s).replace(/\\\//g,'/').replace(/\s+/g,' ').trim();
-          const names=['_0xb64114','_0x4e3ae8','_0x49426d','_0x345a15'];
-          function ctxs(term,r=10000,max=2){let p=0,n=0;console.log('\n===CTX '+term+'===');while(n<max&&(p=out.indexOf(term,p))>=0){console.log(clean(out.slice(Math.max(0,p-r),Math.min(out.length,p+r))));p+=term.length;n++}}
-          for(const name of names){console.log('\n===FUNC '+name+'===');const f=bf(out,name);if(f)console.log(clean(f));else ctxs(name)}
+          timeout 120s node --input-type=commonjs <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36';
+          const WATCH='https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html';
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          function patch(src){
+            let n=0;
+            src=src.replace(/_0xfcc099\s*=\s*new\s+_0x57bd03\s*\(\s*_0x1b1b2c\s*\)/,()=>{n++;return `_0xfcc099=new Proxy({}, {get:function(t,p){if(p==='co')return async function(){return false};if(p==='al')return function(){};return function(){return false}}})`});
+            src=src.replace(/_0x36c318\s*=\s*new\s+_0x26646f\s*\(\s*_0x11c0d4\s*\)/g,()=>{n++;return `_0x36c318={s:0,sample:function(){return 0}}`});
+            console.log('PATCH_COUNT',n);
+            return src;
+          }
+          (async()=>{
+            const browser=await puppeteer.launch({headless:true,executablePath:process.env.HHKUNGFU_CHROMIUM_PATH,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
+            const page=await browser.newPage(); await page.setUserAgent(UA);
+            let hls='', responseBody='';
+            await page.setRequestInterception(true);
+            page.on('request',async req=>{try{const u=req.url();if(/streamfree\.vip\/hls\/.*\.m3u8/i.test(u)){hls=u;console.log('CAPTURED_HLS',u)}if(/streamfree\.vip\/public\/static\/app\.[^/?]+\.js/i.test(u)){const r=await fetch(u,{headers:{'user-agent':UA,'referer':req.headers().referer||'https://streamfree.vip/'}});return req.respond({status:200,contentType:'application/javascript',body:patch(await r.text())})}return req.continue()}catch(e){console.error('INT',e.message);try{await req.continue()}catch{}}});
+            page.on('response',async r=>{if(/streamfree\.vip\/hls\/.*\.m3u8/i.test(r.url()))try{responseBody=(await r.text()).slice(0,20000)}catch{}});
+            await page.goto(WATCH,{waitUntil:'domcontentloaded',timeout:45000});
+            let frame=null;for(let i=0;i<120;i++){frame=page.frames().find(f=>/streamfree\.vip\/embed\//i.test(f.url()));if(frame)break;await sleep(200)}if(!frame)throw Error('iframe missing');
+            for(let i=0;i<180&&!hls;i++){if(i%30===0){const s=await frame.evaluate(()=>{const e=document.querySelector('[data-id]');return{state:e?.dataset?.state||'',msg:document.body?.innerText?.slice(0,180)||''}}).catch(()=>({}));console.log('STATE',JSON.stringify(s))}await sleep(250)}
+            if(!hls)throw Error('HLS not captured');
+            for(let i=0;i<40&&!responseBody;i++)await sleep(250);
+            console.log('HLS_BODY_HEAD',JSON.stringify(responseBody.slice(0,900)));
+            if(!responseBody)throw Error('HLS body missing');
+            console.log('NATIVE_HLS_CAPTURE_OK');
+            await browser.close();
+          })().catch(e=>{console.error('PROBE_FAIL',e);process.exit(1)});
           NODE
