@@ -1,0 +1,46 @@
+name: Web Phim v6.3.9 Progressive Dailymotion MP4
+on:
+  push:
+    paths:
+      - 'v639_patch.js'
+      - 'addon_v639.js'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/ci-v639.yml'
+  workflow_dispatch:
+jobs:
+  progressive-mp4:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax check
+        run: node --check v639_patch.js && node --check addon_v639.js
+      - name: Progressive MP4 regression
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const s = fs.readFileSync('v639_patch.js','utf8');
+          for (const needle of [
+            "/yanhh3d/dm/' + encodeURIComponent(id) + '/video.mp4",
+            "metadata has no progressive MP4",
+            "'content-type':'video/mp4'",
+            "type:isHls ? 'hls' : 'mp4'",
+            "playbackIdentity:'r6'"
+          ]) if (!s.includes(needle)) throw new Error('missing ' + needle);
+          if (!s.includes("String(x.type || '').toLowerCase() === 'video/mp4'")) throw new Error('metadata MP4 selection missing');
+          console.log('progressive MP4 bridge assertions passed');
+          NODE
+      - name: Generated server and manifest smoke
+        run: |
+          node addon_v639.js >/tmp/v639.log 2>&1 &
+          pid=$!
+          for i in {1..20}; do
+            if curl -fsS http://127.0.0.1:7000/yanhh3d/manifest.json >/tmp/manifest.json; then break; fi
+            sleep 0.5
+          done
+          cat /tmp/manifest.json
+          node -e "const j=require('/tmp/manifest.json'); if(j.version!=='1.1.9') throw new Error('manifest version '+j.version);"
+          kill $pid || true
