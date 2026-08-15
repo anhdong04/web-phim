@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Fetch and decode Streamfree app
+      - name: Compact Streamfree runtime analysis
         run: |
           python3 <<'PY'
           import urllib.request
@@ -43,27 +43,42 @@ jobs:
           }
           const ctx={decodeURIComponent,console}; vm.createContext(ctx);
           vm.runInContext(functionSource('a0_0x34f2')+'\n'+functionSource('a0_0x24a9'),ctx);
-          let decoded=0;
+          let decoded=0, failed=0;
           const out=src.replace(/a0_0x24a9\(\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(['"])(.*?)\2\s*\)/g,(all,n,q,key)=>{
-            try{decoded++;return JSON.stringify(ctx.a0_0x24a9(Number(n),key))}catch{return all}
+            try{decoded++;return JSON.stringify(ctx.a0_0x24a9(Number(n),key))}catch{failed++;return all}
           });
           fs.writeFileSync('/tmp/app.deob.js',out);
-          console.log('decoded',decoded,'len',out.length);
+          console.log('decoded='+decoded+' failed='+failed+' len='+out.length);
 
-          const urls=[...new Set((out.match(/https?:\\?\/\\?\/[A-Za-z0-9._~:/?#@!$&'()*+,;=%\\-]+/g)||[]).map(x=>x.replace(/\\\//g,'/')))];
-          console.log('\n===== URLS =====');
-          for(const u of urls.filter(u=>/helvid|stream|api|cdn|player|embed|jw/i.test(u)).slice(0,100)) console.log(u);
-
-          const terms=['helvid.net','cdn/stream','master.m3u8','m3u8','/api/v1/','jwplayer','setup(','sources','playlist','fetch(','authorization','token','signature','cookie'];
-          const low=out.toLowerCase();
-          for(const term of terms){
-            console.log('\n===== '+term+' =====');
-            let pos=0,hits=0;
-            while(hits<8 && (pos=low.indexOf(term.toLowerCase(),pos))>=0){
-              const a=Math.max(0,pos-700), b=Math.min(out.length,pos+1400);
-              console.log(out.slice(a,b).replace(/\s+/g,' ')+'\n---');
-              pos+=term.length; hits++;
+          function clean(s){return String(s).replace(/\\\//g,'/').replace(/\\n/g,' ').replace(/\s+/g,' ').trim()}
+          function contexts(term,limit=4,radius=420){
+            const low=out.toLowerCase(), needle=term.toLowerCase(); let pos=0,n=0;
+            console.log('\n## '+term);
+            while(n<limit && (pos=low.indexOf(needle,pos))>=0){
+              console.log('['+(n+1)+'] '+clean(out.slice(Math.max(0,pos-radius),Math.min(out.length,pos+needle.length+radius))));
+              pos+=needle.length;n++;
             }
-            console.log('hits',hits);
+            if(!n) console.log('(none)');
+          }
+
+          // Only print strings which are likely to reveal the media/API flow.
+          const literalRe=/(?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')/g;
+          const interesting=[]; let m;
+          while((m=literalRe.exec(out))){
+            let s=clean(m[1]??m[2]??'');
+            if(s.length>240) continue;
+            if(/helvid|m3u8|\/api\/|cdn|stream|token|auth|bytecode|jwplayer|playlist|source|embed|player/i.test(s)) interesting.push(s);
+          }
+          console.log('\n## UNIQUE INTERESTING STRINGS');
+          for(const s of [...new Set(interesting)].slice(0,120)) console.log(s);
+
+          for(const t of ['helvid','master.m3u8','m3u8','/api/','fetch(','XMLHttpRequest','jwplayer','bytecode','token','authorization','cdn/stream']) contexts(t,4,420);
+
+          // Show compact call sites which are most likely to assemble network requests.
+          console.log('\n## NETWORK-LIKE CALL SITES');
+          const callRe=/(fetch\s*\(|axios\.(?:get|post)\s*\(|\.open\s*\(\s*["'](?:GET|POST)["'])/gi;
+          let c,count=0;
+          while(count<16 && (c=callRe.exec(out))){
+            console.log('['+(++count)+'] '+clean(out.slice(Math.max(0,c.index-300),Math.min(out.length,c.index+800))));
           }
           NODE
