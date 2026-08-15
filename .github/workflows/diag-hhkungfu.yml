@@ -10,42 +10,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Probe Streamfree session requirements
+      - name: Inspect Streamfree decoder
         run: |
           python3 <<'PY'
-          import re, html, urllib.request, urllib.parse, http.cookiejar
-          BASE='https://hhkungfu.ee'
-          WATCH=BASE+'/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html'
+          import re, html, urllib.request, urllib.parse
           UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36'
-          cj=http.cookiejar.CookieJar()
-          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
-          def get(url, referer=None, origin=None):
-              h={'User-Agent':UA,'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language':'vi-VN,vi;q=0.9,en;q=0.8'}
-              if referer: h['Referer']=referer
-              if origin: h['Origin']=origin
+          EMBED='https://streamfree.vip/embed/v/Dgh6TOLS'
+          REF='https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html'
+          def get(url, referer=REF):
+              h={'User-Agent':UA,'Referer':referer,'Accept':'text/html,application/javascript,*/*'}
               r=urllib.request.Request(url,headers=h)
+              with urllib.request.urlopen(r,timeout=30) as x:
+                  return x.read().decode('utf-8','replace')
+          page=get(EMBED)
+          print('PAGE LEN',len(page))
+          print('\nSCRIPTS:')
+          srcs=re.findall(r'<script[^>]+src=["\']([^"\']+)',page,re.I)
+          print(srcs)
+          print('\nBYTECODE CONTEXT:')
+          for m in re.finditer(r'bytecode|querySelector|meta\[name=["\']bytecode|atob|TextDecoder|WebAssembly|fetch\(',page,re.I):
+              print(page[max(0,m.start()-700):m.start()+1800])
+          for src in srcs:
+              if src.startswith('//'): src='https:'+src
+              elif src.startswith('/'): src='https://streamfree.vip'+src
+              elif not src.startswith('http'): src=urllib.parse.urljoin(EMBED,src)
               try:
-                  with opener.open(r,timeout=30) as x:
-                      raw=x.read(); text=raw.decode('utf-8','replace')
-                      print('HTTP',x.status,'LEN',len(raw),'CTYPE',x.headers.get('content-type'),'URL',url)
-                      print('SET-COOKIE',x.headers.get_all('set-cookie'))
-                      return text
+                  js=get(src,EMBED)
+                  print('\n=== JS',src,'LEN',len(js),'===')
+                  hits=[]
+                  for term in ['bytecode','atob','TextDecoder','WebAssembly','m3u8','mp4','source','playlist','fetch(']:
+                      if term.lower() in js.lower(): hits.append(term)
+                  print('HITS',hits)
+                  for term in hits:
+                      pos=js.lower().find(term.lower())
+                      print('CTX',term,js[max(0,pos-1200):pos+3000])
               except Exception as e:
-                  print('ERR',type(e).__name__,e,'URL',url)
-                  return ''
-
-          watch=get(WATCH)
-          qs=urllib.parse.urlencode({'action':'dox_ajax_player','post_id':'913','chapter_st':'tap-164','type':'pro','sv':'1'})
-          out=get(BASE+'/player/player.php?'+qs,WATCH,BASE)
-          m=re.search(r'<iframe[^>]+src=["\']([^"\']+)',html.unescape(out),re.I)
-          iframe=html.unescape(m.group(1)) if m else ''
-          print('IFRAME',iframe)
-          print('COOKIES',[(c.domain,c.name,c.value) for c in cj])
-          if iframe:
-              for ref in [WATCH, BASE+'/', 'https://hhkungfu.ee/', 'https://hhkungfu.ee']:
-                  print('\nTRY REF',ref)
-                  page=get(iframe,ref,BASE)
-                  print('BODY',page[:5000])
-                  urls=re.findall(r'https?://[^"\'<>\\ ]+',html.unescape(page))
-                  print('MEDIA',[u for u in urls if any(x in u.lower() for x in ['m3u8','.mp4','playlist','manifest'])][:100])
+                  print('JS ERR',src,e)
           PY
