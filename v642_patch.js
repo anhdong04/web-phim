@@ -3,8 +3,8 @@ module.exports = function applyV642(source) {
   if (!source.includes(mutableMarker)) throw new Error('v6.4.7 patch target missing: mutable request path');
 
   const vnRoute = String.raw`
-  // v6.4.7: native HHKungfu HLS resolver + existing experimental K20 bridges for STP/CLBPX.
-  const V645_HHK = require('./v645_hhkungfu');
+  // v6.4.7: resilient native HHKungfu HLS resolver + experimental K20 bridges for STP/CLBPX.
+  const V645_HHK = require('./v647_hhkungfu_provider');
   let V642_K20_BASE = String(process.env.K20_VN_BASE_URL || 'https://sc.k-20.xyz');
   while (V642_K20_BASE.endsWith('/')) V642_K20_BASE = V642_K20_BASE.slice(0, -1);
   const V642_K20_PREFIXES = ['stp:', 'clbpx:'];
