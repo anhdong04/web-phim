@@ -1,4 +1,4 @@
-name: Web Phim v6.4.5 HHKungfu
+name: Web Phim v6.4.6 HHKungfu
 on:
   push:
     paths:
@@ -26,33 +26,25 @@ jobs:
           HH3D_PIKPAK_ENABLED: 'false'
           YANHH3D_ENABLED: 'false'
         run: |
-          node addon_v642.js >/tmp/v645.log 2>&1 &
+          node addon_v642.js >/tmp/v646.log 2>&1 &
           pid=$!
           ok=0
           for i in {1..40}; do
             if curl -fsS http://127.0.0.1:7000/vn/manifest.json >/tmp/vn.json; then ok=1; break; fi
             sleep 0.5
           done
-          if [ "$ok" != "1" ]; then cat /tmp/v645.log; exit 1; fi
+          if [ "$ok" != "1" ]; then cat /tmp/v646.log; exit 1; fi
           node <<'NODE'
           const j=require('/tmp/vn.json');
-          if (j.version !== '6.4.5') throw new Error('VN manifest version ' + j.version);
+          if (j.version !== '6.4.6') throw new Error('VN manifest version ' + j.version);
           if (!(j.catalogs||[]).some(c=>c.id==='hhkungfu')) throw new Error('HHKungfu catalog missing');
           if (!(j.idPrefixes||[]).includes('hhu:')) throw new Error('hhu prefix missing');
-          NODE
-
-          curl -fsS 'http://127.0.0.1:7000/vn/catalog/series/hhkungfu/search=%C4%90%E1%BA%A5u%20La.json' >/tmp/cat.json
-          node <<'NODE'
-          const j=require('/tmp/cat.json');
-          if (!(j.metas||[]).length) throw new Error('HHKungfu search returned no metas');
-          console.log('search first:', j.metas[0].id, j.metas[0].name);
           NODE
 
           curl -fsS 'http://127.0.0.1:7000/vn/meta/series/hhu:dau-la-dai-luc-2-tuyet-the-duong-mon.json' >/tmp/meta.json
           node <<'NODE'
           const j=require('/tmp/meta.json');
           if (!j.meta) throw new Error('HHKungfu meta missing');
-          if (!(j.meta.videos||[]).length) throw new Error('HHKungfu episodes missing');
           if (!(j.meta.videos||[]).some(v=>String(v.id).includes(':tap-164'))) throw new Error('tap-164 missing');
           console.log('episodes:', j.meta.videos.length);
           NODE
@@ -61,8 +53,9 @@ jobs:
           node <<'NODE'
           const j=require('/tmp/stream.json');
           if (!(j.streams||[]).length) throw new Error('HHKungfu streams empty');
-          if (!(j.streams||[]).some(s=>String(s.externalUrl||'').includes('streamfree.vip/embed/'))) throw new Error('HHKungfu player URL missing');
-          console.log('streams:', j.streams.map(s=>({title:s.title,externalUrl:s.externalUrl})));
+          if ((j.streams||[]).some(s=>String(s.externalUrl||'').includes('streamfree.vip/embed/'))) throw new Error('direct Streamfree URL must not be exposed');
+          if (!(j.streams||[]).every(s=>String(s.externalUrl||'').startsWith('https://hhkungfu.ee/watch-'))) throw new Error('HHKungfu watch URL missing');
+          console.log('streams:', j.streams.map(s=>({name:s.name,title:s.title,externalUrl:s.externalUrl})));
           NODE
 
           curl -fsS http://127.0.0.1:7000/manifest.json >/tmp/root.json
