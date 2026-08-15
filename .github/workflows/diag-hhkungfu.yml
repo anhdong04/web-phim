@@ -1,0 +1,30 @@
+name: Diagnose HHKungfu
+on:
+  push:
+    paths:
+      - '.github/workflows/diag-hhkungfu.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe detail and watch page
+        run: |
+          set -x
+          curl -L --compressed -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' \
+            -H 'Accept: text/html,application/xhtml+xml' \
+            'https://hhkungfu.ee/dau-la-dai-luc-2-tuyet-the-duong-mon' -o /tmp/detail.html
+          echo 'DETAIL SIZE:' $(wc -c </tmp/detail.html)
+          grep -Eo 'https?://[^"'"'"' ]+|/watch-[^"'"'"' ]+' /tmp/detail.html | head -n 100 || true
+          curl -L --compressed -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' \
+            -H 'Referer: https://hhkungfu.ee/dau-la-dai-luc-2-tuyet-the-duong-mon' \
+            -H 'Accept: text/html,application/xhtml+xml' \
+            'https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html' -o /tmp/watch.html -D /tmp/headers.txt
+          cat /tmp/headers.txt
+          echo 'WATCH SIZE:' $(wc -c </tmp/watch.html)
+          echo 'IFRAME/SOURCE/M3U8:'
+          grep -Ein 'iframe|m3u8|\.mp4|player|source:|file:|embed|video' /tmp/watch.html | head -n 200 || true
+          echo 'URLS:'
+          grep -Eo 'https?://[^"'"'"'<> ]+' /tmp/watch.html | head -n 200 || true
