@@ -13,7 +13,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Fetch Streamfree app source
+      - name: Fetch and decode Streamfree app
         run: |
           python3 <<'PY'
           import urllib.request
@@ -26,40 +26,44 @@ jobs:
           open('/tmp/app.js','wb').write(raw)
           print('downloaded',len(raw))
           PY
-      - name: Decode literal string calls
-        run: |
           node --input-type=commonjs <<'NODE'
           const fs=require('fs'), vm=require('vm');
           const src=fs.readFileSync('/tmp/app.js','utf8');
           function functionSource(name){
             const re=new RegExp('function\\s+'+name+'\\s*\\([^)]*\\)\\s*\\{');
             const m=re.exec(src); if(!m) throw new Error('missing '+name);
-            let i=m.index, p=src.indexOf('{',m.index), depth=0, q=null, esc=false, tpl=false;
+            const p=src.indexOf('{',m.index); let depth=0,q=null,esc=false;
             for(let j=p;j<src.length;j++){
               const c=src[j];
-              if(q){ if(esc){esc=false;continue} if(c==='\\\\'){esc=true;continue} if(c===q){q=null} continue; }
+              if(q){if(esc){esc=false;continue} if(c==='\\\\'){esc=true;continue} if(c===q)q=null; continue}
               if(c==='"'||c==="'"){q=c;continue}
-              if(c==='{') depth++; else if(c==='}'){depth--; if(depth===0) return src.slice(i,j+1)}
+              if(c==='{')depth++; else if(c==='}'&&--depth===0)return src.slice(m.index,j+1);
             }
             throw new Error('unclosed '+name);
           }
-          const f1=functionSource('a0_0x34f2');
-          const f2=functionSource('a0_0x24a9');
-          const ctx={decodeURIComponent, console}; vm.createContext(ctx); vm.runInContext(f1+'\n'+f2,ctx);
-          const dec=ctx.a0_0x24a9;
-          let count=0,fail=0;
+          const ctx={decodeURIComponent,console}; vm.createContext(ctx);
+          vm.runInContext(functionSource('a0_0x34f2')+'\n'+functionSource('a0_0x24a9'),ctx);
+          let decoded=0;
           const out=src.replace(/a0_0x24a9\(\s*(0x[0-9a-fA-F]+|\d+)\s*,\s*(['"])(.*?)\2\s*\)/g,(all,n,q,key)=>{
-            try{const v=dec(Number(n),key); count++; return JSON.stringify(v)}catch(e){fail++;return all}
+            try{decoded++;return JSON.stringify(ctx.a0_0x24a9(Number(n),key))}catch{return all}
           });
           fs.writeFileSync('/tmp/app.deob.js',out);
-          console.log('decoded',count,'failed',fail,'len',out.length);
-          const terms=['devtools','developer','console','jwplayer','bytecode','helvid','m3u8','master.m3u8','fetch','playlist','source','file','error','webdriver','debugger','visibility','performance','setinterval','settimeout'];
+          console.log('decoded',decoded,'len',out.length);
+
+          const urls=[...new Set((out.match(/https?:\\?\/\\?\/[A-Za-z0-9._~:/?#@!$&'()*+,;=%\\-]+/g)||[]).map(x=>x.replace(/\\\//g,'/')))];
+          console.log('\n===== URLS =====');
+          for(const u of urls.filter(u=>/helvid|stream|api|cdn|player|embed|jw/i.test(u)).slice(0,100)) console.log(u);
+
+          const terms=['helvid.net','cdn/stream','master.m3u8','m3u8','/api/v1/','jwplayer','setup(','sources','playlist','fetch(','authorization','token','signature','cookie'];
+          const low=out.toLowerCase();
           for(const term of terms){
             console.log('\n===== '+term+' =====');
-            const low=out.toLowerCase(); let pos=0,hits=0;
-            while(hits<12 && (pos=low.indexOf(term.toLowerCase(),pos))>=0){
-              console.log(out.slice(Math.max(0,pos-1800),Math.min(out.length,pos+3500))+'\n---'); pos+=term.length;hits++;
+            let pos=0,hits=0;
+            while(hits<8 && (pos=low.indexOf(term.toLowerCase(),pos))>=0){
+              const a=Math.max(0,pos-700), b=Math.min(out.length,pos+1400);
+              console.log(out.slice(a,b).replace(/\s+/g,' ')+'\n---');
+              pos+=term.length; hits++;
             }
-            console.log('hits shown',hits);
+            console.log('hits',hits);
           }
           NODE
