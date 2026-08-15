@@ -10,46 +10,42 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Resolve HHKungfu player
+      - name: Probe Streamfree session requirements
         run: |
           python3 <<'PY'
-          import re, html, urllib.request, urllib.parse
+          import re, html, urllib.request, urllib.parse, http.cookiejar
           BASE='https://hhkungfu.ee'
           WATCH=BASE+'/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html'
           UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36'
-          def get(url, referer=None):
-              h={'User-Agent':UA,'Accept':'*/*'}
+          cj=http.cookiejar.CookieJar()
+          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+          def get(url, referer=None, origin=None):
+              h={'User-Agent':UA,'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8','Accept-Language':'vi-VN,vi;q=0.9,en;q=0.8'}
               if referer: h['Referer']=referer
+              if origin: h['Origin']=origin
               r=urllib.request.Request(url,headers=h)
-              with urllib.request.urlopen(r,timeout=30) as x:
-                  raw=x.read(); text=raw.decode('utf-8','replace')
-                  print('HTTP',x.status,'LEN',len(raw),'CTYPE',x.headers.get('content-type'),'URL',url)
-                  return text
-
-          for typ in ['pro','tiktik','vip4k','vip4kv2']:
-              qs=urllib.parse.urlencode({
-                'action':'dox_ajax_player',
-                'post_id':'913',
-                'chapter_st':'tap-164',
-                'type':typ,
-                'sv':'1'
-              })
-              url=BASE+'/player/player.php?'+qs
-              out=get(url,WATCH)
-              print('\nTYPE',typ,'\n',out[:2500])
-              m=re.search(r'<iframe[^>]+src=["\']([^"\']+)',html.unescape(out),re.I)
-              if not m: continue
-              iframe=html.unescape(m.group(1))
-              print('IFRAME',iframe)
-              if 'not-found' in iframe: continue
               try:
-                  page=get(iframe,WATCH)
-                  print('IFRAME BODY',page[:4000])
-                  urls=re.findall(r'https?://[^"\'<>\\ ]+',html.unescape(page))
-                  media=[u for u in urls if any(x in u.lower() for x in ['m3u8','.mp4','manifest','playlist'])]
-                  print('MEDIA URLS',media[:50])
-                  for pat in [r'file\s*[:=]\s*["\']([^"\']+)',r'source\s*[:=]\s*["\']([^"\']+)',r'src\s*[:=]\s*["\']([^"\']+\.m3u8[^"\']*)']:
-                      print('PAT',pat,re.findall(pat,page,re.I)[:30])
+                  with opener.open(r,timeout=30) as x:
+                      raw=x.read(); text=raw.decode('utf-8','replace')
+                      print('HTTP',x.status,'LEN',len(raw),'CTYPE',x.headers.get('content-type'),'URL',url)
+                      print('SET-COOKIE',x.headers.get_all('set-cookie'))
+                      return text
               except Exception as e:
-                  print('IFRAME ERROR',repr(e))
+                  print('ERR',type(e).__name__,e,'URL',url)
+                  return ''
+
+          watch=get(WATCH)
+          qs=urllib.parse.urlencode({'action':'dox_ajax_player','post_id':'913','chapter_st':'tap-164','type':'pro','sv':'1'})
+          out=get(BASE+'/player/player.php?'+qs,WATCH,BASE)
+          m=re.search(r'<iframe[^>]+src=["\']([^"\']+)',html.unescape(out),re.I)
+          iframe=html.unescape(m.group(1)) if m else ''
+          print('IFRAME',iframe)
+          print('COOKIES',[(c.domain,c.name,c.value) for c in cj])
+          if iframe:
+              for ref in [WATCH, BASE+'/', 'https://hhkungfu.ee/', 'https://hhkungfu.ee']:
+                  print('\nTRY REF',ref)
+                  page=get(iframe,ref,BASE)
+                  print('BODY',page[:5000])
+                  urls=re.findall(r'https?://[^"\'<>\\ ]+',html.unescape(page))
+                  print('MEDIA',[u for u in urls if any(x in u.lower() for x in ['m3u8','.mp4','playlist','manifest'])][:100])
           PY
