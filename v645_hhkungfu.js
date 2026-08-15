@@ -91,18 +91,19 @@ async function playerIframe(postId, chapter, sv, type, referer) {
 async function streams(id) {
   const parsed=slugFromId(id); if (!parsed?.chapter) return [];
   const {episodes}=await detail(parsed.slug); const ep=episodes.find(x=>x.ep===parsed.chapter); if (!ep) return [];
-  const types=[['pro','1080P V2'],['tiktik','1080P V1'],['vip4k','4K V1'],['vip4kv2','4K V2']];
+  const servers=ep.servers.length ? ep.servers : [{sv:'1',href:BASE+'/watch-'+parsed.slug+'/'+parsed.chapter+'-sv1.html'}];
   const out=[];
-  for (const server of (ep.servers.length?ep.servers:[{sv:'1',href:BASE+'/watch-'+parsed.slug+'/'+parsed.chapter+'-sv1.html'}])) {
-    const label=server.sv==='2'?'Thuyết minh':'Vietsub';
-    const referer=server.href || BASE+'/watch-'+parsed.slug+'/'+parsed.chapter+'-sv'+server.sv+'.html';
-    for (const [type,quality] of types) {
-      try {
-        const iframe=await playerIframe(ep.postId, ep.ep, server.sv, type, referer);
-        if (!iframe || /not-found/i.test(iframe) || out.some(x=>x.externalUrl===iframe)) continue;
-        out.push({ name:'🐉 HHKungfu', title:[quality,label].join(' • '), externalUrl:iframe, description:'HHKungfu • '+ep.title, behaviorHints:{ bingeGroup:'hhkungfu-'+server.sv+'-'+type } });
-      } catch {}
-    }
+  for (const server of servers) {
+    const label=server.sv==='2' ? 'Thuyết minh' : 'Vietsub';
+    const watchUrl=server.href || BASE+'/watch-'+parsed.slug+'/'+parsed.chapter+'-sv'+server.sv+'.html';
+    if (!watchUrl || out.some(x=>x.externalUrl===watchUrl)) continue;
+    out.push({
+      name:'🐉 HHKungfu • '+label,
+      title:label+' • mở player HHKungfu',
+      externalUrl:watchUrl,
+      description:'HHKungfu • '+ep.title+' • '+label,
+      behaviorHints:{ bingeGroup:'hhkungfu-watch-'+server.sv }
+    });
   }
   return out;
 }
