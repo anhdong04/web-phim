@@ -2,9 +2,10 @@ const fs = require('node:fs');
 const BASE = String(process.env.HHKUNGFU_BASE_URL || 'https://hhkungfu.ee').replace(/\/+$/, '');
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36';
 const HLS_TTL_MS = Math.max(60_000, Number(process.env.HHKUNGFU_HLS_TTL_MS || 15 * 60_000));
-const HLS_TIMEOUT_MS = Math.max(8_000, Number(process.env.HHKUNGFU_HLS_TIMEOUT_MS || 25_000));
+const HLS_TIMEOUT_MS = Math.max(15_000, Number(process.env.HHKUNGFU_HLS_TIMEOUT_MS || 45_000));
 const hlsCache = new Map();
 let browserPromise = null;
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
 
 function decodeHtml(s='') {
   return String(s)
@@ -103,43 +104,90 @@ async function getBrowser() {
     return puppeteer.launch({
       executablePath,
       headless:true,
-      args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--mute-audio','--autoplay-policy=no-user-gesture-required']
+      args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']
     });
   })().catch(e=>{browserPromise=null;throw e;});
   return browserPromise;
+}
+function playlistHls(items) {
+  const list=Array.isArray(items)?items:[];
+  for(const item of list){
+    if(/\.m3u8(?:\?|$)/i.test(String(item?.file||''))) return String(item.file);
+    for(const src of (Array.isArray(item?.sources)?item.sources:[])){
+      if(/\.m3u8(?:\?|$)/i.test(String(src?.file||''))) return String(src.file);
+    }
+  }
+  return '';
 }
 async function resolveHls(watchUrl, cacheKey) {
   const cached=hlsCache.get(cacheKey);
   if (cached && cached.expiresAt>Date.now()) return cached.url;
   const browser=await getBrowser();
   const page=await browser.newPage();
+  let captured='';
   try {
     await page.setUserAgent(UA);
-    await page.setViewport({width:1280,height:720});
     await page.evaluateOnNewDocument(()=>{
-      try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined,configurable:true});}catch{}
-      try{Object.defineProperty(window,'outerWidth',{get:()=>window.innerWidth,configurable:true});}catch{}
-      try{Object.defineProperty(window,'outerHeight',{get:()=>window.innerHeight,configurable:true});}catch{}
-      try{
-        const noop=function(){};
-        for(const k of ['log','table','clear','debug','dir','dirxml','profile','profileEnd']){
-          try{Object.defineProperty(console,k,{value:noop,writable:false,configurable:false});}catch{}
-        }
-      }catch{}
+      try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined});}catch{}
+      try{Object.defineProperty(window,'outerWidth',{get:()=>window.innerWidth});}catch{}
+      try{Object.defineProperty(window,'outerHeight',{get:()=>window.innerHeight});}catch{}
+      for(const k of ['log','table','clear','debug','dir','dirxml','profile','profileEnd']){
+        try{Object.defineProperty(console,k,{value:function(){},writable:false,configurable:false});}catch{}
+      }
     });
-    let settled=false;
-    const hlsPromise=new Promise((resolve,reject)=>{
-      const timer=setTimeout(()=>{ if(!settled){settled=true;reject(new Error('HHKungfu HLS timeout'));}},HLS_TIMEOUT_MS);
-      page.on('request',req=>{
-        const u=req.url();
-        if(!settled && /\/master\.m3u8(?:\?|$)/i.test(u)){
-          settled=true; clearTimeout(timer); resolve(u);
-        }
-      });
+    page.on('request',req=>{
+      const u=req.url();
+      if(!captured && /\/master\.m3u8(?:\?|$)/i.test(u)) captured=u;
     });
     await page.goto(watchUrl,{waitUntil:'domcontentloaded',timeout:HLS_TIMEOUT_MS});
-    const hls=String(await hlsPromise);
-    if(!/^https:\/\/[^/]*helvid\.net\//i.test(hls)) throw new Error('Unexpected HHKungfu HLS host');
+
+    let sf=null;
+    for(let i=0;i<30;i++){
+      sf=page.frames().find(f=>/streamfree\.vip\/embed\//i.test(f.url()));
+      if(sf) break;
+      await sleep(500);
+    }
+    if(!sf) throw new Error('HHKungfu Streamfree iframe not found');
+
+    await sleep(7000);
+    let hls='';
+    try{
+      const pl=await sf.evaluate(()=>{
+        try{
+          if(typeof jwplayer!=='function') return [];
+          const p=jwplayer();
+          return p.getPlaylist?.() || [];
+        }catch{return []}
+      });
+      hls=playlistHls(pl);
+    }catch{}
+    if(!hls) hls=captured;
+
+    if(!hls){
+      try{
+        await sf.evaluate(()=>{
+          try{
+            if(typeof jwplayer==='function'){
+              const p=jwplayer();
+              p.setMute?.(true);
+              p.play?.(true);
+            }
+          }catch{}
+        });
+      }catch{}
+      for(let i=0;i<24 && !hls;i++){
+        await sleep(500);
+        if(captured){hls=captured;break;}
+        try{
+          const pl=await sf.evaluate(()=>{
+            try{return typeof jwplayer==='function' ? (jwplayer().getPlaylist?.()||[]) : [];}catch{return []}
+          });
+          hls=playlistHls(pl);
+        }catch{}
+      }
+    }
+
+    if(!/^https:\/\/[^/]*helvid\.net\/api\/v1\/cdn\/stream\/.+\/master\.m3u8(?:\?|$)/i.test(hls)) throw new Error('HHKungfu native HLS not resolved');
     hlsCache.set(cacheKey,{url:hls,expiresAt:Date.now()+HLS_TTL_MS});
     return hls;
   } finally {
