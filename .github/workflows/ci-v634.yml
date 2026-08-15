@@ -1,0 +1,78 @@
+name: Web Phim v6.3.4 YanHH3D Fallback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'addon_v634.js'
+      - 'v634_patch.js'
+      - 'v634_yanhh3d.js'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/ci-v634.yml'
+  workflow_dispatch:
+
+jobs:
+  fallback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Prefer compatible server and fallback to Dailymotion
+        run: |
+          node - <<'NODE'
+          const mod=require('./v634_yanhh3d');
+          const make=()=>mod.createProvider({mainUrl:'https://yan.test',cacheTtlMs:30000});
+          (async()=>{
+            const p=make();
+            p.getBaseUrl=async()=> 'https://yan.test';
+            p.fetchHtml=async()=> '<html><title>Quang Âm Chi Ngoại Tập 29 | YanHH3D</title><a class="btn3dsv" data-src="https://scontent.test/player.m3u8">FB 4K</a><a class="btn3dsv" data-src="https://www.dailymotion.com/video/xgood">Dailymotion</a></html>';
+            p.resolveSource=async(url,name)=> url.includes('dailymotion') ? {serverName:name,url:'https://dm.test/master.m3u8',isM3u8:true,headers:{},sourceUrl:url} : null;
+            const out=await p.resolveStreamLinks('https://yan.test/watch/29');
+            if(out.length!==1 || !out[0].sourceUrl.includes('dailymotion')) throw new Error('did not prefer compatible Dailymotion: '+JSON.stringify(out));
+            const s=p.getResolveSummary();
+            if(!s || s.returned.length!==1 || s.buttons[0].kind!=='dailymotion') throw new Error('bad resolution summary: '+JSON.stringify(s));
+
+            const p2=make();
+            p2.getBaseUrl=async()=> 'https://yan.test';
+            p2.fetchHtml=async()=> '<html><title>Trạch Nhật Phi Thăng Tập 7 | YanHH3D</title><a class="btn3dsv" data-src="https://scontent.test/player.m3u8">FB 4K</a></html>';
+            p2.resolveSource=async()=>null;
+            p2.searchDailymotionFallback=async()=>({method:'test',matchedTitle:'Trạch Nhật Phi Thăng Tập 7 Thuyết Minh 4K - YanHH3D',score:150,link:{serverName:'TM - Dailymotion fallback',url:'https://dm.test/fallback.m3u8',isM3u8:true,headers:{},sourceUrl:'https://www.dailymotion.com/video/xfallback'}});
+            const out2=await p2.resolveStreamLinks('https://yan.test/watch/7');
+            if(out2.length!==1 || !out2[0].url.includes('fallback')) throw new Error('Dailymotion fallback did not run: '+JSON.stringify(out2));
+            const s2=p2.getResolveSummary();
+            if(!s2?.dailymotionFallback?.ok) throw new Error('fallback summary missing: '+JSON.stringify(s2));
+            console.log(JSON.stringify({preferred:s.returned,fallback:s2.dailymotionFallback}));
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+      - name: Generated source smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT=17834 ADMIN_TOKEN=test-admin YANHH3D_RELAY_SECRET=test-relay PUBLIC_BASE_URL=http://127.0.0.1:17834 node addon_v634.js > /tmp/web-phim-v634.log 2>&1 &
+          PID=$!
+          trap 'kill $PID 2>/dev/null || true; cat /tmp/web-phim-v634.log' EXIT
+          for i in $(seq 1 50); do
+            if curl -fsS http://127.0.0.1:17834/status >/tmp/status.json; then break; fi
+            sleep 0.25
+          done
+          curl -fsS http://127.0.0.1:17834/yanhh3d/manifest.json >/tmp/yan.json
+          curl -fsS http://127.0.0.1:17834/yanhh3d/source-diag >/tmp/diag.json
+          node - <<'NODE'
+          const fs=require('fs');
+          const status=JSON.parse(fs.readFileSync('/tmp/status.json','utf8'));
+          if(!JSON.stringify(status).includes('6.3.4')) throw new Error('status not 6.3.4');
+          const m=JSON.parse(fs.readFileSync('/tmp/yan.json','utf8'));
+          if(m.version!=='1.1.4') throw new Error('manifest not 1.1.4: '+JSON.stringify(m));
+          const d=JSON.parse(fs.readFileSync('/tmp/diag.json','utf8'));
+          if(d.version!=='6.3.4') throw new Error('diag not 6.3.4: '+JSON.stringify(d));
+          NODE
+          kill $PID
+          wait $PID || true
+          trap - EXIT
+          cat /tmp/web-phim-v634.log
