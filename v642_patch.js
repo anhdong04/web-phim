@@ -1,9 +1,9 @@
 module.exports = function applyV642(source) {
   const mutableMarker = "  const parsedBase = v500Resolved.parsedBase, cfg = parsedBase.config; let path = parsedBase.rest;";
-  if (!source.includes(mutableMarker)) throw new Error('v6.4.7 patch target missing: mutable request path');
+  if (!source.includes(mutableMarker)) throw new Error('v6.4.8 patch target missing: mutable request path');
 
   const vnRoute = String.raw`
-  // v6.4.7: resilient native HHKungfu HLS resolver + experimental K20 bridges for STP/CLBPX.
+  // v6.4.8: native HHKungfu HLS first, explicit HHKungfu fallback if anti-bot blocks extraction.
   const V645_HHK = require('./v647_hhkungfu_provider');
   let V642_K20_BASE = String(process.env.K20_VN_BASE_URL || 'https://sc.k-20.xyz');
   while (V642_K20_BASE.endsWith('/')) V642_K20_BASE = V642_K20_BASE.slice(0, -1);
@@ -22,9 +22,9 @@ module.exports = function applyV642(source) {
     ];
     return {
       id: 'community.webphim.vn-sources',
-      version: '6.4.7',
+      version: '6.4.8',
       name: '🇻🇳 Web Phim • Nguồn Việt',
-      description: 'HHKungfu HLS native + STP và CLB Phim Xưa thử nghiệm',
+      description: 'HHKungfu native-first + fallback; STP và CLB Phim Xưa thử nghiệm',
       resources: ['catalog', 'meta', 'stream'],
       types: ['movie', 'series'],
       idPrefixes: ['hhu:', ...V642_K20_PREFIXES],
