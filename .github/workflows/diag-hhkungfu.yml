@@ -10,18 +10,36 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect Streamfree bootstrap
+      - name: Locate Streamfree bootstrap after string table
         run: |
           python3 <<'PY'
-          import urllib.request
+          import urllib.request,re
           url='https://streamfree.vip/public/static/app.bb288bfe.js'
           req=urllib.request.Request(url,headers={
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36',
             'Referer':'https://streamfree.vip/embed/v/Dgh6TOLS'
           })
           s=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','replace')
-          print('len=',len(s))
-          print('BEGIN_PREFIX')
-          print(s[:9000])
-          print('END_PREFIX')
+          def function_end(name):
+              m=re.search(r'function\s+'+re.escape(name)+r'\s*\([^)]*\)\s*\{',s)
+              if not m: raise RuntimeError('missing '+name)
+              p=s.find('{',m.start()); depth=0; quote=None; esc=False
+              for i in range(p,len(s)):
+                  c=s[i]
+                  if quote:
+                      if esc: esc=False
+                      elif c=='\\': esc=True
+                      elif c==quote: quote=None
+                      continue
+                  if c in "'\"`": quote=c; continue
+                  if c=='{': depth+=1
+                  elif c=='}':
+                      depth-=1
+                      if depth==0: return i+1
+              raise RuntimeError('unclosed '+name)
+          e=function_end('a0_0x34f2')
+          print('function_end=',e,'total=',len(s))
+          print('BEGIN_AFTER_TABLE')
+          print(s[e:e+12000])
+          print('END_AFTER_TABLE')
           PY
