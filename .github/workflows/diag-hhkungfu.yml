@@ -35,7 +35,7 @@ jobs:
           const f24=fn('a0_0x24a9'), f34=fn('a0_0x34f2');
           const bootStart=f34.end, bootEnd=src.indexOf(',!(function',bootStart);
           if(bootEnd<0)throw Error('bootstrap marker missing');
-          const bootstrap=src.slice(bootStart,bootEnd);
+          const bootstrap=src.slice(bootStart,bootEnd)+')';
           const ctx={decodeURIComponent,parseInt,console};vm.createContext(ctx);
           vm.runInContext(f24.text+'\n'+f34.text+'\n'+bootstrap,ctx,{timeout:10000});
           const dec=ctx.a0_0x24a9;
@@ -52,7 +52,7 @@ jobs:
           console.log('\n## STRINGS');
           const seen=new Set();let m;
           const lr=/(?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')/g;
-          while((m=lr.exec(out))){const s=clean(m[1]??m[2]??'');if(s.length>0&&s.length<=300&&/helvid|m3u8|\/api\/|cdn|stream|token|auth|bytecode|jwplayer|playlist|source|embed|player|license|wasm|decrypt|manifest|media/i.test(s)&&!seen.has(s)){seen.add(s);console.log(s);if(seen.size>=220)break}}
+          while((m=lr.exec(out))){const s=clean(m[1]??m[2]??'');if(s.length>0&&s.length<=300&&/helvid|m3u8|\/api\/|cdn|stream|token|auth|bytecode|jwplayer|playlist|source|embed|player|license|wasm|decrypt|manifest|media|origin|referer/i.test(s)&&!seen.has(s)){seen.add(s);console.log(s);if(seen.size>=220)break}}
           function ctxs(term,limit=6,r=650){const low=out.toLowerCase(),n=term.toLowerCase();let p=0,c=0;console.log('\n## '+term);while(c<limit&&(p=low.indexOf(n,p))>=0){console.log('['+(++c)+'] '+clean(out.slice(Math.max(0,p-r),Math.min(out.length,p+n.length+r))));p+=n.length}if(!c)console.log('(none)')}
           for(const t of ['helvid','master.m3u8','m3u8','/api/','cdn/stream','jwplayer','bytecode','WebAssembly','license','fetch(','XMLHttpRequest'])ctxs(t);
           NODE
