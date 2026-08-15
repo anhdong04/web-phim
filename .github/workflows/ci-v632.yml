@@ -1,0 +1,61 @@
+name: Web Phim v6.3.2 Codec Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'addon_v632.js'
+      - 'v632_patch.js'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/ci-v632.yml'
+  workflow_dispatch:
+
+jobs:
+  codec-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Generated source and codec probe regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "ffprobe" v632_patch.js
+          grep -q "codec-probe" v632_patch.js
+          grep -q "v632LastMpvPlaylist" v632_patch.js
+          grep -q "rangeSpec" v632_patch.js
+          PORT=17832 ADMIN_TOKEN=test-admin YANHH3D_RELAY_SECRET=test-relay PUBLIC_BASE_URL=http://127.0.0.1:17832 node addon_v632.js > /tmp/web-phim-v632.log 2>&1 &
+          PID=$!
+          trap 'kill $PID 2>/dev/null || true; cat /tmp/web-phim-v632.log' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:17832/status >/tmp/status.json; then break; fi
+            sleep 0.25
+          done
+          node - <<'NODE'
+          const fs = require('fs');
+          const s = JSON.parse(fs.readFileSync('/tmp/status.json','utf8'));
+          if (!JSON.stringify(s).includes('6.3.2')) throw new Error('status is not v6.3.2');
+          NODE
+          curl -fsS http://127.0.0.1:17832/yanhh3d/manifest.json >/tmp/manifest.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const m = JSON.parse(fs.readFileSync('/tmp/manifest.json','utf8'));
+          if (m.version !== '1.1.2') throw new Error('YanHH3D manifest is not 1.1.2');
+          NODE
+          curl -fsS http://127.0.0.1:17832/yanhh3d/codec-probe >/tmp/probe.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const p = JSON.parse(fs.readFileSync('/tmp/probe.json','utf8'));
+          if (p.version !== '6.3.2') throw new Error('probe version mismatch');
+          if (p.ok !== false || p.stage !== 'no-mpv-playlist') throw new Error('empty probe state mismatch');
+          NODE
+          kill $PID
+          wait $PID || true
+          trap - EXIT
+          cat /tmp/web-phim-v632.log
