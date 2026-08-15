@@ -1,0 +1,53 @@
+name: YanHH3D VLC Windows CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  vlc-fallback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Syntax check v6.4.0
+        run: |
+          node --check addon_v640.js
+          node --check v640_patch.js
+
+      - name: Static VLC stream regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "webphim-vlc://play?url=" v640_patch.js
+          grep -q "externalUrl" v640_patch.js
+          grep -q "YanHH3D • VLC Windows" v640_patch.js
+          grep -q ":r7:" v640_patch.js
+          grep -q "Only http/https playback URLs are allowed" tools/windows/install-webphim-vlc.ps1
+
+      - name: Generated server startup and installer route
+        shell: bash
+        run: |
+          set -euo pipefail
+          env PORT=7810 YANHH3D_ENABLED=false HH3D_PIKPAK_ENABLED=false node addon_v640.js >/tmp/web-phim-v640.log 2>&1 &
+          pid=$!
+          trap 'kill "$pid" 2>/dev/null || true' EXIT
+          ok=0
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:7810/manifest.json >/tmp/manifest-v640.json 2>/dev/null; then ok=1; break; fi
+            sleep 0.25
+          done
+          cat /tmp/web-phim-v640.log
+          test "$ok" -eq 1
+          grep -q '"version":"6.4.0"' /tmp/manifest-v640.json
+          curl -fsS http://127.0.0.1:7810/yanhh3d/manifest.json >/tmp/yan-manifest.json
+          grep -q '"version":"1.2.0"' /tmp/yan-manifest.json
+          curl -fsS http://127.0.0.1:7810/yanhh3d/vlc/install.ps1 >/tmp/install-webphim-vlc.ps1
+          grep -q "webphim-vlc" /tmp/install-webphim-vlc.ps1
+          grep -q "VideoLAN" /tmp/install-webphim-vlc.ps1
