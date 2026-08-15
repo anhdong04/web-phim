@@ -22,6 +22,7 @@ jobs:
       - name: Clone Nuvio Desktop
         shell: pwsh
         run: |
+          $env:GIT_LFS_SKIP_SMUDGE = '1'
           git clone --depth 1 --branch Dev https://github.com/NuvioMedia/NuvioDesktop.git nuvio
           Set-Location nuvio
           git lfs install
