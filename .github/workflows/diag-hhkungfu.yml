@@ -1,4 +1,4 @@
-name: Diagnose Streamfree Token Cipher
+name: Diagnose Streamfree Token Internals
 on:
   push:
     paths:
@@ -13,14 +13,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Decode token cipher functions
+      - name: Decode token internals
         run: |
           python3 <<'PY'
           import urllib.request
-          req=urllib.request.Request('https://streamfree.vip/public/static/app.bb288bfe.js',headers={
-            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36',
-            'Referer':'https://streamfree.vip/embed/v/Dgh6TOLS'
-          })
+          req=urllib.request.Request('https://streamfree.vip/public/static/app.bb288bfe.js',headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36','Referer':'https://streamfree.vip/embed/v/Dgh6TOLS'})
           open('/tmp/app.js','wb').write(urllib.request.urlopen(req,timeout=30).read())
           PY
           node --input-type=commonjs <<'NODE'
@@ -29,7 +26,7 @@ jobs:
           const f24=bf(src,'a0_0x24a9'),f34=bf(src,'a0_0x34f2'),e34=src.indexOf(f34)+f34.length,be=src.indexOf(',!(function',e34);const ctx={decodeURIComponent,parseInt,console};vm.createContext(ctx);vm.runInContext(f24+'\n'+f34+'\n'+src.slice(e34,be)+')',ctx,{timeout:10000});
           const dec=ctx.a0_0x24a9,aliases=new Set(['a0_0x24a9']);for(const m of src.matchAll(/\b(_0x[0-9a-f]+)\s*=\s*a0_0x24a9\b/gi))aliases.add(m[1]);let out=src;for(const a of aliases){const x=a.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&');out=out.replace(new RegExp('\\b'+x+'\\(\\s*(0x[0-9a-fA-F]+|\\d+)\\s*,\\s*([\\\'\"])(.*?)\\2\\s*\\)','g'),(z,n,q,k)=>{try{return JSON.stringify(dec(Number(n),k))}catch{return z}})}
           const clean=s=>String(s).replace(/\\\//g,'/').replace(/\s+/g,' ').trim();
-          const names=['_0x49426d','_0x345a15','_0x526de5','_0x10430b','_0xcc5ccf','_0x5bcb33','_0x387157','_0x34e5b5','_0x5a8cb2','_0x8d0a9c'];
-          function contexts(term,r=7000,max=2){let p=0,n=0;console.log('\n===CTX '+term+'===');while(n<max&&(p=out.indexOf(term,p))>=0){console.log(clean(out.slice(Math.max(0,p-r),Math.min(out.length,p+r))));p+=term.length;n++}if(!n)console.log('(none)')}
-          for(const name of names){console.log('\n===FUNC '+name+'===');const f=bf(out,name);if(f)console.log(clean(f));else contexts(name)}
+          const names=['_0xb64114','_0x4e3ae8','_0x49426d','_0x345a15'];
+          function ctxs(term,r=10000,max=2){let p=0,n=0;console.log('\n===CTX '+term+'===');while(n<max&&(p=out.indexOf(term,p))>=0){console.log(clean(out.slice(Math.max(0,p-r),Math.min(out.length,p+r))));p+=term.length;n++}}
+          for(const name of names){console.log('\n===FUNC '+name+'===');const f=bf(out,name);if(f)console.log(clean(f));else ctxs(name)}
           NODE
