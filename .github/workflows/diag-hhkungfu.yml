@@ -10,59 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Locate browser
+      - name: Test native Helvid HLS
         run: |
-          which google-chrome || which chromium || true
-          google-chrome --version || chromium --version || true
-      - name: Install puppeteer-core
-        run: npm install --no-save puppeteer-core@24
-      - name: Bypass detector and capture media
-        run: |
-          node --input-type=commonjs <<'NODE'
-          const puppeteer=require('puppeteer-core');
-          const fs=require('fs');
-          const executablePath=['/usr/bin/google-chrome','/usr/bin/chromium'].find(p=>fs.existsSync(p));
-          (async()=>{
-            const browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
-            const page=await browser.newPage();
-            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36');
-            await page.evaluateOnNewDocument(()=>{
-              try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined});}catch{}
-              try{Object.defineProperty(window,'outerWidth',{get:()=>window.innerWidth});}catch{}
-              try{Object.defineProperty(window,'outerHeight',{get:()=>window.innerHeight});}catch{}
-              for(const k of ['log','table','clear','debug','dir','dirxml','profile','profileEnd']){
-                try{Object.defineProperty(console,k,{value:function(){},writable:false,configurable:false});}catch{}
-              }
-            });
-            const media=[];
-            page.on('request',r=>{
-              const u=r.url();
-              if(/m3u8|\.mp4(?:\?|$)|playlist|manifest|\.ts(?:\?|$)|\.m4s(?:\?|$)|\.key(?:\?|$)/i.test(u)){
-                console.log('MEDIAREQ',r.resourceType(),u,'REF',r.headers().referer||''); media.push(u);
-              }
-            });
-            page.on('response',r=>{
-              const ct=r.headers()['content-type']||''; const u=r.url();
-              if(/mpegurl|video\//i.test(ct)||/m3u8|\.mp4(?:\?|$)/i.test(u)){
-                console.log('MEDIARES',r.status(),ct,u); media.push(u);
-              }
-            });
-            const watch='https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html';
-            await page.goto(watch,{waitUntil:'domcontentloaded',timeout:45000});
-            let sf=null; for(let i=0;i<30;i++){sf=page.frames().find(f=>/streamfree\.vip\/embed\//i.test(f.url()));if(sf)break;await new Promise(r=>setTimeout(r,500));}
-            if(!sf) throw new Error('Streamfree iframe not found');
-            console.log('SF',sf.url());
-            await new Promise(r=>setTimeout(r,7000));
-            let status=await sf.evaluate(()=>({body:document.body.innerText.slice(0,500),hasPlayer:!!document.querySelector('[id*=player],video'),hasJW:typeof jwplayer==='function',instances:typeof jwplayer==='function'&&jwplayer().getPlaylist?jwplayer().getPlaylist():null}));
-            console.log('BEFORE',JSON.stringify(status));
-            try{await sf.evaluate(()=>{if(typeof jwplayer==='function'){const p=jwplayer();p.setMute?.(true);p.play?.(true)}});}catch(e){console.log('PLAYERR',String(e))}
-            await new Promise(r=>setTimeout(r,12000));
-            status=await sf.evaluate(()=>({body:document.body.innerText.slice(0,500),videos:[...document.querySelectorAll('video')].map(v=>({src:v.src,currentSrc:v.currentSrc,readyState:v.readyState})),playlist:typeof jwplayer==='function'&&jwplayer().getPlaylist?jwplayer().getPlaylist():null,item:typeof jwplayer==='function'&&jwplayer().getPlaylistItem?jwplayer().getPlaylistItem():null}));
-            console.log('AFTER',JSON.stringify(status));
-            console.log('MEDIA',[...new Set(media)]);
-            await browser.close();
-          })().catch(e=>{console.error(e);process.exit(1)});
-          NODE
+          python3 <<'PY'
+          import urllib.request, urllib.error
+          URL='https://helvid.net/api/v1/cdn/stream/60a73e34d3f67e64bbb80534ee0a0866/master.m3u8'
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36'
+          cases=[
+            ('no-ref',{}),
+            ('streamfree-ref',{'Referer':'https://streamfree.vip/'}),
+            ('hhkungfu-ref',{'Referer':'https://hhkungfu.ee/'}),
+          ]
+          for name,extra in cases:
+            print('\n===',name,'===')
+            h={'User-Agent':UA,'Accept':'application/vnd.apple.mpegurl,application/x-mpegURL,*/*'}; h.update(extra)
+            req=urllib.request.Request(URL,headers=h)
+            try:
+              with urllib.request.urlopen(req,timeout=30) as r:
+                raw=r.read(20000); text=raw.decode('utf-8','replace')
+                print('STATUS',r.status,'CTYPE',r.headers.get('content-type'),'FINAL',r.geturl())
+                print('HEADERS',dict(r.headers))
+                print('BODY\n',text[:12000])
+            except urllib.error.HTTPError as e:
+              print('HTTPERR',e.code,dict(e.headers)); print(e.read(2000).decode('utf-8','replace'))
+            except Exception as e: print('ERR',repr(e))
+          PY
