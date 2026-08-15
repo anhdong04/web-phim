@@ -21,38 +21,34 @@ jobs:
         run: npm install --no-save puppeteer-core@24
       - name: Capture media network
         run: |
-          node <<'NODE'
+          node --input-type=commonjs <<'NODE'
           const puppeteer = require('puppeteer-core');
           const fs = require('fs');
           const paths=['/usr/bin/google-chrome','/usr/bin/chromium','/usr/bin/chromium-browser'];
           const executablePath=paths.find(p=>fs.existsSync(p));
           if(!executablePath) throw new Error('No chromium executable');
-          const browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
-          const page=await browser.newPage();
-          await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36');
-          await page.setExtraHTTPHeaders({
-            referer:'https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html',
-            'accept-language':'vi-VN,vi;q=0.9,en;q=0.8'
-          });
-          const seen=[];
-          const interesting=(u)=>/m3u8|\.mp4(?:\?|$)|playlist|manifest|\.ts(?:\?|$)|\.m4s(?:\?|$)|\.key(?:\?|$)/i.test(u);
-          page.on('request',req=>{
-            const u=req.url();
-            if(interesting(u)){ console.log('REQ',req.resourceType(),u); seen.push(u); }
-          });
-          page.on('response',async res=>{
-            const u=res.url(); const ct=(res.headers()['content-type']||'');
-            if(interesting(u)||/mpegurl|video\//i.test(ct)){ console.log('RES',res.status(),ct,u); seen.push(u); }
-          });
-          page.on('console',msg=>console.log('CONSOLE',msg.type(),msg.text()));
-          const url='https://streamfree.vip/embed/v/Dgh6TOLS';
-          console.log('GOTO',url);
-          const resp=await page.goto(url,{waitUntil:'domcontentloaded',timeout:45000,referer:'https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html'});
-          console.log('PAGE STATUS',resp?.status());
-          await new Promise(r=>setTimeout(r,10000));
-          console.log('TITLE',await page.title());
-          console.log('VIDEO',await page.evaluate(()=>[...document.querySelectorAll('video')].map(v=>({src:v.src,currentSrc:v.currentSrc,html:v.outerHTML.slice(0,1000)}))));
-          console.log('PERF',await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/m3u8|\.mp4|playlist|manifest|\.ts|\.m4s/i.test(x))));
-          console.log('SEEN UNIQUE',[...new Set(seen)]);
-          await browser.close();
+          (async()=>{
+            const browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
+            const page=await browser.newPage();
+            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36');
+            await page.setExtraHTTPHeaders({
+              referer:'https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html',
+              'accept-language':'vi-VN,vi;q=0.9,en;q=0.8'
+            });
+            const seen=[];
+            const interesting=(u)=>/m3u8|\.mp4(?:\?|$)|playlist|manifest|\.ts(?:\?|$)|\.m4s(?:\?|$)|\.key(?:\?|$)/i.test(u);
+            page.on('request',req=>{ const u=req.url(); if(interesting(u)){ console.log('REQ',req.resourceType(),u); seen.push(u); } });
+            page.on('response',res=>{ const u=res.url(); const ct=(res.headers()['content-type']||''); if(interesting(u)||/mpegurl|video\//i.test(ct)){ console.log('RES',res.status(),ct,u); seen.push(u); } });
+            page.on('console',msg=>console.log('CONSOLE',msg.type(),msg.text()));
+            const url='https://streamfree.vip/embed/v/Dgh6TOLS';
+            console.log('GOTO',url);
+            const resp=await page.goto(url,{waitUntil:'domcontentloaded',timeout:45000,referer:'https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html'});
+            console.log('PAGE STATUS',resp?.status());
+            await new Promise(r=>setTimeout(r,12000));
+            console.log('TITLE',await page.title());
+            console.log('VIDEO',await page.evaluate(()=>[...document.querySelectorAll('video')].map(v=>({src:v.src,currentSrc:v.currentSrc,html:v.outerHTML.slice(0,1000)}))));
+            console.log('PERF',await page.evaluate(()=>performance.getEntriesByType('resource').map(x=>x.name).filter(x=>/m3u8|\.mp4|playlist|manifest|\.ts|\.m4s/i.test(x))));
+            console.log('SEEN UNIQUE',[...new Set(seen)]);
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
           NODE
