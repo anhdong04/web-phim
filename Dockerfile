@@ -1,9 +1,9 @@
 FROM node:20-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm install --omit=dev
+RUN apk add --no-cache ffmpeg && npm install --omit=dev
 COPY . .
 ENV PORT=7000
-ENV WEB_PHIM_VERSION=6.3.1
+ENV WEB_PHIM_VERSION=6.3.2
 EXPOSE 7000
-CMD ["node", "addon_v631.js"]
+CMD ["node", "addon_v632.js"]
