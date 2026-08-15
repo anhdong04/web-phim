@@ -1,0 +1,226 @@
+name: Build Nuvio Windows VLC Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/nuvio-windows-vlc-build.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 50
+
+    steps:
+      - name: Checkout Web Phim
+        uses: actions/checkout@v4
+
+      - name: Clone Nuvio Desktop
+        shell: pwsh
+        run: |
+          git clone --depth 1 --branch Dev https://github.com/NuvioMedia/NuvioDesktop.git nuvio
+          Set-Location nuvio
+          git lfs install
+          git lfs pull --include="composeApp/src/desktopMain/native/windows/runtime/**,composeApp/src/desktopMain/resources/torrserver/windows-amd64/TorrServer.exe" --exclude=""
+
+      - name: Patch Windows external player to VLC
+        shell: pwsh
+        run: |
+          $policy = @'
+          package com.nuvio.app.core.build
+
+          private val isWindowsDesktop = System.getProperty("os.name")
+              ?.startsWith("Windows", ignoreCase = true)
+              ?: false
+
+          actual object AppFeaturePolicy {
+              actual val pluginsEnabled: Boolean = true
+              actual val downloadsEnabled: Boolean = true
+              actual val notificationsEnabled: Boolean = false
+              actual val supportersContributorsPageEnabled: Boolean = true
+              actual val accountDeletionEnabled: Boolean = false
+              actual val personalMediaAddonCopyEnabled: Boolean = false
+              actual val p2pEnabled: Boolean = true
+              actual val externalPlayerSupported: Boolean = true
+              actual val trailerPlaybackMode: TrailerPlaybackMode =
+                  if (isWindowsDesktop) TrailerPlaybackMode.EXTERNAL else TrailerPlaybackMode.IN_APP
+              actual val heroTrailerPlaybackSupported: Boolean = !isWindowsDesktop
+              actual val inAppUpdaterEnabled: Boolean = true
+              actual val imdbRatingLogoEnabled: Boolean = true
+              actual val mediaPlaybackForegroundServiceEnabled: Boolean = false
+          }
+          '@
+          Set-Content -Path 'nuvio/composeApp/src/desktopMain/kotlin/com/nuvio/app/core/build/AppFeaturePolicy.desktop.kt' -Value $policy -Encoding UTF8
+
+          $external = @'
+          package com.nuvio.app.features.player
+
+          import java.awt.Desktop
+          import java.io.File
+          import java.net.URI
+
+          private data class DesktopExternalPlayerIntent(
+              val request: ExternalPlayerPlaybackRequest,
+              val playerId: String?,
+          )
+
+          internal actual object ExternalPlayerPlatform {
+              private const val systemPlayerId = "system"
+              private const val vlcPlayerId = "vlc"
+
+              actual fun defaultPlayerId(): String? =
+                  if (findVlcExecutable() != null) vlcPlayerId else systemPlayerId
+
+              actual fun availablePlayers(): List<ExternalPlayerApp> = buildList {
+                  if (findVlcExecutable() != null) add(ExternalPlayerApp(vlcPlayerId, "VLC media player"))
+                  add(ExternalPlayerApp(systemPlayerId, "System default"))
+              }
+
+              actual fun open(
+                  request: ExternalPlayerPlaybackRequest,
+                  playerId: String?,
+              ): ExternalPlayerOpenResult {
+                  if (playerId == vlcPlayerId) {
+                      return if (openVlc(request)) ExternalPlayerOpenResult.Opened
+                      else ExternalPlayerOpenResult.NoPlayerAvailable
+                  }
+                  return if (openUri(request.sourceUrl)) {
+                      ExternalPlayerOpenResult.Opened
+                  } else {
+                      ExternalPlayerOpenResult.Failed
+                  }
+              }
+
+              actual fun buildIntent(
+                  request: ExternalPlayerPlaybackRequest,
+                  playerId: String?,
+              ): ExternalPlayerIntentResult =
+                  ExternalPlayerIntentResult.Success(DesktopExternalPlayerIntent(request, playerId))
+
+              internal fun launch(intent: Any): Boolean {
+                  val desktopIntent = intent as? DesktopExternalPlayerIntent ?: return false
+                  return open(desktopIntent.request, desktopIntent.playerId) == ExternalPlayerOpenResult.Opened
+              }
+
+              private fun openVlc(request: ExternalPlayerPlaybackRequest): Boolean {
+                  val executable = findVlcExecutable() ?: return false
+                  val args = mutableListOf(executable.absolutePath)
+                  args += "--one-instance"
+                  args += "--play-and-exit"
+                  if (request.resumePositionMs > 0L) {
+                      args += "--start-time=${request.resumePositionMs / 1000.0}"
+                  }
+                  args += request.sourceUrl
+                  return runCatching {
+                      ProcessBuilder(args)
+                          .redirectErrorStream(true)
+                          .start()
+                  }.isSuccess
+              }
+
+              private fun findVlcExecutable(): File? {
+                  val candidates = buildList {
+                      System.getenv("ProgramFiles")?.let { add(File(it, "VideoLAN/VLC/vlc.exe")) }
+                      System.getenv("ProgramFiles(x86)")?.let { add(File(it, "VideoLAN/VLC/vlc.exe")) }
+                      System.getenv("LOCALAPPDATA")?.let { add(File(it, "Programs/VideoLAN/VLC/vlc.exe")) }
+                      add(File("C:/Program Files/VideoLAN/VLC/vlc.exe"))
+                      add(File("C:/Program Files (x86)/VideoLAN/VLC/vlc.exe"))
+                  }
+                  return candidates.firstOrNull { it.isFile }
+              }
+
+              private fun openUri(rawUri: String): Boolean {
+                  val uri = runCatching { URI(rawUri) }.getOrNull() ?: return false
+                  val desktop = runCatching { Desktop.getDesktop() }.getOrNull()
+
+                  if (desktop != null && Desktop.isDesktopSupported()) {
+                      val opened = runCatching {
+                          if (uri.scheme.equals("file", ignoreCase = true)) {
+                              desktop.open(File(uri))
+                          } else {
+                              desktop.browse(uri)
+                          }
+                      }.isSuccess
+                      if (opened) return true
+                  }
+
+                  return openWithPlatformCommand(rawUri)
+              }
+
+              private fun openWithPlatformCommand(rawUri: String): Boolean {
+                  val osName = System.getProperty("os.name").orEmpty().lowercase()
+                  val command = when {
+                      osName.contains("mac") -> listOf("open", rawUri)
+                      osName.contains("win") -> listOf("rundll32", "url.dll,FileProtocolHandler", rawUri)
+                      else -> listOf("xdg-open", rawUri)
+                  }
+                  return runCatching { ProcessBuilder(command).start() }.isSuccess
+              }
+          }
+          '@
+          Set-Content -Path 'nuvio/composeApp/src/desktopMain/kotlin/com/nuvio/app/features/player/ExternalPlayerPlatform.desktop.kt' -Value $external -Encoding UTF8
+
+      - name: Configure test build
+        shell: pwsh
+        run: |
+          @'
+          NUVIO_SUPABASE_URL=https://example.supabase.co
+          NUVIO_SUPABASE_ANON_KEY=test-anon-key
+          TRAKT_CLIENT_ID=test-client
+          TRAKT_CLIENT_SECRET=test-secret
+          SENTRY_DSN=
+          SENTRY_DESKTOP_DSN=
+          '@ | Set-Content -Path 'nuvio/local.properties' -Encoding UTF8
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Install WebView2 SDK
+        shell: pwsh
+        run: |
+          $version = '1.0.4078.44'
+          nuget install Microsoft.Web.WebView2 -Version $version -OutputDirectory "$env:RUNNER_TEMP\nuget" -DirectDownload -NonInteractive -NoCache
+          $root = Join-Path $env:RUNNER_TEMP "nuget\Microsoft.Web.WebView2.$version"
+          $loader = Join-Path $root 'build\native\x64\WebView2Loader.dll.lib'
+          if (-not (Test-Path $loader)) { throw "WebView2Loader.dll.lib missing: $loader" }
+          "WEBVIEW2_ROOT=$root" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Build Nuvio VLC MSI
+        shell: pwsh
+        working-directory: nuvio
+        run: |
+          & .\gradlew.bat `
+            :composeApp:packageReleaseMsi `
+            "-Pnuvio.webview2.dir=$env:WEBVIEW2_ROOT" `
+            "-Pcompose.desktop.packaging.checkJdkVendor=false" `
+            --no-configuration-cache `
+            --no-daemon `
+            --stacktrace
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+      - name: Collect MSI
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path artifact | Out-Null
+          $msi = Get-ChildItem -Path nuvio -Filter '*.msi' -Recurse | Select-Object -First 1
+          if (-not $msi) { throw 'Nuvio MSI was not produced' }
+          Copy-Item $msi.FullName 'artifact/Nuvio-Windows-VLC-Test.msi'
+          Write-Host "Collected $($msi.FullName)"
+
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nuvio-Windows-VLC-Test
+          path: artifact/Nuvio-Windows-VLC-Test.msi
+          if-no-files-found: error
+          retention-days: 7
