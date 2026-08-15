@@ -1,0 +1,64 @@
+name: Diagnose K20 HH3D
+on:
+  push:
+    paths:
+      - '.github/workflows/diag-k20-hh3d.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe K20 HH3D
+        run: |
+          python <<'PY'
+          import json, urllib.request, urllib.parse
+          BASE='https://sc.k-20.xyz'
+          TITLE='Thế Giới Hoàn Mỹ Movie: Cửu Kiếp Phần Thiên'
+          def get(url):
+              print('\nGET', url)
+              req=urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0','Accept':'application/json'})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  body=r.read().decode('utf-8','replace')
+                  print('HTTP', r.status, 'len', len(body))
+                  try: return json.loads(body)
+                  except Exception:
+                      print(body[:2000]); return None
+          manifest=get(BASE+'/manifest.json')
+          cats=[c for c in (manifest or {}).get('catalogs',[]) if str(c.get('id','')).startswith('hh3d')]
+          print('\nHH3D CATALOGS:')
+          print(json.dumps(cats, ensure_ascii=False, indent=2))
+          found=[]
+          for c in cats:
+              if not any(x.get('name')=='search' for x in c.get('extra',[])): continue
+              q=urllib.parse.quote(TITLE, safe='')
+              url=f"{BASE}/catalog/{c['type']}/{c['id']}/search={q}.json"
+              data=get(url) or {}
+              metas=data.get('metas') or []
+              print('RESULTS', [(m.get('id'),m.get('name'),m.get('type')) for m in metas[:10]])
+              for m in metas:
+                  if 'hoàn mỹ' in str(m.get('name','')).lower() or 'hoan my' in str(m.get('name','')).lower(): found.append(m)
+          print('\nFOUND', json.dumps(found[:10], ensure_ascii=False, indent=2))
+          if not found:
+              raise SystemExit('No matching HH3D item found')
+          item=found[0]
+          typ=item.get('type') or 'series'; mid=item['id']
+          meta=get(f"{BASE}/meta/{typ}/{urllib.parse.quote(mid, safe=':')}.json") or {}
+          print('\nMETA', json.dumps(meta, ensure_ascii=False, indent=2)[:12000])
+          m=meta.get('meta') or {}
+          candidates=[]
+          videos=m.get('videos') or []
+          if videos:
+              print('VIDEOS', [(v.get('id'),v.get('title'),v.get('season'),v.get('episode')) for v in videos[:10]])
+              candidates=[v.get('id') for v in videos[:3] if v.get('id')]
+          if not candidates: candidates=[mid]
+          for vid in candidates:
+              s=get(f"{BASE}/stream/{typ}/{urllib.parse.quote(vid, safe=':')}.json") or {}
+              streams=s.get('streams') or []
+              print('STREAM ID',vid,'COUNT',len(streams))
+              print(json.dumps(streams[:5], ensure_ascii=False, indent=2)[:8000])
+          PY
