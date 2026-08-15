@@ -1,0 +1,63 @@
+name: Web Phim v6.3.1 MPV Relay Compatibility
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'addon_v631.js'
+      - 'v631_patch.js'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/ci-v631.yml'
+  workflow_dispatch:
+
+jobs:
+  mpv-relay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Syntax check
+        run: npm run check
+      - name: Generated source and relay regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "method: playlistHint ? 'GET' : method" v631_patch.js
+          grep -q "content-length':String(bytes.length)" v631_patch.js
+          grep -q "req.headers.range" v631_patch.js
+          grep -q "upstreamStatus === 206" v631_patch.js
+          grep -q "relay-stats" v631_patch.js
+          PORT=17831 ADMIN_TOKEN=test-admin YANHH3D_RELAY_SECRET=test-relay PUBLIC_BASE_URL=http://127.0.0.1:17831 node addon_v631.js > /tmp/web-phim-v631.log 2>&1 &
+          PID=$!
+          trap 'kill $PID 2>/dev/null || true; cat /tmp/web-phim-v631.log' EXIT
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:17831/status >/tmp/status.json; then break; fi
+            sleep 0.25
+          done
+          node - <<'NODE'
+          const fs = require('fs');
+          const s = JSON.parse(fs.readFileSync('/tmp/status.json','utf8'));
+          const raw = JSON.stringify(s);
+          if (!raw.includes('6.3.1')) throw new Error('status is not v6.3.1');
+          NODE
+          curl -fsS http://127.0.0.1:17831/yanhh3d/manifest.json >/tmp/yan-manifest.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const m = JSON.parse(fs.readFileSync('/tmp/yan-manifest.json','utf8'));
+          if (m.version !== '1.1.1') throw new Error('YanHH3D manifest is not 1.1.1');
+          NODE
+          curl -fsS http://127.0.0.1:17831/yanhh3d/relay-stats >/tmp/relay-stats.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const s = JSON.parse(fs.readFileSync('/tmp/relay-stats.json','utf8'));
+          if (s.version !== '6.3.1') throw new Error('relay stats is not v6.3.1');
+          if (!Array.isArray(s.recent)) throw new Error('relay stats recent missing');
+          NODE
+          kill $PID
+          wait $PID || true
+          trap - EXIT
+          cat /tmp/web-phim-v631.log
