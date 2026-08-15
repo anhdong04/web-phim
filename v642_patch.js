@@ -1,9 +1,9 @@
 module.exports = function applyV642(source) {
   const mutableMarker = "  const parsedBase = v500Resolved.parsedBase, cfg = parsedBase.config; let path = parsedBase.rest;";
-  if (!source.includes(mutableMarker)) throw new Error('v6.4.5 patch target missing: mutable request path');
+  if (!source.includes(mutableMarker)) throw new Error('v6.4.6 patch target missing: mutable request path');
 
   const vnRoute = String.raw`
-  // v6.4.5: direct HHKungfu provider + existing experimental K20 bridges for STP/CLBPX.
+  // v6.4.6: HHKungfu watch-page playback + existing experimental K20 bridges for STP/CLBPX.
   const V645_HHK = require('./v645_hhkungfu');
   let V642_K20_BASE = String(process.env.K20_VN_BASE_URL || 'https://sc.k-20.xyz');
   while (V642_K20_BASE.endsWith('/')) V642_K20_BASE = V642_K20_BASE.slice(0, -1);
@@ -22,7 +22,7 @@ module.exports = function applyV642(source) {
     ];
     return {
       id: 'community.webphim.vn-sources',
-      version: '6.4.5',
+      version: '6.4.6',
       name: '🇻🇳 Web Phim • Nguồn Việt',
       description: 'HHKungfu trực tiếp + STP và CLB Phim Xưa thử nghiệm',
       resources: ['catalog', 'meta', 'stream'],
@@ -41,17 +41,12 @@ module.exports = function applyV642(source) {
 
   if (path === '/vn/manifest.json') return sendJson(res, 200, v645Manifest(), 60);
 
-  // HHKungfu catalog: /vn/catalog/series/hhkungfu[/search=...&skip=...].json
   if (path.startsWith('/vn/catalog/series/hhkungfu')) {
     let tail = path.slice('/vn/catalog/series/hhkungfu'.length);
     tail = tail.replace(/^\//, '').replace(/\.json$/i, '');
     const extra = V645_HHK.parseExtra(tail);
-    try {
-      return sendJson(res, 200, { metas: await V645_HHK.catalog(extra) }, 30);
-    } catch (e) {
-      console.error('HHKungfu catalog:', e.message);
-      return sendJson(res, 200, { metas: [] }, 0);
-    }
+    try { return sendJson(res, 200, { metas: await V645_HHK.catalog(extra) }, 30); }
+    catch (e) { console.error('HHKungfu catalog:', e.message); return sendJson(res, 200, { metas: [] }, 0); }
   }
 
   if (path.startsWith('/vn/meta/series/')) {
@@ -70,7 +65,6 @@ module.exports = function applyV642(source) {
     }
   }
 
-  // Keep STP and CLB Phim Xua isolated as K20 experiments; HHKungfu never goes through K20.
   if (path.startsWith('/vn/catalog/') || path.startsWith('/vn/meta/') || path.startsWith('/vn/stream/')) {
     const upstreamPath = path.slice('/vn'.length);
     const parts = upstreamPath.split('/').filter(Boolean);
