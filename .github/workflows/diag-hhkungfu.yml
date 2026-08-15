@@ -10,10 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Decode Streamfree aliases and media flow
+      - name: Inspect Streamfree bootstrap
         run: |
           python3 <<'PY'
           import urllib.request
@@ -22,60 +19,9 @@ jobs:
             'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36',
             'Referer':'https://streamfree.vip/embed/v/Dgh6TOLS'
           })
-          raw=urllib.request.urlopen(req,timeout=30).read()
-          open('/tmp/app.js','wb').write(raw)
-          print('downloaded',len(raw))
+          s=urllib.request.urlopen(req,timeout=30).read().decode('utf-8','replace')
+          print('len=',len(s))
+          print('BEGIN_PREFIX')
+          print(s[:9000])
+          print('END_PREFIX')
           PY
-          node --input-type=commonjs <<'NODE'
-          const fs=require('fs'), vm=require('vm');
-          const src=fs.readFileSync('/tmp/app.js','utf8');
-          function functionSource(name){
-            const re=new RegExp('function\\s+'+name+'\\s*\\([^)]*\\)\\s*\\{');
-            const m=re.exec(src); if(!m) throw new Error('missing '+name);
-            const p=src.indexOf('{',m.index); let depth=0,q=null,esc=false;
-            for(let j=p;j<src.length;j++){
-              const c=src[j];
-              if(q){if(esc){esc=false;continue} if(c==='\\\\'){esc=true;continue} if(c===q)q=null; continue}
-              if(c==='"'||c==="'"){q=c;continue}
-              if(c==='{')depth++; else if(c==='}'&&--depth===0)return src.slice(m.index,j+1);
-            }
-            throw new Error('unclosed '+name);
-          }
-          const ctx={decodeURIComponent,console}; vm.createContext(ctx);
-          vm.runInContext(functionSource('a0_0x34f2')+'\n'+functionSource('a0_0x24a9'),ctx);
-          const dec=ctx.a0_0x24a9;
-          const aliases=new Set(['a0_0x24a9']);
-          for(const m of src.matchAll(/\b(_0x[0-9a-f]+)\s*=\s*a0_0x24a9\b/gi)) aliases.add(m[1]);
-          console.log('aliases='+aliases.size+' '+[...aliases].slice(0,20).join(','));
-          let out=src, total=0, failed=0;
-          for(const alias of aliases){
-            const esc=alias.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-            const re=new RegExp('\\b'+esc+'\\(\\s*(0x[0-9a-fA-F]+|\\d+)\\s*,\\s*([\\\'\"])(.*?)\\2\\s*\\)','g');
-            out=out.replace(re,(all,n,q,key)=>{
-              try{const v=dec(Number(n),key);total++;return JSON.stringify(v)}catch{failed++;return all}
-            });
-          }
-          fs.writeFileSync('/tmp/app.deob.js',out);
-          console.log('decoded='+total+' failed='+failed+' len='+out.length);
-          function clean(s){return String(s).replace(/\\\//g,'/').replace(/\\n/g,' ').replace(/\s+/g,' ').trim()}
-
-          const lit=[]; let m;
-          const literalRe=/(?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')/g;
-          while((m=literalRe.exec(out))){
-            const s=clean(m[1]??m[2]??'');
-            if(s.length<=260 && /helvid|m3u8|\/api\/|cdn|stream|token|auth|bytecode|jwplayer|playlist|source|embed|player|error|parent|origin|referer/i.test(s)) lit.push(s);
-          }
-          console.log('\n## STRINGS');
-          for(const s of [...new Set(lit)].slice(0,180)) console.log(s);
-
-          function contexts(term,limit=5,radius=520){
-            const low=out.toLowerCase(), needle=term.toLowerCase(); let pos=0,n=0;
-            console.log('\n## CTX '+term);
-            while(n<limit && (pos=low.indexOf(needle,pos))>=0){
-              console.log('['+(++n)+'] '+clean(out.slice(Math.max(0,pos-radius),Math.min(out.length,pos+needle.length+radius))));
-              pos+=needle.length;
-            }
-            if(!n) console.log('(none)');
-          }
-          for(const t of ['helvid','master.m3u8','m3u8','/api/','cdn/stream','jwplayer','bytecode','fetch(','WebAssembly','decrypt','AES','source']) contexts(t,5,520);
-          NODE
