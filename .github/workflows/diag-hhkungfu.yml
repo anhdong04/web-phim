@@ -1,8 +1,10 @@
-name: Diagnose HHKungfu
+name: Diagnose HHKungfu Native Resolver
 on:
   push:
     paths:
       - '.github/workflows/diag-hhkungfu.yml'
+      - 'v645_hhkungfu.js'
+      - 'package.json'
   workflow_dispatch:
 
 jobs:
@@ -10,28 +12,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Test native Helvid HLS
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install runtime dependency
+        run: npm install --omit=dev
+      - name: Locate Chrome
         run: |
-          python3 <<'PY'
-          import urllib.request, urllib.error
-          URL='https://helvid.net/api/v1/cdn/stream/60a73e34d3f67e64bbb80534ee0a0866/master.m3u8'
-          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36'
-          cases=[
-            ('no-ref',{}),
-            ('streamfree-ref',{'Referer':'https://streamfree.vip/'}),
-            ('hhkungfu-ref',{'Referer':'https://hhkungfu.ee/'}),
-          ]
-          for name,extra in cases:
-            print('\n===',name,'===')
-            h={'User-Agent':UA,'Accept':'application/vnd.apple.mpegurl,application/x-mpegURL,*/*'}; h.update(extra)
-            req=urllib.request.Request(URL,headers=h)
-            try:
-              with urllib.request.urlopen(req,timeout=30) as r:
-                raw=r.read(20000); text=raw.decode('utf-8','replace')
-                print('STATUS',r.status,'CTYPE',r.headers.get('content-type'),'FINAL',r.geturl())
-                print('HEADERS',dict(r.headers))
-                print('BODY\n',text[:12000])
-            except urllib.error.HTTPError as e:
-              print('HTTPERR',e.code,dict(e.headers)); print(e.read(2000).decode('utf-8','replace'))
-            except Exception as e: print('ERR',repr(e))
-          PY
+          which google-chrome
+          google-chrome --version
+      - name: Resolve one HHKungfu HLS
+        env:
+          HHKUNGFU_CHROMIUM_PATH: /usr/bin/google-chrome
+          HHKUNGFU_HLS_TIMEOUT_MS: 30000
+        run: |
+          timeout 40s node --input-type=commonjs <<'NODE'
+          const h=require('./v645_hhkungfu');
+          (async()=>{
+            const u=await h.resolveHls(
+              'https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html',
+              'diag-tap164-sv1'
+            );
+            console.log('RESOLVED',u);
+            if(!/https:\/\/[^/]*helvid\.net\/api\/v1\/cdn\/stream\/.+\/master\.m3u8/i.test(u)) throw new Error('Unexpected HLS '+u);
+            process.exit(0);
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
