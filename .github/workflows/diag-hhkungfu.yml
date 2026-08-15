@@ -10,21 +10,69 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Probe detail and watch page
+      - name: Probe HHKungfu AJAX player
         run: |
-          set -x
-          curl -L --compressed -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' \
-            -H 'Accept: text/html,application/xhtml+xml' \
-            'https://hhkungfu.ee/dau-la-dai-luc-2-tuyet-the-duong-mon' -o /tmp/detail.html
-          echo 'DETAIL SIZE:' $(wc -c </tmp/detail.html)
-          grep -Eo 'https?://[^"'"'"' ]+|/watch-[^"'"'"' ]+' /tmp/detail.html | head -n 100 || true
-          curl -L --compressed -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' \
-            -H 'Referer: https://hhkungfu.ee/dau-la-dai-luc-2-tuyet-the-duong-mon' \
-            -H 'Accept: text/html,application/xhtml+xml' \
-            'https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html' -o /tmp/watch.html -D /tmp/headers.txt
-          cat /tmp/headers.txt
-          echo 'WATCH SIZE:' $(wc -c </tmp/watch.html)
-          echo 'IFRAME/SOURCE/M3U8:'
-          grep -Ein 'iframe|m3u8|\.mp4|player|source:|file:|embed|video' /tmp/watch.html | head -n 200 || true
-          echo 'URLS:'
-          grep -Eo 'https?://[^"'"'"'<> ]+' /tmp/watch.html | head -n 200 || true
+          python3 <<'PY'
+          import re, html, json, urllib.request, urllib.parse
+          BASE='https://hhkungfu.ee'
+          DETAIL=BASE+'/dau-la-dai-luc-2-tuyet-the-duong-mon'
+          WATCH=BASE+'/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html'
+          UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36'
+
+          def req(url, data=None, referer=None):
+              headers={'User-Agent':UA,'Accept':'*/*'}
+              if referer: headers['Referer']=referer
+              if data is not None: headers['Content-Type']='application/x-www-form-urlencoded; charset=UTF-8'; headers['X-Requested-With']='XMLHttpRequest'
+              r=urllib.request.Request(url, data=data, headers=headers)
+              with urllib.request.urlopen(r, timeout=30) as x:
+                  b=x.read().decode('utf-8','replace')
+                  print('HTTP',x.status,url,'len',len(b), 'ctype',x.headers.get('content-type'))
+                  return b
+
+          w=req(WATCH, referer=DETAIL)
+          print('\n=== PLAYER FUNCTION ===')
+          m=re.search(r'function\s+loadPlayer\s*\([^)]*\)\s*\{.*?\n\s*\}', w, re.S)
+          print((m.group(0) if m else 'NOT FOUND')[:6000])
+
+          print('\n=== LOADPLAYER CALLS / DATA ATTRS ===')
+          for pat in [r'loadPlayer\([^;]{0,500}\)', r'data-(?:post|id|episode|server|type|chapter)[^>]{0,300}', r'chapter_st\s*=.{0,200}', r'post_id\s*=.{0,200}', r'sv\s*=.{0,200}', r'type\s*=.{0,200}']:
+              hits=re.findall(pat,w,re.I|re.S)
+              print('\nPAT',pat,'count',len(hits))
+              for x in hits[:30]: print(re.sub(r'\s+',' ',x)[:1000])
+
+          # Extract the exact $.ajax data object near player.php.
+          p=w.find("url: 'https://hhkungfu.ee/player/player.php'")
+          if p<0: p=w.find('/player/player.php')
+          print('\n=== AJAX CONTEXT ===')
+          print(w[max(0,p-1500):p+3000])
+
+          # Best-effort infer constants from JS/watch URL.
+          post_id='913'; chapter='164'; sv='1'
+          # Discover type value from current active episode/server markup.
+          types=re.findall(r'data-type=["\']([^"\']+)',w,re.I)
+          print('\nTYPE VALUES',types[:30])
+          candidates=[]
+          for typ in list(dict.fromkeys(types+['1','movie','tv',''])):
+              forms=[
+                {'action':'dox_ajax_player','post_id':post_id,'chapter':chapter,'server':sv,'type':typ},
+                {'action':'dox_ajax_player','post_id':post_id,'chapter_st':chapter,'sv':sv,'type':typ},
+                {'action':'dox_ajax_player','post':post_id,'chapter':chapter,'server':sv,'type':typ},
+              ]
+              candidates.extend(forms)
+          seen=set()
+          for form in candidates:
+              key=tuple(form.items())
+              if key in seen: continue
+              seen.add(key)
+              try:
+                  body=urllib.parse.urlencode(form).encode()
+                  out=req(BASE+'/player/player.php', body, WATCH)
+                  useful=bool(re.search(r'iframe|m3u8|\.mp4|source|embed|video',out,re.I))
+                  print('\nFORM',form,'USEFUL',useful,'OUT',out[:3000])
+                  if useful:
+                      urls=re.findall(r'https?://[^"\'<> ]+',html.unescape(out))
+                      print('URLS',urls[:30])
+                      break
+              except Exception as e:
+                  print('FORM ERROR',form,repr(e))
+          PY
