@@ -1,0 +1,39 @@
+name: Web Phim v6.3.7 Nuvio Desktop Headers
+on:
+  push:
+    paths:
+      - 'v637_patch.js'
+      - 'addon_v637.js'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/ci-v637.yml'
+  workflow_dispatch:
+jobs:
+  nuvio-headers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax check
+        run: node --check v637_patch.js && node --check addon_v637.js
+      - name: Dailymotion proxyHeaders regression
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const s = fs.readFileSync('v637_patch.js','utf8');
+          for (const needle of [
+            "proxyHeaders:{ request:requestHeaders }",
+            "dailymotion:'direct-with-proxyHeaders'",
+            "playbackIdentity:'r4'",
+            "':r4:'",
+            "r2|r3|r4"
+          ]) {
+            if (!s.includes(needle)) throw new Error('missing regression marker: ' + needle);
+          }
+          if (!s.includes("const requestHeaders = link.headers")) throw new Error('link.headers are not preserved');
+          console.log('v6.3.7 preserves direct Dailymotion headers for Nuvio Desktop');
+          NODE
+      - name: Generated source smoke
+        run: timeout 10s node addon_v637.js > /tmp/v637.log 2>&1 & pid=$!; sleep 3; if ! kill -0 $pid 2>/dev/null; then cat /tmp/v637.log; exit 1; fi; kill $pid || true
