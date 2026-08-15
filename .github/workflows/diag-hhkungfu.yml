@@ -1,4 +1,4 @@
-name: Diagnose Streamfree Deobfuscation
+name: Diagnose Streamfree Internal HLS
 on:
   push:
     paths:
@@ -6,63 +6,118 @@ on:
   workflow_dispatch:
 
 jobs:
-  deobfuscate:
+  probe:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Extract HLS builder functions
+      - name: Install runtime deps
+        run: npm install --omit=dev
+      - name: Call Streamfree internal HLS builder
+        env:
+          HHKUNGFU_CHROMIUM_PATH: /usr/bin/google-chrome
         run: |
-          python3 <<'PY'
-          import urllib.request
-          req=urllib.request.Request('https://streamfree.vip/public/static/app.bb288bfe.js',headers={
-            'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36',
-            'Referer':'https://streamfree.vip/embed/v/Dgh6TOLS'
-          })
-          open('/tmp/app.js','wb').write(urllib.request.urlopen(req,timeout=30).read())
-          PY
-          node --input-type=commonjs <<'NODE'
-          const fs=require('fs'),vm=require('vm');
-          const src=fs.readFileSync('/tmp/app.js','utf8');
-          function balancedFunction(text,name){
-            const m=new RegExp('function\\s+'+name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*\\([^)]*\\)\\s*\\{').exec(text);
-            if(!m)return '';
-            const p=text.indexOf('{',m.index);let d=0,q=null,e=false;
-            for(let i=p;i<text.length;i++){const c=text[i];if(q){if(e)e=false;else if(c==='\\\\')e=true;else if(c===q)q=null;continue}if(c==='"'||c==="'"||c==='`'){q=c;continue}if(c==='{')d++;else if(c==='}'&&--d===0)return text.slice(m.index,i+1)}
-            return '';
+          timeout 120s node --input-type=commonjs <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36';
+          const watch='https://hhkungfu.ee/watch-dau-la-dai-luc-2-tuyet-the-duong-mon/tap-164-sv1.html';
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+          function functionEnd(src,name){
+            const m=new RegExp('function\\s+'+name.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\$&')+'\\s*\\([^)]*\\)\\s*\\{').exec(src);
+            if(!m) throw new Error('missing '+name);
+            const p=src.indexOf('{',m.index); let d=0,q=null,esc=false;
+            for(let i=p;i<src.length;i++){
+              const c=src[i];
+              if(q){if(esc)esc=false;else if(c==='\\\\')esc=true;else if(c===q)q=null;continue}
+              if(c==='"'||c==="'"||c==='`'){q=c;continue}
+              if(c==='{')d++; else if(c==='}'&&--d===0)return i+1;
+            }
+            throw new Error('unclosed '+name);
           }
-          function fn0(name){
-            const f=balancedFunction(src,name); if(!f)throw Error('missing '+name);
-            return {text:f,end:src.indexOf(f)+f.length};
+          function patchApp(src){
+            const end=functionEnd(src,'_0x40236b');
+            const hook=`;globalThis.__sfBuild=_0x40236b;globalThis.__sfDecryptM3u8=async function(content,nonce){const k=new _0x73517d().update(_0x387157(nonce)).hex().split('').reverse().join('');return _0x4a0bea(content,k);};`;
+            return src.slice(0,end)+hook+src.slice(end);
           }
-          const f24=fn0('a0_0x24a9'), f34=fn0('a0_0x34f2');
-          const bootEnd=src.indexOf(',!(function',f34.end); if(bootEnd<0)throw Error('bootstrap marker missing');
-          const bootstrap=src.slice(f34.end,bootEnd)+')';
-          const ctx={decodeURIComponent,parseInt,console};vm.createContext(ctx);
-          vm.runInContext(f24.text+'\n'+f34.text+'\n'+bootstrap,ctx,{timeout:10000});
-          const dec=ctx.a0_0x24a9;
-          const aliases=new Set(['a0_0x24a9']);
-          for(const m of src.matchAll(/\b(_0x[0-9a-f]+)\s*=\s*a0_0x24a9\b/gi))aliases.add(m[1]);
-          let out=src;
-          for(const alias of aliases){
-            const esc=alias.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-            const re=new RegExp('\\b'+esc+'\\(\\s*(0x[0-9a-fA-F]+|\\d+)\\s*,\\s*([\\\'\"])(.*?)\\2\\s*\\)','g');
-            out=out.replace(re,(all,n,q,key)=>{try{return JSON.stringify(dec(Number(n),key))}catch{return all}});
-          }
-          const clean=s=>String(s).replace(/\\\//g,'/');
-          const targets=['_0x40236b','_0x528a1c','_0x420231','_0x1759bc','_0x34e5b5','_0xd7f14','_0x4a0bea','_0x25d710','_0x530368','_0x73517d','_0x387157','_0x733455','_0x29df87','_0x8d0a9c','_0x28368c'];
-          for(const name of targets){
-            console.log('\n===== '+name+' =====');
-            const f=balancedFunction(out,name);
-            if(f){console.log(clean(f));continue}
-            let p=out.indexOf(name+'='); if(p<0)p=out.indexOf(name+' ='); if(p<0)p=out.indexOf(name);
-            if(p<0){console.log('(missing)');continue}
-            console.log(clean(out.slice(Math.max(0,p-1800),Math.min(out.length,p+6500))));
-          }
-          const needle='new URL("/hls/"';
-          const p=out.indexOf(needle);
-          console.log('\n===== HLS BUILD WIDE CONTEXT =====');
-          console.log(p<0?'(missing)':clean(out.slice(Math.max(0,p-9000),Math.min(out.length,p+9000))));
+
+          (async()=>{
+            const browser=await puppeteer.launch({headless:true,executablePath:process.env.HHKUNGFU_CHROMIUM_PATH,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
+            const page=await browser.newPage();
+            await page.setUserAgent(UA);
+            await page.setRequestInterception(true);
+            page.on('request',async req=>{
+              try{
+                const u=req.url();
+                if(/streamfree\.vip\/public\/static\/app\.[^/?]+\.js/i.test(u)){
+                  const r=await fetch(u,{headers:{'user-agent':UA,'referer':req.headers().referer||'https://streamfree.vip/'}});
+                  const src=await r.text();
+                  const body=patchApp(src);
+                  console.log('PATCHED_APP',u,'bytes',body.length);
+                  return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
+                }
+                return req.continue();
+              }catch(e){console.error('intercept',e.message);try{await req.continue()}catch{}}
+            });
+            await page.goto(watch,{waitUntil:'domcontentloaded',timeout:45000});
+            let frame=null;
+            for(let i=0;i<50;i++){
+              frame=page.frames().find(f=>/streamfree\.vip\/embed\//i.test(f.url()));
+              if(frame)break;
+              await sleep(300);
+            }
+            if(!frame)throw new Error('Streamfree iframe missing');
+            console.log('FRAME',frame.url());
+            let ready=false;
+            for(let i=0;i<60;i++){
+              ready=await frame.evaluate(()=>typeof globalThis.__sfBuild==='function').catch(()=>false);
+              if(ready)break;
+              await sleep(250);
+            }
+            if(!ready)throw new Error('__sfBuild hook missing');
+            const input=await frame.evaluate(()=>{
+              const els=[...document.querySelectorAll('[data-id]')];
+              const el=els.find(x=>x.dataset?.nonce)||els[0];
+              const meta=document.querySelector('meta[name="bytecode"]');
+              return {
+                href:location.href,
+                origin:location.origin,
+                pathId:location.pathname.split('/')[3]||'',
+                id:el?.dataset?.id||'',
+                uip:el?.dataset?.uip||'',
+                nonce:el?.dataset?.nonce||'',
+                checksum:el?.dataset?.checksum||'',
+                time:Number(el?.dataset?.time||Date.now()),
+                bytecode:meta?.getAttribute('content')||'',
+                element:el?.outerHTML?.slice(0,1200)||''
+              };
+            });
+            console.log('INPUT',JSON.stringify({...input,bytecode:input.bytecode.slice(0,120)+'...'}));
+            if(!input.id||!input.nonce||!input.bytecode)throw new Error('required embed inputs missing');
+            const built=await frame.evaluate(async input=>{
+              const out=await globalThis.__sfBuild(window,input.id,input.pathId,input.nonce,input.bytecode,input.time,input.uip,input.checksum,null);
+              return {url:String(out?.[0]||''),types:(out||[]).map(x=>typeof x)};
+            },input);
+            console.log('BUILT',JSON.stringify(built));
+            if(!/\/hls\/.*\.m3u8/i.test(built.url))throw new Error('HLS builder returned unexpected URL');
+            const fetched=await frame.evaluate(async url=>{
+              const r=await fetch(url); const text=await r.text();
+              return {status:r.status,url:r.url,text:text.slice(0,10000)};
+            },built.url);
+            console.log('HLS_FETCH',fetched.status,fetched.url,'head',JSON.stringify(fetched.text.slice(0,300)));
+            let playlist=fetched.text;
+            if(playlist.includes('#ENC-AESGCM')){
+              const dec=await frame.evaluate(async ({text,nonce})=>{
+                const out=await globalThis.__sfDecryptM3u8(text,nonce);
+                return {playlist:typeof out?.[0]==='string'?out[0]:new TextDecoder().decode(out?.[0]||new Uint8Array()),initType:typeof out?.[1]};
+              },{text:playlist,nonce:input.nonce});
+              playlist=dec.playlist;
+              console.log('DECRYPTED',JSON.stringify(playlist.slice(0,500)),'initType',dec.initType);
+            }
+            if(!playlist.startsWith('#EXTM3U'))throw new Error('decrypted playlist is not HLS');
+            console.log('NATIVE_HLS_OK');
+            await browser.close();
+          })().catch(e=>{console.error('PROBE_FAIL',e);process.exit(1)});
           NODE
