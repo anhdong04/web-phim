@@ -10,25 +10,16 @@ const CACHE_MS = Math.max(60_000, Number(process.env.IPTV_CACHE_SECONDS || 900) 
 const PAGE_SIZE = Math.max(20, Math.min(250, Number(process.env.IPTV_PAGE_SIZE || 100)));
 
 const IPTV_CATEGORIES = Object.freeze([
-  { id: 'all', label: '📺 IPTV • Tất cả', file: 'index.m3u' },
-  { id: 'news', label: '📰 IPTV • Tin tức', file: 'categories/news.m3u' },
-  { id: 'sports', label: '⚽ IPTV • Thể thao', file: 'categories/sports.m3u' },
-  { id: 'movies', label: '🎬 IPTV • Phim', file: 'categories/movies.m3u' },
-  { id: 'entertainment', label: '🎭 IPTV • Giải trí', file: 'categories/entertainment.m3u' },
-  { id: 'music', label: '🎵 IPTV • Âm nhạc', file: 'categories/music.m3u' },
-  { id: 'kids', label: '🧒 IPTV • Trẻ em', file: 'categories/kids.m3u' },
-  { id: 'animation', label: '🎨 IPTV • Hoạt hình', file: 'categories/animation.m3u' },
-  { id: 'documentary', label: '🌍 IPTV • Tài liệu', file: 'categories/documentary.m3u' },
-  { id: 'education', label: '🎓 IPTV • Giáo dục', file: 'categories/education.m3u' },
-  { id: 'cooking', label: '🍳 IPTV • Ẩm thực', file: 'categories/cooking.m3u' },
-  { id: 'lifestyle', label: '🏡 IPTV • Đời sống', file: 'categories/lifestyle.m3u' },
-  { id: 'comedy', label: '😂 IPTV • Hài', file: 'categories/comedy.m3u' },
-  { id: 'travel', label: '✈️ IPTV • Du lịch', file: 'categories/travel.m3u' },
-  { id: 'business', label: '💼 IPTV • Kinh doanh', file: 'categories/business.m3u' },
-  { id: 'science', label: '🔬 IPTV • Khoa học', file: 'categories/science.m3u' },
-  { id: 'family', label: '👨‍👩‍👧 IPTV • Gia đình', file: 'categories/family.m3u' },
-  { id: 'series', label: '📺 IPTV • Series', file: 'categories/series.m3u' },
-  { id: 'general', label: '🌐 IPTV • Tổng hợp', file: 'categories/general.m3u' }
+  {
+    id: 'vn',
+    label: '🇻🇳 IPTV • Việt Nam',
+    files: ['countries/vn.m3u']
+  },
+  {
+    id: 'kids',
+    label: '🧒 IPTV • Hoạt hình & Trẻ em',
+    files: ['categories/kids.m3u', 'categories/animation.m3u']
+  }
 ]);
 const CATEGORY_BY_ID = new Map(IPTV_CATEGORIES.map(x => [x.id, x]));
 const playlistCache = new Map();
@@ -42,7 +33,7 @@ function sendJson(req, res, status, body, maxAge = 0) {
     'access-control-allow-headers': '*',
     'access-control-allow-methods': 'GET,HEAD,OPTIONS',
     'cache-control': maxAge ? `public, max-age=${maxAge}` : 'no-store',
-    'x-web-phim-iptv': 'intercept-v2'
+    'x-web-phim-iptv': 'intercept-v3'
   });
   if (req.method === 'HEAD') return res.end();
   res.end(data);
@@ -55,9 +46,9 @@ function manifest() {
   ];
   return {
     id: 'vn.webphim.iptvorg',
-    version: '1.3.0',
-    name: 'IPTV-org Live TV',
-    description: 'Live TV IPTV-org • phân theo thể loại • hỗ trợ header stream cho Nuvio',
+    version: '1.4.0',
+    name: 'IPTV Việt Nam + Kids',
+    description: 'IPTV-org chọn lọc: kênh Việt Nam và Hoạt hình/Trẻ em',
     resources: [
       'catalog',
       { name: 'meta', types: ['movie'], idPrefixes: ['iptv:'] },
@@ -104,12 +95,9 @@ function makeChannelId(categoryId, channel) {
 
 function parseChannelId(id) {
   const value = safeDecode(id);
-  let m = value.match(/^iptv:([a-z0-9_-]+):([a-f0-9]{20})$/i);
-  if (m) return { categoryId: m[1].toLowerCase(), hash: m[2].toLowerCase(), raw: value };
-  // Backward compatibility with v1.0-v1.2 cached catalog IDs.
-  m = value.match(/^iptv:([a-f0-9]{20})$/i);
-  if (m) return { categoryId: 'all', hash: m[1].toLowerCase(), raw: value };
-  return null;
+  const m = value.match(/^iptv:([a-z0-9_-]+):([a-f0-9]{20})$/i);
+  if (!m) return null;
+  return { categoryId: m[1].toLowerCase(), hash: m[2].toLowerCase(), raw: value };
 }
 
 function normalizeHeaderName(name) {
@@ -212,45 +200,61 @@ function parseM3u(text, categoryId) {
   return out;
 }
 
-function playlistUrl(categoryId) {
-  const category = CATEGORY_BY_ID.get(categoryId) || CATEGORY_BY_ID.get('all');
-  return `${IPTV_ROOT}/${category.file}`;
-}
-
-async function loadCategory(categoryId) {
-  const id = CATEGORY_BY_ID.has(categoryId) ? categoryId : 'all';
-  const now = Date.now();
-  const cached = playlistCache.get(id);
-  if (cached && cached.channels.length && now - cached.at < CACHE_MS) return cached;
-
+async function fetchPlaylist(relativePath, categoryId) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 25_000);
   try {
-    const response = await fetch(playlistUrl(id), {
+    const response = await fetch(`${IPTV_ROOT}/${relativePath}`, {
       headers: {
-        'user-agent': 'WebPhim-IPTV/1.3',
+        'user-agent': 'WebPhim-IPTV/1.4',
         accept: 'application/x-mpegURL, audio/x-mpegurl, text/plain, */*'
       },
       signal: controller.signal
     });
-    if (!response.ok) throw new Error(`playlist ${id} HTTP ${response.status}`);
-    const channels = parseM3u(await response.text(), id);
-    if (!channels.length) throw new Error(`playlist ${id} parsed 0 channels`);
-    const value = {
-      at: now,
-      channels,
-      byHash: new Map(channels.map(channel => [channel.hash, channel]))
-    };
-    playlistCache.set(id, value);
-    console.log(`[iptv-intercept] loaded ${id}: ${channels.length} channels`);
-    return value;
+    if (!response.ok) throw new Error(`${relativePath} HTTP ${response.status}`);
+    return parseM3u(await response.text(), categoryId);
   } finally {
     clearTimeout(timer);
   }
 }
 
+async function loadCategory(categoryId) {
+  const category = CATEGORY_BY_ID.get(categoryId);
+  if (!category) throw new Error(`unknown IPTV category ${categoryId}`);
+
+  const now = Date.now();
+  const cached = playlistCache.get(categoryId);
+  if (cached && cached.channels.length && now - cached.at < CACHE_MS) return cached;
+
+  const results = await Promise.allSettled(category.files.map(file => fetchPlaylist(file, categoryId)));
+  const merged = [];
+  const seen = new Set();
+  for (const result of results) {
+    if (result.status !== 'fulfilled') {
+      console.error('[iptv-intercept] playlist:', result.reason?.message || result.reason);
+      continue;
+    }
+    for (const channel of result.value) {
+      if (seen.has(channel.hash)) continue;
+      seen.add(channel.hash);
+      merged.push(channel);
+    }
+  }
+  if (!merged.length) throw new Error(`category ${categoryId} parsed 0 channels`);
+
+  const value = {
+    at: now,
+    channels: merged,
+    byHash: new Map(merged.map(channel => [channel.hash, channel]))
+  };
+  playlistCache.set(categoryId, value);
+  console.log(`[iptv-intercept] loaded ${categoryId}: ${merged.length} channels`);
+  return value;
+}
+
 function categoryLabel(categoryId) {
-  return CATEGORY_BY_ID.get(categoryId)?.label.replace(/^\S+\s+IPTV\s+•\s+/, '') || 'Live TV';
+  const label = CATEGORY_BY_ID.get(categoryId)?.label || 'Live TV';
+  return label.replace(/^\S+\s+IPTV\s+•\s+/, '');
 }
 
 function preview(channel, categoryId) {
@@ -282,17 +286,10 @@ function parseExtra(raw) {
 }
 
 async function findChannelByParsedId(parsed) {
-  if (!parsed) return null;
+  if (!parsed || !CATEGORY_BY_ID.has(parsed.categoryId)) return null;
   const data = await loadCategory(parsed.categoryId);
-  let channel = data.byHash.get(parsed.hash) || null;
-  if (channel) return { channel, categoryId: parsed.categoryId };
-
-  if (parsed.categoryId !== 'all') {
-    const all = await loadCategory('all');
-    channel = all.byHash.get(parsed.hash) || null;
-    if (channel) return { channel, categoryId: 'all' };
-  }
-  return null;
+  const channel = data.byHash.get(parsed.hash) || null;
+  return channel ? { channel, categoryId: parsed.categoryId } : null;
 }
 
 function streamFor(channel) {
@@ -323,7 +320,7 @@ async function handleIptv(req, res, pathname) {
   if (req.method !== 'GET' && req.method !== 'HEAD') return sendJson(req, res, 405, { error: 'Method not allowed' });
 
   if (pathname === '/iptv/manifest.json') return sendJson(req, res, 200, manifest(), 30);
-  if (pathname === '/iptv' || pathname === '/iptv/') return sendJson(req, res, 200, { manifest: '/iptv/manifest.json', version: '1.3.0' });
+  if (pathname === '/iptv' || pathname === '/iptv/') return sendJson(req, res, 200, { manifest: '/iptv/manifest.json', version: '1.4.0' });
 
   let m = pathname.match(/^\/iptv\/catalog\/movie\/([^/.]+)(?:\/([^/]+))?\.json$/i);
   if (m) {
@@ -391,5 +388,5 @@ http.createServer = function patchedCreateServer(...args) {
   return originalCreateServer.apply(http, args);
 };
 
-console.log('[iptv-intercept] v1.3 enabled: encoded IDs + categories + proxyHeaders');
+console.log('[iptv-intercept] v1.4 enabled: Vietnam + Kids/Animation only');
 require('./addon_v641_legacy');
