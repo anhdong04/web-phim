@@ -1,7 +1,7 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "6.5.8",
-  "description": "Web Phim with curated Vietnam and Kids IPTV catalogs for Nuvio",
+  "version": "6.5.9",
+  "description": "Web Phim with curated Vietnam, Kids and Football IPTV catalogs for Nuvio",
   "main": "addon_v641.js",
   "scripts": {
     "start": "node addon_v641.js",
