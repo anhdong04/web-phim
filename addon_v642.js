@@ -40,6 +40,7 @@ const applyV642 = require('./v642_patch');
 const applyV649HhkungfuStandalone = require('./v649_hhkungfu_standalone_patch');
 const applyV650IptvStandalone = require('./v650_iptv_standalone_patch');
 const applyV651IptvNuvioCompat = require('./v651_iptv_nuvio_compat_patch');
+const applyV652IptvForceRoute = require('./v652_iptv_force_route_patch');
 
 let launcher = fs.readFileSync(require.resolve('./addon_v410.js'), 'utf8');
 const finalEval = 'eval(source);';
@@ -88,6 +89,7 @@ const runV642 = [
   'source = applyV649HhkungfuStandalone(source);',
   'source = applyV650IptvStandalone(source);',
   'source = applyV651IptvNuvioCompat(source);',
+  'source = applyV652IptvForceRoute(source);',
   "try { new vm.Script(source, { filename: 'web-phim-generated.js' }); } catch (e) { const m = String(e.stack || e).match(/web-phim-generated\\.js:(\\d+)/); const n = m ? Number(m[1]) : 0; const lines = source.split('\\n'); if (n) console.error(lines.slice(Math.max(0,n-6),Math.min(lines.length,n+5)).map((x,i)=>(Math.max(0,n-6)+i+1)+': '+x).join('\\n')); throw e; }",
   'eval(source);'
 ].join(' ');
