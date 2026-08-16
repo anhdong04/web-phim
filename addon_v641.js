@@ -19,10 +19,52 @@ const IPTV_CATEGORIES = Object.freeze([
     id: 'kids',
     label: '🧒 IPTV • Hoạt hình & Trẻ em',
     files: ['categories/kids.m3u', 'categories/animation.m3u']
+  },
+  {
+    id: 'football',
+    label: '⚽ IPTV • Bóng đá',
+    files: ['categories/sports.m3u', 'countries/vn.m3u'],
+    filter: 'football'
   }
 ]);
 const CATEGORY_BY_ID = new Map(IPTV_CATEGORIES.map(x => [x.id, x]));
 const playlistCache = new Map();
+
+const FOOTBALL_CHANNEL_PATTERNS = [
+  /\bfootball\b/i,
+  /\bsoccer\b/i,
+  /\bfifa\+?\b/i,
+  /\bbein\s*sports?\b/i,
+  /\bsky\s*sports?\b/i,
+  /\btnt\s*sports?\b/i,
+  /\bbt\s*sports?\b/i,
+  /\bespn\b/i,
+  /\bdazn\b/i,
+  /\bsupersport\b/i,
+  /\barena\s*sport/i,
+  /\bsport\s*tv\b/i,
+  /\bsportklub\b/i,
+  /\bsport\s*club\b/i,
+  /\bcanal\+?\s*sport/i,
+  /\bpremier\s*sports?\b/i,
+  /\beleven\s*sports?\b/i,
+  /\bsetanta\s*sports?\b/i,
+  /\bssc\s*sport/i,
+  /\balkass\b/i,
+  /\babu\s*dhabi\s*sports?\b/i,
+  /\bdubai\s*sports?\b/i,
+  /\bastro\s*supersport/i,
+  /\btrue\s*(?:premier\s*)?(?:football|sport)/i,
+  /\bziggo\s*sport/i,
+  /\bviaplay\s*sport/i,
+  /\bmax\s*sport/i,
+  /\bnova\s*sport/i,
+  /\bmatch!?\b/i,
+  /\bon\s*sports?\b/i,
+  /\bvtvcab\b/i,
+  /\bhtv\s*(?:thể thao|the thao|sports?)\b/i,
+  /\bvtv5\b/i
+];
 
 function sendJson(req, res, status, body, maxAge = 0) {
   const data = JSON.stringify(body);
@@ -33,7 +75,7 @@ function sendJson(req, res, status, body, maxAge = 0) {
     'access-control-allow-headers': '*',
     'access-control-allow-methods': 'GET,HEAD,OPTIONS',
     'cache-control': maxAge ? `public, max-age=${maxAge}` : 'no-store',
-    'x-web-phim-iptv': 'intercept-v3'
+    'x-web-phim-iptv': 'intercept-v4'
   });
   if (req.method === 'HEAD') return res.end();
   res.end(data);
@@ -46,9 +88,9 @@ function manifest() {
   ];
   return {
     id: 'vn.webphim.iptvorg',
-    version: '1.4.0',
-    name: 'IPTV Việt Nam + Kids',
-    description: 'IPTV-org chọn lọc: kênh Việt Nam và Hoạt hình/Trẻ em',
+    version: '1.5.0',
+    name: 'IPTV Việt Nam + Kids + Bóng đá',
+    description: 'IPTV-org chọn lọc: Việt Nam, Hoạt hình/Trẻ em và kênh bóng đá',
     resources: [
       'catalog',
       { name: 'meta', types: ['movie'], idPrefixes: ['iptv:'] },
@@ -206,7 +248,7 @@ async function fetchPlaylist(relativePath, categoryId) {
   try {
     const response = await fetch(`${IPTV_ROOT}/${relativePath}`, {
       headers: {
-        'user-agent': 'WebPhim-IPTV/1.4',
+        'user-agent': 'WebPhim-IPTV/1.5',
         accept: 'application/x-mpegURL, audio/x-mpegurl, text/plain, */*'
       },
       signal: controller.signal
@@ -216,6 +258,11 @@ async function fetchPlaylist(relativePath, categoryId) {
   } finally {
     clearTimeout(timer);
   }
+}
+
+function isFootballChannel(channel) {
+  const text = [channel.name, channel.group, channel.tvgId].filter(Boolean).join(' ');
+  return FOOTBALL_CHANNEL_PATTERNS.some(pattern => pattern.test(text));
 }
 
 async function loadCategory(categoryId) {
@@ -235,6 +282,7 @@ async function loadCategory(categoryId) {
       continue;
     }
     for (const channel of result.value) {
+      if (category.filter === 'football' && !isFootballChannel(channel)) continue;
       if (seen.has(channel.hash)) continue;
       seen.add(channel.hash);
       merged.push(channel);
@@ -320,7 +368,7 @@ async function handleIptv(req, res, pathname) {
   if (req.method !== 'GET' && req.method !== 'HEAD') return sendJson(req, res, 405, { error: 'Method not allowed' });
 
   if (pathname === '/iptv/manifest.json') return sendJson(req, res, 200, manifest(), 30);
-  if (pathname === '/iptv' || pathname === '/iptv/') return sendJson(req, res, 200, { manifest: '/iptv/manifest.json', version: '1.4.0' });
+  if (pathname === '/iptv' || pathname === '/iptv/') return sendJson(req, res, 200, { manifest: '/iptv/manifest.json', version: '1.5.0' });
 
   let m = pathname.match(/^\/iptv\/catalog\/movie\/([^/.]+)(?:\/([^/]+))?\.json$/i);
   if (m) {
@@ -388,5 +436,5 @@ http.createServer = function patchedCreateServer(...args) {
   return originalCreateServer.apply(http, args);
 };
 
-console.log('[iptv-intercept] v1.4 enabled: Vietnam + Kids/Animation only');
+console.log('[iptv-intercept] v1.5 enabled: Vietnam + Kids + curated Football');
 require('./addon_v641_legacy');
