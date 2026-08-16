@@ -1,7 +1,7 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "6.5.6",
-  "description": "Web Phim with single-process IPTV route interception and preserved legacy routes",
+  "version": "6.5.7",
+  "description": "Web Phim with Nuvio-compatible IPTV categories, encoded IDs and proxy headers",
   "main": "addon_v641.js",
   "scripts": {
     "start": "node addon_v641.js",
