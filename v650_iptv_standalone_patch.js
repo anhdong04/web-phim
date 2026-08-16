@@ -38,7 +38,7 @@ module.exports = function applyV650IptvStandalone(source) {
   }
 
   function v650IptvAttr(line, key) {
-    const re = new RegExp('(?:^|\\s)' + key.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&') + '="([^"]*)"', 'i');
+    const re = new RegExp('(?:^|\\s)' + key + '="([^"]*)"', 'i');
     const m = String(line || '').match(re);
     return m ? v650IptvDecodeEntities(m[1].trim()) : '';
   }
