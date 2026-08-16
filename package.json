@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "6.5.5",
-  "description": "Web Phim with IPTV front router and preserved legacy addon routes",
+  "version": "6.5.6",
+  "description": "Web Phim with single-process IPTV route interception and preserved legacy routes",
   "main": "addon_v641.js",
   "scripts": {
     "start": "node addon_v641.js",
-    "check": "node --check addon_v641.js && node --check iptv_front.js && node --check addon_v641_legacy.js"
+    "check": "node --check addon_v641.js && node --check addon_v641_legacy.js"
   },
   "dependencies": {
     "puppeteer-core": "^24.0.0"
