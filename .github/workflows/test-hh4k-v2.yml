@@ -13,19 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: npm install --omit=dev
-      - name: Resolve HH4K Streamfree HLS
+      - name: Validate HH4K provider
         shell: bash
-        env:
-          HHKUNGFU_HLS_TIMEOUT_MS: '30000'
-          HHKUNGFU_HLS_ATTEMPTS: '1'
         run: |
+          node --check hh4k_provider.js
+          node --check hh4k_bridge.js
           node <<'NODE'
-          const { resolveHls } = require('./v647_hhkungfu_resolver');
+          const { HH4KProvider } = require('./hh4k_provider');
           (async()=>{
-            const embed='https://streamfree.vip/embed/v/YKDs8Q0X';
-            const hls=await resolveHls(embed,'hh4k-test');
-            console.log('HLS',hls);
-            if(!hls) throw new Error('no HLS');
-          })().catch(e=>{ console.error(e); process.exit(1); });
+            const p=new HH4KProvider({mainUrl:'https://hhtq.sh',timeoutMs:15000});
+            const page=await p.fetchCategoryPage('moi-cap-nhat',1);
+            console.log('CATALOG',page.items.length,page.items.slice(0,3).map(x=>x.title));
+            if(page.items.length<10) throw new Error('catalog too small');
+            const d=await p.loadDetail(page.items[0].detailUrl);
+            console.log('META',d.title,'EPISODES',d.episodes.length,d.episodes[0]);
+            if(!d.episodes.length) throw new Error('no episodes');
+            const links=await p.resolveStreamLinks(d.episodes[0].watchUrl);
+            console.log('PLAYERS',links.length,links.slice(0,4).map(x=>[x.serverName,x.externalUrl]));
+            if(!links.length) throw new Error('no player sources');
+          })().catch(e=>{console.error(e);process.exit(1)});
           NODE
