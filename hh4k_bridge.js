@@ -36,15 +36,15 @@ function sendJson(req, res, status, body, maxAge = 0) {
     'access-control-allow-headers': '*',
     'access-control-allow-methods': 'GET,HEAD,OPTIONS',
     'cache-control': maxAge ? `public, max-age=${maxAge}` : 'no-store',
-    'x-web-phim-hh4k': 'bridge-v1'
+    'x-web-phim-hh4k': 'bridge-v2'
   });
   if (req.method === 'HEAD') return res.end();
   res.end(data);
 }
 function manifest() {
   return {
-    id: 'vn.webphim.hh4k.v1', version: '1.0.0', name: '🐉 HH4K',
-    description: 'HH4K • Hoạt hình Trung Quốc • catalog, metadata, episode và public streams',
+    id: 'vn.webphim.hh4k.v2', version: '1.1.0', name: '🐉 HH4K',
+    description: 'HH4K • nguồn PhimHHTQ • catalog, metadata, episode và Halim streams',
     resources: ['catalog', { name: 'meta', types: ['series'], idPrefixes: ['hh4k:'] }, { name: 'stream', types: ['series'], idPrefixes: ['hh4k:'] }],
     types: ['series'], idPrefixes: ['hh4k:'],
     catalogs: [{ type: 'series', id: 'hh4k', name: '🐉 HH4K - Mới cập nhật', extra: [{ name: 'search', isRequired: false }, { name: 'skip', isRequired: false }] }],
@@ -53,42 +53,49 @@ function manifest() {
 }
 function preview(item) {
   const description = ['🐉 HH4K', item.episodeLabel, item.qualityLabel].filter(Boolean).join(' • ');
-  const meta = { id: idForDetail(item.detailUrl), type: 'series', name: item.title, description: description || 'Nguồn HH4K' };
+  const meta = { id: idForDetail(item.detailUrl), type: 'series', name: item.title, description: description || 'Nguồn PhimHHTQ' };
   if (item.posterUrl) { meta.poster = item.posterUrl; meta.background = item.posterUrl; }
   return meta;
 }
 async function catalog(extra) {
   const search = String(extra.search || '').trim(), skip = Math.max(0, Number(extra.skip || 0));
   if (search) return (await provider.search(search)).slice(skip, skip + PAGE_SIZE).map(preview);
-  const pageNo = Math.floor(skip / PAGE_SIZE) + 1, page = await provider.fetchCategoryPage('/the-loai/moi-cap-nhap', pageNo), offset = skip % PAGE_SIZE;
+  const pageNo = Math.floor(skip / PAGE_SIZE) + 1;
+  const page = await provider.fetchCategoryPage('moi-cap-nhat', pageNo);
+  const offset = skip % PAGE_SIZE;
   return page.items.slice(offset, offset + PAGE_SIZE).map(preview);
 }
 async function metaFor(id) {
   const parsed = parseId(id); if (!parsed || !/^https?:\/\//i.test(parsed.detailUrl)) return null;
   const detail = await provider.loadDetail(parsed.detailUrl);
-  const videos = (detail.episodes || []).map((ep, index) => ({ id: `hh4k:${parsed.detailKey}:r1:${index}`, title: [ep.name, ep.serverName, ep.vip ? 'VIP' : ''].filter(Boolean).join(' • '), season: 1, episode: Number.isFinite(ep.number) ? ep.number : index + 1 }));
+  const videos = (detail.episodes || []).map((ep, index) => ({ id: `hh4k:${parsed.detailKey}:r1:${index}`, title: [ep.name, ep.serverName].filter(Boolean).join(' • '), season: 1, episode: Number.isFinite(ep.number) ? ep.number : index + 1 }));
   const poster = detail.posterUrl || null;
-  return { id: `hh4k:${parsed.detailKey}`, type: 'series', name: detail.title, poster, background: detail.bannerUrl || poster, description: detail.overview || 'Nguồn HH4K', releaseInfo: detail.year ? String(detail.year) : undefined, genres: detail.genres || ['Hoạt hình Trung Quốc'], videos, behaviorHints: videos.length ? { defaultVideoId: videos[0].id } : undefined };
+  return { id: `hh4k:${parsed.detailKey}`, type: 'series', name: detail.title, poster, background: detail.bannerUrl || poster, description: detail.overview || 'Nguồn PhimHHTQ', releaseInfo: detail.year ? String(detail.year) : undefined, genres: detail.genres || ['Hoạt hình Trung Quốc'], videos, behaviorHints: videos.length ? { defaultVideoId: videos[0].id } : undefined };
 }
 function streamObject(link, title) {
   const fmt = link.isM3u8 ? 'HLS' : 'MP4';
-  return { name: '🐉 HH4K', title: [link.serverName, fmt, title].filter(Boolean).join(' • '), url: link.url, behaviorHints: { notWebReady: true, proxyHeaders: { request: link.headers || {} }, bingeGroup: 'webphim-hh4k-r1' } };
+  return { name: '🐉 HH4K', title: [link.serverName, fmt, title].filter(Boolean).join(' • '), url: link.url, behaviorHints: { notWebReady: true, proxyHeaders: { request: link.headers || {} }, bingeGroup: 'webphim-hh4k-r2' } };
 }
 async function streamsFor(id) {
   const parsed = parseId(id); if (!parsed || parsed.episodeIndex == null || !/^https?:\/\//i.test(parsed.detailUrl)) return [];
   const detail = await provider.loadDetail(parsed.detailUrl), ep = (detail.episodes || [])[parsed.episodeIndex];
-  if (!ep?.watchUrl || ep.vip) return [];
-  return (await provider.resolveStreamLinks(ep.watchUrl, ep.serverName || 'HH4K')).slice(0, 8).map(link => streamObject(link, detail.title));
+  if (!ep?.watchUrl) return [];
+  return (await provider.resolveStreamLinks(ep.watchUrl)).slice(0, 8).map(link => streamObject(link, detail.title));
 }
 async function handleHh4k(req, res, pathname) {
   if (req.method === 'OPTIONS') { res.writeHead(204, { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'GET,HEAD,OPTIONS' }); return res.end(); }
   if (req.method !== 'GET' && req.method !== 'HEAD') return sendJson(req, res, 405, { error: 'Method not allowed' });
-  if (pathname === '/hh4k' || pathname === '/hh4k/') return sendJson(req, res, 200, { addon: 'HH4K', manifest: '/hh4k/manifest.json', version: '1.0.0' });
+  if (pathname === '/hh4k' || pathname === '/hh4k/') return sendJson(req, res, 200, { addon: 'HH4K', manifest: '/hh4k/manifest.json', version: '1.1.0' });
   if (pathname === '/hh4k/manifest.json') return sendJson(req, res, 200, manifest(), 30);
   if (pathname === '/hh4k/diag') {
     const started = Date.now();
-    try { const baseUrl = await provider.getBaseUrl(true), page = await provider.fetchCategoryPage('/the-loai/moi-cap-nhap', 1); return sendJson(req, res, 200, { ok: true, version: '1.0.0', baseUrl, elapsedMs: Date.now() - started, itemCount: page.items.length, sample: page.items.slice(0, 5).map(x => ({ title: x.title, poster: Boolean(x.posterUrl), episode: x.episodeLabel })) }); }
-    catch (e) { return sendJson(req, res, 200, { ok: false, version: '1.0.0', elapsedMs: Date.now() - started, error: String(e?.message || e).slice(0, 500) }); }
+    try {
+      const baseUrl = provider.getBaseUrl();
+      const page = await provider.fetchCategoryPage('moi-cap-nhat', 1);
+      return sendJson(req, res, 200, { ok: true, version: '1.1.0', baseUrl, elapsedMs: Date.now() - started, itemCount: page.items.length, sample: page.items.slice(0, 5).map(x => ({ title: x.title, poster: Boolean(x.posterUrl), episode: x.episodeLabel })) });
+    } catch (e) {
+      return sendJson(req, res, 200, { ok: false, version: '1.1.0', elapsedMs: Date.now() - started, error: String(e?.message || e).slice(0, 500) });
+    }
   }
   let m = pathname.match(/^\/hh4k\/catalog\/series\/hh4k(?:\/([^/]+))?\.json$/i);
   if (m) { try { return sendJson(req, res, 200, { metas: await catalog(parseExtra(m[1] || '')) }, 30); } catch (e) { console.error('[hh4k] catalog:', e.message); return sendJson(req, res, 200, { metas: [] }); } }
@@ -114,5 +121,5 @@ http.createServer = function patchedCreateServer(...args) {
   return originalCreateServer.apply(http, args);
 };
 
-console.log('[hh4k] bridge v1 enabled at /hh4k/*');
+console.log('[hh4k] bridge v2 enabled at /hh4k/* using PhimHHTQ source');
 module.exports = { manifest, handleHh4k, parseId, idForDetail, catalog, metaFor, streamsFor };
