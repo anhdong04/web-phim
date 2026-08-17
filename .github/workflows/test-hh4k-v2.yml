@@ -12,32 +12,14 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Test hhtq.sh with provider
+      - name: Inspect hhtq.sh player
         shell: bash
         run: |
-          node --check hh4k_provider.js
-          node <<'NODE'
-          const { HH4KProvider } = require('./hh4k_provider');
-          (async () => {
-            const p = new HH4KProvider({ mainUrl: 'https://hhtq.sh', timeoutMs: 15000 });
-            for (const path of ['moi-cap-nhat','']) {
-              try {
-                const page = await p.fetchCategoryPage(path || 'moi-cap-nhat', 1);
-                console.log('PATH', path || '/', 'ITEMS', page.items.length);
-                console.log('SAMPLE', JSON.stringify(page.items.slice(0,3), null, 2));
-                if (!page.items.length) continue;
-                const d = await p.loadDetail(page.items[0].detailUrl);
-                console.log('DETAIL', d.title, 'EPS', d.episodes.length, d.detailUrl);
-                console.log('EPSAMPLE', JSON.stringify(d.episodes.slice(0,3), null, 2));
-                if (d.episodes.length) {
-                  try {
-                    const links = await p.resolveStreamLinks(d.episodes[0].watchUrl);
-                    console.log('STREAMS', JSON.stringify(links.slice(0,3), null, 2));
-                  } catch(e) { console.log('STREAM_ERR', e.message); }
-                }
-                break;
-              } catch(e) { console.log('PATH_ERR', path, e.message); }
-            }
-          })().catch(e => { console.error(e); process.exit(1); });
-          NODE
+          set +e
+          u='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html'
+          curl -L -sS --max-time 25 -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' "$u" -o /tmp/page
+          echo "bytes=$(wc -c </tmp/page)"
+          echo '=== URLs / player markers ==='
+          grep -Eio 'https?:[^"'"'"' <>\\]+' /tmp/page | grep -Ei 'm3u8|mp4|embed|player|stream|video|ajax|api' | head -n 80
+          echo '=== relevant lines ==='
+          grep -Ein 'm3u8|\.mp4|iframe|data-(src|url|file|embed)|jwplayer|halim|ajax|player|source|video' /tmp/page | head -n 160
