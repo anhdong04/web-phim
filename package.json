@@ -1,11 +1,11 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "6.5.9",
-  "description": "Web Phim with curated Vietnam, Kids and Football IPTV catalogs for Nuvio",
-  "main": "addon_v641.js",
+  "version": "6.5.10",
+  "description": "Web Phim with curated Vietnam, Kids, Football and standalone HH4K addon for Nuvio",
+  "main": "addon_v650.js",
   "scripts": {
-    "start": "node addon_v641.js",
-    "check": "node --check addon_v641.js && node --check addon_v641_legacy.js"
+    "start": "node addon_v650.js",
+    "check": "node --check addon_v650.js && node --check hh4k_bridge.js && node --check hh4k_provider.js && node --check addon_v641.js && node --check addon_v641_legacy.js"
   },
   "dependencies": {
     "puppeteer-core": "^24.0.0"
