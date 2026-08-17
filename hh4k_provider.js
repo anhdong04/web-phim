@@ -1,8 +1,19 @@
 'use strict';
 
-// Clean JS port of the uploaded PhimHhtqProvider.kt.
+// HH4K/HHTQ provider. Parser follows the uploaded HaLim provider flow,
+// using an accessible HHTQ 4K mirror for server-side Nuvio deployment.
 const DEFAULT_UA = 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36';
-const DEFAULT_BASE = 'https://phimhhtq.com';
+const DEFAULT_BASE = 'https://hhtq.sh';
+const PLAYER_TYPES = [
+  ['vip4k_v2', 'Vietsub 4K V2'],
+  ['vip4k', 'Vietsub 4K V1'],
+  ['pro', 'Vietsub 1080 V2'],
+  ['tiktik', 'Vietsub 1080 V1'],
+  ['vip4ktm_v2', 'Thuyết minh 4K V2'],
+  ['vip4ktm', 'Thuyết minh 4K V1'],
+  ['pro_tm', 'Thuyết minh 1080 V2'],
+  ['tiktm', 'Thuyết minh 1080 V1']
+];
 
 const uniq = (arr, key = x => x) => {
   const seen = new Set();
@@ -17,7 +28,7 @@ function attr(tag, name) {
   if (!m) m = String(tag || '').match(new RegExp(`\\b${safe}\\s*=\\s*([^\\s>]+)`, 'i'));
   return decodeHtml(m?.[1] || '');
 }
-const classHas = (tag, token) => new RegExp(`(?:^|\\s)${token}(?:\\s|$)`, 'i').test(attr(tag, 'class'));
+const classHas = (tag, token) => new RegExp(`(?:^|\\s)${String(token).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}(?:\\s|$)`, 'i').test(attr(tag, 'class'));
 function fixUrl(raw, base) {
   const v = decodeHtml(String(raw || '').trim()).replace(/\\\//g, '/');
   if (!v) return null;
@@ -55,7 +66,7 @@ function parseListItem(block, base) {
     const open = m[0].match(/^<span\b[^>]*>/i)?.[0] || '';
     if (classHas(open, 'episode')) { episodeLabel = strip(m[0]) || null; break; }
   }
-  return { title, detailUrl, posterUrl, episodeLabel, qualityLabel: null };
+  return { title, detailUrl, posterUrl, episodeLabel, qualityLabel: episodeLabel?.match(/\[(?:4K|HD|1080P?)\]/i)?.[0] || null };
 }
 function parseListItems(html, base) {
   const out = [];
@@ -69,22 +80,34 @@ function parseListItems(html, base) {
 }
 function parseEpisodes(html, base) {
   const out = [];
-  const ul = [...String(html).matchAll(/<ul\b[^>]*>[\s\S]*?<\/ul>/gi)].find(m => classHas(m[0].match(/^<ul\b[^>]*>/i)?.[0] || '', 'halim-list-eps'))?.[0] || String(html);
+  const full = String(html);
+  const ul = [...full.matchAll(/<ul\b[^>]*>[\s\S]*?<\/ul>/gi)].find(m => classHas(m[0].match(/^<ul\b[^>]*>/i)?.[0] || '', 'halim-list-eps'))?.[0] || full;
   for (const m of ul.matchAll(/<li\b[^>]*>[\s\S]*?<\/li>/gi)) {
     const liOpen = m[0].match(/^<li\b[^>]*>/i)?.[0] || '';
-    if (ul !== html && !classHas(liOpen, 'halim-episode')) continue;
+    if (ul !== full && !classHas(liOpen, 'halim-episode')) continue;
     const a = m[0].match(/<a\b[^>]*>[\s\S]*?<\/a>/i)?.[0] || '';
     const aOpen = a.match(/^<a\b[^>]*>/i)?.[0] || '';
-    const label = strip(a), watchUrl = fixUrl(attr(aOpen,'href'), base);
-    if (!label || !watchUrl) continue;
-    const n = label.match(/\d+(?:\.\d+)?/)?.[0];
-    out.push({ name: `Tập ${label}`, number: n ? Number(n) : null, watchUrl, serverName: 'Halim', vip: false });
+    const rawLabel = strip(a).trim();
+    const watchUrl = fixUrl(attr(aOpen,'href'), base);
+    if (!rawLabel || !watchUrl) continue;
+    const cleanLabel = rawLabel.replace(/^Tập\s+/i, '').trim();
+    const n = cleanLabel.match(/\d+(?:\.\d+)?/)?.[0];
+    out.push({
+      name: `Tập ${cleanLabel}`,
+      number: n ? Number(n) : null,
+      watchUrl,
+      serverName: 'HHTQ',
+      vip: false,
+      postId: attr(aOpen, 'data-post-id') || null,
+      chapter: attr(aOpen, 'data-ep') || null,
+      server: attr(aOpen, 'data-sv') || '1'
+    });
   }
   return uniq(out, x => x.watchUrl);
 }
 function parseDetail(html, detailUrl, base) {
   const title = strip(tagged(html, 'h1', 'entry-title')) || strip(metaContent(html,'og:title') || '').split('|')[0].trim();
-  if (!title) throw new Error('PhimHHTQ: không đọc được tên phim');
+  if (!title) throw new Error('HH4K: không đọc được tên phim');
   let movieThumb = '';
   for (const m of String(html).matchAll(/<img\b[^>]*>/gi)) if (classHas(m[0], 'movie-thumb')) { movieThumb = m[0]; break; }
   const posterUrl = fixUrl(attr(movieThumb,'src'), base) || fixUrl(metaContent(html,'og:image'), base);
@@ -95,23 +118,25 @@ function parseDetail(html, detailUrl, base) {
   let overview = null;
   const entry = tagged(html, 'div', 'entry-content');
   if (entry) overview = strip(entry.match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)?.[1] || entry) || null;
-  return { title, detailUrl, posterUrl, bannerUrl, overview, year: year ? Number(year) : null, genres: ['Hoạt hình Trung Quốc'], episodes: parseEpisodes(html, base), recommendations: [] };
+  return { title, detailUrl, posterUrl, bannerUrl, overview, year: year ? Number(year) : null, genres: ['Hoạt hình Trung Quốc', '4K'], episodes: parseEpisodes(html, base), recommendations: [] };
 }
-function parseHalimWatchPageParams(html, watchUrl) {
-  const cfg = String(html).match(/var\s+halim_cfg\s*=\s*\{([^}]+)\}/i)?.[1] || '';
-  const postId = cfg.match(/post_id\s*:\s*(\d+)/i)?.[1] || String(html).match(/postid-(\d+)/i)?.[1] || String(html).match(/post_id\s*:\s*(\d+)/i)?.[1];
-  const nonce = String(html).match(/ajax_player\s*=\s*\{[^}]*["']nonce["']\s*:\s*["']([a-zA-Z0-9]+)["']/i)?.[1];
-  if (!postId) throw new Error('PhimHHTQ: không tìm thấy post_id');
-  if (!nonce) throw new Error('PhimHHTQ: không tìm thấy nonce (ajax_player)');
-  const ep = String(watchUrl).match(/-tap-(\d+)-sv-(\d+)/i);
-  return { postId, nonce, episode: cfg.match(/episode\s*:\s*(\d+)/i)?.[1] || ep?.[1] || '1', server: cfg.match(/server\s*:\s*(\d+)/i)?.[1] || ep?.[2] || '1' };
-}
-function extractStreamUrlFromPlayerResponse(text) {
-  for (const m of String(text).matchAll(/["']file["']\s*:\s*["']([^"']+)["']/gi)) {
-    const u = m[1].trim().replace(/\\\//g,'/').replace(/\\/g,'');
-    if (/^https?:\/\//i.test(u)) return u;
+function activePlayerParams(html, watchUrl) {
+  const full = String(html);
+  let selected = '';
+  for (const m of full.matchAll(/<a\b[^>]*data-post-id=[^>]*>/gi)) {
+    const href = fixUrl(attr(m[0], 'href'), DEFAULT_BASE);
+    if (href === watchUrl || /\bactive\b/i.test(full.slice(Math.max(0,m.index-160),m.index))) { selected = m[0]; break; }
+    if (!selected) selected = m[0];
   }
-  return String(text).match(/https?:\/\/[^\s"'\\]+?\.m3u8[^\s"'\\]*/i)?.[0]?.replace(/\\\//g,'/') || null;
+  const postId = attr(selected,'data-post-id') || full.match(/var\s+DoPostInfo\s*=\s*\{[\s\S]*?\bid\s*:\s*(\d+)/i)?.[1] || full.match(/data-id=["'](\d+)["']/i)?.[1];
+  const chapter = attr(selected,'data-ep') || String(watchUrl).match(/\/(tap-[^/.]+)\.html/i)?.[1];
+  const server = attr(selected,'data-sv') || '1';
+  if (!postId || !chapter) throw new Error('HH4K: thiếu tham số player');
+  return { postId, chapter, server };
+}
+function iframeUrl(html, base) {
+  const iframe = String(html).match(/<iframe\b[^>]*>/i)?.[0] || '';
+  return fixUrl(attr(iframe,'src') || attr(iframe,'data-src'), base);
 }
 
 class HH4KProvider {
@@ -135,12 +160,23 @@ class HH4KProvider {
   async loadDetail(url) { const base=this.getBaseUrl(); return this.cached(`detail:${url}`,async()=>parseDetail(await this.fetchText(url,base),url,base)); }
   async resolveStreamLinks(watchUrl) {
     return this.cached(`stream:${watchUrl}`, async()=>{
-      const base=this.getBaseUrl(), html=await this.fetchText(watchUrl,base), p=parseHalimWatchPageParams(html,watchUrl);
-      const body=new URLSearchParams({action:'halim_ajax_player',nonce:p.nonce,postid:p.postId,episode:p.episode,server:p.server});
-      const r=await this.rawFetch(`${base}/wp-admin/admin-ajax.php`,{method:'POST',headers:{'User-Agent':DEFAULT_UA,Referer:watchUrl,Origin:base,Accept:'*/*','Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},body:body.toString()});
-      if(!r.ok)throw new Error(`PhimHHTQ AJAX HTTP ${r.status}`); const url=extractStreamUrlFromPlayerResponse(await r.text()); if(!url)throw new Error('PhimHHTQ: không tìm thấy file stream');
-      return [{serverName:`Server ${p.server}`,url,isM3u8:/\.m3u8(?:$|\?)/i.test(url),headers:{Referer:watchUrl,'User-Agent':DEFAULT_UA},sourceUrl:watchUrl}];
+      const base=this.getBaseUrl();
+      const html=await this.fetchText(watchUrl,base);
+      const p=activePlayerParams(html,watchUrl);
+      const out=[];
+      for (const [type,label] of PLAYER_TYPES) {
+        try {
+          const q=new URLSearchParams({action:'dox_ajax_player',post_id:p.postId,chapter_st:p.chapter,type,sv:p.server});
+          const r=await this.rawFetch(`${base}/player/player.php?${q.toString()}`,{headers:{'User-Agent':DEFAULT_UA,Referer:watchUrl,Accept:'text/html,*/*'}});
+          if(!r.ok) continue;
+          const embed=iframeUrl(await r.text(),base);
+          if(!embed) continue;
+          out.push({serverName:label,externalUrl:embed,url:null,isM3u8:false,headers:{Referer:watchUrl,'User-Agent':DEFAULT_UA},sourceUrl:watchUrl,embedUrl:embed});
+        } catch {}
+      }
+      if(!out.length) throw new Error('HH4K: player không trả nguồn');
+      return uniq(out,x=>x.embedUrl);
     },300000);
   }
 }
-module.exports={HH4KProvider,parseListItems,parseEpisodes,parseDetail,parseHalimWatchPageParams,extractStreamUrlFromPlayerResponse,DEFAULT_BASE};
+module.exports={HH4KProvider,parseListItems,parseEpisodes,parseDetail,activePlayerParams,iframeUrl,DEFAULT_BASE,PLAYER_TYPES};
