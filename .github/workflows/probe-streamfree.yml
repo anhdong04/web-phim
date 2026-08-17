@@ -13,24 +13,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Node dependencies
-        run: npm install --omit=dev
-      - name: Find browser and resolve HHTQ watch page to HLS
+      - run: npm install --omit=dev
+      - name: Trace HHTQ player requests
         shell: bash
-        env:
-          HHKUNGFU_HLS_TIMEOUT_MS: '45000'
-          HHKUNGFU_HLS_ATTEMPTS: '1'
         run: |
           set -e
-          echo "google-chrome=$(command -v google-chrome || true) chromium=$(command -v chromium || true)"
-          export HHKUNGFU_CHROMIUM_PATH="$(command -v google-chrome || command -v chromium || true)"
-          test -n "$HHKUNGFU_CHROMIUM_PATH"
+          export BROWSER="$(command -v google-chrome || command -v chromium || true)"
+          test -n "$BROWSER"
           node <<'NODE'
-          const { resolveHls } = require('./v647_hhkungfu_resolver');
+          const puppeteer=require('puppeteer-core');
+          const fs=require('node:fs');
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           (async()=>{
-            const watch='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html';
-            const hls=await resolveHls(watch,'hh4k-hhtq-tien-nghich-154');
-            console.log('DIRECT_HLS',hls);
-            if(!hls || !/\.m3u8/i.test(hls)) throw new Error('No direct HLS');
+            const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
+            const page=await browser.newPage();
+            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36');
+            const interesting=[];
+            page.on('request',req=>{
+              const u=req.url();
+              if(/m3u8|\.mp4|helvid|streamfree|player\.php|cdn\/stream|master|playlist|manifest/i.test(u)) {
+                interesting.push(['REQ',req.resourceType(),u]);
+                console.log('REQ',req.resourceType(),u);
+              }
+            });
+            page.on('response',async res=>{
+              const u=res.url();
+              if(/m3u8|\.mp4|helvid|streamfree|player\.php|cdn\/stream|master|playlist|manifest/i.test(u)) console.log('RES',res.status(),u);
+            });
+            await page.goto('https://hhtq.sh/tu-tien/tien-nghich/tap-154.html',{waitUntil:'domcontentloaded',timeout:45000});
+            for(let i=0;i<25;i++){
+              await sleep(500);
+              for(const f of page.frames()){
+                if(/streamfree|player/i.test(f.url())) {
+                  const text=await f.evaluate(()=>document.body?.innerText?.slice(0,1000)||'').catch(()=>'<eval failed>');
+                  console.log('FRAME',f.url(),'TEXT',JSON.stringify(text));
+                  const jw=await f.evaluate(()=>{try{return typeof jwplayer==='function' ? (jwplayer().getPlaylist?.()||[]) : []}catch{return[]}}).catch(()=>[]);
+                  if(jw?.length) console.log('JW',JSON.stringify(jw).slice(0,5000));
+                }
+              }
+            }
+            console.log('FRAMES',page.frames().map(f=>f.url()));
+            console.log('INTERESTING_COUNT',interesting.length);
+            await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
