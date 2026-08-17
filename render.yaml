@@ -1,11 +1,12 @@
 services:
   - type: web
     name: kkphim-nuvio-addon
-    runtime: node
+    runtime: docker
     plan: free
-    buildCommand: npm install
-    startCommand: npm start
+    region: singapore
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     healthCheckPath: /manifest.json
-    envVars:
-      - key: NODE_VERSION
-        value: 20
+    autoDeployTrigger: commit
+    renderSubdomainPolicy: enabled
