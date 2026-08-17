@@ -12,25 +12,71 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Locate anti-devtools detector object
+      - uses: actions/checkout@v4
+      - run: npm install --omit=dev
+      - name: Patch anti-devtools and capture HLS
         shell: bash
         run: |
           set -e
-          ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36'
-          ref='https://streamfree.vip/embed/v/xbwJ5CT4'
-          curl -L -sS --max-time 25 -A "$ua" -e "$ref" 'https://streamfree.vip/public/static/app.bb288bfe.js' -o /tmp/app.js
-          python3 <<'PY'
-          s=open('/tmp/app.js','r',encoding='utf-8',errors='ignore').read()
-          terms=['_0xfcc099=','var _0xfcc099','let _0xfcc099','const _0xfcc099',"_0xfcc099['co']","_0xfcc099['al']",'_0xfcc099.co','_0xfcc099.al']
-          for term in terms:
-              print('\n===== '+term+' =====')
-              start=0;c=0
-              while c<20:
-                  i=s.find(term,start)
-                  if i<0: break
-                  print('AT',i)
-                  print(s[max(0,i-5000):min(len(s),i+9000)])
-                  print('\n---')
-                  start=i+len(term);c+=1
-              print('COUNT',c)
-          PY
+          export BROWSER="$(command -v google-chrome || command -v chromium || true)"
+          test -n "$BROWSER"
+          node <<'NODE'
+          const puppeteer=require('puppeteer-core');
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36';
+          (async()=>{
+            const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
+            const page=await browser.newPage();
+            await page.setUserAgent(UA);
+            await page.setRequestInterception(true);
+            let patched=false;
+            const media=[];
+            page.on('request',async req=>{
+              const u=req.url();
+              try{
+                if(/streamfree\.vip\/public\/static\/app\.[a-f0-9]+\.js/i.test(u)){
+                  const r=await fetch(u,{headers:{'user-agent':UA,'referer':'https://streamfree.vip/embed/v/xbwJ5CT4'}});
+                  let body=await r.text();
+                  const re=/var (_0x[a-f0-9]+)=new (_0x[a-f0-9]+)\((_0x[a-f0-9]+)\);/g;
+                  const candidates=[...body.matchAll(re)];
+                  let replaced=0;
+                  for(const m of candidates){
+                    const v=m[1];
+                    const co=(body.match(new RegExp(v.replace(/[$]/g,'\\$&')+"\\['co'\\]\\(\\)", 'g'))||[]).length;
+                    const al=(body.match(new RegExp(v.replace(/[$]/g,'\\$&')+"\\['al'\\]\\(", 'g'))||[]).length;
+                    if(co===2 && al===1){
+                      const replacement=`var ${v}={co:function(){return Promise.resolve(false);},al:function(){return void 0;}};`;
+                      body=body.replace(m[0],replacement); replaced++;
+                      console.log('PATCHED_DETECTOR',v,'co',co,'al',al);
+                      break;
+                    }
+                  }
+                  if(!replaced) throw new Error('anti-devtools detector pattern not found');
+                  patched=true;
+                  return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
+                }
+                if(/\.m3u8(?:$|[?#])/i.test(u) || /\.mp4(?:$|[?#])/i.test(u)){
+                  media.push(u); console.log('MEDIA_REQ',req.resourceType(),u);
+                }
+                return req.continue();
+              }catch(e){console.log('INTERCEPT_ERR',u,e.message); try{return req.continue();}catch{}}
+            });
+            page.on('response',res=>{const u=res.url(); if(/\.m3u8(?:$|[?#])/i.test(u)||/\.mp4(?:$|[?#])/i.test(u)) console.log('MEDIA_RES',res.status(),u);});
+            await page.goto('https://hhtq.sh/tu-tien/tien-nghich/tap-154.html',{waitUntil:'domcontentloaded',timeout:45000});
+            for(let i=0;i<60 && !media.length;i++){
+              await sleep(500);
+              for(const f of page.frames()){
+                if(/streamfree/i.test(f.url())){
+                  const text=await f.evaluate(()=>document.body?.innerText?.slice(0,500)||'').catch(()=> '');
+                  if(text) console.log('FRAME_TEXT',JSON.stringify(text));
+                  const pl=await f.evaluate(()=>{try{return typeof jwplayer==='function'?(jwplayer().getPlaylist?.()||[]):[]}catch{return[]}}).catch(()=>[]);
+                  if(pl?.length) console.log('JW_PLAYLIST',JSON.stringify(pl).slice(0,6000));
+                }
+              }
+            }
+            console.log('PATCHED',patched,'MEDIA_COUNT',media.length,'MEDIA',media);
+            await browser.close();
+            if(!patched) throw new Error('JS was not patched');
+            if(!media.some(u=>/\.m3u8/i.test(u))) throw new Error('No direct m3u8 captured');
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
