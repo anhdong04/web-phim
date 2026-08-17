@@ -12,24 +12,32 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe HHTQ mirrors
+      - uses: actions/checkout@v4
+      - name: Test hhtq.sh with provider
         shell: bash
         run: |
-          set +e
-          urls=(
-            'https://hhtq.sh/'
-            'https://hhtq.app/'
-            'https://hoathinhtrungquoc.vip/'
-            'https://hhninja2.fun/'
-            'https://phimgenz.com/'
-            'https://hhtq.dog/'
-          )
-          for u in "${urls[@]}"; do
-            echo "===== $u ====="
-            curl -L -sS --max-time 20 -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' -D /tmp/h "$u" -o /tmp/b
-            code=$(awk '/^HTTP/{c=$2} END{print c}' /tmp/h)
-            echo "status=$code bytes=$(wc -c </tmp/b)"
-            grep -Eio 'Phàm Nhân|Tiên Nghịch|Mới Cập Nhật|halim|episode|m3u8|Just a moment|security verification' /tmp/b | head -n 20
-            head -c 700 /tmp/b
-            echo
-          done
+          node --check hh4k_provider.js
+          node <<'NODE'
+          const { HH4KProvider } = require('./hh4k_provider');
+          (async () => {
+            const p = new HH4KProvider({ mainUrl: 'https://hhtq.sh', timeoutMs: 15000 });
+            for (const path of ['moi-cap-nhat','']) {
+              try {
+                const page = await p.fetchCategoryPage(path || 'moi-cap-nhat', 1);
+                console.log('PATH', path || '/', 'ITEMS', page.items.length);
+                console.log('SAMPLE', JSON.stringify(page.items.slice(0,3), null, 2));
+                if (!page.items.length) continue;
+                const d = await p.loadDetail(page.items[0].detailUrl);
+                console.log('DETAIL', d.title, 'EPS', d.episodes.length, d.detailUrl);
+                console.log('EPSAMPLE', JSON.stringify(d.episodes.slice(0,3), null, 2));
+                if (d.episodes.length) {
+                  try {
+                    const links = await p.resolveStreamLinks(d.episodes[0].watchUrl);
+                    console.log('STREAMS', JSON.stringify(links.slice(0,3), null, 2));
+                  } catch(e) { console.log('STREAM_ERR', e.message); }
+                }
+                break;
+              } catch(e) { console.log('PATH_ERR', path, e.message); }
+            }
+          })().catch(e => { console.error(e); process.exit(1); });
+          NODE
