@@ -14,30 +14,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm install --omit=dev
-      - name: Probe all unique Streamfree video IDs
+      - name: Probe HH4K sources inside HHTQ iframe context
         shell: bash
         run: |
           set -o pipefail
           export BROWSER="$(command -v google-chrome || command -v chromium || true)"
           test -n "$BROWSER"
-          node <<'NODE' 2>&1 | tee hh4k-server-status.log
+          node <<'NODE' 2>&1 | tee hh4k-iframe-status.log
           const puppeteer=require('puppeteer-core');
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           const WATCH='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html';
-          const EMBEDS=[
-            ['Vietsub 4K','https://streamfree.vip/embed/v/YKDs8Q0X'],
-            ['Vietsub 1080','https://streamfree.vip/embed/v/xbwJ5CT4'],
-            ['Thuyet minh 4K','https://streamfree.vip/embed/v/JulD6U5B'],
-            ['Thuyet minh 1080','https://streamfree.vip/embed/v/3aP2w8CJ']
+          const SOURCES=[
+            ['Vietsub 4K','YKDs8Q0X','https://streamfree.vip/embed/v/YKDs8Q0X'],
+            ['Vietsub 1080','xbwJ5CT4','https://streamfree.vip/embed/v/xbwJ5CT4'],
+            ['Thuyet minh 4K','JulD6U5B','https://streamfree.vip/embed/v/JulD6U5B'],
+            ['Thuyet minh 1080','3aP2w8CJ','https://streamfree.vip/embed/v/3aP2w8CJ']
           ];
-          async function stealth(page){
-            await page.evaluateOnNewDocument(()=>{
-              try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined});}catch{}
-              try{Object.defineProperty(navigator,'languages',{get:()=>['vi-VN','vi','en-US','en']});}catch{}
-              try{Object.defineProperty(navigator,'plugins',{get:()=>[1,2,3,4,5]});}catch{}
-              try{if(!window.chrome)window.chrome={runtime:{}};}catch{}
-            });
-          }
           function patchApp(body){
             const re=/var (_0x[a-f0-9]+)=new (_0x[a-f0-9]+)\((_0x[a-f0-9]+)\);/g;
             for(const m of body.matchAll(re)){
@@ -49,26 +41,48 @@ jobs:
             }
             return body;
           }
+          async function prepare(page){
+            await page.evaluateOnNewDocument(()=>{
+              try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined});}catch{}
+              try{Object.defineProperty(navigator,'languages',{get:()=>['vi-VN','vi','en-US','en']});}catch{}
+              try{Object.defineProperty(navigator,'plugins',{get:()=>[1,2,3,4,5]});}catch{}
+              try{if(!window.chrome)window.chrome={runtime:{}};}catch{}
+            });
+            await page.setRequestInterception(true);
+            page.on('request',async req=>{
+              const u=req.url();
+              try{
+                if(/streamfree\.vip\/public\/static\/app\.[a-f0-9]+\.js/i.test(u)){
+                  const r=await fetch(u,{headers:{...req.headers(),referer:'https://streamfree.vip/'}});
+                  return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body:patchApp(await r.text())});
+                }
+                return req.continue();
+              }catch{try{return req.continue();}catch{}}
+            });
+          }
           (async()=>{
             const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-blink-features=AutomationControlled','--autoplay-policy=no-user-gesture-required']});
             const results=[];
-            for(const [name,embed] of EMBEDS){
-              const page=await browser.newPage(); await stealth(page); await page.setRequestInterception(true);
+            for(const [name,vid,embed] of SOURCES){
+              const page=await browser.newPage(); await prepare(page);
               let hlsUrl='',status=0,bodyHead='',headers={};
-              page.on('request',async req=>{
-                const u=req.url();
-                try{
-                  if(/streamfree\.vip\/public\/static\/app\.[a-f0-9]+\.js/i.test(u)){
-                    const r=await fetch(u,{headers:{...req.headers(),referer:'https://streamfree.vip/'}}); let body=patchApp(await r.text());
-                    return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
-                  }
-                  if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(u)){hlsUrl=u;headers=req.headers();}
-                  return req.continue();
-                }catch{try{return req.continue();}catch{}}
-              });
-              page.on('response',async res=>{if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(res.url())){status=res.status();try{bodyHead=(await res.text()).slice(0,300);}catch{}}});
-              try{await page.goto(embed,{waitUntil:'domcontentloaded',timeout:30000,referer:WATCH});for(let i=0;i<40&&(!hlsUrl||!status);i++)await sleep(250);}catch(e){console.log('PAGE_ERR',name,String(e));}
-              const item={name,embed,hlsUrl,status,bodyHead,headers}; results.push(item); console.log('SERVER_RESULT',JSON.stringify(item));
+              page.on('request',req=>{try{const u=new URL(req.url());if(/\/hls\/.*\.m3u8$/i.test(u.pathname)&&u.searchParams.get('vid')===vid){hlsUrl=req.url();headers=req.headers();}}catch{}});
+              page.on('response',async res=>{try{const u=new URL(res.url());if(/\/hls\/.*\.m3u8$/i.test(u.pathname)&&u.searchParams.get('vid')===vid){status=res.status();try{bodyHead=(await res.text()).slice(0,400);}catch{}}}catch{}});
+              try{
+                await page.goto(WATCH,{waitUntil:'domcontentloaded',timeout:45000});
+                await sleep(1000);
+                const changed=await page.evaluate(src=>{
+                  let old=[...document.querySelectorAll('iframe')].find(x=>/streamfree\.vip/i.test(x.src));
+                  if(!old) old=document.querySelector('iframe');
+                  if(!old) return false;
+                  const f=document.createElement('iframe');
+                  for(const a of old.attributes) if(a.name!=='src') f.setAttribute(a.name,a.value);
+                  f.src=src; old.replaceWith(f); return true;
+                },embed);
+                console.log('IFRAME_SET',name,changed);
+                for(let i=0;i<48&&(!hlsUrl||!status);i++)await sleep(250);
+              }catch(e){console.log('PAGE_ERR',name,String(e));}
+              const item={name,vid,embed,hlsUrl,status,bodyHead,headers}; results.push(item); console.log('SOURCE_RESULT',JSON.stringify(item));
               await page.close();
             }
             console.log('ALL_RESULTS',JSON.stringify(results));
@@ -79,6 +93,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hh4k-server-status
-          path: hh4k-server-status.log
+          name: hh4k-iframe-status
+          path: hh4k-iframe-status.log
           retention-days: 1
