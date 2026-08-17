@@ -14,22 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm install --omit=dev
-      - name: Probe HH4K sources inside HHTQ iframe context
+      - name: Probe latest HH4K episode in headful Chrome
         shell: bash
         run: |
           set -o pipefail
           export BROWSER="$(command -v google-chrome || command -v chromium || true)"
           test -n "$BROWSER"
-          node <<'NODE' 2>&1 | tee hh4k-iframe-status.log
+          command -v xvfb-run
+          xvfb-run -a node <<'NODE' 2>&1 | tee hh4k-headful-latest.log
           const puppeteer=require('puppeteer-core');
+          const {HH4KProvider}=require('./hh4k_provider');
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-          const WATCH='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html';
-          const SOURCES=[
-            ['Vietsub 4K','YKDs8Q0X','https://streamfree.vip/embed/v/YKDs8Q0X'],
-            ['Vietsub 1080','xbwJ5CT4','https://streamfree.vip/embed/v/xbwJ5CT4'],
-            ['Thuyet minh 4K','JulD6U5B','https://streamfree.vip/embed/v/JulD6U5B'],
-            ['Thuyet minh 1080','3aP2w8CJ','https://streamfree.vip/embed/v/3aP2w8CJ']
-          ];
           function patchApp(body){
             const re=/var (_0x[a-f0-9]+)=new (_0x[a-f0-9]+)\((_0x[a-f0-9]+)\);/g;
             for(const m of body.matchAll(re)){
@@ -41,14 +36,25 @@ jobs:
             }
             return body;
           }
-          async function prepare(page){
+          (async()=>{
+            const provider=new HH4KProvider({mainUrl:'https://hhtq.sh',timeoutMs:20000,cacheTtlMs:30000});
+            const cat=await provider.fetchCategoryPage('moi-cap-nhat',1);
+            let picked=null;
+            for(const item of cat.items.slice(0,8)){
+              try{const d=await provider.loadDetail(item.detailUrl);if(d.episodes?.length){picked={item,detail:d,ep:d.episodes[0]};break;}}catch{}
+            }
+            if(!picked)throw new Error('No current HH4K episode');
+            const WATCH=picked.ep.watchUrl;
+            console.log('LATEST_PICK',JSON.stringify({title:picked.detail.title,watchUrl:WATCH,episode:picked.ep.name}));
+            const browser=await puppeteer.launch({headless:false,executablePath:process.env.BROWSER,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-blink-features=AutomationControlled','--autoplay-policy=no-user-gesture-required','--window-size=1365,768']});
+            const page=await browser.newPage();
             await page.evaluateOnNewDocument(()=>{
               try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined});}catch{}
               try{Object.defineProperty(navigator,'languages',{get:()=>['vi-VN','vi','en-US','en']});}catch{}
-              try{Object.defineProperty(navigator,'plugins',{get:()=>[1,2,3,4,5]});}catch{}
               try{if(!window.chrome)window.chrome={runtime:{}};}catch{}
             });
             await page.setRequestInterception(true);
+            let hlsUrl='',status=0,bodyHead='',headers={};
             page.on('request',async req=>{
               const u=req.url();
               try{
@@ -56,36 +62,19 @@ jobs:
                   const r=await fetch(u,{headers:{...req.headers(),referer:'https://streamfree.vip/'}});
                   return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body:patchApp(await r.text())});
                 }
+                if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(u)){hlsUrl=u;headers=req.headers();console.log('HLS_REQ',u);}
                 return req.continue();
               }catch{try{return req.continue();}catch{}}
             });
-          }
-          (async()=>{
-            const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-blink-features=AutomationControlled','--autoplay-policy=no-user-gesture-required']});
-            const results=[];
-            for(const [name,vid,embed] of SOURCES){
-              const page=await browser.newPage(); await prepare(page);
-              let hlsUrl='',status=0,bodyHead='',headers={};
-              page.on('request',req=>{try{const u=new URL(req.url());if(/\/hls\/.*\.m3u8$/i.test(u.pathname)&&u.searchParams.get('vid')===vid){hlsUrl=req.url();headers=req.headers();}}catch{}});
-              page.on('response',async res=>{try{const u=new URL(res.url());if(/\/hls\/.*\.m3u8$/i.test(u.pathname)&&u.searchParams.get('vid')===vid){status=res.status();try{bodyHead=(await res.text()).slice(0,400);}catch{}}}catch{}});
-              try{
-                await page.goto(WATCH,{waitUntil:'domcontentloaded',timeout:45000});
-                await sleep(1000);
-                const changed=await page.evaluate(src=>{
-                  let old=[...document.querySelectorAll('iframe')].find(x=>/streamfree\.vip/i.test(x.src));
-                  if(!old) old=document.querySelector('iframe');
-                  if(!old) return false;
-                  const f=document.createElement('iframe');
-                  for(const a of old.attributes) if(a.name!=='src') f.setAttribute(a.name,a.value);
-                  f.src=src; old.replaceWith(f); return true;
-                },embed);
-                console.log('IFRAME_SET',name,changed);
-                for(let i=0;i<48&&(!hlsUrl||!status);i++)await sleep(250);
-              }catch(e){console.log('PAGE_ERR',name,String(e));}
-              const item={name,vid,embed,hlsUrl,status,bodyHead,headers}; results.push(item); console.log('SOURCE_RESULT',JSON.stringify(item));
-              await page.close();
-            }
-            console.log('ALL_RESULTS',JSON.stringify(results));
+            page.on('response',async res=>{
+              if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(res.url())){status=res.status();try{bodyHead=(await res.text()).slice(0,1000);}catch{}console.log('HLS_RESPONSE',status,JSON.stringify(bodyHead));}
+            });
+            await page.goto(WATCH,{waitUntil:'domcontentloaded',timeout:45000});
+            for(let i=0;i<80&&(!hlsUrl||!status);i++)await sleep(250);
+            const frames=[];
+            for(const f of page.frames())if(/streamfree/i.test(f.url())){const x=await f.evaluate(()=>({url:location.href,ua:navigator.userAgent,playlist:typeof jwplayer==='function'?jwplayer().getPlaylist?.():null,state:typeof jwplayer==='function'?jwplayer().getState?.():null})).catch(e=>({url:f.url(),err:String(e)}));frames.push(x);}
+            console.log('FRAME_STATE',JSON.stringify(frames).slice(0,12000));
+            console.log('RESULT',JSON.stringify({title:picked.detail.title,watchUrl:WATCH,hlsUrl,status,bodyHead,headers}));
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
@@ -93,6 +82,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hh4k-iframe-status
-          path: hh4k-iframe-status.log
+          name: hh4k-headful-latest
+          path: hh4k-headful-latest.log
           retention-days: 1
