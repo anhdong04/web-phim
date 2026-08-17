@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm install --omit=dev
-      - name: Patch anti-devtools and capture HLS
+      - name: Trace player after anti-devtools patch
         shell: bash
         run: |
           set -e
@@ -28,9 +28,12 @@ jobs:
             const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
             const page=await browser.newPage();
             await page.setUserAgent(UA);
+            page.on('console',msg=>console.log('CONSOLE',msg.type(),msg.text().slice(0,2000)));
+            page.on('pageerror',e=>console.log('PAGEERROR',String(e?.stack||e).slice(0,4000)));
+            page.on('framenavigated',f=>console.log('FRAME_NAV',f.url()));
+            page.on('requestfailed',req=>console.log('REQ_FAIL',req.failure()?.errorText,req.url()));
             await page.setRequestInterception(true);
-            let patched=false;
-            const media=[];
+            let patched=false; const media=[]; const net=[];
             page.on('request',async req=>{
               const u=req.url();
               try{
@@ -38,45 +41,37 @@ jobs:
                   const r=await fetch(u,{headers:{'user-agent':UA,'referer':'https://streamfree.vip/embed/v/xbwJ5CT4'}});
                   let body=await r.text();
                   const re=/var (_0x[a-f0-9]+)=new (_0x[a-f0-9]+)\((_0x[a-f0-9]+)\);/g;
-                  const candidates=[...body.matchAll(re)];
-                  let replaced=0;
-                  for(const m of candidates){
-                    const v=m[1];
-                    const co=(body.match(new RegExp(v.replace(/[$]/g,'\\$&')+"\\['co'\\]\\(\\)", 'g'))||[]).length;
-                    const al=(body.match(new RegExp(v.replace(/[$]/g,'\\$&')+"\\['al'\\]\\(", 'g'))||[]).length;
-                    if(co===2 && al===1){
-                      const replacement=`var ${v}={co:function(){return Promise.resolve(false);},al:function(){return void 0;}};`;
-                      body=body.replace(m[0],replacement); replaced++;
-                      console.log('PATCHED_DETECTOR',v,'co',co,'al',al);
-                      break;
-                    }
+                  for(const m of body.matchAll(re)){
+                    const v=m[1], esc=v.replace(/[$]/g,'\\$&');
+                    const co=(body.match(new RegExp(esc+"\\['co'\\]\\(\\)",'g'))||[]).length;
+                    const al=(body.match(new RegExp(esc+"\\['al'\\]\\(",'g'))||[]).length;
+                    if(co===2&&al===1){body=body.replace(m[0],`var ${v}={co:function(){return Promise.resolve(false);},al:function(){return void 0;}};`);patched=true;console.log('PATCHED',v);break;}
                   }
-                  if(!replaced) throw new Error('anti-devtools detector pattern not found');
-                  patched=true;
                   return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
                 }
-                if(/\.m3u8(?:$|[?#])/i.test(u) || /\.mp4(?:$|[?#])/i.test(u)){
-                  media.push(u); console.log('MEDIA_REQ',req.resourceType(),u);
+                if(/streamfree|helvid|m3u8|\.mp4|cdn|playlist|manifest|api|ajax|source|token/i.test(u)){
+                  if(net.length<300){net.push(u);console.log('NET_REQ',req.resourceType(),u);}
                 }
+                if(/\.m3u8(?:$|[?#])/i.test(u)||/\.mp4(?:$|[?#])/i.test(u)){media.push(u);console.log('MEDIA_REQ',u);}
                 return req.continue();
               }catch(e){console.log('INTERCEPT_ERR',u,e.message); try{return req.continue();}catch{}}
             });
-            page.on('response',res=>{const u=res.url(); if(/\.m3u8(?:$|[?#])/i.test(u)||/\.mp4(?:$|[?#])/i.test(u)) console.log('MEDIA_RES',res.status(),u);});
+            page.on('response',res=>{
+              const u=res.url(), st=res.status();
+              if(st>=400||/streamfree|helvid|m3u8|\.mp4|playlist|manifest|api|ajax|source|token/i.test(u)) console.log('RES',st,u);
+            });
             await page.goto('https://hhtq.sh/tu-tien/tien-nghich/tap-154.html',{waitUntil:'domcontentloaded',timeout:45000});
-            for(let i=0;i<60 && !media.length;i++){
-              await sleep(500);
-              for(const f of page.frames()){
-                if(/streamfree/i.test(f.url())){
-                  const text=await f.evaluate(()=>document.body?.innerText?.slice(0,500)||'').catch(()=> '');
-                  if(text) console.log('FRAME_TEXT',JSON.stringify(text));
-                  const pl=await f.evaluate(()=>{try{return typeof jwplayer==='function'?(jwplayer().getPlaylist?.()||[]):[]}catch{return[]}}).catch(()=>[]);
-                  if(pl?.length) console.log('JW_PLAYLIST',JSON.stringify(pl).slice(0,6000));
-                }
+            for(let i=0;i<40;i++) await sleep(500);
+            console.log('FINAL_FRAMES',page.frames().map(f=>f.url()));
+            for(const f of page.frames()){
+              const info=await f.evaluate(()=>({url:location.href,text:(document.body?.innerText||'').slice(0,2000),html:(document.body?.innerHTML||'').slice(0,5000),jw:typeof jwplayer==='function'})).catch(e=>({url:f.url(),err:String(e)}));
+              console.log('FRAME_INFO',JSON.stringify(info).slice(0,8000));
+              if(info.jw){
+                const jw=await f.evaluate(()=>{try{return {state:jwplayer().getState?.(),playlist:jwplayer().getPlaylist?.(),error:jwplayer().getError?.()}}catch(e){return {err:String(e)}}}).catch(e=>({err:String(e)}));
+                console.log('JW_INFO',JSON.stringify(jw).slice(0,12000));
               }
             }
-            console.log('PATCHED',patched,'MEDIA_COUNT',media.length,'MEDIA',media);
+            console.log('SUMMARY patched=',patched,'media=',media);
             await browser.close();
-            if(!patched) throw new Error('JS was not patched');
-            if(!media.some(u=>/\.m3u8/i.test(u))) throw new Error('No direct m3u8 captured');
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
