@@ -12,25 +12,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe WordPress endpoints
+      - name: Probe correct edge reader URLs
         shell: bash
         run: |
           set +e
           urls=(
-            'https://phimhhtq.com/wp-json/'
-            'https://phimhhtq.com/wp-json/wp/v2/search?search=phim&per_page=3'
-            'https://phimhhtq.com/wp-json/wp/v2/posts?per_page=3'
-            'https://phimhhtq.com/?rest_route=/wp/v2/posts&per_page=3'
-            'https://phimhhtq.com/feed/'
-            'https://phimhhtq.com/wp-sitemap.xml'
-            'https://phimhhtq.com/wp-sitemap-posts-post-1.xml'
-            'https://phimhhtq.com/wp-admin/admin-ajax.php'
+            'https://r.jina.ai/https://phimhhtq.com/moi-cap-nhat/'
+            'https://r.jina.ai/http://phimhhtq.com/moi-cap-nhat/'
+            'https://r.jina.ai/https://www.phimhhtq.com/moi-cap-nhat/'
+            'https://r.jina.ai/https://phimhhtq.com/'
           )
           for u in "${urls[@]}"; do
             echo "===== $u ====="
-            curl -L -sS --max-time 20 -A 'Mozilla/5.0' -H 'Accept: application/json,text/xml,text/html,*/*' -D /tmp/h "$u" -o /tmp/b
-            head -n 10 /tmp/h
+            curl -L -sS --max-time 40 -D /tmp/h "$u" -o /tmp/b
+            head -n 12 /tmp/h
             echo "bytes=$(wc -c </tmp/b)"
-            head -c 900 /tmp/b
+            grep -Eio 'Phàm Nhân|Mới Cập Nhật|halim|phimhhtq|Just a moment|security verification' /tmp/b | head -n 20
+            head -c 1800 /tmp/b
             echo
           done
