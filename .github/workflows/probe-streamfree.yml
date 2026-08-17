@@ -13,27 +13,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Probe HHTQ mirrors
+      - name: Install dependencies and Chromium
         shell: bash
         run: |
-          set -e
+          npm install --omit=dev
+          sudo apt-get update -qq
+          sudo apt-get install -y chromium >/dev/null
+      - name: Resolve HHTQ watch page to HLS
+        shell: bash
+        env:
+          HHKUNGFU_HLS_TIMEOUT_MS: '45000'
+          HHKUNGFU_HLS_ATTEMPTS: '1'
+          HHKUNGFU_CHROMIUM_PATH: '/usr/bin/chromium'
+        run: |
           node <<'NODE'
-          const { HH4KProvider } = require('./hh4k_provider');
-          const domains=['https://hhtq.ee','https://hhtq.st','https://hhtq.sh','https://hhtq.hair'];
+          const { resolveHls } = require('./v647_hhkungfu_resolver');
           (async()=>{
-            for(const base of domains){
-              console.log('\n===== '+base+' =====');
-              try{
-                const p=new HH4KProvider({mainUrl:base,timeoutMs:15000,cacheTtlMs:30000});
-                const page=await p.fetchCategoryPage('moi-cap-nhat',1);
-                console.log('CAT',page.items.length,page.items.slice(0,2).map(x=>x.title));
-                if(!page.items.length) continue;
-                const d=await p.loadDetail(page.items[0].detailUrl);
-                console.log('DETAIL',d.title,'EPS',d.episodes.length,d.episodes[0]?.watchUrl);
-                if(!d.episodes.length) continue;
-                const links=await p.resolveStreamLinks(d.episodes[0].watchUrl);
-                console.log('PLAYERS',links.slice(0,8).map(x=>({name:x.serverName,embed:x.embedUrl,url:x.url})));
-              }catch(e){console.log('ERR',String(e.message||e));}
-            }
+            const watch='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html';
+            const hls=await resolveHls(watch,'hh4k-hhtq-tien-nghich-154');
+            console.log('DIRECT_HLS',hls);
+            if(!hls || !/\.m3u8/i.test(hls)) throw new Error('No direct HLS');
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
