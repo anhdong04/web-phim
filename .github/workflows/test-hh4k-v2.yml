@@ -1,0 +1,41 @@
+name: Test HH4K v2
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install --omit=dev
+      - name: Syntax and provider test
+        shell: bash
+        run: |
+          npm run check
+          node <<'NODE'
+          const { HH4KProvider } = require('./hh4k_provider');
+          (async () => {
+            const p = new HH4KProvider({ timeoutMs: 15000 });
+            const page = await p.fetchCategoryPage('moi-cap-nhat', 1);
+            console.log('BASE', p.getBaseUrl());
+            console.log('ITEMS', page.items.length);
+            console.log('SAMPLE', JSON.stringify(page.items.slice(0,3), null, 2));
+            if (!page.items.length) throw new Error('catalog empty');
+            const d = await p.loadDetail(page.items[0].detailUrl);
+            console.log('DETAIL', d.title, 'EPS', d.episodes.length);
+            console.log('EP', JSON.stringify(d.episodes.slice(0,3), null, 2));
+            if (!d.episodes.length) throw new Error('episodes empty');
+            try {
+              const links = await p.resolveStreamLinks(d.episodes[0].watchUrl);
+              console.log('STREAMS', JSON.stringify(links, null, 2));
+            } catch (e) {
+              console.log('STREAM_ERR', String(e.message || e));
+            }
+          })().catch(e => { console.error(e); process.exit(1); });
+          NODE
