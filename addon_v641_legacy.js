@@ -3,6 +3,7 @@
 // and now also exposes the isolated /vn bridge for Render services
 // whose dashboard start command is pinned to addon_v641.js.
 // Load HH4K here as well so it works even when Render pins addon_v641.js directly.
+require('./hh4k_browser_patch');
 require('./hh4k_bridge');
 const fs = require('node:fs');
 const vm = require('node:vm');
