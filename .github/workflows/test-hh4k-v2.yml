@@ -9,27 +9,46 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  live:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Validate HH4K provider
+      - name: Wait for Render and verify manifest catalog meta stream
         shell: bash
         run: |
-          node --check hh4k_provider.js
-          node --check hh4k_bridge.js
           node <<'NODE'
-          const { HH4KProvider } = require('./hh4k_provider');
+          const base='https://web-phim-zwsx.onrender.com/hh4k';
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          async function get(path){
+            const r=await fetch(base+path,{headers:{'user-agent':'HH4K-live-probe/1.2'}});
+            const text=await r.text();
+            if(!r.ok) throw new Error(`${path} HTTP ${r.status}: ${text.slice(0,300)}`);
+            return JSON.parse(text);
+          }
           (async()=>{
-            const p=new HH4KProvider({mainUrl:'https://hhtq.sh',timeoutMs:15000});
-            const page=await p.fetchCategoryPage('moi-cap-nhat',1);
-            console.log('CATALOG',page.items.length,page.items.slice(0,3).map(x=>x.title));
-            if(page.items.length<10) throw new Error('catalog too small');
-            const d=await p.loadDetail(page.items[0].detailUrl);
-            console.log('META',d.title,'EPISODES',d.episodes.length,d.episodes[0]);
-            if(!d.episodes.length) throw new Error('no episodes');
-            const links=await p.resolveStreamLinks(d.episodes[0].watchUrl);
-            console.log('PLAYERS',links.length,links.slice(0,4).map(x=>[x.serverName,x.externalUrl]));
-            if(!links.length) throw new Error('no player sources');
+            let last='';
+            for(let i=1;i<=36;i++){
+              try{
+                const mf=await get('/manifest.json');
+                last=`manifest ${mf.version} ${mf.id}`;
+                console.log(`TRY ${i}:`,last);
+                if(mf.version!=='1.2.0'||mf.id!=='vn.webphim.hh4k.v3'){await sleep(10000);continue;}
+                const cat=await get('/catalog/series/hh4k.json');
+                console.log('LIVE CATALOG',cat.metas?.length,cat.metas?.slice(0,3).map(x=>x.name));
+                if(!cat.metas?.length) throw new Error('live catalog empty');
+                const id=encodeURIComponent(cat.metas[0].id);
+                const meta=await get('/meta/series/'+id+'.json');
+                console.log('LIVE META',meta.meta?.name,'VIDEOS',meta.meta?.videos?.length);
+                if(!meta.meta?.videos?.length) throw new Error('live meta has no videos');
+                const vid=encodeURIComponent(meta.meta.videos[0].id);
+                const streams=await get('/stream/series/'+vid+'.json');
+                console.log('LIVE STREAMS',streams.streams?.length,streams.streams?.slice(0,4).map(x=>({title:x.title,url:x.url,externalUrl:x.externalUrl})));
+                if(!streams.streams?.length) throw new Error('live streams empty');
+                process.exit(0);
+              }catch(e){
+                last=String(e.message||e); console.log(`TRY ${i} ERROR:`,last);
+              }
+              await sleep(10000);
+            }
+            throw new Error('Render did not pass end-to-end check: '+last);
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
