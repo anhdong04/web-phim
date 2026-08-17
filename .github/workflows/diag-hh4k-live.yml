@@ -1,0 +1,36 @@
+name: Diagnose HH4K live route
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe Render HH4K route
+        shell: bash
+        run: |
+          set -u
+          URL='https://kkphim-nuvio-addon.onrender.com/hh4k/manifest.json'
+          ROOT='https://kkphim-nuvio-addon.onrender.com/manifest.json'
+          for i in 1 2 3 4 5 6 7 8; do
+            echo "=== attempt $i $(date -u +%FT%TZ) ==="
+            echo "--- HH4K ---"
+            code=$(curl -L -sS --max-time 30 -D /tmp/hh4k.headers -o /tmp/hh4k.body -w '%{http_code}' "$URL" || true)
+            echo "HTTP=$code"
+            cat /tmp/hh4k.headers || true
+            cat /tmp/hh4k.body || true
+            echo
+            echo "--- ROOT ---"
+            curl -L -sS --max-time 30 -D - "$ROOT" | head -c 3000 || true
+            echo
+            if [ "$code" = "200" ] && grep -q 'vn.webphim.hh4k.v1' /tmp/hh4k.body; then
+              echo 'HH4K_LIVE_OK'
+              exit 0
+            fi
+            sleep 15
+          done
+          echo 'HH4K_LIVE_NOT_READY'
+          exit 1
