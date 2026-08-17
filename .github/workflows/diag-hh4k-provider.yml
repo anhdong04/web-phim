@@ -1,0 +1,41 @@
+name: Test HH4K provider
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-provider:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test catalog and one public stream
+        shell: bash
+        run: |
+          node <<'NODE'
+          const { HH4KProvider } = require('./hh4k_provider');
+          (async () => {
+            const p = new HH4KProvider({ timeoutMs: 12000 });
+            const base = await p.getBaseUrl(true);
+            console.log('BASE', base);
+            const page = await p.fetchCategoryPage('/the-loai/moi-cap-nhap', 1);
+            console.log('ITEMS', page.items.length);
+            console.log('SAMPLE', JSON.stringify(page.items.slice(0,3), null, 2));
+            for (const item of page.items.slice(0,8)) {
+              try {
+                const d = await p.loadDetail(item.detailUrl);
+                console.log('DETAIL', d.title, 'EPS', d.episodes.length);
+                const ep = d.episodes.find(x => !x.vip);
+                if (!ep) continue;
+                console.log('PUBLIC_EP', ep.name, ep.serverName, ep.watchUrl);
+                const links = await p.resolveStreamLinks(ep.watchUrl, ep.serverName);
+                console.log('STREAMS', JSON.stringify(links.slice(0,3), null, 2));
+                if (links.length) break;
+              } catch (e) { console.log('ERR', item.title, String(e.message || e)); }
+            }
+          })().catch(e => { console.error(e); process.exit(1); });
+          NODE
