@@ -14,58 +14,64 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm install --omit=dev
-      - name: Inspect Streamfree HLS payload
+      - name: Probe all unique Streamfree video IDs
         shell: bash
         run: |
           set -o pipefail
           export BROWSER="$(command -v google-chrome || command -v chromium || true)"
           test -n "$BROWSER"
-          node <<'NODE' 2>&1 | tee hh4k-hls-payload.log
+          node <<'NODE' 2>&1 | tee hh4k-server-status.log
           const puppeteer=require('puppeteer-core');
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           const WATCH='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html';
-          (async()=>{
-            const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-blink-features=AutomationControlled','--autoplay-policy=no-user-gesture-required']});
-            const page=await browser.newPage();
+          const EMBEDS=[
+            ['Vietsub 4K','https://streamfree.vip/embed/v/YKDs8Q0X'],
+            ['Vietsub 1080','https://streamfree.vip/embed/v/xbwJ5CT4'],
+            ['Thuyet minh 4K','https://streamfree.vip/embed/v/JulD6U5B'],
+            ['Thuyet minh 1080','https://streamfree.vip/embed/v/3aP2w8CJ']
+          ];
+          async function stealth(page){
             await page.evaluateOnNewDocument(()=>{
               try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined});}catch{}
               try{Object.defineProperty(navigator,'languages',{get:()=>['vi-VN','vi','en-US','en']});}catch{}
               try{Object.defineProperty(navigator,'plugins',{get:()=>[1,2,3,4,5]});}catch{}
-              try{if(!window.chrome) window.chrome={runtime:{}};}catch{}
+              try{if(!window.chrome)window.chrome={runtime:{}};}catch{}
             });
-            page.on('console',msg=>console.log('CONSOLE',msg.type(),msg.text().slice(0,1500)));
-            await page.setRequestInterception(true);
-            let hlsUrl=''; let hlsHeaders={}; let payload='';
-            page.on('request',async req=>{
-              const u=req.url();
-              try{
-                if(/streamfree\.vip\/public\/static\/app\.[a-f0-9]+\.js/i.test(u)){
-                  const r=await fetch(u,{headers:{...req.headers(),referer:'https://streamfree.vip/'}});
-                  let body=await r.text();
-                  const re=/var (_0x[a-f0-9]+)=new (_0x[a-f0-9]+)\((_0x[a-f0-9]+)\);/g;
-                  for(const m of body.matchAll(re)){
-                    const v=m[1], esc=v.replace(/[$]/g,'\\$&');
-                    const co=(body.match(new RegExp(esc+"\\['co'\\]\\(\\)",'g'))||[]).length;
-                    const al=(body.match(new RegExp(esc+"\\['al'\\]\\(",'g'))||[]).length;
-                    const l=(body.match(new RegExp(esc+"\\['l'\\]\\(\\)",'g'))||[]).length;
-                    if(co===2&&al===1&&l===1){body=body.replace(m[0],`${m[0]}${v}['co']=function(){return Promise.resolve(false);};${v}['al']=function(){};`);console.log('PATCHED',v);break;}
+          }
+          function patchApp(body){
+            const re=/var (_0x[a-f0-9]+)=new (_0x[a-f0-9]+)\((_0x[a-f0-9]+)\);/g;
+            for(const m of body.matchAll(re)){
+              const v=m[1],esc=v.replace(/[$]/g,'\\$&');
+              const co=(body.match(new RegExp(esc+"\\['co'\\]\\(\\)",'g'))||[]).length;
+              const al=(body.match(new RegExp(esc+"\\['al'\\]\\(",'g'))||[]).length;
+              const l=(body.match(new RegExp(esc+"\\['l'\\]\\(\\)",'g'))||[]).length;
+              if(co===2&&al===1&&l===1)return body.replace(m[0],`${m[0]}${v}['co']=function(){return Promise.resolve(false);};${v}['al']=function(){};`);
+            }
+            return body;
+          }
+          (async()=>{
+            const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-blink-features=AutomationControlled','--autoplay-policy=no-user-gesture-required']});
+            const results=[];
+            for(const [name,embed] of EMBEDS){
+              const page=await browser.newPage(); await stealth(page); await page.setRequestInterception(true);
+              let hlsUrl='',status=0,bodyHead='',headers={};
+              page.on('request',async req=>{
+                const u=req.url();
+                try{
+                  if(/streamfree\.vip\/public\/static\/app\.[a-f0-9]+\.js/i.test(u)){
+                    const r=await fetch(u,{headers:{...req.headers(),referer:'https://streamfree.vip/'}}); let body=patchApp(await r.text());
+                    return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
                   }
-                  return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
-                }
-                if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(u)) { hlsUrl=u; hlsHeaders=req.headers(); console.log('HLS_REQ',u); console.log('HLS_HEADERS',JSON.stringify(hlsHeaders)); }
-                return req.continue();
-              }catch(e){try{return req.continue();}catch{}}
-            });
-            page.on('response',async res=>{
-              const u=res.url();
-              if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(u)) {
-                try{payload=await res.text();console.log('HLS_STATUS',res.status());console.log('HLS_CONTENT_TYPE',res.headers()['content-type']||'');console.log('HLS_BODY_HEAD',JSON.stringify(payload.slice(0,5000)));}catch(e){console.log('HLS_BODY_ERR',String(e));}
-              }
-            });
-            await page.goto(WATCH,{waitUntil:'domcontentloaded',timeout:45000});
-            for(let i=0;i<60&&(!hlsUrl||!payload);i++) await sleep(300);
-            await sleep(1200);
-            console.log('RESULT',JSON.stringify({url:hlsUrl,headers:hlsHeaders,payloadHead:payload.slice(0,500),payloadLength:payload.length}));
+                  if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(u)){hlsUrl=u;headers=req.headers();}
+                  return req.continue();
+                }catch{try{return req.continue();}catch{}}
+              });
+              page.on('response',async res=>{if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(res.url())){status=res.status();try{bodyHead=(await res.text()).slice(0,300);}catch{}}});
+              try{await page.goto(embed,{waitUntil:'domcontentloaded',timeout:30000,referer:WATCH});for(let i=0;i<40&&(!hlsUrl||!status);i++)await sleep(250);}catch(e){console.log('PAGE_ERR',name,String(e));}
+              const item={name,embed,hlsUrl,status,bodyHead,headers}; results.push(item); console.log('SERVER_RESULT',JSON.stringify(item));
+              await page.close();
+            }
+            console.log('ALL_RESULTS',JSON.stringify(results));
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
@@ -73,6 +79,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hh4k-hls-payload
-          path: hh4k-hls-payload.log
+          name: hh4k-server-status
+          path: hh4k-server-status.log
           retention-days: 1
