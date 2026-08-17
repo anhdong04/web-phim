@@ -12,29 +12,20 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe player.php responses
+      - uses: actions/checkout@v4
+      - run: npm install --omit=dev
+      - name: Resolve HH4K Streamfree HLS
         shell: bash
+        env:
+          HHKUNGFU_HLS_TIMEOUT_MS: '30000'
+          HHKUNGFU_HLS_ATTEMPTS: '1'
         run: |
-          set -e
-          base='https://hhtq.sh/player/player.php'
-          ref='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html'
-          for type in vip4k_v2 vip4k pro tiktik vip4ktm_v2 pro_tm; do
-            echo "===== $type ====="
-            curl -L -sS --max-time 25 -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' -e "$ref" \
-              --get "$base" \
-              --data-urlencode 'action=dox_ajax_player' \
-              --data-urlencode 'post_id=1010' \
-              --data-urlencode 'chapter_st=tap-154' \
-              --data-urlencode "type=$type" \
-              --data-urlencode 'sv=1' -o "/tmp/$type"
-            echo "bytes=$(wc -c </tmp/$type)"
-            python3 - "$type" <<'PY'
-          import re,sys
-          t=sys.argv[1]
-          s=open('/tmp/'+t,'r',encoding='utf-8',errors='ignore').read()
-          print(s[:3000])
-          print('\nURLS:')
-          for u in re.findall(r'https?://[^\s"\'<>\\]+',s):
-              if any(x in u.lower() for x in ['m3u8','mp4','embed','stream','video','player']): print(u[:1000])
-          PY
-          done
+          node <<'NODE'
+          const { resolveHls } = require('./v647_hhkungfu_resolver');
+          (async()=>{
+            const embed='https://streamfree.vip/embed/v/YKDs8Q0X';
+            const hls=await resolveHls(embed,'hh4k-test');
+            console.log('HLS',hls);
+            if(!hls) throw new Error('no HLS');
+          })().catch(e=>{ console.error(e); process.exit(1); });
+          NODE
