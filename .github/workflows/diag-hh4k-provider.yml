@@ -13,18 +13,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Install Node dependency
+        run: npm install --omit=dev
       - name: Test catalog and one public stream
         shell: bash
         run: |
+          echo "Chrome: $(which google-chrome || which google-chrome-stable || which chromium || true)"
           node <<'NODE'
+          require('./hh4k_browser_patch');
           const { HH4KProvider } = require('./hh4k_provider');
           (async () => {
-            const p = new HH4KProvider({ timeoutMs: 12000 });
+            const p = new HH4KProvider({ timeoutMs: 18000 });
             const base = await p.getBaseUrl(true);
             console.log('BASE', base);
             const page = await p.fetchCategoryPage('/the-loai/moi-cap-nhap', 1);
             console.log('ITEMS', page.items.length);
             console.log('SAMPLE', JSON.stringify(page.items.slice(0,3), null, 2));
+            if (!page.items.length) throw new Error('HH4K parsed zero catalog items');
             for (const item of page.items.slice(0,8)) {
               try {
                 const d = await p.loadDetail(item.detailUrl);
