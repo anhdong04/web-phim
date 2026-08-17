@@ -12,22 +12,21 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Probe correct edge reader URLs
+      - name: Probe Google Translate routes
         shell: bash
         run: |
           set +e
           urls=(
-            'https://r.jina.ai/https://phimhhtq.com/moi-cap-nhat/'
-            'https://r.jina.ai/http://phimhhtq.com/moi-cap-nhat/'
-            'https://r.jina.ai/https://www.phimhhtq.com/moi-cap-nhat/'
-            'https://r.jina.ai/https://phimhhtq.com/'
+            'https://phimhhtq-com.translate.goog/moi-cap-nhat/?_x_tr_sl=vi&_x_tr_tl=en&_x_tr_hl=en'
+            'https://translate.google.com/translate?sl=vi&tl=en&u=https%3A%2F%2Fphimhhtq.com%2Fmoi-cap-nhat%2F'
+            'https://phimhhtq-com.translate.goog/?_x_tr_sl=vi&_x_tr_tl=en&_x_tr_hl=en'
           )
           for u in "${urls[@]}"; do
             echo "===== $u ====="
-            curl -L -sS --max-time 40 -D /tmp/h "$u" -o /tmp/b
+            curl -L -sS --max-time 40 -A 'Mozilla/5.0' -D /tmp/h "$u" -o /tmp/b
             head -n 12 /tmp/h
             echo "bytes=$(wc -c </tmp/b)"
-            grep -Eio 'Phàm Nhân|Mới Cập Nhật|halim|phimhhtq|Just a moment|security verification' /tmp/b | head -n 20
-            head -c 1800 /tmp/b
+            grep -Eio 'halim_box|entry-title|Mới Cập Nhật|Latest|Phàm Nhân|Just a moment|security verification' /tmp/b | head -n 30
+            head -c 1500 /tmp/b
             echo
           done
