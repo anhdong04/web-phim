@@ -12,7 +12,7 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect Streamfree decoder bootstrap
+      - name: Locate anti-devtools detector object
         shell: bash
         run: |
           set -e
@@ -21,14 +21,16 @@ jobs:
           curl -L -sS --max-time 25 -A "$ua" -e "$ref" 'https://streamfree.vip/public/static/app.bb288bfe.js' -o /tmp/app.js
           python3 <<'PY'
           s=open('/tmp/app.js','r',encoding='utf-8',errors='ignore').read()
-          print('LEN',len(s))
-          print('\n===== FIRST 14000 =====\n',s[:14000])
-          for term in ['function a0_0x34f2','a0_0x34f2=function','var _0x6b8455','function _0xc36d41','_0x6b8455[','-3']:
-              print('\n===== FIND',term,'=====')
+          terms=['_0xfcc099=','var _0xfcc099','let _0xfcc099','const _0xfcc099',"_0xfcc099['co']","_0xfcc099['al']",'_0xfcc099.co','_0xfcc099.al']
+          for term in terms:
+              print('\n===== '+term+' =====')
               start=0;c=0
-              while c<8:
+              while c<20:
                   i=s.find(term,start)
-                  if i<0:break
-                  print('AT',i,'\n',s[max(0,i-3000):min(len(s),i+7000)])
+                  if i<0: break
+                  print('AT',i)
+                  print(s[max(0,i-5000):min(len(s),i+9000)])
+                  print('\n---')
                   start=i+len(term);c+=1
+              print('COUNT',c)
           PY
