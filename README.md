@@ -1,6 +1,8 @@
 # KKPhim + Streams for Nuvio
 
-A small Stremio-compatible stream aggregator for Nuvio. It keeps KKPhim as the built-in source and can also merge streams from other configured Stremio-compatible addons.
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/anhdong04/web-phim)
+
+A small Stremio-compatible stream aggregator for Nuvio. It keeps KKPhim as the built-in source and can also merge streams from other configured Stremio-compatible addons. The same service also exposes the standalone `/hhkungfu/*` and `/hh4k/*` addon routes.
 
 ## How it works
 
@@ -18,7 +20,7 @@ Nuvio
   -> return one stream list to Nuvio
 ```
 
-The addon is stream-only and does not create a duplicate movie catalog.
+The main addon is stream-only and does not create a duplicate movie catalog. Standalone provider routes such as HH4K can expose their own catalog and metadata.
 
 ## Supported IDs
 
@@ -46,23 +48,40 @@ Important: for addons that have a configuration page, paste the final configured
 
 ## Render setup
 
-The repository already includes `render.yaml`. After Render deploys the repository, add the desired manifest URLs in Render under:
+The repository includes a Docker-based `render.yaml`. Docker is used because the HH4K resolver needs Chromium in addition to Node.js.
+
+Use the **Deploy to Render** button above, review the Blueprint, and approve it in your Render account. The Blueprint creates the `kkphim-nuvio-addon` web service from `main` and enables auto-deploys for later commits.
+
+After Render deploys the repository, add any optional upstream manifest URLs in Render under:
 
 `Web Service -> Environment`
 
-For example, set only the providers you want to use. Empty variables are ignored.
+Empty optional variables are ignored. After saving environment variables, redeploy/restart the Render service.
 
-After saving environment variables, redeploy/restart the Render service. Nuvio continues to use the same manifest URL:
+Main manifest:
 
 ```text
 https://YOUR-SERVICE.onrender.com/manifest.json
 ```
 
+HH4K manifest:
+
+```text
+https://YOUR-SERVICE.onrender.com/hh4k/manifest.json
+```
+
+HHKungfu manifest:
+
+```text
+https://YOUR-SERVICE.onrender.com/hhkungfu/manifest.json
+```
+
 ## Local run
 
-Node.js 18+ is required. There are no third-party Node dependencies.
+Node.js 18+ is required.
 
 ```bash
+npm install
 npm start
 ```
 
@@ -85,6 +104,7 @@ curl http://127.0.0.1:7000/stream/movie/tt0133093.json
 - Manifest metadata is cached.
 - Duplicate direct URLs, external URLs, and torrent hashes/file indexes are removed.
 - Upstream stream objects are preserved, so compatible fields such as direct `url`, `externalUrl`, or `infoHash` can pass through.
+- HH4K tries validated direct HLS first and falls back to the external player only when no validated direct HLS is available.
 
 ## Legal / access note
 
