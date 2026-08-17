@@ -7,7 +7,8 @@ const originalCreateServer = http.createServer;
 const PAGE_SIZE = Math.max(10, Math.min(50, Number(process.env.HH4K_PAGE_SIZE || 20)));
 // Force the server-accessible 4K HHTQ mirror. The original PhimHHTQ frontend is Cloudflare-blocked from datacenters.
 const provider = new HH4KProvider({ mainUrl: 'https://hhtq.sh', timeoutMs: process.env.HH4K_TIMEOUT_MS, cacheTtlMs: process.env.HH4K_CACHE_TTL_MS });
-const VERSION = '1.2.0';
+const VERSION = '1.3.0';
+const RESOLVER = 'browser-hls-guarded';
 
 function safeDecode(value) { try { return decodeURIComponent(String(value || '')); } catch { return String(value || ''); } }
 function enc(value) { return Buffer.from(String(value || ''), 'utf8').toString('base64url'); }
@@ -38,7 +39,7 @@ function sendJson(req, res, status, body, maxAge = 0) {
     'access-control-allow-headers': '*',
     'access-control-allow-methods': 'GET,HEAD,OPTIONS',
     'cache-control': maxAge ? `public, max-age=${maxAge}` : 'no-store',
-    'x-web-phim-hh4k': 'bridge-v3'
+    'x-web-phim-hh4k': 'bridge-v4'
   });
   if (req.method === 'HEAD') return res.end();
   res.end(data);
@@ -78,7 +79,7 @@ function streamObject(link, title) {
   const base = {
     name: '🐉 HH4K',
     title: [link.serverName, title].filter(Boolean).join(' • '),
-    behaviorHints: { notWebReady: true, bingeGroup: 'webphim-hh4k-r3' }
+    behaviorHints: { notWebReady: true, bingeGroup: 'webphim-hh4k-r4' }
   };
   if (link.url) {
     base.url = link.url;
@@ -93,12 +94,17 @@ async function streamsFor(id) {
   const parsed = parseId(id); if (!parsed || parsed.episodeIndex == null || !/^https?:\/\//i.test(parsed.detailUrl)) return [];
   const detail = await provider.loadDetail(parsed.detailUrl), ep = (detail.episodes || [])[parsed.episodeIndex];
   if (!ep?.watchUrl) return [];
-  return (await provider.resolveStreamLinks(ep.watchUrl)).slice(0, 8).map(link => streamObject(link, detail.title));
+  const resolved = await provider.resolveStreamLinks(ep.watchUrl);
+  const direct = (resolved || []).filter(link => Boolean(link?.url));
+  // If Chromium found at least one validated HLS URL, only expose direct streams
+  // so Nuvio does not accidentally choose a browser/external fallback first.
+  const selected = direct.length ? direct : (resolved || []);
+  return selected.slice(0, 8).map(link => streamObject(link, detail.title));
 }
 async function handleHh4k(req, res, pathname) {
   if (req.method === 'OPTIONS') { res.writeHead(204, { 'access-control-allow-origin': '*', 'access-control-allow-headers': '*', 'access-control-allow-methods': 'GET,HEAD,OPTIONS' }); return res.end(); }
   if (req.method !== 'GET' && req.method !== 'HEAD') return sendJson(req, res, 405, { error: 'Method not allowed' });
-  if (pathname === '/hh4k' || pathname === '/hh4k/') return sendJson(req, res, 200, { addon: 'HH4K', manifest: '/hh4k/manifest.json', version: VERSION });
+  if (pathname === '/hh4k' || pathname === '/hh4k/') return sendJson(req, res, 200, { addon: 'HH4K', manifest: '/hh4k/manifest.json', version: VERSION, resolver: RESOLVER });
   if (pathname === '/hh4k/manifest.json') return sendJson(req, res, 200, manifest(), 15);
   if (pathname === '/hh4k/diag') {
     const started = Date.now();
@@ -107,9 +113,9 @@ async function handleHh4k(req, res, pathname) {
       const page = await provider.fetchCategoryPage('moi-cap-nhat', 1);
       let episodes = 0;
       if (page.items[0]) episodes = (await provider.loadDetail(page.items[0].detailUrl)).episodes.length;
-      return sendJson(req, res, 200, { ok: page.items.length > 0, version: VERSION, baseUrl, elapsedMs: Date.now() - started, itemCount: page.items.length, firstItemEpisodes: episodes, sample: page.items.slice(0, 5).map(x => ({ title: x.title, poster: Boolean(x.posterUrl), episode: x.episodeLabel })) });
+      return sendJson(req, res, 200, { ok: page.items.length > 0, version: VERSION, resolver: RESOLVER, baseUrl, elapsedMs: Date.now() - started, itemCount: page.items.length, firstItemEpisodes: episodes, sample: page.items.slice(0, 5).map(x => ({ title: x.title, poster: Boolean(x.posterUrl), episode: x.episodeLabel })) });
     } catch (e) {
-      return sendJson(req, res, 200, { ok: false, version: VERSION, elapsedMs: Date.now() - started, error: String(e?.message || e).slice(0, 500) });
+      return sendJson(req, res, 200, { ok: false, version: VERSION, resolver: RESOLVER, elapsedMs: Date.now() - started, error: String(e?.message || e).slice(0, 500) });
     }
   }
   let m = pathname.match(/^\/hh4k\/catalog\/series\/hh4k(?:\/([^/]+))?\.json$/i);
@@ -136,5 +142,5 @@ http.createServer = function patchedCreateServer(...args) {
   return originalCreateServer.apply(http, args);
 };
 
-console.log('[hh4k] bridge v3 enabled at /hh4k/* using hhtq.sh');
+console.log('[hh4k] bridge v4 enabled at /hh4k/* using hhtq.sh');
 module.exports = { manifest, handleHh4k, parseId, idForDetail, catalog, metaFor, streamsFor };
