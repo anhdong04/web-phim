@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm install --omit=dev
-      - name: Capture direct HLS with fixed detector shim
+      - name: Capture direct HLS preserving detector init
         shell: bash
         run: |
           set -o pipefail
@@ -46,20 +46,27 @@ jobs:
                     const al=(body.match(new RegExp(esc+"\\['al'\\]\\(",'g'))||[]).length;
                     const l=(body.match(new RegExp(esc+"\\['l'\\]\\(\\)",'g'))||[]).length;
                     if(co===2&&al===1&&l===1){
-                      body=body.replace(m[0],`var ${v}={l:function(){},co:function(){return Promise.resolve(false);},al:function(){}};`);
-                      patched=true; console.log('PATCHED_DETECTOR',v,'co',co,'al',al,'l',l); break;
+                      const shim=`${m[0]}${v}['co']=function(){return Promise.resolve(false);};${v}['al']=function(){};`;
+                      body=body.replace(m[0],shim);
+                      patched=true; console.log('PATCHED_DETECTOR_METHODS',v,'co',co,'al',al,'l',l); break;
                     }
                   }
                   if(!patched) console.log('PATCH_MISS');
                   return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
                 }
                 if(/\/reportaproblem/i.test(u)) console.log('REPORT_REQ',req.method(),u,req.postData()||'');
-                if(/streamfree|\/hls\/|\.m3u8(?:$|[?#])|\.mp4(?:$|[?#])/i.test(u)) console.log('NET_REQ',req.resourceType(),req.method(),u);
+                if(!/\.(?:css|png|jpe?g|gif|svg|woff2?)(?:$|[?#])/i.test(u)) console.log('NET_REQ',req.resourceType(),req.method(),u);
                 if(/\.m3u8(?:$|[?#])/i.test(u)||/\.mp4(?:$|[?#])/i.test(u)){media.push({url:u,headers:req.headers()});console.log('MEDIA_REQ',u,JSON.stringify(req.headers()));}
                 return req.continue();
               }catch(e){console.log('INTERCEPT_ERR',u,e.message); try{return req.continue();}catch{}}
             });
-            page.on('response',res=>{const u=res.url(); if(/streamfree|\/hls\/|\.m3u8|reportaproblem/i.test(u)) console.log('RES',res.status(),u);});
+            page.on('response',async res=>{
+              const u=res.url();
+              if(/\/hls\/|\.m3u8|reportaproblem/i.test(u)) {
+                console.log('RES',res.status(),u);
+                try { const text=await res.text(); console.log('RES_BODY',u,text.slice(0,1200)); } catch {}
+              }
+            });
             await page.goto('https://hhtq.sh/tu-tien/tien-nghich/tap-154.html',{waitUntil:'domcontentloaded',timeout:45000});
             for(let i=0;i<50&&!media.length;i++) await sleep(400);
             console.log('FRAMES',page.frames().map(f=>f.url()));
