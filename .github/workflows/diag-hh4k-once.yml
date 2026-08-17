@@ -1,0 +1,21 @@
+name: Probe HH4K once
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl live routes
+        shell: bash
+        run: |
+          set +e
+          echo '=== HH4K ==='
+          curl -L -i -sS --max-time 20 'https://kkphim-nuvio-addon.onrender.com/hh4k/manifest.json'
+          echo
+          echo '=== ROOT ==='
+          curl -L -i -sS --max-time 20 'https://kkphim-nuvio-addon.onrender.com/manifest.json' | head -c 5000
+          echo
