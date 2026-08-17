@@ -19,9 +19,10 @@ jobs:
         run: |
           npm run check
           node <<'NODE'
+          require('./hh4k_browser_patch');
           const { HH4KProvider } = require('./hh4k_provider');
           (async () => {
-            const p = new HH4KProvider({ timeoutMs: 15000 });
+            const p = new HH4KProvider({ timeoutMs: 20000 });
             const page = await p.fetchCategoryPage('moi-cap-nhat', 1);
             console.log('BASE', p.getBaseUrl());
             console.log('ITEMS', page.items.length);
