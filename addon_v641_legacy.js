@@ -2,6 +2,8 @@
 // Builds on v6.4.0, adds one-install full manifest support,
 // and now also exposes the isolated /vn bridge for Render services
 // whose dashboard start command is pinned to addon_v641.js.
+// Load HH4K here as well so it works even when Render pins addon_v641.js directly.
+require('./hh4k_bridge');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const applyV420 = require('./v420_patch');
