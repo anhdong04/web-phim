@@ -12,22 +12,29 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect hhtq.sh player config
+      - name: Probe player.php responses
         shell: bash
         run: |
           set -e
-          u='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html'
-          curl -L -sS --max-time 25 -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' "$u" -o /tmp/page
-          python3 <<'PY'
-          text=open('/tmp/page','r',encoding='utf-8',errors='ignore').read()
-          for marker in ['DoPostInfo','player/player.php','halim-player-wrapper','iframe-placeholder','data-type="vip4k','postid','episode','server']:
-              print('\n===== MARKER',marker,'=====')
-              start=0
-              count=0
-              while count<6:
-                  i=text.find(marker,start)
-                  if i<0: break
-                  print(text[max(0,i-900):min(len(text),i+1800)])
-                  print('\n---')
-                  start=i+len(marker); count+=1
+          base='https://hhtq.sh/player/player.php'
+          ref='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html'
+          for type in vip4k_v2 vip4k pro tiktik vip4ktm_v2 pro_tm; do
+            echo "===== $type ====="
+            curl -L -sS --max-time 25 -A 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36' -e "$ref" \
+              --get "$base" \
+              --data-urlencode 'action=dox_ajax_player' \
+              --data-urlencode 'post_id=1010' \
+              --data-urlencode 'chapter_st=tap-154' \
+              --data-urlencode "type=$type" \
+              --data-urlencode 'sv=1' -o "/tmp/$type"
+            echo "bytes=$(wc -c </tmp/$type)"
+            python3 - "$type" <<'PY'
+          import re,sys
+          t=sys.argv[1]
+          s=open('/tmp/'+t,'r',encoding='utf-8',errors='ignore').read()
+          print(s[:3000])
+          print('\nURLS:')
+          for u in re.findall(r'https?://[^\s"\'<>\\]+',s):
+              if any(x in u.lower() for x in ['m3u8','mp4','embed','stream','video','player']): print(u[:1000])
           PY
+          done
