@@ -13,19 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies and Chromium
-        shell: bash
-        run: |
-          npm install --omit=dev
-          sudo apt-get update -qq
-          sudo apt-get install -y chromium >/dev/null
-      - name: Resolve HHTQ watch page to HLS
+      - name: Install Node dependencies
+        run: npm install --omit=dev
+      - name: Find browser and resolve HHTQ watch page to HLS
         shell: bash
         env:
           HHKUNGFU_HLS_TIMEOUT_MS: '45000'
           HHKUNGFU_HLS_ATTEMPTS: '1'
-          HHKUNGFU_CHROMIUM_PATH: '/usr/bin/chromium'
         run: |
+          set -e
+          echo "google-chrome=$(command -v google-chrome || true) chromium=$(command -v chromium || true)"
+          export HHKUNGFU_CHROMIUM_PATH="$(command -v google-chrome || command -v chromium || true)"
+          test -n "$HHKUNGFU_CHROMIUM_PATH"
           node <<'NODE'
           const { resolveHls } = require('./v647_hhkungfu_resolver');
           (async()=>{
