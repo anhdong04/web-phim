@@ -17,10 +17,10 @@ jobs:
       - name: Trace player after anti-devtools patch
         shell: bash
         run: |
-          set -e
+          set -o pipefail
           export BROWSER="$(command -v google-chrome || command -v chromium || true)"
           test -n "$BROWSER"
-          node <<'NODE'
+          node <<'NODE' 2>&1 | tee streamfree-trace.log
           const puppeteer=require('puppeteer-core');
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36';
@@ -75,3 +75,10 @@ jobs:
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
+      - name: Upload Streamfree trace
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: streamfree-trace
+          path: streamfree-trace.log
+          retention-days: 1
