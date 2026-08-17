@@ -12,33 +12,28 @@ jobs:
   probe:
     runs-on: ubuntu-latest
     steps:
-      - name: Inspect Streamfree embed
+      - uses: actions/checkout@v4
+      - name: Probe HHTQ mirrors
         shell: bash
         run: |
           set -e
-          url='https://streamfree.vip/embed/v/YKDs8Q0X'
-          ref='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html'
-          ua='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36'
-          curl -L -sS --max-time 25 -A "$ua" -e "$ref" "$url" -D /tmp/headers -o /tmp/page
-          echo '=== RESPONSE HEADERS ==='
-          sed -n '1,80p' /tmp/headers
-          echo '=== BYTES ==='
-          wc -c /tmp/page
-          echo '=== FIRST 12000 CHARS ==='
-          python3 - <<'PY'
-          s=open('/tmp/page','r',encoding='utf-8',errors='ignore').read()
-          print(s[:12000])
-          PY
-          echo '=== URLS / MARKERS ==='
-          python3 - <<'PY'
-          import re
-          s=open('/tmp/page','r',encoding='utf-8',errors='ignore').read()
-          for pat in [r'https?://[^\s"\'<>\\]+',r'/(?:api|ajax|player|source|stream|video)[^\s"\'<>\\]*']:
-              for u in re.findall(pat,s,re.I):
-                  if any(k in u.lower() for k in ['m3u8','mp4','api','ajax','player','source','stream','video','embed']): print(u[:1200])
-          print('SCRIPTS')
-          for x in re.findall(r'<script\b[^>]*src=["\']([^"\']+)',s,re.I): print(x)
-          print('MARKERS')
-          for k in ['m3u8','jwplayer','videojs','hls','file:','sources','fetch(','XMLHttpRequest','atob(','eval(','CryptoJS','token','source']:
-              if k.lower() in s.lower(): print(k)
-          PY
+          node <<'NODE'
+          const { HH4KProvider } = require('./hh4k_provider');
+          const domains=['https://hhtq.ee','https://hhtq.st','https://hhtq.sh','https://hhtq.hair'];
+          (async()=>{
+            for(const base of domains){
+              console.log('\n===== '+base+' =====');
+              try{
+                const p=new HH4KProvider({mainUrl:base,timeoutMs:15000,cacheTtlMs:30000});
+                const page=await p.fetchCategoryPage('moi-cap-nhat',1);
+                console.log('CAT',page.items.length,page.items.slice(0,2).map(x=>x.title));
+                if(!page.items.length) continue;
+                const d=await p.loadDetail(page.items[0].detailUrl);
+                console.log('DETAIL',d.title,'EPS',d.episodes.length,d.episodes[0]?.watchUrl);
+                if(!d.episodes.length) continue;
+                const links=await p.resolveStreamLinks(d.episodes[0].watchUrl);
+                console.log('PLAYERS',links.slice(0,8).map(x=>({name:x.serverName,embed:x.embedUrl,url:x.url})));
+              }catch(e){console.log('ERR',String(e.message||e));}
+            }
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
