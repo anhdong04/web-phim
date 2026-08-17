@@ -1,56 +1,371 @@
 'use strict';
 
+// Port of the uploaded PhimHhtqProvider.kt for the standalone Nuvio HH4K addon.
+// Source flow: phimhhtq.com -> list -> detail -> Halim AJAX player -> m3u8/mp4.
+
 const DEFAULT_UA = 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36';
-const DEFAULT_BASE = 'https://hoathinh4k7.top';
-const FALLBACK_BASES = ['https://hoathinh4k7.top', 'https://hoathinh4k.net', 'https://hoathinhhd.club'];
+const DEFAULT_BASE = 'https://phimhhtq.com';
 
-function uniq(items, key = x => x) { const seen = new Set(); return items.filter(item => { const k = key(item); if (!k || seen.has(k)) return false; seen.add(k); return true; }); }
-function decodeHtml(value = '') { return String(value).replace(/&nbsp;/gi, ' ').replace(/&amp;/gi, '&').replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/&lt;/gi, '<').replace(/&gt;/gi, '>').replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n))).replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16))); }
-function stripTags(value = '') { return decodeHtml(String(value).replace(/<script\b[\s\S]*?<\/script>/gi, ' ').replace(/<style\b[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()); }
-function attr(tag = '', name = '') { const safe = String(name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); const m = String(tag).match(new RegExp('\\b' + safe + '\\s*=\\s*(?:"([^"]*)"|\'([^\']*)\'|([^\\s>]+))', 'i')); return decodeHtml(m ? (m[1] ?? m[2] ?? m[3] ?? '') : ''); }
-function absUrl(raw, base) { const value = decodeHtml(String(raw || '').trim()).replace(/\\\//g, '/'); if (!value || /^(?:javascript:|data:|#)/i.test(value)) return null; try { if (value.startsWith('//')) return 'https:' + value; return new URL(value, String(base || '').replace(/\/+$/, '') + '/').toString(); } catch { return null; } }
-function originOf(url = '') { try { return new URL(url).origin; } catch { return ''; } }
-function normalizeBase(url = '') { const value = String(url || '').trim().replace(/\/+$/, ''); if (!value) return DEFAULT_BASE; return /^https?:\/\//i.test(value) ? value : 'https://' + value; }
-function metaContent(html, key) { for (const m of String(html).matchAll(/<meta\b[^>]*>/gi)) { const tag = m[0], k = attr(tag, 'property') || attr(tag, 'name'); if (String(k).toLowerCase() === String(key).toLowerCase()) return attr(tag, 'content') || null; } return null; }
-function episodeNumber(text = '') { const m = String(text).replace(',', '.').match(/\d+(?:\.\d+)?/); return m ? Number(m[0]) : null; }
-function looksLikeInternalMovieUrl(url, base) { try { const u = new URL(url), b = new URL(base); if (u.hostname !== b.hostname || !/^https?:$/.test(u.protocol)) return false; const p = u.pathname.toLowerCase(); if (p === '/' || p.startsWith('/the-loai/') || p.startsWith('/tag/') || p.startsWith('/category/')) return false; if (p.includes('/wp-') || p.includes('/login') || p.includes('/dang-')) return false; return true; } catch { return false; } }
-
-function itemFromBlock(block, baseUrl) {
-  const heading = String(block).match(/<h[1-4]\b[^>]*>[\s\S]*?<\/h[1-4]>/i)?.[0] || '';
-  const anchor = heading.match(/<a\b[^>]*>[\s\S]*?<\/a>/i)?.[0] || String(block).match(/<a\b[^>]*href=["'][^"']+["'][^>]*>[\s\S]*?<\/a>/i)?.[0];
-  if (!anchor) return null;
-  const open = anchor.match(/^<a\b[^>]*>/i)?.[0] || anchor, detailUrl = absUrl(attr(open, 'href'), baseUrl), title = stripTags(heading || anchor);
-  if (!detailUrl || !title || !looksLikeInternalMovieUrl(detailUrl, baseUrl)) return null;
-  let posterUrl = null;
-  for (const im of String(block).matchAll(/<img\b[^>]*>/gi)) { const tag = im[0], raw = attr(tag, 'data-src') || attr(tag, 'data-lazy-src') || attr(tag, 'data-original') || attr(tag, 'src'); if (!raw || /^data:image/i.test(raw)) continue; posterUrl = absUrl(raw, baseUrl); if (posterUrl) break; }
-  const text = stripTags(block);
-  const episodeLabel = text.match(/T(?:Ậ|A)P\s*[^|•<]{1,28}/i)?.[0] || text.match(/\b\d+(?:\.\d+)?\s*\/\s*(?:\d+|\.{2,3}|\?+)/)?.[0] || null;
-  const qualityLabel = text.match(/\[(?:4K|60\s*fps|HD)\]/i)?.[0] || text.match(/\b(?:4K|60\s*fps|1080P|Vietsub|Thuyết\s*Minh)\b/i)?.[0] || null;
-  return { title, detailUrl, posterUrl, episodeLabel, qualityLabel };
+function uniq(items, key = x => x) {
+  const seen = new Set();
+  return (items || []).filter(item => {
+    const k = key(item);
+    if (!k || seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
 }
-function parseListItems(html, baseUrl) { const text = String(html || ''), out = []; for (const m of text.matchAll(/<article\b[^>]*>[\s\S]*?<\/article>/gi)) { const item = itemFromBlock(m[0], baseUrl); if (item) out.push(item); } if (!out.length) { const heads = [...text.matchAll(/<h[2-4]\b[^>]*>[\s\S]*?<\/h[2-4]>/gi)]; for (let i = 0; i < heads.length; i++) { const h = heads[i], start = Math.max(0, h.index - 2200), end = i + 1 < heads.length ? heads[i + 1].index : Math.min(text.length, h.index + h[0].length + 2200); const item = itemFromBlock(text.slice(start, end), baseUrl); if (item) out.push(item); } } return uniq(out, x => x.detailUrl); }
-function inferServerName(context = '') { const t = stripTags(context), matches = [...t.matchAll(/Server\s+(4K\s*\/\s*(?:60|30)\s*Fps|1080P|4K[^\n]{0,20}|[^\n•]{1,28})/gi)]; if (matches.length) return 'Server ' + matches[matches.length - 1][1].replace(/\s+/g, ' ').trim(); if (/60\s*fps/i.test(t)) return '4K/60Fps'; if (/30\s*fps/i.test(t)) return '4K/30Fps'; if (/1080p/i.test(t)) return '1080P'; return 'HH4K'; }
-function parseEpisodes(html, baseUrl) { const text = String(html || ''), out = []; for (const m of text.matchAll(/<a\b[^>]*>[\s\S]*?<\/a>/gi)) { const tag = m[0], open = tag.match(/^<a\b[^>]*>/i)?.[0] || '', rawHref = attr(open, 'href') || attr(open, 'data-href') || attr(open, 'data-url'), watchUrl = absUrl(rawHref, baseUrl); if (!watchUrl) continue; const path = (() => { try { return new URL(watchUrl).pathname; } catch { return ''; } })(); if (!/\/tap-[^/]+\.html$/i.test(path) && !/tap-\d+/i.test(path)) continue; const label = stripTags(tag) || attr(open, 'title') || path, number = episodeNumber(label) ?? episodeNumber(path); if (number == null) continue; const before = text.slice(Math.max(0, m.index - 700), m.index), around = text.slice(Math.max(0, m.index - 200), Math.min(text.length, m.index + tag.length + 200)), vip = /\bVIP\b/i.test(stripTags(around)); out.push({ name: 'Tập ' + number, number, watchUrl, serverName: inferServerName(before), vip }); } return uniq(out, x => x.watchUrl).sort((a, b) => a.number - b.number || a.serverName.localeCompare(b.serverName)); }
-function firstDescription(html) { const candidates = [/<div\b[^>]*class=["'][^"']*(?:entry-content|post-content|movie-content|content)[^"']*["'][^>]*>([\s\S]*?)<\/div>/i, /<section\b[^>]*>\s*<h[2-4][^>]*>\s*Nội dung\s*<\/h[2-4]>([\s\S]*?)<\/section>/i, /Nội dung[\s\S]{0,250}?<p\b[^>]*>([\s\S]*?)<\/p>/i]; for (const re of candidates) { const value = stripTags(String(html).match(re)?.[1] || ''); if (value && value.length > 20) return value.slice(0, 2500); } return metaContent(html, 'description') || null; }
-function parseDetail(html, detailUrl, baseUrl) { const title = stripTags(String(html).match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i)?.[1] || '') || stripTags(metaContent(html, 'og:title') || '').split('|')[0].trim() || stripTags(String(html).match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)?.[1] || '').split('|')[0].trim(); if (!title) throw new Error('HH4K: không đọc được tên phim'); let posterUrl = absUrl(metaContent(html, 'og:image'), baseUrl); if (!posterUrl) { for (const im of String(html).matchAll(/<img\b[^>]*>/gi)) { const tag = im[0]; if (!/poster|thumb|movie/i.test(tag)) continue; posterUrl = absUrl(attr(tag, 'data-src') || attr(tag, 'src'), baseUrl); if (posterUrl) break; } } const yearText = stripTags(html).match(/(?:19|20)\d{2}/)?.[0], year = yearText ? Number(yearText) : null, episodes = parseEpisodes(html, baseUrl), recommendations = parseListItems(html, baseUrl).filter(x => x.detailUrl !== detailUrl), ogW = Number(metaContent(html, 'og:image:width') || 0), ogH = Number(metaContent(html, 'og:image:height') || 0), bannerUrl = posterUrl && ogW > ogH ? posterUrl : null; return { title, detailUrl, posterUrl, bannerUrl, overview: firstDescription(html), year, genres: ['Hoạt hình Trung Quốc', '4K'], episodes, recommendations }; }
-function publicLockDetected(html = '') { const t = stripTags(html); return /yêu cầu tài khoản VIP/i.test(t) || /vui lòng nâng cấp tài khoản/i.test(t) || /đăng nhập để xem/i.test(t); }
-function extractDirectMedia(html, baseUrl) { const out = [], text = String(html || '').replace(/\\\//g, '/'), patterns = [/https?:\/\/[^\s"'<>\\]+?\.m3u8(?:\?[^\s"'<>\\]*)?/gi, /https?:\/\/[^\s"'<>\\]+?\.mp4(?:\?[^\s"'<>\\]*)?/gi, /["'](?:file|src|source|url)["']\s*:\s*["']([^"']+\.(?:m3u8|mp4)(?:\?[^"']*)?)["']/gi]; for (const re of patterns) for (const m of text.matchAll(re)) { const raw = m[1] || m[0], url = absUrl(raw, baseUrl); if (url) out.push(url); } for (const m of text.matchAll(/<(?:source|video)\b[^>]*>/gi)) { const url = absUrl(attr(m[0], 'src') || attr(m[0], 'data-src'), baseUrl); if (url && /\.(?:m3u8|mp4)(?:$|\?)/i.test(url)) out.push(url); } return uniq(out); }
-function extractEmbeds(html, baseUrl) { const out = []; for (const m of String(html || '').matchAll(/<iframe\b[^>]*>/gi)) { const url = absUrl(attr(m[0], 'src') || attr(m[0], 'data-src'), baseUrl); if (url) out.push(url); } for (const m of String(html || '').matchAll(/\b(?:data-file|data-url|data-embed|data-src)\s*=\s*(?:"([^"]+)"|'([^']+)')/gi)) { const url = absUrl(m[1] || m[2], baseUrl); if (url && /^https?:\/\//i.test(url)) out.push(url); } return uniq(out); }
+
+function decodeHtml(value = '') {
+  return String(value)
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/&lt;/gi, '<')
+    .replace(/&gt;/gi, '>')
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)));
+}
+
+function stripTags(value = '') {
+  return decodeHtml(String(value)
+    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim());
+}
+
+function attr(tag = '', name = '') {
+  const safe = String(name).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const m = String(tag).match(new RegExp('\\b' + safe + '\\s*=\\s*(?:"([^"]*)"|\\'([^\\']*)\\'|([^\\s>]+))', 'i'));
+  return decodeHtml(m ? (m[1] ?? m[2] ?? m[3] ?? '') : '');
+}
+
+function normalizeBase(url = '') {
+  const value = String(url || '').trim().replace(/\/+$/, '');
+  if (!value) return DEFAULT_BASE;
+  return /^https?:\/\//i.test(value) ? value : 'https://' + value;
+}
+
+function fixUrl(raw, baseUrl) {
+  const value = decodeHtml(String(raw || '').trim()).replace(/\\\//g, '/');
+  if (!value) return null;
+  try {
+    if (/^https?:\/\//i.test(value)) return value;
+    if (value.startsWith('//')) return 'https:' + value;
+    if (value.startsWith('/')) return String(baseUrl).replace(/\/+$/, '') + value;
+    return String(baseUrl).replace(/\/+$/, '') + '/' + value;
+  } catch {
+    return null;
+  }
+}
+
+function metaContent(html, key) {
+  for (const m of String(html || '').matchAll(/<meta\b[^>]*>/gi)) {
+    const tag = m[0];
+    const k = attr(tag, 'property') || attr(tag, 'name');
+    if (String(k).toLowerCase() === String(key).toLowerCase()) return attr(tag, 'content') || null;
+  }
+  return null;
+}
+
+function classHas(tag, token) {
+  return new RegExp('(?:^|\\s)' + token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?:\\s|$)', 'i')
+    .test(attr(tag, 'class'));
+}
+
+function firstTag(html, tagName, classToken) {
+  const re = new RegExp('<' + tagName + '\\b[^>]*>[\\s\\S]*?<\\/' + tagName + '>', 'gi');
+  for (const m of String(html || '').matchAll(re)) {
+    const open = m[0].match(new RegExp('^<' + tagName + '\\b[^>]*>', 'i'))?.[0] || '';
+    if (!classToken || classHas(open, classToken)) return m[0];
+  }
+  return '';
+}
+
+function episodeNumber(text = '') {
+  const m = String(text).replace(',', '.').match(/\d+(?:\.\d+)?/);
+  return m ? Number(m[0]) : null;
+}
+
+function parseListItem(block, baseUrl) {
+  const h2 = firstTag(block, 'h2', 'entry-title');
+  const title = stripTags(h2);
+  if (!title) return null;
+
+  let linkTag = '';
+  for (const m of String(block).matchAll(/<a\b[^>]*>/gi)) {
+    if (classHas(m[0], 'halim-thumb')) { linkTag = m[0]; break; }
+  }
+  if (!linkTag) return null;
+  const detailUrl = fixUrl(attr(linkTag, 'href'), baseUrl);
+  if (!detailUrl) return null;
+
+  let imgTag = '';
+  const figure = firstTag(block, 'figure');
+  imgTag = String(figure || block).match(/<img\b[^>]*>/i)?.[0] || '';
+  const posterUrl = fixUrl(attr(imgTag, 'src') || attr(imgTag, 'data-src'), baseUrl);
+
+  let episodeLabel = null;
+  for (const m of String(block).matchAll(/<span\b[^>]*>[\s\S]*?<\/span>/gi)) {
+    const open = m[0].match(/^<span\b[^>]*>/i)?.[0] || '';
+    if (classHas(open, 'episode')) { episodeLabel = stripTags(m[0]) || null; break; }
+  }
+
+  return { title, detailUrl, posterUrl, episodeLabel, qualityLabel: null };
+}
+
+function parseListItems(html, baseUrl) {
+  const out = [];
+  for (const m of String(html || '').matchAll(/<article\b[^>]*>[\s\S]*?<\/article>/gi)) {
+    const open = m[0].match(/^<article\b[^>]*>/i)?.[0] || '';
+    if (!classHas(open, 'thumb')) continue;
+    const item = parseListItem(m[0], baseUrl);
+    if (item) out.push(item);
+  }
+  return uniq(out, x => x.detailUrl);
+}
+
+function findImgWithClass(html, classToken) {
+  for (const m of String(html || '').matchAll(/<img\b[^>]*>/gi)) {
+    if (classHas(m[0], classToken)) return m[0];
+  }
+  return '';
+}
+
+function parseEpisodes(html, baseUrl) {
+  const out = [];
+  let listHtml = String(html || '');
+  const ulMatch = [...listHtml.matchAll(/<ul\b[^>]*>[\s\S]*?<\/ul>/gi)]
+    .find(m => classHas(m[0].match(/^<ul\b[^>]*>/i)?.[0] || '', 'halim-list-eps'));
+  if (ulMatch) listHtml = ulMatch[0];
+
+  for (const m of listHtml.matchAll(/<li\b[^>]*>[\s\S]*?<\/li>/gi)) {
+    const openLi = m[0].match(/^<li\b[^>]*>/i)?.[0] || '';
+    if (ulMatch && !classHas(openLi, 'halim-episode')) continue;
+    const a = m[0].match(/<a\b[^>]*>[\s\S]*?<\/a>/i)?.[0] || '';
+    if (!a) continue;
+    const openA = a.match(/^<a\b[^>]*>/i)?.[0] || '';
+    const label = stripTags(a).trim();
+    const watchUrl = fixUrl(attr(openA, 'href'), baseUrl);
+    if (!label || !watchUrl) continue;
+    out.push({
+      name: 'Tập ' + label,
+      number: episodeNumber(label),
+      watchUrl,
+      serverName: 'Halim',
+      vip: false
+    });
+  }
+  return uniq(out, x => x.watchUrl);
+}
+
+function parseOverview(html) {
+  const entry = [...String(html || '').matchAll(/<div\b[^>]*>[\s\S]*?<\/div>/gi)]
+    .find(m => classHas(m[0].match(/^<div\b[^>]*>/i)?.[0] || '', 'entry-content'));
+  if (entry) {
+    const article = entry[0].match(/<article\b[^>]*>([\s\S]*?)<\/article>/i)?.[1] || entry[0];
+    const text = stripTags(article);
+    if (text) return text.slice(0, 3000);
+  }
+  return metaContent(html, 'description') || null;
+}
+
+function parseDetail(html, detailUrl, baseUrl) {
+  const title = stripTags(firstTag(html, 'h1', 'entry-title'))
+    || stripTags(metaContent(html, 'og:title') || '').split('|')[0].trim();
+  if (!title) throw new Error('PhimHHTQ: không đọc được tên phim');
+
+  const movieThumb = findImgWithClass(html, 'movie-thumb');
+  const posterUrl = fixUrl(attr(movieThumb, 'src'), baseUrl)
+    || fixUrl(metaContent(html, 'og:image'), baseUrl);
+  const ogImage = fixUrl(metaContent(html, 'og:image'), baseUrl);
+  const ogWidth = Number(metaContent(html, 'og:image:width') || 0);
+  const ogHeight = Number(metaContent(html, 'og:image:height') || 0);
+  const bannerUrl = ogImage && ogWidth > ogHeight ? ogImage : (ogImage && ogImage !== posterUrl ? ogImage : null);
+
+  let moreInfo = '';
+  for (const m of String(html || '').matchAll(/<div\b[^>]*>[\s\S]*?<\/div>/gi)) {
+    const open = m[0].match(/^<div\b[^>]*>/i)?.[0] || '';
+    if (classHas(open, 'more-info')) { moreInfo = stripTags(m[0]); break; }
+  }
+  const yearText = moreInfo.match(/(?:19|20)\d{2}/)?.[0];
+
+  return {
+    title,
+    detailUrl,
+    posterUrl,
+    bannerUrl,
+    overview: parseOverview(html),
+    year: yearText ? Number(yearText) : null,
+    genres: ['Hoạt hình Trung Quốc'],
+    episodes: parseEpisodes(html, baseUrl),
+    recommendations: parseListItems(html, baseUrl).filter(x => x.detailUrl !== detailUrl)
+  };
+}
+
+function parseHalimWatchPageParams(html, watchUrl) {
+  const cfgBlock = String(html || '').match(/var\s+halim_cfg\s*=\s*\{([^}]+)\}/i)?.[1] || '';
+  const postId = cfgBlock.match(/post_id\s*:\s*(\d+)/i)?.[1]
+    || String(html || '').match(/postid-(\d+)/i)?.[1]
+    || String(html || '').match(/post_id\s*:\s*(\d+)/i)?.[1];
+  if (!postId) throw new Error('PhimHHTQ: không tìm thấy post_id');
+
+  const nonce = String(html || '').match(/ajax_player\s*=\s*\{[^}]*["']nonce["']\s*:\s*["']([a-zA-Z0-9]+)["']/i)?.[1];
+  if (!nonce) throw new Error('PhimHHTQ: không tìm thấy nonce (ajax_player)');
+
+  const epMatch = String(watchUrl || '').match(/-tap-(\d+)-sv-(\d+)/i);
+  const episode = cfgBlock.match(/episode\s*:\s*(\d+)/i)?.[1] || epMatch?.[1] || '1';
+  const server = cfgBlock.match(/server\s*:\s*(\d+)/i)?.[1] || epMatch?.[2] || '1';
+  return { postId: String(postId).trim(), nonce: String(nonce).trim(), episode, server };
+}
+
+function normalizePlayerFileUrl(raw = '') {
+  return String(raw).trim().replace(/\\\//g, '/').replace(/\\/g, '');
+}
+
+function extractStreamUrlFromPlayerResponse(response = '') {
+  for (const m of String(response).matchAll(/["']file["']\s*:\s*["']([^"']+)["']/gi)) {
+    const url = normalizePlayerFileUrl(m[1]);
+    if (/^https?:\/\//i.test(url)) return url;
+  }
+  const m3u8 = String(response).match(/https?:\/\/[^\s"'\\]+?\.m3u8[^\s"'\\]*/i)?.[0];
+  return m3u8 ? normalizePlayerFileUrl(m3u8) : null;
+}
 
 class HH4KProvider {
-  constructor(opts = {}) { this.mainUrl = normalizeBase(opts.mainUrl || process.env.HH4K_MAIN_URL || DEFAULT_BASE); this.timeoutMs = Math.max(2500, Math.min(20000, Number(opts.timeoutMs || 10000))); this.cacheTtlMs = Math.max(30000, Math.min(3600000, Number(opts.cacheTtlMs || 600000))); this.baseCache = null; this.baseCacheAt = 0; this.categoryCache = new Map(); this.searchCache = new Map(); this.detailCache = new Map(); this.streamCache = new Map(); }
-  headers(referer, accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8') { const h = { 'User-Agent': DEFAULT_UA, Accept: accept }; if (referer) h.Referer = referer; return h; }
-  playbackHeaders(referer) { const ref = String(referer || this.mainUrl).trim(); return { 'User-Agent': DEFAULT_UA, Referer: ref, Origin: originOf(ref), Accept: '*/*' }; }
-  async rawFetch(url, opts = {}, timeout = this.timeoutMs) { const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), timeout); try { return await fetch(url, { redirect: 'follow', ...opts, signal: ctl.signal }); } finally { clearTimeout(timer); } }
-  async fetchText(url, referer) { const response = await this.rawFetch(url, { headers: this.headers(referer) }); if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`); return await response.text(); }
-  async probeBase(base) { try { const url = normalizeBase(base) + '/the-loai/moi-cap-nhap', r = await this.rawFetch(url, { headers: this.headers() }, 6000); if (!r.ok) return false; const html = await r.text(); return /HoatHinh4K|Tất Cả Phim|moi-cap-nhap|Phim VIP/i.test(html); } catch { return false; } }
-  async getBaseUrl(force = false) { if (!force && this.baseCache && Date.now() - this.baseCacheAt < this.cacheTtlMs) return this.baseCache; const candidates = uniq([this.mainUrl, ...FALLBACK_BASES].map(normalizeBase)); for (const base of candidates) if (await this.probeBase(base)) { this.baseCache = base; this.baseCacheAt = Date.now(); return base; } this.baseCache = this.mainUrl; this.baseCacheAt = Date.now(); return this.baseCache; }
-  async fetchCategoryPage(categoryPath = '/the-loai/moi-cap-nhap', page = 1) { const base = await this.getBaseUrl(), path = '/' + String(categoryPath || '/the-loai/moi-cap-nhap').replace(/^\/+/, '').replace(/\/$/, ''), pageNo = Math.max(1, Number(page || 1)), key = `${path}:${pageNo}`, cached = this.categoryCache.get(key); if (cached && cached.exp > Date.now()) return cached.value; const url = pageNo <= 1 ? base + path : `${base}${path}/page/${pageNo}/`, html = await this.fetchText(url, base), items = parseListItems(html, base), value = { items, hasMore: items.length > 0, baseUrl: base }; this.categoryCache.set(key, { value, exp: Date.now() + this.cacheTtlMs }); return value; }
-  async search(query) { const q = String(query || '').trim(); if (!q) return []; const key = q.toLowerCase(), cached = this.searchCache.get(key); if (cached && cached.exp > Date.now()) return cached.value; const base = await this.getBaseUrl(), html = await this.fetchText(`${base}/?s=${encodeURIComponent(q)}`, base), value = parseListItems(html, base); this.searchCache.set(key, { value, exp: Date.now() + this.cacheTtlMs }); return value; }
-  async loadDetail(detailUrl) { const key = String(detailUrl || '').trim(), cached = this.detailCache.get(key); if (cached && cached.exp > Date.now()) return cached.value; const base = await this.getBaseUrl(), html = await this.fetchText(key, base), value = parseDetail(html, key, base); this.detailCache.set(key, { value, exp: Date.now() + this.cacheTtlMs }); return value; }
-  async resolveDailymotion(url, serverName) { try { const id = url.match(/dailymotion\.com\/(?:embed\/)?video\/([^/?#]+)/i)?.[1] || url.match(/dai\.ly\/([^/?#]+)/i)?.[1]; if (!id) return []; const dmRef = 'https://www.dailymotion.com/', r = await this.rawFetch(`https://www.dailymotion.com/player/metadata/video/${id}`, { headers: { 'User-Agent': DEFAULT_UA, Referer: dmRef, Origin: 'https://www.dailymotion.com' } }, 7000); if (!r.ok) return []; const qualities = (await r.json())?.qualities || {}, out = []; for (const quality of ['2160', '1440', '1080', '720', '480', 'auto']) { const entries = Array.isArray(qualities[quality]) ? qualities[quality] : qualities[quality] ? [qualities[quality]] : []; for (const item of entries) if (item?.url && /\.m3u8/i.test(item.url)) out.push({ serverName: `${serverName} • ${quality}`, url: item.url, isM3u8: true, headers: this.playbackHeaders(dmRef), sourceUrl: url }); if (out.length) break; } return out; } catch { return []; } }
-  async resolvePage(url, serverName, referer, depth = 0) { if (depth > 2) return []; if (/dailymotion\.com|dai\.ly/i.test(url)) return this.resolveDailymotion(url, serverName); if (/\.(?:m3u8|mp4)(?:$|\?)/i.test(url)) return [{ serverName, url, isM3u8: /\.m3u8(?:$|\?)/i.test(url), headers: this.playbackHeaders(referer), sourceUrl: url }]; let html; try { html = await this.fetchText(url, referer); } catch { return []; } const direct = extractDirectMedia(html, url).map(mediaUrl => ({ serverName, url: mediaUrl, isM3u8: /\.m3u8(?:$|\?)/i.test(mediaUrl), headers: this.playbackHeaders(url), sourceUrl: url })); if (direct.length) return direct; const nested = []; for (const embed of extractEmbeds(html, url).slice(0, 8)) { nested.push(...await this.resolvePage(embed, serverName, url, depth + 1)); if (nested.length >= 8) break; } return uniq(nested, x => x.url); }
-  async resolveStreamLinks(watchPageUrl, serverName = 'HH4K') { const key = `${watchPageUrl}|${serverName}`, cached = this.streamCache.get(key); if (cached && cached.exp > Date.now()) return cached.value; const base = await this.getBaseUrl(); let html; try { html = await this.fetchText(watchPageUrl, base); } catch { return []; } const direct = extractDirectMedia(html, watchPageUrl).map(url => ({ serverName, url, isM3u8: /\.m3u8(?:$|\?)/i.test(url), headers: this.playbackHeaders(watchPageUrl), sourceUrl: watchPageUrl })), resolved = [...direct]; for (const embed of extractEmbeds(html, watchPageUrl).slice(0, 10)) { resolved.push(...await this.resolvePage(embed, serverName, watchPageUrl, 1)); if (resolved.length >= 10) break; } const value = uniq(resolved, x => x.url), finalValue = value.length ? value : (publicLockDetected(html) ? [] : value); this.streamCache.set(key, { value: finalValue, exp: Date.now() + Math.min(this.cacheTtlMs, 300000) }); return finalValue; }
+  constructor(opts = {}) {
+    this.mainUrl = normalizeBase(opts.mainUrl || process.env.HH4K_MAIN_URL || DEFAULT_BASE);
+    this.timeoutMs = Math.max(2500, Math.min(30000, Number(opts.timeoutMs || 12000)));
+    this.cacheTtlMs = Math.max(30000, Math.min(3600000, Number(opts.cacheTtlMs || 300000)));
+    this.categoryCache = new Map();
+    this.searchCache = new Map();
+    this.detailCache = new Map();
+    this.streamCache = new Map();
+  }
+
+  getBaseUrl() { return this.mainUrl.replace(/\/+$/, ''); }
+
+  headers(referer, accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8') {
+    const h = { 'User-Agent': DEFAULT_UA, Accept: accept };
+    if (referer) h.Referer = referer;
+    return h;
+  }
+
+  playbackHeaders(referer) {
+    return { Referer: referer, 'User-Agent': DEFAULT_UA };
+  }
+
+  async rawFetch(url, opts = {}) {
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), this.timeoutMs);
+    try {
+      return await fetch(url, { redirect: 'follow', ...opts, signal: ctl.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async fetchText(url, referer) {
+    const response = await this.rawFetch(url, { headers: this.headers(referer) });
+    if (!response.ok) throw new Error(`HTTP ${response.status} for ${url}`);
+    return await response.text();
+  }
+
+  async fetchCategoryPage(categoryPath = 'moi-cap-nhat', page = 1) {
+    const base = this.getBaseUrl();
+    let path = String(categoryPath || 'moi-cap-nhat').trim().replace(/^\/+|\/+$/g, '');
+    // Accept the old bridge path too, but map it to the path from the uploaded provider.
+    if (/^(?:the-loai\/)?moi-cap-nhap$/i.test(path)) path = 'moi-cap-nhat';
+    const pageNo = Math.max(1, Number(page || 1));
+    const key = `${path}:${pageNo}`;
+    const cached = this.categoryCache.get(key);
+    if (cached && cached.exp > Date.now()) return cached.value;
+    const url = pageNo <= 1 ? `${base}/${path}/` : `${base}/${path}/page/${pageNo}/`;
+    const html = await this.fetchText(url, base);
+    const items = parseListItems(html, base);
+    const value = { items, hasMore: items.length > 0, baseUrl: base };
+    this.categoryCache.set(key, { value, exp: Date.now() + this.cacheTtlMs });
+    return value;
+  }
+
+  async search(query) {
+    const q = String(query || '').trim();
+    if (!q) return [];
+    const key = q.toLowerCase();
+    const cached = this.searchCache.get(key);
+    if (cached && cached.exp > Date.now()) return cached.value;
+    const base = this.getBaseUrl();
+    const url = `${base}/?s=${encodeURIComponent(q)}`;
+    const html = await this.fetchText(url, base);
+    const value = parseListItems(html, base);
+    this.searchCache.set(key, { value, exp: Date.now() + this.cacheTtlMs });
+    return value;
+  }
+
+  async loadDetail(detailUrl) {
+    const url = String(detailUrl || '').trim();
+    const cached = this.detailCache.get(url);
+    if (cached && cached.exp > Date.now()) return cached.value;
+    const base = this.getBaseUrl();
+    const html = await this.fetchText(url, base);
+    const value = parseDetail(html, url, base);
+    this.detailCache.set(url, { value, exp: Date.now() + this.cacheTtlMs });
+    return value;
+  }
+
+  async resolveStreamLinks(watchPageUrl) {
+    const watchUrl = String(watchPageUrl || '').trim();
+    const cached = this.streamCache.get(watchUrl);
+    if (cached && cached.exp > Date.now()) return cached.value;
+
+    const base = this.getBaseUrl();
+    const pageHtml = await this.fetchText(watchUrl, base);
+    const params = parseHalimWatchPageParams(pageHtml, watchUrl);
+    const ajaxUrl = `${base}/wp-admin/admin-ajax.php`;
+    const body = new URLSearchParams({
+      action: 'halim_ajax_player',
+      nonce: params.nonce,
+      postid: params.postId,
+      episode: params.episode,
+      server: params.server
+    });
+    const response = await this.rawFetch(ajaxUrl, {
+      method: 'POST',
+      headers: {
+        'User-Agent': DEFAULT_UA,
+        Referer: watchUrl,
+        Origin: base,
+        Accept: '*/*',
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+      },
+      body: body.toString()
+    });
+    if (!response.ok) throw new Error(`PhimHHTQ AJAX HTTP ${response.status}`);
+    const ajaxText = await response.text();
+    const streamUrl = extractStreamUrlFromPlayerResponse(ajaxText);
+    if (!streamUrl) throw new Error('PhimHHTQ: không tìm thấy file stream');
+
+    const value = [{
+      serverName: `Server ${params.server}`,
+      url: streamUrl,
+      isM3u8: /\.m3u8(?:$|\?)/i.test(streamUrl),
+      headers: this.playbackHeaders(watchUrl),
+      sourceUrl: watchUrl
+    }];
+    this.streamCache.set(watchUrl, { value, exp: Date.now() + Math.min(this.cacheTtlMs, 300000) });
+    return value;
+  }
 }
 
-module.exports = { HH4KProvider, parseListItems, parseEpisodes, parseDetail, extractDirectMedia, extractEmbeds, publicLockDetected, DEFAULT_BASE };
+module.exports = {
+  HH4KProvider,
+  parseListItems,
+  parseEpisodes,
+  parseDetail,
+  parseHalimWatchPageParams,
+  extractStreamUrlFromPlayerResponse,
+  DEFAULT_BASE
+};
