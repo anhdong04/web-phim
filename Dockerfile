@@ -7,4 +7,4 @@ ENV PORT=7000
 ENV WEB_PHIM_VERSION=6.5.9
 ENV HHKUNGFU_CHROMIUM_PATH=/usr/bin/chromium-browser
 EXPOSE 7000
-CMD ["node", "addon_v641.js"]
+CMD ["node", "addon_v650.js"]
