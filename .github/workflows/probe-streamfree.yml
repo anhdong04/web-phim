@@ -14,53 +14,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm install --omit=dev
-      - name: Inspect all HHTQ servers and Streamfree decrypt failure
+      - name: Inspect Streamfree HLS payload
         shell: bash
         run: |
           set -o pipefail
           export BROWSER="$(command -v google-chrome || command -v chromium || true)"
           test -n "$BROWSER"
-          node <<'NODE' 2>&1 | tee hh4k-probe.log
+          node <<'NODE' 2>&1 | tee hh4k-hls-payload.log
           const puppeteer=require('puppeteer-core');
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           const WATCH='https://hhtq.sh/tu-tien/tien-nghich/tap-154.html';
-          const TYPES=['vip4k_v2','vip4k','pro','tiktik','vip4ktm_v2','vip4ktm','pro_tm','tiktm'];
-          const abs=(s,b)=>{try{return new URL(s,b).href}catch{return s}};
           (async()=>{
-            console.log('=== HHTQ SERVER MATRIX ===');
-            for(const type of TYPES){
-              const u=`https://hhtq.sh/player/player.php?action=dox_ajax_player&post_id=1010&chapter_st=tap-154&type=${encodeURIComponent(type)}&sv=1`;
-              try{
-                const r=await fetch(u,{headers:{referer:WATCH,'user-agent':'Mozilla/5.0'}});
-                const text=await r.text();
-                const urls=[];
-                for(const m of text.matchAll(/(?:src|href|file|url|data-url|data-src)\s*[=:]\s*["']([^"']+)["']/gi)) urls.push(abs(m[1],u));
-                for(const m of text.matchAll(/https?:\\?\/\\?\/[^"'<>\s]+/gi)) urls.push(m[0].replace(/\\\//g,'/'));
-                console.log('SERVER',type,'STATUS',r.status,'LEN',text.length,'URLS',JSON.stringify([...new Set(urls)].slice(0,20)));
-                console.log('BODY',type,text.slice(0,2500).replace(/\s+/g,' '));
-              }catch(e){ console.log('SERVER_ERR',type,String(e)); }
-            }
-
-            console.log('=== STREAMFREE BROWSER TRACE ===');
-            const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});
+            const browser=await puppeteer.launch({headless:true,executablePath:process.env.BROWSER,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-blink-features=AutomationControlled','--autoplay-policy=no-user-gesture-required']});
             const page=await browser.newPage();
             await page.evaluateOnNewDocument(()=>{
               try{Object.defineProperty(navigator,'webdriver',{get:()=>undefined});}catch{}
               try{Object.defineProperty(navigator,'languages',{get:()=>['vi-VN','vi','en-US','en']});}catch{}
               try{Object.defineProperty(navigator,'plugins',{get:()=>[1,2,3,4,5]});}catch{}
               try{if(!window.chrome) window.chrome={runtime:{}};}catch{}
-              const orig=JSON.parse;
-              JSON.parse=function(s,...rest){
-                try{return orig.call(this,s,...rest)}catch(e){
-                  try{console.log('__JSON_PARSE_FAIL__ type='+typeof s+' len='+(s?.length??-1)+' value='+String(s).slice(0,5000));}catch{}
-                  throw e;
-                }
-              };
             });
-            page.on('console',msg=>console.log('CONSOLE',msg.type(),msg.text().slice(0,6500)));
-            page.on('pageerror',e=>console.log('PAGEERROR',String(e?.stack||e).slice(0,6500)));
+            page.on('console',msg=>console.log('CONSOLE',msg.type(),msg.text().slice(0,1500)));
             await page.setRequestInterception(true);
-            const media=[];
+            let hlsUrl=''; let hlsHeaders={}; let payload='';
             page.on('request',async req=>{
               const u=req.url();
               try{
@@ -68,42 +43,36 @@ jobs:
                   const r=await fetch(u,{headers:{...req.headers(),referer:'https://streamfree.vip/'}});
                   let body=await r.text();
                   const re=/var (_0x[a-f0-9]+)=new (_0x[a-f0-9]+)\((_0x[a-f0-9]+)\);/g;
-                  let patched=false;
                   for(const m of body.matchAll(re)){
                     const v=m[1], esc=v.replace(/[$]/g,'\\$&');
                     const co=(body.match(new RegExp(esc+"\\['co'\\]\\(\\)",'g'))||[]).length;
                     const al=(body.match(new RegExp(esc+"\\['al'\\]\\(",'g'))||[]).length;
                     const l=(body.match(new RegExp(esc+"\\['l'\\]\\(\\)",'g'))||[]).length;
-                    if(co===2&&al===1&&l===1){
-                      body=body.replace(m[0],`${m[0]}${v}['co']=function(){return Promise.resolve(false);};${v}['al']=function(){};`);
-                      patched=true; console.log('PATCHED_DETECTOR',v); break;
-                    }
+                    if(co===2&&al===1&&l===1){body=body.replace(m[0],`${m[0]}${v}['co']=function(){return Promise.resolve(false);};${v}['al']=function(){};`);console.log('PATCHED',v);break;}
                   }
-                  if(!patched) console.log('PATCH_MISS');
                   return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
                 }
-                if(/\.m3u8(?:$|[?#])/i.test(u)||/\.mp4(?:$|[?#])/i.test(u)||/\/hls\//i.test(u)){
-                  media.push({url:u,headers:req.headers()}); console.log('MEDIA_REQ',u,JSON.stringify(req.headers()));
-                }
+                if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(u)) { hlsUrl=u; hlsHeaders=req.headers(); console.log('HLS_REQ',u); console.log('HLS_HEADERS',JSON.stringify(hlsHeaders)); }
                 return req.continue();
-              }catch(e){console.log('INTERCEPT_ERR',u,e.message);try{return req.continue();}catch{}}
+              }catch(e){try{return req.continue();}catch{}}
+            });
+            page.on('response',async res=>{
+              const u=res.url();
+              if(/\/hls\/.*\.m3u8(?:$|[?#])/i.test(u)) {
+                try{payload=await res.text();console.log('HLS_STATUS',res.status());console.log('HLS_CONTENT_TYPE',res.headers()['content-type']||'');console.log('HLS_BODY_HEAD',JSON.stringify(payload.slice(0,5000)));}catch(e){console.log('HLS_BODY_ERR',String(e));}
+              }
             });
             await page.goto(WATCH,{waitUntil:'domcontentloaded',timeout:45000});
-            for(let i=0;i<45&&!media.length;i++) await sleep(400);
-            for(const f of page.frames()){
-              if(/streamfree/i.test(f.url())){
-                const d=await f.evaluate(()=>({ua:navigator.userAgent,wd:navigator.webdriver,attrs:Object.fromEntries([...document.querySelector('#hrm-player')?.attributes||[]].map(a=>[a.name,a.value])),bytecode:document.querySelector('meta[name=bytecode]')?.content||''})).catch(e=>({err:String(e)}));
-                console.log('STREAMFREE_STATE',JSON.stringify(d).slice(0,8000));
-              }
-            }
-            console.log('MEDIA',JSON.stringify(media));
+            for(let i=0;i<60&&(!hlsUrl||!payload);i++) await sleep(300);
+            await sleep(1200);
+            console.log('RESULT',JSON.stringify({url:hlsUrl,headers:hlsHeaders,payloadHead:payload.slice(0,500),payloadLength:payload.length}));
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
-      - name: Upload probe trace
+      - name: Upload trace
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hh4k-probe
-          path: hh4k-probe.log
+          name: hh4k-hls-payload
+          path: hh4k-hls-payload.log
           retention-days: 1
