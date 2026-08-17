@@ -14,13 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: npm install --omit=dev
-      - name: Trace player after anti-devtools patch
+      - name: Capture Streamfree player assets
         shell: bash
         run: |
           set -o pipefail
           export BROWSER="$(command -v google-chrome || command -v chromium || true)"
           test -n "$BROWSER"
           node <<'NODE' 2>&1 | tee streamfree-trace.log
+          const fs=require('node:fs');
           const puppeteer=require('puppeteer-core');
           const sleep=ms=>new Promise(r=>setTimeout(r,ms));
           const UA='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/151 Safari/537.36';
@@ -30,16 +31,15 @@ jobs:
             await page.setUserAgent(UA);
             page.on('console',msg=>console.log('CONSOLE',msg.type(),msg.text().slice(0,2000)));
             page.on('pageerror',e=>console.log('PAGEERROR',String(e?.stack||e).slice(0,4000)));
-            page.on('framenavigated',f=>console.log('FRAME_NAV',f.url()));
-            page.on('requestfailed',req=>console.log('REQ_FAIL',req.failure()?.errorText,req.url()));
             await page.setRequestInterception(true);
-            let patched=false; const media=[]; const net=[];
+            let patched=false; const media=[];
             page.on('request',async req=>{
               const u=req.url();
               try{
                 if(/streamfree\.vip\/public\/static\/app\.[a-f0-9]+\.js/i.test(u)){
-                  const r=await fetch(u,{headers:{'user-agent':UA,'referer':'https://streamfree.vip/embed/v/xbwJ5CT4'}});
+                  const r=await fetch(u,{headers:{...req.headers(),'user-agent':UA,'referer':'https://streamfree.vip/embed/v/xbwJ5CT4'}});
                   let body=await r.text();
+                  fs.writeFileSync('streamfree-app-original.js',body);
                   const re=/var (_0x[a-f0-9]+)=new (_0x[a-f0-9]+)\((_0x[a-f0-9]+)\);/g;
                   for(const m of body.matchAll(re)){
                     const v=m[1], esc=v.replace(/[$]/g,'\\$&');
@@ -47,28 +47,28 @@ jobs:
                     const al=(body.match(new RegExp(esc+"\\['al'\\]\\(",'g'))||[]).length;
                     if(co===2&&al===1){body=body.replace(m[0],`var ${v}={co:function(){return Promise.resolve(false);},al:function(){return void 0;}};`);patched=true;console.log('PATCHED',v);break;}
                   }
+                  fs.writeFileSync('streamfree-app-patched.js',body);
                   return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
                 }
-                if(/streamfree|helvid|m3u8|\.mp4|cdn|playlist|manifest|api|ajax|source|token/i.test(u)){
-                  if(net.length<300){net.push(u);console.log('NET_REQ',req.resourceType(),u);}
+                if(/streamfree\.vip\/public\/static\/31\.[a-f0-9]+\.js/i.test(u)){
+                  const r=await fetch(u,{headers:{...req.headers(),'user-agent':UA,'referer':'https://streamfree.vip/embed/v/xbwJ5CT4'}});
+                  const body=await r.text();
+                  fs.writeFileSync('streamfree-chunk31.js',body);
+                  return req.respond({status:200,contentType:'application/javascript; charset=utf-8',body});
                 }
                 if(/\.m3u8(?:$|[?#])/i.test(u)||/\.mp4(?:$|[?#])/i.test(u)){media.push(u);console.log('MEDIA_REQ',u);}
                 return req.continue();
               }catch(e){console.log('INTERCEPT_ERR',u,e.message); try{return req.continue();}catch{}}
             });
-            page.on('response',res=>{
-              const u=res.url(), st=res.status();
-              if(st>=400||/streamfree|helvid|m3u8|\.mp4|playlist|manifest|api|ajax|source|token/i.test(u)) console.log('RES',st,u);
-            });
             await page.goto('https://hhtq.sh/tu-tien/tien-nghich/tap-154.html',{waitUntil:'domcontentloaded',timeout:45000});
-            for(let i=0;i<40;i++) await sleep(500);
-            console.log('FINAL_FRAMES',page.frames().map(f=>f.url()));
+            for(let i=0;i<30;i++) await sleep(500);
             for(const f of page.frames()){
-              const info=await f.evaluate(()=>({url:location.href,text:(document.body?.innerText||'').slice(0,2000),html:(document.body?.innerHTML||'').slice(0,5000),jw:typeof jwplayer==='function'})).catch(e=>({url:f.url(),err:String(e)}));
-              console.log('FRAME_INFO',JSON.stringify(info).slice(0,8000));
-              if(info.jw){
-                const jw=await f.evaluate(()=>{try{return {state:jwplayer().getState?.(),playlist:jwplayer().getPlaylist?.(),error:jwplayer().getError?.()}}catch(e){return {err:String(e)}}}).catch(e=>({err:String(e)}));
-                console.log('JW_INFO',JSON.stringify(jw).slice(0,12000));
+              if(/streamfree/i.test(f.url())){
+                const html=await f.content().catch(()=> '');
+                fs.writeFileSync('streamfree-embed-rendered.html',html);
+                const data=await f.evaluate(()=>{const el=document.querySelector('#hrm-player');return el?Object.fromEntries([...el.attributes].map(a=>[a.name,a.value])):{};}).catch(()=>({}));
+                fs.writeFileSync('streamfree-player-data.json',JSON.stringify(data,null,2));
+                console.log('PLAYER_DATA',JSON.stringify(data));
               }
             }
             console.log('SUMMARY patched=',patched,'media=',media);
@@ -79,6 +79,12 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: streamfree-trace
-          path: streamfree-trace.log
+          name: streamfree-assets
+          path: |
+            streamfree-trace.log
+            streamfree-app-original.js
+            streamfree-app-patched.js
+            streamfree-chunk31.js
+            streamfree-embed-rendered.html
+            streamfree-player-data.json
           retention-days: 1
