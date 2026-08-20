@@ -6,6 +6,7 @@ on:
       - feat/secure-multiuser-builder
       - fix/hhtq-direct-player
       - fix/hhtq-exact-resolver
+      - fix/hhtq-hh4k-fallback
       - main
     paths:
       - 'multiuser_secure.js'
@@ -14,9 +15,11 @@ on:
       - 'hhtq_browser_patch.js'
       - 'hhtq_exact_patch.js'
       - 'hhtq_relay.js'
+      - 'hhtq_hh4k_fallback.js'
       - 'hhtq_bridge.js'
       - 'tests/hhtq_provider.test.js'
       - 'tests/hhtq_exact_patch.test.js'
+      - 'tests/hhtq_hh4k_fallback.test.js'
       - 'v641_patch.js'
       - 'addon_v650.js'
       - 'package.json'
@@ -29,9 +32,11 @@ on:
       - 'hhtq_browser_patch.js'
       - 'hhtq_exact_patch.js'
       - 'hhtq_relay.js'
+      - 'hhtq_hh4k_fallback.js'
       - 'hhtq_bridge.js'
       - 'tests/hhtq_provider.test.js'
       - 'tests/hhtq_exact_patch.test.js'
+      - 'tests/hhtq_hh4k_fallback.test.js'
       - 'v641_patch.js'
       - 'addon_v650.js'
       - 'package.json'

@@ -2,6 +2,7 @@
 
 const http = require('node:http');
 const { HHTQProvider, CATEGORY_PATHS } = require('./hhtq_provider');
+const { resolveFallback } = require('./hhtq_hh4k_fallback');
 
 const originalCreateServer = http.createServer;
 const provider = new HHTQProvider();
@@ -128,9 +129,10 @@ async function streamsFor(type,id) {
   if(index==null) return [];
   const ep=eps[index]; if(!ep?.watchUrl) return [];
   const links=await provider.streams(ep.watchUrl);
-  const direct=links.filter(x=>x.url);
-  const selected=direct.length?direct:links;
-  return selected.slice(0,10).map(x=>streamObject(x,d.title));
+  const direct=(links||[]).filter(x=>x?.url&&/^https?:\/\//i.test(x.url));
+  if(direct.length) return direct.slice(0,10).map(x=>streamObject(x,d.title));
+  const fallback=await resolveFallback(d.title,ep);
+  return (fallback||[]).slice(0,10).map(x=>streamObject(x,d.title));
 }
 async function diag() {
   const started=Date.now();
