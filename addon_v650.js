@@ -6,10 +6,12 @@
 require('./hh4k_browser_patch');
 require('./hh4k_bridge');
 
-// HHTQ direct resolver patches the provider prototype before the bridge creates
-// its instance. This guarantees Nuvio receives media URLs instead of web embeds.
-require('./hhtq_browser_patch');
+// HHTQ now follows the supplied CloudStream provider logic host-by-host.
+// Patch the provider before bridge construction, then install the local M3U8
+// relay after the bridge so synthetic Cliphub playlists remain playable in-app.
+require('./hhtq_exact_patch');
 require('./hhtq_bridge');
+require('./hhtq_relay');
 
 // Secure multi-user builder is an outer HTTP layer. It owns /configure,
 // authenticated /api/* and /a/<publicId>/*, while delegating provider work to
