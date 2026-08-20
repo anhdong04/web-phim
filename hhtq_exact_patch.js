@@ -60,9 +60,15 @@ function playerAaaaUrls(html, base) {
 function normalizeLink(url) {
   try { return new URL(String(url)).toString(); } catch { return ''; }
 }
+function saneDirectUrl(url) {
+  const raw = String(url || '');
+  if (!/^https?:\/\//i.test(raw) || raw.length > 4096) return false;
+  if (/&quot;|&#0*34;|\\&quot;|[\r\n<>]/i.test(raw)) return false;
+  try { new URL(raw); return true; } catch { return false; }
+}
 function directRow(url, name, referer) {
   const u = normalizeLink(url);
-  if (!u) return null;
+  if (!u || !saneDirectUrl(u)) return null;
   return {
     serverName: name || 'HHTQ',
     url: u,
@@ -73,6 +79,36 @@ function directRow(url, name, referer) {
 }
 async function fetchText(provider, url, referer) {
   try { return await provider.fetchText(url, referer); } catch { return ''; }
+}
+function decodeEmbeddedHtml(value) {
+  return String(value || '')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#0*34;/gi, '"')
+    .replace(/&amp;/gi, '&')
+    .replace(/\\u0026/gi, '&')
+    .replace(/\\&/g, '&')
+    .replace(/\\\//g, '/')
+    .replace(/\\"/g, '"');
+}
+function extractOkRuHls(html) {
+  const text = decodeEmbeddedHtml(html);
+  const patterns = [
+    /["']hlsManifestUrl["']\s*:\s*["'](https?:\/\/[^"'<>]+)["']/i,
+    /hlsManifestUrl\s*[=:]\s*["'](https?:\/\/[^"'<>]+)["']/i
+  ];
+  for (const re of patterns) {
+    const m = text.match(re);
+    if (!m?.[1]) continue;
+    const url = normalizeLink(decodeEmbeddedHtml(m[1]));
+    if (url && saneDirectUrl(url) && /\.m3u8(?:$|[?#])/i.test(url)) return url;
+  }
+  return '';
+}
+async function resolveOkRu(provider, url, referer) {
+  const text = await fetchText(provider, url, referer);
+  const hls = extractOkRuHls(text);
+  if (!hls) return [];
+  return [directRow(hls, 'HHTQ • OK.ru', url)].filter(Boolean);
 }
 async function resolveEmbedCliphub(provider, url, referer) {
   const target = url.endsWith('/') ? url : url + '/';
@@ -124,15 +160,17 @@ async function resolveGeneric(provider, url, referer) {
   if (/vip\.cliphub\.tv/i.test(url)) return resolveVipCliphub(provider, url, referer);
   if (/^https?:\/\/helvid/i.test(url)) return resolveHelvid(provider, url, referer);
   if (/rumble\.com/i.test(url)) return resolveRumble(url);
-  const text = await fetchText(provider, url, referer);
-  const matches = [...text.matchAll(/https?:\\?\/\\?\/[^\s'"<>]+?\.(?:m3u8|mp4)(?:\?[^\s'"<>]*)?/gi)]
-    .map(m => m[0].replace(/\\\//g, '/'));
+  if (/(?:^|\.)ok\.ru\//i.test(url)) return resolveOkRu(provider, url, referer);
+  const text = decodeEmbeddedHtml(await fetchText(provider, url, referer));
+  const matches = [...text.matchAll(/https?:\/\/[^\s'"<>]+?\.(?:m3u8|mp4)(?:\?[^\s'"<>]*)?/gi)]
+    .map(m => m[0])
+    .filter(saneDirectUrl);
   return [...new Set(matches)].slice(0, 3).map(x => directRow(x, 'HHTQ • Direct', url)).filter(Boolean);
 }
 
 HHTQProvider.prototype.streams = async function exactHhtqStreams(watchUrl) {
   const raw = await originalStreams.call(this, watchUrl).catch(() => []);
-  const direct = (raw || []).filter(x => x?.url && /^https?:\/\//i.test(x.url));
+  const direct = (raw || []).filter(x => x?.url && saneDirectUrl(x.url));
   if (direct.length) return direct;
 
   const candidates = [];
@@ -141,7 +179,7 @@ HHTQProvider.prototype.streams = async function exactHhtqStreams(watchUrl) {
     candidates.push(...playerAaaaUrls(watchHtml, watchUrl));
   } catch {}
   for (const link of raw || []) {
-    const u = link?.externalUrl || link?.url;
+    const u = link?.externalUrl || (saneDirectUrl(link?.url) ? link.url : '');
     if (u) candidates.push(u);
   }
 
@@ -158,4 +196,15 @@ HHTQProvider.prototype.streams = async function exactHhtqStreams(watchUrl) {
 };
 
 console.log('[hhtq] exact host resolver enabled');
-module.exports = { deobfuscateVipPl, playerAaaaUrls, registerPlaylist, getPlaylist, resolveEmbedCliphub, resolveVipCliphub, resolveHelvid };
+module.exports = {
+  deobfuscateVipPl,
+  playerAaaaUrls,
+  registerPlaylist,
+  getPlaylist,
+  resolveEmbedCliphub,
+  resolveVipCliphub,
+  resolveHelvid,
+  resolveOkRu,
+  extractOkRuHls,
+  saneDirectUrl
+};
