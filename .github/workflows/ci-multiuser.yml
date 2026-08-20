@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - feat/secure-multiuser-builder
+      - fix/hhtq-direct-player
       - main
     paths:
       - 'multiuser_secure.js'
       - 'tests/multiuser_secure.test.js'
       - 'hhtq_provider.js'
+      - 'hhtq_browser_patch.js'
       - 'hhtq_bridge.js'
       - 'tests/hhtq_provider.test.js'
       - 'v641_patch.js'
@@ -20,6 +22,7 @@ on:
       - 'multiuser_secure.js'
       - 'tests/multiuser_secure.test.js'
       - 'hhtq_provider.js'
+      - 'hhtq_browser_patch.js'
       - 'hhtq_bridge.js'
       - 'tests/hhtq_provider.test.js'
       - 'v641_patch.js'
@@ -42,7 +45,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-          cache: npm
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm run check
       - run: npm test
