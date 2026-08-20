@@ -6,13 +6,13 @@
 require('./hh4k_browser_patch');
 require('./hh4k_bridge');
 
-// HHTQ now follows the supplied CloudStream provider logic host-by-host.
-// Patch the provider before bridge construction, then install the local M3U8
-// relay after the bridge so synthetic Cliphub playlists remain playable in-app.
+// HHTQ host resolvers are installed first. Relay/diagnostic HTTP wrappers must
+// be registered BEFORE the catch-all /hhtq bridge so they become the outer
+// request layers and are not swallowed by the bridge's /hhtq/* interception.
 require('./hhtq_exact_patch');
-require('./hhtq_bridge');
 require('./hhtq_relay');
 require('./hhtq_diag_patch');
+require('./hhtq_bridge');
 
 // Secure multi-user builder is an outer HTTP layer. It owns /configure,
 // authenticated /api/* and /a/<publicId>/*, while delegating provider work to
