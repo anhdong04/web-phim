@@ -4,7 +4,9 @@ const { HHTQProvider, DEFAULT_UA } = require('./hhtq_provider');
 const {
   resolveEmbedCliphub,
   resolveVipCliphub,
-  resolveHelvid
+  resolveHelvid,
+  resolveOkRu,
+  saneDirectUrl
 } = require('./hhtq_exact_patch');
 
 const previousStreams = HHTQProvider.prototype.streams;
@@ -36,6 +38,7 @@ function knownHostUrls(html) {
 function directRow(url, name, referer) {
   try {
     const u = new URL(String(url)).toString();
+    if (!saneDirectUrl(u)) return null;
     return {
       serverName: name,
       url: u,
@@ -50,6 +53,7 @@ async function resolveKnownHost(provider, url, referer) {
   if (/embed\.cliphub\.tv/i.test(url)) return resolveEmbedCliphub(provider, url, referer);
   if (/vip\.cliphub\.tv/i.test(url)) return resolveVipCliphub(provider, url, referer);
   if (/^https?:\/\/(?:[^/]+\.)?helvid/i.test(url)) return resolveHelvid(provider, url, referer);
+  if (/^https?:\/\/(?:www\.)?ok\.ru\//i.test(url)) return resolveOkRu(provider, url, referer);
 
   const rumble = String(url).match(/rumble\.com\/embed\/v([^/?#]+)/i);
   if (rumble) {
@@ -57,13 +61,13 @@ async function resolveKnownHost(provider, url, referer) {
     return row ? [row] : [];
   }
 
-  // OK.ru, Dailymotion and q8y5z are fallback-only here. Some pages expose a
-  // direct media URL in their HTML even when the regular HHTQ parser misses it.
+  // Dailymotion and q8y5z fallback: accept only sane direct media URLs.
   try {
     const html = await provider.fetchText(url, referer || provider.mainUrl);
     const text = normalizeEmbeddedHtml(html);
     const media = [...text.matchAll(/https?:\/\/[^\s"'<>]+?\.(?:m3u8|mp4)(?:\?[^\s"'<>]*)?/gi)]
-      .map(x => x[0]);
+      .map(x => x[0])
+      .filter(saneDirectUrl);
     const rows = [...new Set(media)].slice(0, 3)
       .map(x => directRow(x, 'HHTQ • Direct', url))
       .filter(Boolean);
@@ -74,7 +78,7 @@ async function resolveKnownHost(provider, url, referer) {
 
 HHTQProvider.prototype.streams = async function watchKnownHostStreams(watchUrl) {
   const prior = await previousStreams.call(this, watchUrl).catch(() => []);
-  const direct = (prior || []).filter(x => x?.url && /^https?:\/\//i.test(x.url));
+  const direct = (prior || []).filter(x => x?.url && saneDirectUrl(x.url));
   if (direct.length) return direct;
 
   let html = '';
