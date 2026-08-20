@@ -12,6 +12,7 @@ require('./hh4k_bridge');
 require('./hhtq_exact_patch');
 require('./hhtq_bridge');
 require('./hhtq_relay');
+require('./hhtq_diag_patch');
 
 // Secure multi-user builder is an outer HTTP layer. It owns /configure,
 // authenticated /api/* and /a/<publicId>/*, while delegating provider work to
