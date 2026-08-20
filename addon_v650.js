@@ -6,13 +6,15 @@
 require('./hh4k_browser_patch');
 require('./hh4k_bridge');
 
-// HHTQ host resolvers are installed first. Relay/diagnostic HTTP wrappers must
-// be registered BEFORE the catch-all /hhtq bridge so they become the outer
-// request layers and are not swallowed by the bridge's /hhtq/* interception.
+// HHTQ provider patches must be installed before bridge construction. The
+// catch-all bridge is then wrapped by relay/diagnostic handlers so /hhtq/relay
+// is handled before the bridge's generic /hhtq/* interception.
 require('./hhtq_exact_patch');
+require('./hhtq_watch_known_hosts_patch');
+require('./hhtq_bridge');
 require('./hhtq_relay');
 require('./hhtq_diag_patch');
-require('./hhtq_bridge');
+require('./hhtq_watch_diag_patch');
 
 // Secure multi-user builder is an outer HTTP layer. It owns /configure,
 // authenticated /api/* and /a/<publicId>/*, while delegating provider work to
