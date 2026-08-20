@@ -1,0 +1,40 @@
+name: CI Secure Multi-user Builder
+
+on:
+  push:
+    branches:
+      - feat/secure-multiuser-builder
+      - main
+    paths:
+      - 'multiuser_secure.js'
+      - 'tests/multiuser_secure.test.js'
+      - 'addon_v650.js'
+      - 'package.json'
+      - '.github/workflows/ci-multiuser.yml'
+  pull_request:
+    paths:
+      - 'multiuser_secure.js'
+      - 'tests/multiuser_secure.test.js'
+      - 'addon_v650.js'
+      - 'package.json'
+      - '.github/workflows/ci-multiuser.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test

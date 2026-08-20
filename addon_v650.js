@@ -5,4 +5,10 @@
 // route exactly as before.
 require('./hh4k_browser_patch');
 require('./hh4k_bridge');
+
+// Secure multi-user builder is an outer HTTP layer. It owns /configure,
+// authenticated /api/* and /a/<publicId>/*, while delegating provider work to
+// the already-tested Full/IPTV handlers.
+require('./multiuser_secure');
+
 require('./addon_v641');
