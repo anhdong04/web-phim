@@ -1,6 +1,6 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "7.1.6",
+  "version": "7.1.7",
   "description": "Web Phim with secure multi-user Nuvio/Stremio addon builder and HHTQ watch-page resolver",
   "main": "addon_v650.js",
   "scripts": {
