@@ -6,6 +6,10 @@
 require('./hh4k_browser_patch');
 require('./hh4k_bridge');
 
+// HHTQProvider port is isolated behind /hhtq/* and also exposes a narrow hook
+// consumed by the Full addon patch. Existing providers are not rewritten.
+require('./hhtq_bridge');
+
 // Secure multi-user builder is an outer HTTP layer. It owns /configure,
 // authenticated /api/* and /a/<publicId>/*, while delegating provider work to
 // the already-tested Full/IPTV handlers.
