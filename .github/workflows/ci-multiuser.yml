@@ -5,14 +5,18 @@ on:
     branches:
       - feat/secure-multiuser-builder
       - fix/hhtq-direct-player
+      - fix/hhtq-exact-resolver
       - main
     paths:
       - 'multiuser_secure.js'
       - 'tests/multiuser_secure.test.js'
       - 'hhtq_provider.js'
       - 'hhtq_browser_patch.js'
+      - 'hhtq_exact_patch.js'
+      - 'hhtq_relay.js'
       - 'hhtq_bridge.js'
       - 'tests/hhtq_provider.test.js'
+      - 'tests/hhtq_exact_patch.test.js'
       - 'v641_patch.js'
       - 'addon_v650.js'
       - 'package.json'
@@ -23,8 +27,11 @@ on:
       - 'tests/multiuser_secure.test.js'
       - 'hhtq_provider.js'
       - 'hhtq_browser_patch.js'
+      - 'hhtq_exact_patch.js'
+      - 'hhtq_relay.js'
       - 'hhtq_bridge.js'
       - 'tests/hhtq_provider.test.js'
+      - 'tests/hhtq_exact_patch.test.js'
       - 'v641_patch.js'
       - 'addon_v650.js'
       - 'package.json'
