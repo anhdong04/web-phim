@@ -1,12 +1,12 @@
 {
   "name": "kkphim-nuvio-addon",
-  "version": "7.1.2",
-  "description": "Web Phim with secure multi-user Nuvio/Stremio addon builder and HHTQ exact resolver",
+  "version": "7.1.3",
+  "description": "Web Phim with secure multi-user Nuvio/Stremio addon builder and HHTQ direct fallback",
   "main": "addon_v650.js",
   "scripts": {
     "start": "node addon_v650.js",
-    "test": "node tests/multiuser_secure.test.js && node tests/hhtq_provider.test.js && node tests/hhtq_exact_patch.test.js",
-    "check": "node --check addon_v650.js && node --check multiuser_secure.js && node --check tests/multiuser_secure.test.js && node --check hhtq_exact_patch.js && node --check hhtq_relay.js && node --check hhtq_bridge.js && node --check hhtq_provider.js && node --check tests/hhtq_provider.test.js && node --check tests/hhtq_exact_patch.test.js && node --check hh4k_bridge.js && node --check hh4k_provider.js && node --check addon_v641.js && node --check addon_v641_legacy.js && node --check v641_patch.js"
+    "test": "node tests/multiuser_secure.test.js && node tests/hhtq_provider.test.js && node tests/hhtq_exact_patch.test.js && node tests/hhtq_hh4k_fallback.test.js",
+    "check": "node --check addon_v650.js && node --check multiuser_secure.js && node --check tests/multiuser_secure.test.js && node --check hhtq_exact_patch.js && node --check hhtq_relay.js && node --check hhtq_hh4k_fallback.js && node --check hhtq_bridge.js && node --check hhtq_provider.js && node --check tests/hhtq_provider.test.js && node --check tests/hhtq_exact_patch.test.js && node --check tests/hhtq_hh4k_fallback.test.js && node --check hh4k_bridge.js && node --check hh4k_provider.js && node --check addon_v641.js && node --check addon_v641_legacy.js && node --check v641_patch.js"
   },
   "dependencies": {
     "puppeteer-core": "^24.0.0"
