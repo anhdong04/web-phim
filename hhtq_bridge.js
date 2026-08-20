@@ -6,7 +6,7 @@ const { resolveFallback } = require('./hhtq_hh4k_fallback');
 
 const originalCreateServer = http.createServer;
 const provider = new HHTQProvider();
-const VERSION = '1.0.0';
+const VERSION = '1.0.1';
 const PAGE_SIZE = Math.max(10, Math.min(50, Number(process.env.HHTQ_PAGE_SIZE || 20)));
 
 function safeDecode(value) { try { return decodeURIComponent(String(value || '')); } catch { return String(value || ''); } }
@@ -38,7 +38,7 @@ function sendJson(req,res,status,body,maxAge=0) {
     'access-control-allow-headers':'*',
     'access-control-allow-methods':'GET,HEAD,OPTIONS',
     'cache-control':maxAge?`public, max-age=${maxAge}`:'no-store',
-    'x-web-phim-hhtq':'bridge-v1'
+    'x-web-phim-hhtq':'bridge-v1.0.1'
   });
   if(req.method==='HEAD') return res.end();
   res.end(data);
@@ -117,7 +117,7 @@ function streamObject(link,title) {
   if(link.url){
     s.url=link.url;
     if(link.headers&&Object.keys(link.headers).length) s.behaviorHints.proxyHeaders={request:link.headers};
-  } else if(link.externalUrl) s.externalUrl=link.externalUrl;
+  }
   return s;
 }
 async function streamsFor(type,id) {
@@ -127,12 +127,21 @@ async function streamsFor(type,id) {
   let index=parsed.episodeIndex;
   if(index==null && type==='movie') index=0;
   if(index==null) return [];
-  const ep=eps[index]; if(!ep?.watchUrl) return [];
-  const links=await provider.streams(ep.watchUrl);
+
+  // HHTQ movie pages marked FULL do not always expose an episode list. In that
+  // case the CloudStream provider resolves the player from the movie page itself.
+  // Preserve that behavior instead of returning [] before the host resolver runs.
+  let ep=eps[index]||null;
+  if(!ep?.watchUrl && type==='movie') {
+    ep={ name:'FULL', number:1, watchUrl:parsed.detailUrl, serverName:'HHTQ' };
+  }
+  if(!ep?.watchUrl) return [];
+
+  const links=await provider.streams(ep.watchUrl).catch(()=>[]);
   const direct=(links||[]).filter(x=>x?.url&&/^https?:\/\//i.test(x.url));
   if(direct.length) return direct.slice(0,10).map(x=>streamObject(x,d.title));
   const fallback=await resolveFallback(d.title,ep);
-  return (fallback||[]).slice(0,10).map(x=>streamObject(x,d.title));
+  return (fallback||[]).filter(x=>x?.url).slice(0,10).map(x=>streamObject(x,d.title));
 }
 async function diag() {
   const started=Date.now();
@@ -174,5 +183,5 @@ http.createServer=function patchedCreateServer(...args){
   return originalCreateServer.apply(http,args);
 };
 
-console.log('[hhtq] bridge v1 enabled at /hhtq/*');
+console.log('[hhtq] bridge v1.0.1 enabled at /hhtq/*');
 module.exports={manifest,catalog,metaFor,streamsFor,parseId,rootId,handleHhtq,CATALOGS,CATEGORY_PATHS};
