@@ -6,8 +6,9 @@
 require('./hh4k_browser_patch');
 require('./hh4k_bridge');
 
-// HHTQProvider port is isolated behind /hhtq/* and also exposes a narrow hook
-// consumed by the Full addon patch. Existing providers are not rewritten.
+// HHTQ direct resolver patches the provider prototype before the bridge creates
+// its instance. This guarantees Nuvio receives media URLs instead of web embeds.
+require('./hhtq_browser_patch');
 require('./hhtq_bridge');
 
 // Secure multi-user builder is an outer HTTP layer. It owns /configure,
