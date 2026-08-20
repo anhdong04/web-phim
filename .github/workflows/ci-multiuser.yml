@@ -8,6 +8,10 @@ on:
     paths:
       - 'multiuser_secure.js'
       - 'tests/multiuser_secure.test.js'
+      - 'hhtq_provider.js'
+      - 'hhtq_bridge.js'
+      - 'tests/hhtq_provider.test.js'
+      - 'v641_patch.js'
       - 'addon_v650.js'
       - 'package.json'
       - '.github/workflows/ci-multiuser.yml'
@@ -15,6 +19,10 @@ on:
     paths:
       - 'multiuser_secure.js'
       - 'tests/multiuser_secure.test.js'
+      - 'hhtq_provider.js'
+      - 'hhtq_bridge.js'
+      - 'tests/hhtq_provider.test.js'
+      - 'v641_patch.js'
       - 'addon_v650.js'
       - 'package.json'
       - '.github/workflows/ci-multiuser.yml'
