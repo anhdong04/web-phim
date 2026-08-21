@@ -12,10 +12,12 @@ require('./hh4k_bridge');
 // before the bridge falls back to its generic HHTQ router.
 require('./hhtq_exact_patch');
 require('./hhtq_watch_known_hosts_patch');
+require('./hhtq_abyss_browser_patch');
 require('./hhtq_okru_proxy');
 require('./hhtq_relay');
 require('./hhtq_diag_patch');
 require('./hhtq_watch_diag_patch');
+require('./hhtq_batch_diag_patch');
 require('./hhtq_bridge');
 
 // Secure multi-user builder is an outer HTTP layer. It owns /configure,
